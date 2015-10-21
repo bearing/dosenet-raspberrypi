@@ -12,7 +12,6 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 CONFIGFILE=$DOSENET/config.csv
-CONDA=$HOME/miniconda/bin
 LOG=/home/pi/sender.log
 echo "DoseNet script called @ " > $LOG
 date >> $LOG
@@ -20,7 +19,7 @@ case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
-    sudo screen $CONDA/python $DOSENET/udp_sender.py -f $CONFIGFILE
+    sudo screen python $DOSENET/udp_sender.py -f $CONFIGFILE
     date >> $LOG
     ;;
   stop)
@@ -32,7 +31,7 @@ case "$1" in
   test)
     echo "Testing DoseNet Script" >> $LOG
     echo "Testing DoseNet Script"
-    sudo $CONDA/python $DOSENET/udp_sender.py -f $DOSENET/config-files/$CONFIGFILE --test
+    sudo python $DOSENET/udp_sender.py -f $DOSENET/config-files/$CONFIGFILE --test
     date >> $LOG
     ;;
   *)
