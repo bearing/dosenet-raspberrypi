@@ -9,9 +9,9 @@
 # X-Interactive: false
 # Short-Description: DoseNet - sends UDP packets to the GRIM for the DoseNet project
 ### END INIT INFO
-CONFIGFILE=config.csv
 HOME=/home/pi
-DOSENET=$HOME/dosenet
+DOSENET=$HOME/dosenet-raspberrypi
+CONFIGFILE=$DOSENET/config.csv
 CONDA=$HOME/miniconda/bin
 LOG=/home/pi/sender.log
 echo "DoseNet script called @ " > $LOG
@@ -20,7 +20,7 @@ case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
-    sudo screen $CONDA/python $DOSENET/udp_sender.py -f $DOSENET/config-files/$CONFIGFILE
+    sudo screen $CONDA/python $DOSENET/udp_sender.py -f $CONFIGFILE
     date >> $LOG
     ;;
   stop)
