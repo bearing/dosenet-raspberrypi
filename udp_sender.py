@@ -18,6 +18,7 @@ from dosimeter import Dosimeter
 import subprocess
 from multiprocessing import Process
 import email_message
+from dosimeter import SIG_PIN, NS_PIN
 
 class Sender:
     def parseArguments(self):
@@ -141,8 +142,8 @@ class Sender:
             p = Process(target = det.ping, args=(self.led_network,))
             p.start()
             p.join() # Will block main thread execution until ping succeeds, else blinks in parallel
-            GPIO.remove_event_detect(24)
-            GPIO.add_event_detect(24, GPIO.FALLING, callback = det.updateCount_basic, bouncetime=1)
+            GPIO.remove_event_detect(SIG_PIN)
+            GPIO.add_event_detect(SIG_PIN, GPIO.FALLING, callback = det.updateCount_basic, bouncetime=1)
             sleep(sleep_time)
             self.getAndSendData(det = det, sleep_time = sleep_time) # time in seconds
 

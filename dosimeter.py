@@ -15,12 +15,12 @@
 import RPi.GPIO as GPIO
 import numpy as np
 import datetime
-import time
 from time import sleep
 import os
-import sys
-import random
 import email_message
+
+SIG_PIN = 17
+NS_PIN = 4
 
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
@@ -41,22 +41,22 @@ class Dosimeter:
         self.microphonics = [] # errorFlag list
         self.margin = datetime.timedelta(microseconds = 100000) #100ms milliseconds is not an option
         """
-        GPIO.setmode(GPIO.BCM) # Use Broadcom GPIO numbers - GPIO numbering system eg. GPIO 23 > pin 16. Not BOARD numbers, eg. 1, 2 ,3 etc.
-        GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP) # SIG Sets up radiation detection; Uses pull up resistor on RPi
-        #GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP) # NS  Sets up microphonics detection; Uses pull up resistor on RPi
-        GPIO.add_event_detect(24, GPIO.FALLING, callback=self.updateCount_basic, bouncetime=1)
-        #GPIO.add_event_detect(23, GPIO.FALLING, callback=self.updateNoise, bouncetime=1000)
+        GPIO.setmode(GPIO.BCM) # Use Broadcom GPIO numbers - GPIO numbering system eg. GPIO NS_PIN > pin 16. Not BOARD numbers, eg. 1, 2 ,3 etc.
+        GPIO.setup(SIG_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP) # SIG Sets up radiation detection; Uses pull up resistor on RPi
+        #GPIO.setup(NS_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP) # NS  Sets up microphonics detection; Uses pull up resistor on RPi
+        GPIO.add_event_detect(SIG_PIN, GPIO.FALLING, callback=self.updateCount_basic, bouncetime=1)
+        #GPIO.add_event_detect(NS_PIN, GPIO.FALLING, callback=self.updateNoise, bouncetime=1000)
         GPIO.setup(led_network, GPIO.OUT)
         GPIO.setup(led_power, GPIO.OUT)
         GPIO.setup(led_counts, GPIO.OUT)
 
-    def updateCount_basic(self, channel=24):
+    def updateCount_basic(self, channel=SIG_PIN):
         now = datetime.datetime.now()
         self.counts.append(now)         # Update datetime List
         print '~~~  COUNT:',now            # Print to screen
         self.blink(pin = self.LEDS['led_counts'], frequency = .01) # Blink count LED (#20)
 
-    """def updateNoise(self,channel=23):
+    """def updateNoise(self,channel=NS_PIN):
         if not self.first_noise:
             #Avoids IndexError from the initialisation issue
             #print 'updateNoise - ', str(datetime.datetime.now())
@@ -66,9 +66,9 @@ class Dosimeter:
             self.first_noise = False
             print '\t~~ Haven\'t got any noise yet ~~'"""
 
-    """def updateCount(self,channel=24):
+    """def updateCount(self,channel=SIG_PIN):
         GPIO.setmode(GPIO.BCM)
-        #noiseInput = GPIO.input(23)
+        #noiseInput = GPIO.input(NS_PIN)
         now = datetime.datetime.now()
         if noiseInput: # == 1/True
             self.noise.append(now)
@@ -199,8 +199,8 @@ if __name__ == "__main__":
     count = 0
     while True:
         try:
-            GPIO.remove_event_detect(24)
-            GPIO.add_event_detect(24, GPIO.FALLING, callback = det.updateCount_basic, bouncetime=1)
+            GPIO.remove_event_detect(SIG_PIN)
+            GPIO.add_event_detect(SIG_PIN, GPIO.FALLING, callback = det.updateCount_basic, bouncetime=1)
             sleep(1)
             cpm, cpm_err = det.getCPM(accumulation_time = MEASURE_TIME)
             print '\t','CPM: ',cpm,u'±',cpm_err,'\n'
