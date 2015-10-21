@@ -20,7 +20,7 @@ case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
-    sudo tmux new-session -s dosenet python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
+    sudo tmux -d new-session -s dosenet 'python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY'
     date >> $LOG
     ;;
   stop)
