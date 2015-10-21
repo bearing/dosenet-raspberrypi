@@ -47,7 +47,7 @@ class Sender:
         self.LEDS = dict(led_network = self.led_network,
                         led_power = self.led_power,
                         led_counts = self.led_counts)
-        self.public_key = args.public_key
+        self.public_key = self.args.public_key
         print 'PUBLIC KEY!'
         print '    ' + self.public_key
         if self.args.test:
