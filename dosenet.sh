@@ -12,6 +12,7 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 CONFIGFILE=$DOSENET/config.csv
+PUBLICKEY=$DOSENET/id_rsa_lbl.pub
 LOG=/home/pi/sender.log
 echo "DoseNet script called @ " > $LOG
 date >> $LOG
@@ -19,7 +20,7 @@ case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
-    sudo tmux new -s dosenet\; python $DOSENET/udp_sender.py -f $CONFIGFILE
+    sudo tmux new-session -s dosenet python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
     date >> $LOG
     ;;
   stop)

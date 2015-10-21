@@ -37,6 +37,8 @@ class Sender:
             help='\n\t The BCM pin number of the + end of the networking LED - pings berkeley.edu\n')
                                        # nargs='?' means 0-or-1 arguments
         parser.add_argument('--ip',nargs=1,required=False,type=str)
+        parser.add_argument('--public_key', type=str,
+                            default='/home/pi/dosenet-raspberrypi/id_rsa_lbl.pub')
         self.args = parser.parse_args()
         self.file_path = self.args.filename
         self.led_network = self.args.led_network
@@ -45,6 +47,9 @@ class Sender:
         self.LEDS = dict(led_network = self.led_network,
                         led_power = self.led_power,
                         led_counts = self.led_counts)
+        self.public_key = args.public_key
+        print 'PUBLIC KEY!'
+        print '    ' + self.public_key
         if self.args.test:
             print 'LED pins (BCM): ', self.LEDS
 
@@ -89,8 +94,7 @@ class Sender:
         self.msg_hash =  csv[0]['message_hash']
 
     def initVariables(self):
-        public_key = ['/home/pi/dosenet/ssh_keys/id_rsa_lbl.pub']
-        self.pe = ccrypt.public_d_encrypt(key_file_lst = public_key)
+        self.pe = ccrypt.public_d_encrypt(key_file_lst=[self.public_key])
         self.IP = 'dosenet.dhcp.lbl.gov'
         self.port = 5005
         if self.args.ip:
