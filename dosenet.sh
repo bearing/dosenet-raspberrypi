@@ -16,6 +16,7 @@ CONFIGFILE=$DOSENET/config.csv
 if [ ! -f $CONFIGFILE ]
 then
   # no config file. exit with a user-defined exit code, 64
+  echo "Config file $CONFIGFILE not found! Aborting  "
   exit 64
 fi
 
@@ -23,6 +24,7 @@ PUBLICKEY=$DOSENET/id_rsa_lbl.pub
 if [ ! -f $PUBLICKEY ]
 then
   # no publickey. exit with a user-defined exit code, 65
+  echo "Public key file  $PUBLICKEY not found! Aborting  "
   exit 65
 fi
 
