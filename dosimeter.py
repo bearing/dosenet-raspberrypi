@@ -28,6 +28,7 @@ NS_PIN = 4
 # Note: GPIO.LOW  - 0V
 #       GPIO.HIGH - 3.3V or 5V ???? (RPi rail voltage)
 
+
 class Dosimeter:
     def __init__(self, led_network=20, led_power=26, led_counts=21):
         self.LEDS = dict(led_network=led_network,
@@ -36,12 +37,16 @@ class Dosimeter:
         self.counts = []  # Datetime list
         # self.noise  = [] # Datetime list
         start = datetime.datetime.now()
-        # Initialise with the starting time so getCPM doesn't get IndexError - needs a 1 item minimum for [0] to work
+        # Initialise with the starting time so getCPM doesn't get IndexError -
+        #   needs a 1 item minimum for [0] to work
         self.counts.append(start)
 
-        # self.noise.append(start) # Initialise with the starting time so updateCount doesn't get IndexError - needs a 1 item minimum for [-1] to work
+        # self.noise.append(start)
+        # # Initialise with the starting time so updateCount doesn't get
+        # #   IndexError - needs a 1 item minimum for [-1] to work
         # self.microphonics = [] # errorFlag list
-        # self.margin = datetime.timedelta(microseconds = 100000) #100ms milliseconds is not an option
+        # self.margin = datetime.timedelta(microseconds = 100000) # 100ms
+        # # milliseconds is not an option
 
         # Use Broadcom GPIO numbers - GPIO numbering system
         # eg. GPIO NS_PIN > pin 16. Not BOARD numbers, eg. 1, 2 ,3 etc.
@@ -50,8 +55,12 @@ class Dosimeter:
         GPIO.setup(SIG_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         # NS Sets up microphonics detection; Uses pull up resistor on RPi
         # GPIO.setup(NS_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(SIG_PIN, GPIO.FALLING, callback=self.updateCount_basic, bouncetime=1)
-        # GPIO.add_event_detect(NS_PIN, GPIO.FALLING, callback=self.updateNoise, bouncetime=1000)
+        GPIO.add_event_detect(
+            SIG_PIN, GPIO.FALLING,
+            callback=self.updateCount_basic,
+            bouncetime=1)
+        # GPIO.add_event_detect(
+        #     NS_PIN, GPIO.FALLING, callback=self.updateNoise, bouncetime=1000)
         GPIO.setup(led_network, GPIO.OUT)
         GPIO.setup(led_power, GPIO.OUT)
         GPIO.setup(led_counts, GPIO.OUT)
@@ -83,13 +92,15 @@ class Dosimeter:
             print '\t\t\t\t NOISE only'
         elif not noiseInput: # ==0/False
             lastNoise = self.noise[-1] # Last datetime object in the noise list
-            # Checks to see if microphonics detected within a 200ms window before deciding whether to change the
+            # Checks to see if microphonics detected within a 200ms window
+            #   before deciding whether to change the
             # errorFlag to 'microphonics was HIGH' or leave as default
             if not (now - self.margin) <= lastNoise <= (now + self.margin):
                 print '. #', int(self.getCount())
                 self.counts.append(now) # Stores counts as a list of datetimes
                 self.blink()
-                self.microphonics.append(False) # errorFlag = False by default (no errror registered)
+                # errorFlag = False by default (no error registered)
+                self.microphonics.append(False)
                 # Remove later
                 cpm, err = self.getCPM(); print cpm
             else:
