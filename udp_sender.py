@@ -128,9 +128,8 @@ class Sender:
         GPIO.output(self.led_power, False)
         GPIO.cleanup()
 
-    def getAndSendData(self, det, sleep_time=300):
-        cpm, cpm_error = det.getCPM(accumulation_time=sleep_time)
-        count = det.getCount()
+    def getAndSendData(self, det, startTime, endTime):
+        count, cpm, cpm_error = det.getCPM(startTime, endTime)
         print 'Count: ', count, ' - CPM: ', cpm, '+/-', cpm_error
         # Only run the next segment after the warm-up phase
         if len(det.counts) > 1:
@@ -139,7 +138,7 @@ class Sender:
     def sendData(self, cpm, cpm_error, error_code=0):
         # Default 'working' state - error code 0
         c = ','
-        now = datetime.datetime.now()
+        now = datetime.datetime.now()   # only used in test block below
         package = (str(self.msg_hash) + c +
                    str(self.stationID) + c +
                    str(cpm) + c +
@@ -161,11 +160,19 @@ class Sender:
 
     def main(self):
         # Initialise dosimeter object from dosimeter.py
-        det = Dosimeter(**self.LEDS)
+        det = Dosimeter(max_accumulation_time_sec=3600, **self.LEDS)
         det.activatePin(self.led_power)
         sleep_time = 300
+        dt = datetime.timedelta(seconds=sleep_time)
         if self.args.test:
             sleep_time = 10  # seconds
+
+        # now we are keeping track of our accumulation time intervals
+        #   in this block, not in Dosimeter
+        curStart = datetime.datetime.now()
+        curEnd = curStart + dt
+        timeCheckFactor = 4
+
         while True:
             # Run until error or KeyboardInterrupt (Ctrl + C)
             p = Process(target=det.ping, args=(self.led_network,))
@@ -177,8 +184,16 @@ class Sender:
             GPIO.add_event_detect(
                 SIG_PIN, GPIO.FALLING, callback=det.updateCount_basic,
                 bouncetime=1)
-            sleep(sleep_time)
-            self.getAndSendData(det=det, sleep_time=sleep_time)  # time in sec
+            while datetime.datetime.now() < curEnd:
+                # Wait until the accumulation time interval is up
+                # If timeCheckFactor==1, then the intervals of the while True
+                #   loop would slowly get out of sync with the start/end times,
+                #   due to the additional processing time for commands before
+                #   and after the sleep command.
+                sleep(sleep_time / timeCheckFactor)
+            self.getAndSendData(det, curStart, curEnd)  # time in sec
+            curStart = curEnd + datetime.timedelta(seconds=0)   # copy
+            curEnd = curEnd + dt
 
 if __name__ == "__main__":
     sen = Sender()

@@ -18,9 +18,19 @@ import datetime
 from time import sleep
 import os
 import email_message
+import collections
+# collections.deque object allows fast popping from left side
 
 SIG_PIN = 17
 NS_PIN = 4
+
+# Count seconds from the year 1970
+# This is like Unix time, but without handling time zones.
+# *** If times from a different clock or time zone are passed into Dosimeter,
+#   there would be problems....
+# So even if the RPi is in some weird state where it thinks its the 1990s...
+#   it will still work because everything is a relative measure of seconds.
+EPOCH_START_TIME = datetime.datetime(year=2000)
 
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
@@ -30,16 +40,25 @@ NS_PIN = 4
 
 
 class Dosimeter:
-    def __init__(self, led_network=20, led_power=26, led_counts=21):
+    def __init__(self, led_network=20, led_power=26, led_counts=21,
+                 max_accumulation_time_sec=3600):
+
         self.LEDS = dict(led_network=led_network,
                          led_power=led_power,
                          led_counts=led_counts)
-        self.counts = []  # Datetime list
+        self.counts = collections.deque([])  # Datetime queue
         # self.noise  = [] # Datetime list
-        start = datetime.datetime.now()
-        # Initialise with the starting time so getCPM doesn't get IndexError -
-        #   needs a 1 item minimum for [0] to work
-        self.counts.append(start)
+
+        # [BCP] now accumulation time is handled outside of Dosimeter.
+        #       Dosimeter just keeps all counts within the last
+        #       maxAccumulationTime
+        self.maxAccumulationTime = datetime.timedelta(
+            seconds=max_accumulation_time_sec)
+
+        # start = datetime.datetime.now()
+        # # Initialise with the starting time so getCPM doesn't get IndexError-
+        # #   needs a 1 item minimum for [0] to work
+        # self.counts.append(start)
 
         # self.noise.append(start)
         # # Initialise with the starting time so updateCount doesn't get
@@ -67,8 +86,12 @@ class Dosimeter:
 
     def updateCount_basic(self, channel=SIG_PIN):
         now = datetime.datetime.now()
+        # TODO: put datetimes in one queue,
+        #  and let the main (non-interrupt) thread handle converting them
+        #  in a 'flush' operation.
+        timeFloat = (now - EPOCH_START_TIME).total_seconds()
         # Update datetime List
-        self.counts.append(now)
+        self.counts.append(timeFloat)
         print '~~~  COUNT:', now
         # Blink count LED (#20)
         self.blink(pin=self.LEDS['led_counts'], frequency=0.01)
@@ -114,54 +137,76 @@ class Dosimeter:
         else:
             print '\n\t\t\t NS was not GPIO.HIGH or GPIO.LOW'"""
 
-    def countsToArr(self):
-        self.counts = np.array(self.counts, dtype='M8[us]')
+    # def countsToArr(self):
+    #     self.counts = np.array(self.counts, dtype='M8[us]')
+    #
+    # def countsToList(self):
+    #     self.counts = self.counts.tolist()
 
-    def countsToList(self):
-        self.counts = self.counts.tolist()
+    def resetCounts(self, refTime):
+        # refTime should be "now"
+        # counts before (refTime - maxAccumulationTime) get removed
 
-    def resetCounts(self, seconds=300):
-        try:
-            self.countsToArr()
-        except Exception as e:
-            print '~~ Error: could not convert to array. ~~'
-            print str(e)
-        try:
-            """Saves only the last number of seconds of events
-            Moving window
-            Will lead to exponential decay behaviour...
-            Change to fixed window scheme?"""
-            # print 'Last count: ', self.counts[-1]
-            # print 'All counts: ', self.counts
-            # Courtesy of Joey
-            self.counts = self.counts[self.counts > self.counts[-1] -
-                                      np.timedelta64(seconds, 's')]
-        except Exception as e:
-            print '~~ Error: Could not clip counts. ~~'
-            print str(e)
-        try:
-            self.countsToList()
-        except Exception as e:
-            print '~~ Error: Could not convert to list. ~~'
-            print str(e)
+        # try:
+        #     self.countsToArr()
+        # except Exception as e:
+        #     print '~~ Error: could not convert to array. ~~'
+        #     print str(e)
+
+        if len(self.counts) == 0:
+            # nothing to do, and "while self.counts[0]" will error
+            return
+        while self.counts[0] < (refTime - self.maxAccumulationTime):
+            self.counts.popleft()
+
+        # try:
+        #     """Saves only the last number of seconds of events
+        #     Moving window
+        #     Will lead to exponential decay behaviour...
+        #     Change to fixed window scheme?"""
+        #     # print 'Last count: ', self.counts[-1]
+        #     # print 'All counts: ', self.counts
+        #     # Courtesy of Joey
+        #     self.counts = self.counts[self.counts > self.counts[-1] -
+        #                               np.timedelta64(seconds, 's')]
+        # except Exception as e:
+        #     print '~~ Error: Could not clip counts. ~~'
+        #     print str(e)
+
+        # try:
+        #     self.countsToList()
+        # except Exception as e:
+        #     print '~~ Error: Could not convert to list. ~~'
+        #     print str(e)
 
     def getCount(self):
         return float(len(self.counts))
 
-    def getCPM(self, accumulation_time=300):
-        now = datetime.datetime.now()
-        count = self.getCount()
-        if count < 2:
-            return 0, 0
+    def getCPM(self, startTime, endTime):
+        startTimeFloat = (startTime - EPOCH_START_TIME).total_seconds()
+        endTimeFloat = (endTime - EPOCH_START_TIME).total_seconds()
+        # now = datetime.datetime.now()
+        # count = self.getCount()
+        # if count < 2:
+        #     return 0, 0
+
+        # convert to np.ndarray in order to perform elementwise logic
+        countsArray = np.array(self.counts)
+        count = np.sum(np.logical_and(
+            countsArray > startTimeFloat, countsArray < endTimeFloat))
         count_err = np.sqrt(count)
-        counting_time = (now - self.counts[0]).total_seconds()
-        cpm = count / counting_time * 60
-        cpm_err = count_err / counting_time * 60
-        # Default last 5 minutes of counts
-        if(counting_time > accumulation_time):
-            print '\n\t\t ~~~~ RESET ~~~~\n'
-            self.resetCounts(seconds=accumulation_time)
-        return cpm, cpm_err
+        countingTime_sec = endTimeFloat - startTimeFloat  # already in seconds
+        # counting_time = (now - self.counts[0]).total_seconds()
+        if countingTime_sec > 0:
+            cpm = count / countingTime_sec * 60
+            cpm_err = count_err / countingTime_sec * 60
+        else:
+            cpm, cpm_err = 0, 0
+        # # Default last 5 minutes of counts
+        # if(counting_time > accumulation_time):
+        #     print '\n\t\t ~~~~ RESET ~~~~\n'
+        #     self.resetCounts(seconds=accumulation_time)
+        return count, cpm, cpm_err
 
     def ping(self, pin=20, hostname='dosenet.dhcp.lbl.gov'):
         response = os.system('ping -c 1 ' + str(hostname) + '> /dev/null')
@@ -210,6 +255,9 @@ class Dosimeter:
         GPIO.cleanup()
 
 if __name__ == "__main__":
+
+    # *** must rewrite test code for changes in GetCPM and everything
+
     det = Dosimeter()
     response = det.ping()
     print 'Ping DoseNet server test: ', response
