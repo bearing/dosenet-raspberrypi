@@ -132,7 +132,8 @@ class Sender:
         count, cpm, cpm_error = det.getCPM(startTime, endTime)
         now = datetime.datetime.now()
         print (now.ctime() + ': ' +
-               str(count) + 'cts, ' + cpm + ' +/- ' + cpm_error + ' cpm ' +
+               str(count) + 'cts, ' + str(cpm) +
+               ' +/- ' + str(cpm_error) + ' cpm ' +
                '(' + startTime.ctime() + ' to ' + endTime.ctime() + ')')
         # Only run the next segment after the warm-up phase
         if len(det.counts) > 1 and not self.args.test:
