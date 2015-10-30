@@ -162,7 +162,7 @@ class Sender:
         # Initialise dosimeter object from dosimeter.py
         det = Dosimeter(max_accumulation_time_sec=3600, **self.LEDS)
         det.activatePin(self.led_power)
-        sleep_time = 300
+        sleep_time = 30
         dt = datetime.timedelta(seconds=sleep_time)
         if self.args.test:
             sleep_time = 10  # seconds
