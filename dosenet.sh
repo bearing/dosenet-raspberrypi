@@ -11,8 +11,8 @@
 ### END INIT INFO
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-
-CONFIGFILE=$HOME/config/config.csv
+CONFIGDIR=$HOME/config
+CONFIGFILE=$CONFIGDIR/config.csv
 if [ ! -f $CONFIGFILE ]
 then
   # no config file. exit with a user-defined exit code, 64
@@ -20,7 +20,7 @@ then
   exit 64
 fi
 
-PUBLICKEY=$DOSENET/id_rsa_lbl.pub
+PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 if [ ! -f $PUBLICKEY ]
 then
   # no publickey. exit with a user-defined exit code, 65
