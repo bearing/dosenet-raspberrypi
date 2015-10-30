@@ -30,7 +30,7 @@ NS_PIN = 4
 #   there would be problems....
 # So even if the RPi is in some weird state where it thinks its the 1990s...
 #   it will still work because everything is a relative measure of seconds.
-EPOCH_START_TIME = datetime.datetime(year=2000)
+EPOCH_START_TIME = datetime.datetime(year=2000, month=1, day=1)
 
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
