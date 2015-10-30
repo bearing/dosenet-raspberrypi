@@ -132,7 +132,8 @@ class Sender:
         count, cpm, cpm_error = det.getCPM(startTime, endTime)
         print 'Count: ', count, ' - CPM: ', cpm, '+/-', cpm_error
         # Only run the next segment after the warm-up phase
-        if len(det.counts) > 1:
+        if len(det.counts) > 1 and not self.args.test:
+            # don't send data in test mode
             self.sendData(cpm=cpm, cpm_error=cpm_error)
 
     def sendData(self, cpm, cpm_error, error_code=0):
@@ -162,7 +163,7 @@ class Sender:
         # Initialise dosimeter object from dosimeter.py
         det = Dosimeter(max_accumulation_time_sec=3600, **self.LEDS)
         det.activatePin(self.led_power)
-        sleep_time = 30
+        sleep_time = 300
         dt = datetime.timedelta(seconds=sleep_time)
         if self.args.test:
             sleep_time = 10  # seconds
