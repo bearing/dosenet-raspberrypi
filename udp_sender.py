@@ -15,6 +15,12 @@ from dosimeter import Dosimeter
 from multiprocessing import Process
 from dosimeter import SIG_PIN, NS_PIN
 
+# ANSI color codes
+ANSI_RESET = '\033[0m'
+ANSI_BOLD = '\033[1m'
+ANSI_YEL = '\033[33m' + ANSI_BOLD
+ANSI_GR = '\033[32m' + ANSI_BOLD
+
 
 class Sender:
     def parseArguments(self):
@@ -131,9 +137,12 @@ class Sender:
     def getAndSendData(self, det, startTime, endTime):
         count, cpm, cpm_error = det.getCPM(startTime, endTime)
         now = datetime.datetime.now()
-        print (now.ctime() + ': ' +
-               str(count) + 'cts, ' + str(cpm) +
-               ' +/- ' + str(cpm_error) + ' cpm ' +
+        count_str = '{:d}'.format(count)
+        cpm_str = '{:.2f}'.format(cpm)
+        cpm_err_str = '{:.2f}'.format(cpm_error)
+        print (now.ctime() + ': ' + ANSI_YEL +
+               count_str + ' cts, ' + ANSI_GR + cpm_str +
+               ' +/- ' + cpm_err_str + ' cpm ' + ANSI_RESET +
                '(' + startTime.ctime() + ' to ' + endTime.ctime() + ')')
         # Only run the next segment after the warm-up phase
         if len(det.counts) > 1 and not self.args.test:
