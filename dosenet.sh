@@ -47,7 +47,7 @@ case "$1" in
   test)
     echo "Testing DoseNet Script" >> $LOG
     echo "Testing DoseNet Script"
-    sudo python $DOSENET/udp_sender.py -f $DOSENET/config-files/$CONFIGFILE --test
+    sudo python $DOSENET/udp_sender.py -f $CONFIGFILE --test
     date >> $LOG
     ;;
   *)
