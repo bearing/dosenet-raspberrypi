@@ -175,7 +175,7 @@ class Sender:
         #   in this block, not in Dosimeter
         curStart = datetime.datetime.now()
         curEnd = curStart + dt
-        timeCheckFactor = 4
+        timeCheckFactor = 30
 
         while True:
             # Run until error or KeyboardInterrupt (Ctrl + C)
