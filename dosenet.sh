@@ -12,7 +12,7 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
-CONFIGFILE=$DOSENET/config.csv
+CONFIGFILE=$HOME/config/config.csv
 if [ ! -f $CONFIGFILE ]
 then
   # no config file. exit with a user-defined exit code, 64
