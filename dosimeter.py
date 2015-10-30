@@ -18,9 +18,19 @@ import datetime
 from time import sleep
 import os
 import email_message
+import collections
+# collections.deque object allows fast popping from left side
 
 SIG_PIN = 17
 NS_PIN = 4
+
+# Count seconds from the year 1970
+# This is like Unix time, but without handling time zones.
+# *** If times from a different clock or time zone are passed into Dosimeter,
+#   there would be problems....
+# So even if the RPi is in some weird state where it thinks its the 1990s...
+#   it will still work because everything is a relative measure of seconds.
+EPOCH_START_TIME = datetime.datetime(year=1970, month=1, day=1)
 
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
@@ -28,131 +38,104 @@ NS_PIN = 4
 # Note: GPIO.LOW  - 0V
 #       GPIO.HIGH - 3.3V or 5V ???? (RPi rail voltage)
 
+
 class Dosimeter:
-    def __init__(self, led_network=20, led_power=26, led_counts=21):
+    """
+    Dosimeter object connects to RPi GPIO and responds to interrupts to record
+    counts. It provides getCPM method but does not handle the accumulation
+    times.
+    """
+
+    def __init__(self, led_network=20, led_power=26, led_counts=21,
+                 max_accumulation_time_sec=3600):
+        """
+        RPi hardware setup: LEDs, signals
+        """
+
         self.LEDS = dict(led_network=led_network,
                          led_power=led_power,
                          led_counts=led_counts)
-        self.counts = []  # Datetime list
-        # self.noise  = [] # Datetime list
-        start = datetime.datetime.now()
-        # Initialise with the starting time so getCPM doesn't get IndexError - needs a 1 item minimum for [0] to work
-        self.counts.append(start)
+        self.counts = collections.deque([])  # Datetime queue
 
-        # self.noise.append(start) # Initialise with the starting time so updateCount doesn't get IndexError - needs a 1 item minimum for [-1] to work
-        # self.microphonics = [] # errorFlag list
-        # self.margin = datetime.timedelta(microseconds = 100000) #100ms milliseconds is not an option
+        # [BCP] now accumulation time is handled outside of Dosimeter.
+        #       Dosimeter just keeps all counts within the last
+        #       maxAccumulationTime
+        self.maxAccumulationTime = datetime.timedelta(
+            seconds=max_accumulation_time_sec)
 
         # Use Broadcom GPIO numbers - GPIO numbering system
         # eg. GPIO NS_PIN > pin 16. Not BOARD numbers, eg. 1, 2 ,3 etc.
         GPIO.setmode(GPIO.BCM)
         # SIG Sets up radiation detection; Uses pull up resistor on RPi
         GPIO.setup(SIG_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        # NS Sets up microphonics detection; Uses pull up resistor on RPi
-        # GPIO.setup(NS_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(SIG_PIN, GPIO.FALLING, callback=self.updateCount_basic, bouncetime=1)
-        # GPIO.add_event_detect(NS_PIN, GPIO.FALLING, callback=self.updateNoise, bouncetime=1000)
+        GPIO.add_event_detect(
+            SIG_PIN, GPIO.FALLING,
+            callback=self.updateCount_basic,
+            bouncetime=1)
         GPIO.setup(led_network, GPIO.OUT)
         GPIO.setup(led_power, GPIO.OUT)
         GPIO.setup(led_counts, GPIO.OUT)
 
     def updateCount_basic(self, channel=SIG_PIN):
+        """
+        Run this as the callback from the detector signal interrupt.
+        Add one count to the list.
+        """
+
         now = datetime.datetime.now()
+        # TODO: put datetimes in one queue,
+        #  and let the main (non-interrupt) thread handle converting them
+        #  in a 'flush' operation.
+        timeFloat = (now - EPOCH_START_TIME).total_seconds()
         # Update datetime List
-        self.counts.append(now)
+        self.counts.append(timeFloat)
         print '~~~  COUNT:', now
         # Blink count LED (#20)
-        self.blink(pin=self.LEDS['led_counts'], frequency=0.01)
+        self.blink(pin=self.LEDS['led_counts'], timeInterval=0.01)
 
-    """def updateNoise(self,channel=NS_PIN):
-        if not self.first_noise:
-            #Avoids IndexError from the initialisation issue
-            #print 'updateNoise - ', str(datetime.datetime.now())
-            self.noise.append(datetime.datetime.now())
-            print '\t\t\t\t NOISE only'
-        else:
-            self.first_noise = False
-            print '\t~~ Haven\'t got any noise yet ~~'"""
+    def resetCounts(self, refTime):
+        """
+        Remove any counts in the queue that are older than maxAccumulationTime.
+        """
+        # refTime should be "now"
+        # counts before (refTime - maxAccumulationTime) get removed
 
-    """def updateCount(self,channel=SIG_PIN):
-        GPIO.setmode(GPIO.BCM)
-        #noiseInput = GPIO.input(NS_PIN)
-        now = datetime.datetime.now()
-        if noiseInput: # == 1/True
-            self.noise.append(now)
-            print '\t\t\t\t NOISE only'
-        elif not noiseInput: # ==0/False
-            lastNoise = self.noise[-1] # Last datetime object in the noise list
-            # Checks to see if microphonics detected within a 200ms window before deciding whether to change the
-            # errorFlag to 'microphonics was HIGH' or leave as default
-            if not (now - self.margin) <= lastNoise <= (now + self.margin):
-                print '. #', int(self.getCount())
-                self.counts.append(now) # Stores counts as a list of datetimes
-                self.blink()
-                self.microphonics.append(False) # errorFlag = False by default (no errror registered)
-                # Remove later
-                cpm, err = self.getCPM(); print cpm
-            else:
-                self.counts.append(now) # Stores counts as a list of datetimes
-                self.blink()
-                self.microphonics.append(True)
-                print 'counts + ** NOISE **'
-                # Remove later
-                cpm, err = self.getCPM(); print cpm
-                # print 'Stop shaking meeeeee'
-        else:
-            print '\n\t\t\t NS was not GPIO.HIGH or GPIO.LOW'"""
+        if len(self.counts) == 0:
+            # nothing to do, and "while self.counts[0]" will error
+            return
+        while self.counts[0] < (refTime - self.maxAccumulationTime):
+            self.counts.popleft()
 
-    def countsToArr(self):
-        self.counts = np.array(self.counts, dtype='M8[us]')
+    def getCPM(self, startTime, endTime):
+        """
+        Calculate the CPM for the time interval between startTime and endTime.
 
-    def countsToList(self):
-        self.counts = self.counts.tolist()
+        If startTime is farther back in time than maxAccumulationTime, this
+        will not be accurate because those counts are already forgotten.
+        """
 
-    def resetCounts(self, seconds=300):
-        try:
-            self.countsToArr()
-        except Exception as e:
-            print '~~ Error: could not convert to array. ~~'
-            print str(e)
-        try:
-            """Saves only the last number of seconds of events
-            Moving window
-            Will lead to exponential decay behaviour...
-            Change to fixed window scheme?"""
-            # print 'Last count: ', self.counts[-1]
-            # print 'All counts: ', self.counts
-            # Courtesy of Joey
-            self.counts = self.counts[self.counts > self.counts[-1] -
-                                      np.timedelta64(seconds, 's')]
-        except Exception as e:
-            print '~~ Error: Could not clip counts. ~~'
-            print str(e)
-        try:
-            self.countsToList()
-        except Exception as e:
-            print '~~ Error: Could not convert to list. ~~'
-            print str(e)
+        startTimeFloat = (startTime - EPOCH_START_TIME).total_seconds()
+        endTimeFloat = (endTime - EPOCH_START_TIME).total_seconds()
 
-    def getCount(self):
-        return float(len(self.counts))
-
-    def getCPM(self, accumulation_time=300):
-        now = datetime.datetime.now()
-        count = self.getCount()
-        if count < 2:
-            return 0, 0
+        # convert to np.ndarray in order to perform elementwise logic
+        countsArray = np.array(self.counts)
+        count = np.sum(np.logical_and(
+            countsArray > startTimeFloat, countsArray < endTimeFloat))
         count_err = np.sqrt(count)
-        counting_time = (now - self.counts[0]).total_seconds()
-        cpm = count / counting_time * 60
-        cpm_err = count_err / counting_time * 60
-        # Default last 5 minutes of counts
-        if(counting_time > accumulation_time):
-            print '\n\t\t ~~~~ RESET ~~~~\n'
-            self.resetCounts(seconds=accumulation_time)
-        return cpm, cpm_err
+        countingTime_sec = endTimeFloat - startTimeFloat  # already in seconds
+        if countingTime_sec > 0:
+            cpm = count / countingTime_sec * 60
+            cpm_err = count_err / countingTime_sec * 60
+        else:
+            cpm, cpm_err = 0, 0
+
+        return count, cpm, cpm_err
 
     def ping(self, pin=20, hostname='dosenet.dhcp.lbl.gov'):
+        """
+        Check whether DoseNet server is up.
+        """
+
         response = os.system('ping -c 1 ' + str(hostname) + '> /dev/null')
         # and then check the response...
         if response == 0:
@@ -161,30 +144,34 @@ class Dosimeter:
             return True
         else:
             print '~ ', hostname, 'is DOWN!'
-            self.blink(pin=pin, frequency=2, number_of_flashes=5)
+            self.blink(pin=pin, timeInterval=2, number_of_flashes=5)
             self.ping()
 
     def activatePin(self, pin):
+        """Set pin output to True/HIGH"""
         GPIO.output(pin, True)
         # print 'Pin ON #:',pin,' - ',datetime.datetime.now()
 
     def deactivatePin(self, pin):
+        """Set pin output to False/LOW"""
         GPIO.output(pin, False)
         # print 'Pin OFF #:',pin,' - ',datetime.datetime.now()
 
     def invertPin(self, pin):
+        """Invert pin output"""
         GPIO.output(pin, not GPIO.input(pin))
 
-    def blink(self, pin=21, frequency=1, number_of_flashes=1):
+    def blink(self, pin=21, timeInterval=1, number_of_flashes=1):
+        """Flash LED at pin on timeInterval, number_of_flashes times"""
         for i in range(0, number_of_flashes):
             # Flash
             print '\t\t * #%s' % pin
             self.deactivatePin(pin)
             sleep(0.005)
             self.activatePin(pin)
-            sleep(frequency / 2)
+            sleep(timeInterval / 2)
             self.deactivatePin(pin)
-            sleep(frequency / 2)
+            sleep(timeInterval / 2)
 
     def __del__(self):
         print ('Dosimeter object just died - __del__')
@@ -199,6 +186,11 @@ class Dosimeter:
         GPIO.cleanup()
 
 if __name__ == "__main__":
+    """
+    Test code is currently broken!
+    """
+    # TODO: rewrite this test code for Brian's changes
+
     det = Dosimeter()
     response = det.ping()
     print 'Ping DoseNet server test: ', response
