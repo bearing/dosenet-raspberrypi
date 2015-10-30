@@ -164,10 +164,10 @@ class Sender:
         det = Dosimeter(max_accumulation_time_sec=3600, **self.LEDS)
         det.activatePin(self.led_power)
         sleep_time = 300
-        dt = datetime.timedelta(seconds=sleep_time)
         if self.args.test:
             sleep_time = 10  # seconds
-
+        dt = datetime.timedelta(seconds=sleep_time)
+        
         # now we are keeping track of our accumulation time intervals
         #   in this block, not in Dosimeter
         curStart = datetime.datetime.now()
