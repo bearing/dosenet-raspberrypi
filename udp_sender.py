@@ -1,29 +1,27 @@
 #!/home/pi/miniconda/bin/python
 # -*- coding: utf-8 -*-
 ##########################
-## Run on Raspberry Pis ##
+#  Run on Raspberry Pis  #
 ##########################
 
-import numpy as np
 import socket
 import datetime
-import time
 from time import sleep
 import cust_crypt as ccrypt
-import os
 import csv
-import sys
 import argparse
 import RPi.GPIO as GPIO
 from dosimeter import Dosimeter
-import subprocess
 from multiprocessing import Process
-import email_message
 from dosimeter import SIG_PIN, NS_PIN
 
 
 class Sender:
     def parseArguments(self):
+        """
+        Parse command-line arguments to udp_sender.
+        """
+
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--test', '-t', action='store_true',
@@ -65,6 +63,9 @@ class Sender:
             print 'LED pins (BCM): ', self.LEDS
 
     def getContents(self, file_path):
+        """
+        Return content of csv file as list of dicts
+        """
         content = []  # list()
         with open(file_path, 'r') as csvfile:
             csvfile.seek(0)
@@ -101,7 +102,6 @@ class Sender:
                 print ('~~~~~ ERROR: Getting the CSV file contents failed ' +
                        '~~~~~\n')
                 raise e
-                sys.exit(0)
 
     def getDatafromCSV(self):
         # Load from config files
@@ -167,7 +167,7 @@ class Sender:
         if self.args.test:
             sleep_time = 10  # seconds
         dt = datetime.timedelta(seconds=sleep_time)
-        
+
         # now we are keeping track of our accumulation time intervals
         #   in this block, not in Dosimeter
         curStart = datetime.datetime.now()

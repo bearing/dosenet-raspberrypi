@@ -9,6 +9,8 @@
 # X-Interactive: false
 # Short-Description: DoseNet - sends UDP packets to the GRIM for the DoseNet project
 ### END INIT INFO
+
+# setup paths and check config files
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
@@ -31,10 +33,12 @@ fi
 LOG=/home/pi/sender.log
 echo "DoseNet script called @ " > $LOG
 date >> $LOG
+
 case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
+    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
     date >> $LOG
     ;;
