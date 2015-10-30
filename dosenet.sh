@@ -35,7 +35,7 @@ case "$1" in
   start)
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
-    sudo screen python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
+    sudo screen -dm python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
     date >> $LOG
     ;;
   stop)
