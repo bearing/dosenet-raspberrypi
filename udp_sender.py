@@ -43,7 +43,7 @@ class Sender:
             '--led_counts', nargs='?', required=False, type=int, default=21,
             help='\n\t The BCM pin number of the + end of the count LED\n')
         parser.add_argument(
-            '--led_power', nargs='?', required=False, type=int, default=26,
+            '--led_power', nargs='?', required=False, type=int, default=19,
             help='\n\t The BCM pin number of the + end of the power LED\n')
         parser.add_argument(
             '--led_network', nargs='?', required=False, type=int, default=20,
