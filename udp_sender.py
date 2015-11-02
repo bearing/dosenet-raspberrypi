@@ -178,7 +178,7 @@ class Sender:
         det.activatePin(self.led_power)
         sleep_time = 300
         if self.args.test:
-            sleep_time = 10  # seconds
+            sleep_time = 30  # seconds
         dt = datetime.timedelta(seconds=sleep_time)
 
         # now we are keeping track of our accumulation time intervals
