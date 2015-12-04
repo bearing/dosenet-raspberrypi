@@ -8,8 +8,10 @@
 DOSENETPATH=$HOME/gh/dosenet-raspberrypi
 cd $DOSENETPATH
 echo "Doing a git pull..."
-git pull origin master
+# the git pull must be performed by normal user (pi)
+sudo -u pi git pull origin master
 
 echo " "
-echo "Rebooting in 5..."
-sudo shutdown -r 5
+echo "Rebooting now..."
+# the shutdown must be performed by superuser
+sudo shutdown -r now
