@@ -5,11 +5,11 @@
 # Pull the latest master branch of dosenet-raspberrypi
 # Then reboot the computer
 
-DOSENETPATH=$HOME/gh/dosenet-raspberrypi
+DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
 echo "Doing a git pull..."
 # the git pull must be performed by normal user (pi)
-sudo -u pi git pull origin master
+sudo -u pi git pull --ff-only
 
 echo " "
 echo "Rebooting now..."
