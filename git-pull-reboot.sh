@@ -11,6 +11,7 @@ echo "Doing a git pull..."
 # the git pull must be performed by normal user (pi)
 sudo -u pi git pull --ff-only
 
+sleep 300
 echo " "
 echo "Rebooting now..."
 # the shutdown must be performed by superuser
