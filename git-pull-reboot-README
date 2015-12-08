@@ -19,4 +19,4 @@ $ sudo ln -s /home/pi/dosenet-raspberrypi/git-pull-reboot.sh /usr/local/bin/git-
 $ sudo crontab -e
 
 and add the following line:
-*/5 * * * * git-pull-reboot.sh
+0 0 * * * git-pull-reboot.sh
