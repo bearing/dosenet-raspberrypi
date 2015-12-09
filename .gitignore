@@ -1,3 +1,4 @@
 config.csv
 *.pyc
 *.pub
+*.log

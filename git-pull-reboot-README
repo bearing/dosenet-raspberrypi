@@ -1,0 +1,19 @@
+To add to RPi disk image:
+
+1. vim... for Brian for all future work... pleeeease
+
+$ sudo apt-get install vim
+
+2. Crontab
+
+$ sudo crontab -e
+
+and add the following line:
+0 8 * * * /home/pi/dosenet-raspberrypi/git-pull-reboot.sh
+
+3. (possibly) Better NTP servers.
+
+$ sudo nano /etc/ntp.conf
+
+In the existing config, the four servers are #.debian.pool.ntp.org iburst
+Remove the "debian" so that it is just #.pool.ntp.org iburst
