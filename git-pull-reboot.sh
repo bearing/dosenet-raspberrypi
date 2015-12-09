@@ -7,12 +7,10 @@
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
-echo "Doing a git pull..."
+logger -s -t dosenet git-pull-reboot.sh is doing a git pull...
 # the git pull must be performed by normal user (pi)
 sudo -u pi git pull --ff-only
 
-sleep 300
-echo " "
-echo "Rebooting now..."
+logger -s -t dosenet git-pull-reboot.sh is rebooting now
 # the shutdown must be performed by superuser
 sudo shutdown -r now
