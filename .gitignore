@@ -1,1 +1,3 @@
 config.csv
+*.pyc
+*.log
