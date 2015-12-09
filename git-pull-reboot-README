@@ -1,22 +1,12 @@
 Commands to set up the git-pull-reboot.sh script and crontab
 
-# vim... for Brian... pleeeease
+1. vim... for Brian for all future work... pleeeease
+
 $ sudo apt-get install vim
-
-# Never mind this one...
-# 1. In order for git pull to work, the local git repo must be configured with
-#    a username and email.
-#
-# $ git config --global user.name "Anonymous Pi"
-# $ git config --global user.email "ucbdosenet@gmail.com"
-
-1. Symlink
-
-$ sudo ln -s /home/pi/dosenet-raspberrypi/git-pull-reboot.sh /usr/local/bin/git-pull-reboot.sh
 
 2. Crontab
 
 $ sudo crontab -e
 
 and add the following line:
-8 0 * * * git-pull-reboot.sh
+0 8 * * * /home/pi/dosenet-raspberrypi/git-pull-reboot.sh
