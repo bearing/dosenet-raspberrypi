@@ -175,6 +175,10 @@ class Dosimeter(object):
         print('Deleting Dosimeter instance {}'.format(self))
         self.cleanup()
 
+    def __enter__(self):
+        # required for using in 'with'
+        pass
+
     def __exit__(self):
         print('Exiting Dosimeter instance {}'.format(self))
         self.cleanup()
