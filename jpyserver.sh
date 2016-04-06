@@ -13,24 +13,24 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
-# make sure webserver environment is configured properly
-echo "checking that error log can write"
-if [ ! -d "/var/log/lighttpd" ]; then
-    sudo mkdir /var/log/lighttpd
-    sudo chown -R www-data /var/log/lighttpd
-fi
-
 LOG=$HOME/jpyserver.log
 JLOG=$HOME/jupyter.log
 
 case "$1" in
   start)
+	# make sure webserver environment is configured properly
+	echo "checking that error log can write" >> $LOG
+	if [ ! -d "/var/log/lighttpd" ]; then
+	    sudo mkdir /var/log/lighttpd
+	    sudo chown -R www-data /var/log/lighttpd
+	fi
     echo "Starting web-server" >> $LOG
     echo "Starting web-server"
     sudo /etc/init.d/lighttpd start
     echo "Starting jupyter notebook" >> $LOG
     echo "Starting jupyter notebook"
-    screen -dm jupyter notebook
+    cd $HOME/dosenet-analysis
+    jupyter notebook >& $JLOG &
     date >> $LOG
     ;;
   stop)
