@@ -158,6 +158,17 @@ class Dosimeter(object):
     def reset_GPIO(self):
         pass
 
+    def cleanup(self):
+        GPIO.cleanup()
+
+    def __del__(self):
+        print('Deleting Dosimeter instance {}'.format(self))
+        self.cleanup()
+
+    def __exit__(self):
+        print('Exiting Dosimeter instance {}'.format(self))
+        self.cleanup()
+
 
 class LED(object):
     """
