@@ -130,7 +130,8 @@ class NetworkStatus(object):
                  network_led=None,
                  verbosity=1):
         self.hostname = hostname
-        self.interval_s = interval_s
+        self.up_interval_s = up_interval_s
+        self.down_interval_s = down_interval_s
         self.led = network_led
         self.blink_period_s = 1.5
         self.v = verbosity
