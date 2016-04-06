@@ -1,5 +1,5 @@
 #! /bin/sh
-# /etc/init.d/localweb.sh
+# /etc/init.d/jpyserver.sh
 ### BEGIN INIT INFO
 # Provides: jpyserver
 # Required-Start: $all
@@ -45,7 +45,7 @@ case "$1" in
     date >> $LOG
     ;;
   *)
-    echo "Usage: /etc/init.d/jpyserver {start|test|stop}"
+    echo "Usage: /etc/init.d/jpyserver.sh {start|test|stop}"
     exit 1
     ;;
 esac
