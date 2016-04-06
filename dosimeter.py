@@ -71,8 +71,10 @@ class DosimeterTimer(object):
 
         self.power_LED.on()
         self.dosimeter = Dosimeter(counts_LED=self.counts_LED)
+        self.network_up = NetworkStatus()
 
         self.DT = time_interval_s
+        # TODO: standardize all these timedeltas and floats in a nice way
         self.running = False
 
     def start(self):
@@ -93,6 +95,83 @@ class DosimeterTimer(object):
     def stop(self):
         """Stop counting time."""
         self.running = False
+
+
+class NetworkStatus(object):
+    """
+    Keep track of network status.
+
+    Inputs:
+      hostname='dosenet.dhcp.lbl.gov'
+        hostname to ping
+      up_interval_s=300
+        this is the interval between pings, if the network was up
+      down_interval_s=5
+        this is the interval between pings, if the network was down
+      network_led=None
+        an instance of LED class
+      verbosity=1
+        verbosity 0: nothing printed
+        verbosity 1: only network down printed
+        verbosity 2: always printed
+
+    Output:
+      use the __bool__() function
+      e.g.:
+      ns = NetworkStatus()
+      if ns:
+          # network is up
+    """
+
+    def __init__(self,
+                 hostname='dosenet.dhcp.lbl.gov',
+                 up_interval_s=300,
+                 down_interval_s=5,
+                 network_led=None,
+                 verbosity=1):
+        self.hostname = hostname
+        self.interval_s = interval_s
+        self.led = network_led
+        self.blink_period_s = 1.5
+        self.v = verbosity
+
+        self.is_up = False
+
+        self._p = multiprocessing.Process(target=self._do_pings)
+        self._p.start()
+
+    def update(self):
+        """Update network status"""
+
+        response = self._ping()
+        if response == 0:
+            self.is_up = True
+            if self.led.blinker:
+                self.led.stop_blink()
+            self.led.on()
+            if self.v > 1:
+                print('  {} is UP'.format(self.server))
+        else:
+            self.is_up = False
+            self.led.start_blink(interval=self.blink_period_s)
+            if self.v > 0:
+                print('  {} is DOWN!'.format(self.server))
+
+    def _do_pings(self):
+        """Runs forever - only call as a subprocess"""
+        while True:
+            self.update()
+            if self:
+                sleep(self.up_interval_s)
+            else:
+                sleep(self.down_interval_s)
+
+    def _ping(self):
+        """one ping"""
+        return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
+
+    def __bool__(self):
+        return self.is_up
 
 
 class Dosimeter(object):
@@ -163,7 +242,9 @@ class Dosimeter(object):
             self.counts.popleft()
 
     def reset_GPIO(self):
-        """(Older code does this every loop)"""
+        """
+        Older code does this every loop. I don't know whether it's needed.
+        """
         GPIO.remove_event_detect(SIGNAL_PIN)
         self.add_interrupt()
 
@@ -370,12 +451,10 @@ def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
     wait_time_s = (end_time_s - now_float())
     print('  Accumulation test; waiting another {} s'.format(wait_time_s))
     sleep(wait_time_s)
-    print('    {}'.format(d.counts))
     # get_all_counts() calls check_accumulation(), so don't use it here
     n = len(d.counts)
 
     d.check_accumulation()
-    print('    {}'.format(d.get_all_counts()))
     # the first count ought to be removed now
     assert len(d.get_all_counts()) < n
     # also make sure there are no counts within accum time
