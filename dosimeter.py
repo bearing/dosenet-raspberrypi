@@ -116,14 +116,20 @@ class Dosimeter(object):
         # use Broadcom GPIO numbering
         GPIO.setmode(GPIO.BCM)
         # set up signal pin
-        GPIO.setup(SIG_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(
-            SIG_PIN, GPIO.FALLING,
+            SIGNAL_PIN, GPIO.FALLING,
             callback=self.count,
             bouncetime=1)
 
-    def count(self):
+    def count(self, *args, **kwargs):
         """Add one count to queue. (Callback for GPIO pin)"""
+
+        # debug
+        print('args:')
+        print(args)
+        print('kwargs:')
+        print(kwargs)
 
         # add to queue
         now = datetime.datetime.now()
