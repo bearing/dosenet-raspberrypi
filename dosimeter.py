@@ -122,14 +122,12 @@ class Dosimeter(object):
             callback=self.count,
             bouncetime=1)
 
-    def count(self, *args, **kwargs):
-        """Add one count to queue. (Callback for GPIO pin)"""
+    def count(self, pin=SIGNAL_PIN):
+        """
+        Add one count to queue. (Callback for GPIO pin)
 
-        # debug
-        print('args:')
-        print(args)
-        print('kwargs:')
-        print(kwargs)
+        pin argument is automatically supplied by GPIO.add_event_detect
+        """
 
         # add to queue
         now = datetime.datetime.now()
