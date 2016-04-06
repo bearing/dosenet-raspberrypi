@@ -155,10 +155,12 @@ class Dosimeter(object):
     def check_accumulation(self):
         """Remove counts that are older than accum_time"""
 
-        if self.counts:
-            while self.counts[0] < time_float(
+        while self.counts:      # gotta make sure it's not an empty queue
+            if self.counts[0] > time_float(
                     datetime.datetime.now() - self.accum_time):
-                self.counts.popleft()
+                # done
+                break
+            self.counts.popleft()
 
     def reset_GPIO(self):
         """(Older code does this every loop)"""
