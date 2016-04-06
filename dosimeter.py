@@ -156,7 +156,8 @@ class Dosimeter(object):
         """Remove counts that are older than accum_time"""
 
         if self.counts:
-            while self.counts[0] < (now_float() - self.accum_time):
+            while self.counts[0] < time_float(
+                    datetime.datetime.now() - self.accum_time):
                 self.counts.popleft()
 
     def reset_GPIO(self):
