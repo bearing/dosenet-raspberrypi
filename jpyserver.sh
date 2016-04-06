@@ -30,7 +30,7 @@ case "$1" in
     echo "Starting jupyter notebook" >> $LOG
     echo "Starting jupyter notebook"
     cd $HOME/dosenet-analysis
-    jupyter notebook >& $JLOG &
+    screen -dm jupyter notebook
     date >> $LOG
     ;;
   stop)
