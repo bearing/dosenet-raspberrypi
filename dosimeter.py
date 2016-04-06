@@ -117,6 +117,12 @@ class Dosimeter(object):
         GPIO.setmode(GPIO.BCM)
         # set up signal pin
         GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        self.add_interrupt()
+
+    def add_interrupt(self):
+        """
+        Setup GPIO for signal. (for initialization and GPIO reset)
+        """
         GPIO.add_event_detect(
             SIGNAL_PIN, GPIO.FALLING,
             callback=self.count,
@@ -131,8 +137,7 @@ class Dosimeter(object):
 
         # add to queue
         now = datetime.datetime.now()
-        time_float = (now - EPOCH_START_TIME).total_seconds()
-        self.counts.append(time_float)
+        self.counts.append(now_float())
 
         # display(s)
         print('\tCount at {}'.format(now))
@@ -156,9 +161,12 @@ class Dosimeter(object):
                 self.counts.popleft()
 
     def reset_GPIO(self):
-        pass
+        """(Older code does this every loop)"""
+        GPIO.remove_event_detect(SIGNAL_PIN)
+        self.add_interrupt()
 
     def cleanup(self):
+        print('Cleaning up GPIO pins')
         GPIO.cleanup()
 
     def __del__(self):
@@ -220,7 +228,7 @@ class LED(object):
             self.blinker.terminate()
             # this is maybe not necessary, but seems safer
         self.blinker = multiprocessing.Process(
-            target=self.do_blink, kwargs={'interval': interval})
+            target=self._do_blink, kwargs={'interval': interval})
         self.blinker.start()
 
     def stop_blink(self):
@@ -229,7 +237,7 @@ class LED(object):
             self.blinker.terminate()
         self.off()
 
-    def do_blink(self, interval=1):
+    def _do_blink(self, interval=1):
         """
         Run this method as a subprocess only!
 
@@ -258,6 +266,109 @@ class ServerSender(object):
     """
 
     pass
+
+
+def time_float(a_datetime):
+    """
+    Return a float indicating number of seconds from EPOCH_START_TIME
+    to the input
+    """
+    return (a_datetime - EPOCH_START_TIME).total_seconds()
+
+
+def now_float():
+    """
+    Return a float indicating number of seconds since EPOCH_START_TIME
+    """
+    return time_float(datetime.datetime.now())
+
+
+def test():
+    """
+    Test suite
+    """
+
+    # Clean up everything in case of bad previous session
+    for pin in (
+            SIGNAL_PIN,
+            NOISE_PIN,
+            NETWORK_LED_PIN,
+            COUNTS_LED_PIN,
+            POWER_LED_PIN):
+        try:
+            GPIO.cleanup(pin)
+        except RuntimeWarning:
+            # 'No channels have been set up yet - nothing to clean up!'
+            pass
+
+    print('Testing LED class...')
+    test_LED()
+
+    print('Testing Dosimeter class. KeyboardInterrupt to skip..')
+    try:
+        test_Dosimeter()
+    except KeyboardInterrupt:
+        print('  Okay, skipping remaining Dosimeter tests!')
+
+
+def test_LED():
+    led = LED(pin=NETWORK_LED_PIN)
+    print('  LED on')
+    led.on()
+    sleep(1)
+    print('  LED off')
+    led.off()
+    sleep(1)
+    print('  LED flash')
+    led.flash()
+    sleep(1)
+    print('  LED start blink')
+    led.start_blink()
+    sleep(5.2)
+    # stop mid-blink. the LED should turn off.
+    print('  LED stop blink')
+    led.stop_blink()
+    sleep(0.5)
+
+
+def test_Dosimeter():
+    test_accum_time = 30
+    print('  Creating Dosimeter with max_accumulation_time_s={}'.format(
+        test_accum_time))
+    d = Dosimeter(max_accumulation_time_s=test_accum_time)
+    print('  Waiting for counts')
+    max_test_time_s = datetime.timedelta(seconds=300)
+    start_time = datetime.datetime.now()
+
+    first_count_time_float = None
+    while datetime.datetime.now() - start_time < max_test_time_s:
+        sleep(10)
+        if d.get_all_counts():
+            first_count_time_float = d.get_all_counts()[0]
+            break
+    else:
+        # "break" skips over this
+        print('    Got no counts in {} seconds! May be a problem.'.format(
+            max_test_time_s.total_seconds()),
+            'Skipping accumulation test')
+    if first_count_time_float:
+        # accumulation test
+        test_Dosimeter_accum(d, first_count_time_float, test_accum_time)
+
+
+def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
+    """ accumulation test """
+    end_time_s = first_count_time_float + test_accum_time + 10
+    wait_time_s = (end_time_s - now_float())
+    print('  Accumulation test; waiting another {} s'.format(wait_time_s))
+    sleep(wait_time_s)
+    n = len(d.get_all_counts())
+
+    d.check_accumulation()
+    # the first count ought to be removed now
+    assert len(d.get_all_counts()) < n
+    # also make sure there are no counts within accum time
+    assert now_float() - d.get_all_counts()[0] < test_accum_time
 
 
 if __name__ == '__main__':
