@@ -366,8 +366,9 @@ def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
     wait_time_s = (end_time_s - now_float())
     print('  Accumulation test; waiting another {} s'.format(wait_time_s))
     sleep(wait_time_s)
-    print('    {}'.format(d.get_all_counts()))
-    n = len(d.get_all_counts())
+    print('    {}'.format(d.counts))
+    # get_all_counts() calls check_accumulation(), so don't use it here
+    n = len(d.counts)
 
     d.check_accumulation()
     print('    {}'.format(d.get_all_counts()))
