@@ -324,7 +324,7 @@ def test_LED():
     sleep(1)
     print('  LED start blink')
     led.start_blink()
-    sleep(5.2)
+    sleep(3.2)
     # stop mid-blink. the LED should turn off.
     print('  LED stop blink')
     led.stop_blink()
@@ -336,6 +336,8 @@ def test_Dosimeter():
     print('  Creating Dosimeter with max_accumulation_time_s={}'.format(
         test_accum_time))
     d = Dosimeter(max_accumulation_time_s=test_accum_time)
+    print('  Testing check_accumulation() on empty queue')
+    d.check_accumulation()
     print('  Waiting for counts')
     max_test_time_s = datetime.timedelta(seconds=300)
     start_time = datetime.datetime.now()
@@ -358,7 +360,7 @@ def test_Dosimeter():
 
 def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
     """ accumulation test """
-    end_time_s = first_count_time_float + test_accum_time + 10
+    end_time_s = first_count_time_float + test_accum_time + 5
     wait_time_s = (end_time_s - now_float())
     print('  Accumulation test; waiting another {} s'.format(wait_time_s))
     sleep(wait_time_s)
@@ -368,7 +370,8 @@ def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
     # the first count ought to be removed now
     assert len(d.get_all_counts()) < n
     # also make sure there are no counts within accum time
-    assert now_float() - d.get_all_counts()[0] < test_accum_time
+    if d.get_all_counts():
+        assert now_float() - d.get_all_counts()[0] < test_accum_time
 
 
 if __name__ == '__main__':
