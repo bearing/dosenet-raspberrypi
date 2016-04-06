@@ -2,7 +2,12 @@
 # /etc/init.d/localweb.sh
 ### BEGIN INIT INFO
 # Provides: jpyserver
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
 # X-Interactive: false
+# Short-Description: jpyserver - starts a jupyter notebook for students to play with locally
 ### END INIT INFO
 
 HOME=/home/pi
@@ -44,3 +49,5 @@ case "$1" in
     exit 1
     ;;
 esac
+
+exit 0
