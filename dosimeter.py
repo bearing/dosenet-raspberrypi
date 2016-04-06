@@ -193,7 +193,6 @@ class LED(object):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.OUT)
         self.pin = pin
-        self.blinking = False
         self.blinker = None
 
     def on(self):
@@ -220,14 +219,12 @@ class LED(object):
         if self.blinker:
             self.blinker.terminate()
             # this is maybe not necessary, but seems safer
-        self.blinking = True
         self.blinker = multiprocessing.Process(
             target=self.do_blink, kwargs={'interval': interval})
         self.blinker.start()
 
     def stop_blink(self):
         """Switch off the blinking state of the LED"""
-        self.blinking = False
         if self.blinker:
             self.blinker.terminate()
         self.off()
@@ -236,10 +233,10 @@ class LED(object):
         """
         Run this method as a subprocess only!
 
-        It blinks until self.blinking = False.
+        It blinks forever (until terminated).
         """
 
-        while self.blinking:
+        while True:
             self.on()
             sleep(interval / 2.0)
             self.off()
