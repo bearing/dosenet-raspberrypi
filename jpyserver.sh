@@ -30,7 +30,7 @@ case "$1" in
     sudo /etc/init.d/lighttpd start
     echo "Starting jupyter notebook" >> $LOG
     echo "Starting jupyter notebook"
-    jupyter notebook >& $JLOG &
+    screen -dm jupyter notebook
     date >> $LOG
     ;;
   stop)
