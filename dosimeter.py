@@ -228,6 +228,9 @@ class LED(object):
     def stop_blink(self):
         """Switch off the blinking state of the LED"""
         self.blinking = False
+        if self.blinker:
+            self.blinker.terminate()
+        self.off()
 
     def do_blink(self, interval=1):
         """
@@ -241,8 +244,6 @@ class LED(object):
             sleep(interval / 2.0)
             self.off()
             sleep(interval / 2.0)
-        else:
-            self.blinker.terminate()
 
 
 class DataManager(object):
