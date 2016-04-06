@@ -337,27 +337,27 @@ def test_Dosimeter():
     test_accum_time = 30
     print('  Creating Dosimeter with max_accumulation_time_s={}'.format(
         test_accum_time))
-    d = Dosimeter(max_accumulation_time_s=test_accum_time)
-    print('  Testing check_accumulation() on empty queue')
-    d.check_accumulation()
-    print('  Waiting for counts')
-    max_test_time_s = datetime.timedelta(seconds=300)
-    start_time = datetime.datetime.now()
+    with Dosimeter(max_accumulation_time_s=test_accum_time) as d:
+        print('  Testing check_accumulation() on empty queue')
+        d.check_accumulation()
+        print('  Waiting for counts')
+        max_test_time_s = datetime.timedelta(seconds=300)
+        start_time = datetime.datetime.now()
 
-    first_count_time_float = None
-    while datetime.datetime.now() - start_time < max_test_time_s:
-        sleep(10)
-        if d.get_all_counts():
-            first_count_time_float = d.get_all_counts()[0]
-            break
-    else:
-        # "break" skips over this
-        print('    Got no counts in {} seconds! May be a problem.'.format(
-            max_test_time_s.total_seconds()),
-            'Skipping accumulation test')
-    if first_count_time_float:
-        # accumulation test
-        test_Dosimeter_accum(d, first_count_time_float, test_accum_time)
+        first_count_time_float = None
+        while datetime.datetime.now() - start_time < max_test_time_s:
+            sleep(10)
+            if d.get_all_counts():
+                first_count_time_float = d.get_all_counts()[0]
+                break
+        else:
+            # "break" skips over this
+            print('    Got no counts in {} seconds! May be a problem.'.format(
+                max_test_time_s.total_seconds()),
+                'Skipping accumulation test')
+        if first_count_time_float:
+            # accumulation test
+            test_Dosimeter_accum(d, first_count_time_float, test_accum_time)
 
 
 def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
