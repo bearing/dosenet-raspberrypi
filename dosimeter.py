@@ -177,9 +177,9 @@ class Dosimeter(object):
 
     def __enter__(self):
         # required for using in 'with'
-        pass
+        return self
 
-    def __exit__(self):
+    def __exit__(self, *args):
         print('Exiting Dosimeter instance {}'.format(self))
         self.cleanup()
 
