@@ -65,7 +65,9 @@ class DosimeterTimer(object):
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
                  time_interval_s=300,
-                 config_csv_path=None):
+                 config_csv_path=None,
+                 public_key_path=None,
+                 ):
 
         self.network_LED = LED(network_LED_pin)
         self.power_LED = LED(power_LED_pin)
@@ -76,6 +78,12 @@ class DosimeterTimer(object):
             self.config = Config(config_csv_path)
         else:
             print('WARNING: no config file given. Not posting to server')
+
+        if public_key_path:
+            # TODO
+            pass
+        else:
+            pass
 
         self.power_LED.on()
         self.dosimeter = Dosimeter(counts_LED=self.counts_LED)
