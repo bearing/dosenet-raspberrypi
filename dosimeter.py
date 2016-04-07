@@ -147,14 +147,16 @@ class NetworkStatus(object):
         response = self._ping()
         if response == 0:
             self.is_up = True
-            if self.led.blinker:
-                self.led.stop_blink()
-            self.led.on()
+            if self.led:
+                if self.led.blinker:
+                    self.led.stop_blink()
+                self.led.on()
             if self.v > 1:
                 print('  {} is UP'.format(self.server))
         else:
             self.is_up = False
-            self.led.start_blink(interval=self.blink_period_s)
+            if self.led:
+                self.led.start_blink(interval=self.blink_period_s)
             if self.v > 0:
                 print('  {} is DOWN!'.format(self.server))
 
