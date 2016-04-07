@@ -20,6 +20,7 @@ import datetime
 import multiprocessing
 from time import sleep
 import os
+import csv
 import collections
 # collections.deque object allows fast popping from left side
 
@@ -63,15 +64,22 @@ class DosimeterTimer(object):
                  counts_LED_pin=COUNTS_LED_PIN,
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
-                 time_interval_s=300):
+                 time_interval_s=300,
+                 config_csv_path=None):
 
         self.network_LED = LED(network_LED_pin)
         self.power_LED = LED(power_LED_pin)
         self.counts_LED = LED(counts_LED_pin)
 
+        if config_csv_path:
+            # TODO: handle config_csv_path=None as well as IOError here
+            self.config = Config(config_csv_path)
+        else:
+            print('WARNING: no config file given. Not posting to server')
+
         self.power_LED.on()
         self.dosimeter = Dosimeter(counts_LED=self.counts_LED)
-        self.network_up = NetworkStatus()
+        self.network_up = NetworkStatus(network_led=self.network_LED)
 
         self.DT = time_interval_s
         # TODO: standardize all these timedeltas and floats in a nice way
@@ -175,6 +183,27 @@ class NetworkStatus(object):
 
     def __bool__(self):
         return self.is_up
+
+
+class Config(object):
+    """
+    Represents the CSV configuration file.
+    """
+
+    def __init__(self, filename):
+        try:
+            with open(filename, 'rb') as config_file:
+                config_reader = csv.DictReader(config_file)
+                content = config_reader.next()
+        except IOError:
+            print('IOError loading config file.',
+                  'Check filename, path, permissions?')
+            return None
+
+        self.ID = content['stationID']
+        self.hash = content['message_hash']
+        self.lat = content['lat']
+        self.long = content['long']
 
 
 class Dosimeter(object):
