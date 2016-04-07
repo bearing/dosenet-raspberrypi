@@ -91,6 +91,7 @@ class Manager(object):
         self.power_LED.on()
         self.dosimeter = Dosimeter(counts_LED=self.counts_LED)
         self.network_up = NetworkStatus(network_led=self.network_LED)
+        self.sender = ServerSender(self)
 
         self.DT = time_interval_s
         # TODO: standardize all these timedeltas and floats in a nice way
@@ -101,15 +102,22 @@ class Manager(object):
         Start counting time.
 
         This method does NOT return, so run in a subprocess if you
-        want to keep control.
+        want to keep control. However, setting self.running = False will stop.
         """
 
         this_start = datetime.datetime.now()
+        this_end = this_start + self.DT
         self.running = True
 
         while self.running:
-            pass
-            sleep(10)
+            sleeptime = this_end - datetime.datetime.now()
+            sleep(sleeptime)
+            assert datetime.datetime.now() > this_end
+            cpm, cpm_err = self.dosimeter.get_cpm(this_start, this_end)
+            self.sender.send_cpm(cpm, cpm_err)
+
+            this_start = this_end
+            this_end = this_end + self.DT
 
     def stop(self):
         """Stop counting time."""
@@ -260,11 +268,14 @@ class Dosimeter(object):
         # add to queue
         now = datetime.datetime.now()
         self.counts.append(now_float())
+        now2 = datetime.datetime.now()
 
         # display(s)
         print('\tCount at {}'.format(now))
         if self.LED:
             self.LED.flash()
+        print('    Adding count to queue took no more than {} s'.format(
+            (now2 - now).total_seconds()))
 
     def get_all_counts(self):
         """Return the list of all counts"""
@@ -273,6 +284,24 @@ class Dosimeter(object):
 
         # should this be a copy or something? need to be careful
         return self.counts
+
+    def get_cpm(self, start_time, end_time):
+        """Measure the CPM between start_time and end_time."""
+
+        counts = np.array(self.get_all_counts())
+        # np.array(deque) makes a copy of the data.
+        # there could be more optimal ways to pass around the data,
+        #   but it only happens every ~5 minutes anyway.
+        #   just as long as there's no memory issue.
+        n_counts = np.sum(counts > start_time & counts < end_time)
+        err_counts = np.sqrt(n_counts)
+        dt = end_time - start_time
+        cps = n_counts / dt
+        cps_err = err_counts / dt
+        cpm = cps / 60
+        cpm_err = cps_err / 60
+
+        return cpm, cpm_err
 
     def check_accumulation(self):
         """Remove counts that are older than accum_time"""
@@ -383,8 +412,8 @@ class LED(object):
 
 class DataManager(object):
     """
-    Handles the passing of the CPM between DosimeterTimer, memory buffer,
-    local storage, and ServerSender.
+    To handle the passing of the CPM between DosimeterTimer, memory buffer,
+    local storage, and ServerSender... ?
     """
 
     pass
@@ -428,6 +457,15 @@ class ServerSender(object):
 
         self.socket.sendto(encrypted_packet, (self.address, self.port))
         # TODO: try/except
+
+    def send_cpm(self, cpm, cpm_error, error_code=0):
+        """Wrapper for construct_packet and send_packet"""
+
+        packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
+        self.send_packet(packet)
+        # TODO: handle errors?
+        # TODO: return status?
+        return None
 
 
 def time_float(a_datetime):
