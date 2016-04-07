@@ -21,6 +21,8 @@ import multiprocessing
 from time import sleep
 import os
 import csv
+import cust_crypt
+import socket
 import collections
 # collections.deque object allows fast popping from left side
 
@@ -46,13 +48,13 @@ COUNTS_LED_PIN = 21
 #       GPIO.HIGH - 3.3V or 5V ???? (RPi rail voltage)
 
 
-class DosimeterTimer(object):
+class Manager(object):
     """
     Master object for dosimeter operation.
 
     Initializes Dosimeter, LEDs and DosimeterCommunicator,
     tracks time intervals, and converts the counts from Dosimeter into
-    a CPM for DosimeterCommunicator to give to the buffers and the server.
+    a CPM for ___ to give to the buffers and the server.
 
     time_interval_s is the interval (in seconds) over for which CPM is
     calculated.
@@ -82,6 +84,7 @@ class DosimeterTimer(object):
         if public_key_path:
             # TODO
             pass
+            self.public_key = False
         else:
             pass
 
@@ -392,7 +395,39 @@ class ServerSender(object):
     Sends UDP packets to the DoseNet server.
     """
 
-    pass
+    # TODO: include verbosity for test mode
+
+    def __init__(self, manager):
+        self.manager = manager
+        # check that config and publickey exist and are valid
+        self.encrypter = cust_crypt.PublicDEncrypt(
+            key_file_lst=[self.manager.public_key])
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # TODO: load these from somewhere
+        self.address = 'dosenet.dhcp.lbl.gov'
+        self.port = 5005
+
+    def construct_packet(self, cpm, cpm_error, error_code=0):
+        """basically copied from old code"""
+
+        c = ','
+        config = self.manager.config
+        raw_packet = (
+            str(config.hash) + c +
+            str(config.ID) + c +
+            str(cpm) + c +
+            str(cpm_error) + c +
+            str(error_code))
+        encrypted_packet = self.encrypter.encrypt_message(raw_packet)[0]
+
+        return encrypted_packet
+
+    def send_packet(self, encrypted_packet):
+        """basically copied from old code"""
+
+        self.socket.sendto(encrypted_packet, (self.address, self.port))
+        # TODO: try/except
 
 
 def time_float(a_datetime):
