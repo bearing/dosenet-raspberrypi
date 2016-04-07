@@ -152,13 +152,13 @@ class NetworkStatus(object):
                     self.led.stop_blink()
                 self.led.on()
             if self.v > 1:
-                print('  {} is UP'.format(self.server))
+                print('  {} is UP'.format(self.hostname))
         else:
             self.is_up = False
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
             if self.v > 0:
-                print('  {} is DOWN!'.format(self.server))
+                print('  {} is DOWN!'.format(self.hostname))
 
     def _do_pings(self):
         """Runs forever - only call as a subprocess"""
