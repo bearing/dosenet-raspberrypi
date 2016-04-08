@@ -14,7 +14,6 @@ HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
 LOG=$HOME/jpyserver.log
-JLOG=$HOME/jupyter.log
 
 case "$1" in
   start)
@@ -24,13 +23,21 @@ case "$1" in
 	    sudo mkdir /var/log/lighttpd
 	    sudo chown -R www-data /var/log/lighttpd
 	fi
+    sudo chown www-data:www-data /var/run/lighttpd.pid
     echo "Starting web-server" >> $LOG
     echo "Starting web-server"
     sudo /etc/init.d/lighttpd start
+    echo "Updating web code" >> $LOG
+    echo "Updating web code"
+    cd $HOME/dosenet-web
+    sudo -u pi git pull --ff-only
+    echo "Updating analysis code" >> $LOG
+    echo "Updating analysis code"
+    cd $HOME/dosenet-analysis
+    sudo -u pi git pull --ff-only
     echo "Starting jupyter notebook" >> $LOG
     echo "Starting jupyter notebook"
-    cd $HOME/dosenet-analysis
-    screen -dm jupyter notebook
+    sudo -u pi screen -dm jupyter notebook
     date >> $LOG
     ;;
   stop)
