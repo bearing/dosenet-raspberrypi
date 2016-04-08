@@ -31,7 +31,7 @@ case "$1" in
     echo "Updating web code"
     cd $HOME/dosenet-web
     sudo -u pi git pull --ff-only
-    sudo cp $HOME/dosenet-web/sample_device.html
+    sudo cp $HOME/dosenet-web/sample_device.html /var/www/html/index.html
     echo "Updating analysis code" >> $LOG
     echo "Updating analysis code"
     cd $HOME/dosenet-analysis
