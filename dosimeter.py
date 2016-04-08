@@ -28,7 +28,7 @@ import collections
 
 # Count seconds from the year 1970
 # This is like Unix time, but without handling time zones.
-# *** If times from a different clock or time zone are passed into Dosimeter,
+# *** If times from a different clock or time zone are passed into Sensor,
 #   there would be problems....
 # So even if the RPi is in some weird state where it thinks its the 1990s...
 #   it will still work because everything is a relative measure of seconds.
@@ -52,9 +52,8 @@ class Manager(object):
     """
     Master object for dosimeter operation.
 
-    Initializes Dosimeter, LEDs and DosimeterCommunicator,
-    tracks time intervals, and converts the counts from Dosimeter into
-    a CPM for ___ to give to the buffers and the server.
+    Initializes other classes, tracks time intervals, and converts the counts
+    from Sensor into a CPM to give to the server.
 
     time_interval_s is the interval (in seconds) over for which CPM is
     calculated.
@@ -89,7 +88,7 @@ class Manager(object):
             pass
 
         self.power_LED.on()
-        self.dosimeter = Dosimeter(counts_LED=self.counts_LED)
+        self.sensor = Sensor(counts_LED=self.counts_LED)
         self.network_up = NetworkStatus(network_led=self.network_LED)
         self.sender = ServerSender(self)
 
@@ -97,7 +96,7 @@ class Manager(object):
         # TODO: standardize all these timedeltas and floats in a nice way
         self.running = False
 
-    def start(self):
+    def run(self):
         """
         Start counting time.
 
@@ -113,7 +112,7 @@ class Manager(object):
             sleeptime = this_end - datetime.datetime.now()
             sleep(sleeptime)
             assert datetime.datetime.now() > this_end
-            cpm, cpm_err = self.dosimeter.get_cpm(this_start, this_end)
+            cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             self.sender.send_cpm(cpm, cpm_err)
 
             this_start = this_end
@@ -225,9 +224,9 @@ class Config(object):
         self.long = content['long']
 
 
-class Dosimeter(object):
+class Sensor(object):
     """
-    Dosimeter takes counts from the sensor, flashing the LED and adding to a
+    Sensor takes counts from the sensor, flashing the LED and adding to a
     queue of counts. CPM should be calculated by something external.
 
     counts_LED: an LED object
@@ -248,6 +247,9 @@ class Dosimeter(object):
         # set up signal pin
         GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         self.add_interrupt()
+
+        # TODO: check_accumulation every 5 minutes or so?
+        #       to prevent memory leak if it gets abandoned?
 
     def add_interrupt(self):
         """
@@ -325,7 +327,7 @@ class Dosimeter(object):
         GPIO.cleanup()
 
     def __del__(self):
-        print('Deleting Dosimeter instance {}'.format(self))
+        print('Deleting Sensor instance {}'.format(self))
         self.cleanup()
 
     def __enter__(self):
@@ -333,7 +335,7 @@ class Dosimeter(object):
         return self
 
     def __exit__(self, *args):
-        print('Exiting Dosimeter instance {}'.format(self))
+        print('Exiting Sensor instance {}'.format(self))
         self.cleanup()
 
 
@@ -408,15 +410,6 @@ class LED(object):
             sleep(interval / 2.0)
             self.off()
             sleep(interval / 2.0)
-
-
-class DataManager(object):
-    """
-    To handle the passing of the CPM between DosimeterTimer, memory buffer,
-    local storage, and ServerSender... ?
-    """
-
-    pass
 
 
 class ServerSender(object):
@@ -504,11 +497,11 @@ def test():
     print('Testing LED class...')
     test_LED()
 
-    print('Testing Dosimeter class. KeyboardInterrupt to skip..')
+    print('Testing Sensor class. KeyboardInterrupt to skip..')
     try:
-        test_Dosimeter()
+        test_Sensor()
     except KeyboardInterrupt:
-        print('  Okay, skipping remaining Dosimeter tests!')
+        print('  Okay, skipping remaining Sensor tests!')
 
 
 def test_LED():
@@ -531,11 +524,11 @@ def test_LED():
     sleep(0.5)
 
 
-def test_Dosimeter():
+def test_Sensor():
     test_accum_time = 30
-    print('  Creating Dosimeter with max_accumulation_time_s={}'.format(
+    print('  Creating Sensor with max_accumulation_time_s={}'.format(
         test_accum_time))
-    with Dosimeter(max_accumulation_time_s=test_accum_time) as d:
+    with Sensor(max_accumulation_time_s=test_accum_time) as d:
         print('  Testing check_accumulation() on empty queue')
         d.check_accumulation()
         print('  Waiting for counts')
@@ -555,10 +548,10 @@ def test_Dosimeter():
                 'Skipping accumulation test')
         if first_count_time_float:
             # accumulation test
-            test_Dosimeter_accum(d, first_count_time_float, test_accum_time)
+            test_Sensor_accum(d, first_count_time_float, test_accum_time)
 
 
-def test_Dosimeter_accum(d, first_count_time_float, test_accum_time):
+def test_Sensor_accum(d, first_count_time_float, test_accum_time):
     """ accumulation test """
     end_time_s = first_count_time_float + test_accum_time + 5
     wait_time_s = (end_time_s - now_float())
