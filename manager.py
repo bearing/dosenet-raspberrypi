@@ -7,6 +7,7 @@ from time import sleep
 from auxiliaries import LED, Config, NetworkStatus
 from sensor import Sensor
 from sender import ServerSender
+import argparse
 
 # Count seconds from the year 1970
 # This is like Unix time, but without handling time zones.
@@ -103,3 +104,7 @@ class Manager(object):
     def stop(self):
         """Stop counting time."""
         self.running = False
+
+    @classmethod
+    def from_args(cls):
+        parser = argparse.ArgumentParser()
