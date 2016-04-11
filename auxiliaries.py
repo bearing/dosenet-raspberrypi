@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+import datetime
 import multiprocessing
 import csv
 from time import sleep
 import os
 import RPi.GPIO as GPIO
+
+
+def datetime_from_epoch(timestamp):
+    """
+    Return a datetime object equivalent to the number of seconds since
+    Unix epoch (Jan 1, 1970).
+
+    The datetime object is in UTC.
+    """
+
+    datetime_value = (datetime.datetime(year=1970, month=1, day=1) +
+                      datetime.timedelta(seconds=timestamp))
+    return datetime_value
 
 
 class LED(object):

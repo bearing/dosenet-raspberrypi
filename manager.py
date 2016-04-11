@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-import datetime
-from time import sleep
-
-from auxiliaries import LED, Config, NetworkStatus
-from sensor import Sensor
-from sender import ServerSender
+import time
 import argparse
 
-# Count seconds from the year 1970
-# This is like Unix time, but without handling time zones.
-# *** If times from a different clock or time zone are passed into Sensor,
-#   there would be problems....
-# So even if the RPi is in some weird state where it thinks its the 1990s...
-#   it will still work because everything is a relative measure of seconds.
-EPOCH_START_TIME = datetime.datetime(year=1970, month=1, day=1)
-# TODO: convert datetime.datetime's to time.time's
+from auxiliaries import LED, Config, NetworkStatus, datetime_from_epoch
+from sensor import Sensor
+from sender import ServerSender
 
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
@@ -85,12 +75,12 @@ class Manager(object):
         self.counts_LED = LED(counts_LED_pin)
 
         if config:
-            self.config = Config(config_csv_path)
+            self.config = Config(config)
         else:
             print('WARNING: no config file given. Not posting to server')
             self.config = None
 
-        if public_key_path:
+        if publickey:
             # TODO
             pass
             self.public_key = False
@@ -102,7 +92,7 @@ class Manager(object):
         self.network_up = NetworkStatus(network_led=self.network_LED)
         self.sender = ServerSender(self)
 
-        self.DT = interval
+        self.interval = interval
         # TODO: standardize all these timedeltas and floats in a nice way
         self.running = False
 
@@ -114,19 +104,19 @@ class Manager(object):
         want to keep control. However, setting self.running = False will stop.
         """
 
-        this_start = datetime.datetime.now()
-        this_end = this_start + self.DT
+        this_start = time.time()
+        this_end = this_start + self.interval
         self.running = True
 
         while self.running:
-            sleeptime = this_end - datetime.datetime.now()
-            sleep(sleeptime)
-            assert datetime.datetime.now() > this_end
+            sleeptime = this_end - time.time()
+            time.sleep(sleeptime)
+            assert time.time() > this_end
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             self.sender.send_cpm(cpm, cpm_err)
 
             this_start = this_end
-            this_end = this_end + self.DT
+            this_end = this_end + self.interval
 
     def stop(self):
         """Stop counting time."""

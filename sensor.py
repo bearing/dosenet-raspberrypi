@@ -16,13 +16,11 @@ from __future__ import print_function
 
 import RPi.GPIO as GPIO
 import numpy as np
-import datetime
-from time import sleep
+import time
 import collections
 
-from auxiliaries import LED
+from auxiliaries import LED, datetime_from_epoch
 
-EPOCH_START_TIME = datetime.datetime(year=1970, month=1, day=1)
 # Standard pin numbers (Broadcom):
 SIGNAL_PIN = 17
 NOISE_PIN = 4
@@ -47,7 +45,7 @@ class Sensor(object):
         self.LED = counts_LED
         # initialize queue of datetime's
         self.counts = collections.deque([])
-        self.accum_time = datetime.timedelta(seconds=max_accumulation_time_s)
+        self.accum_time = max_accumulation_time_s
 
         # use Broadcom GPIO numbering
         GPIO.setmode(GPIO.BCM)
@@ -75,16 +73,16 @@ class Sensor(object):
         """
 
         # add to queue
-        now = datetime.datetime.now()
-        self.counts.append(now_float())
-        now2 = datetime.datetime.now()
+        now = time.time()
+        self.counts.append(now)
+        now2 = time.time()
 
         # display(s)
-        print('\tCount at {}'.format(now))
+        print('\tCount at {}'.format(datetime_from_epoch(now)))
         if self.LED:
             self.LED.flash()
         print('    Adding count to queue took no more than {} s'.format(
-            (now2 - now).total_seconds()))
+            (now2 - now)))
 
     def get_all_counts(self):
         """Return the list of all counts"""
@@ -116,8 +114,7 @@ class Sensor(object):
         """Remove counts that are older than accum_time"""
 
         while self.counts:      # gotta make sure it's not an empty queue
-            if self.counts[0] > time_float(
-                    datetime.datetime.now() - self.accum_time):
+            if self.counts[0] > time.time() - self.accum_time:
                 # done
                 break
             self.counts.popleft()
@@ -144,21 +141,6 @@ class Sensor(object):
     def __exit__(self, *args):
         print('Exiting Sensor instance {}'.format(self))
         self.cleanup()
-
-
-def time_float(a_datetime):
-    """
-    Return a float indicating number of seconds from EPOCH_START_TIME
-    to the input
-    """
-    return (a_datetime - EPOCH_START_TIME).total_seconds()
-
-
-def now_float():
-    """
-    Return a float indicating number of seconds since EPOCH_START_TIME
-    """
-    return time_float(datetime.datetime.now())
 
 
 def test():
@@ -193,20 +175,20 @@ def test_LED():
     led = LED(pin=NETWORK_LED_PIN)
     print('  LED on')
     led.on()
-    sleep(1)
+    time.sleep(1)
     print('  LED off')
     led.off()
-    sleep(1)
+    time.sleep(1)
     print('  LED flash')
     led.flash()
-    sleep(1)
+    time.sleep(1)
     print('  LED start blink')
     led.start_blink()
-    sleep(3.2)
+    time.sleep(3.2)
     # stop mid-blink. the LED should turn off.
     print('  LED stop blink')
     led.stop_blink()
-    sleep(0.5)
+    time.sleep(0.5)
 
 
 def test_Sensor():
@@ -217,19 +199,19 @@ def test_Sensor():
         print('  Testing check_accumulation() on empty queue')
         d.check_accumulation()
         print('  Waiting for counts')
-        max_test_time_s = datetime.timedelta(seconds=300)
-        start_time = datetime.datetime.now()
+        max_test_time_s = 300
+        start_time = time.time()
 
         first_count_time_float = None
-        while datetime.datetime.now() - start_time < max_test_time_s:
-            sleep(10)
+        while time.time() - start_time < max_test_time_s:
+            time.sleep(10)
             if d.get_all_counts():
                 first_count_time_float = d.get_all_counts()[0]
                 break
         else:
             # "break" skips over this
             print('    Got no counts in {} seconds! May be a problem.'.format(
-                max_test_time_s.total_seconds()),
+                max_test_time_s),
                 'Skipping accumulation test')
         if first_count_time_float:
             # accumulation test
@@ -239,9 +221,9 @@ def test_Sensor():
 def test_Sensor_accum(d, first_count_time_float, test_accum_time):
     """ accumulation test """
     end_time_s = first_count_time_float + test_accum_time + 5
-    wait_time_s = (end_time_s - now_float())
+    wait_time_s = (end_time_s - time.time())
     print('  Accumulation test; waiting another {} s'.format(wait_time_s))
-    sleep(wait_time_s)
+    time.sleep(wait_time_s)
     # get_all_counts() calls check_accumulation(), so don't use it here
     n = len(d.counts)
 
@@ -250,7 +232,7 @@ def test_Sensor_accum(d, first_count_time_float, test_accum_time):
     assert len(d.get_all_counts()) < n
     # also make sure there are no counts within accum time
     if d.get_all_counts():
-        assert now_float() - d.get_all_counts()[0] < test_accum_time
+        assert time.time() - d.get_all_counts()[0] < test_accum_time
 
 
 if __name__ == '__main__':
