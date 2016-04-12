@@ -13,11 +13,11 @@ from sender import ServerSender
 # SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
 # NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
 
-# Standard pin numbers (Broadcom):
+# Standard pin numbers (Broadcom, a.k.a. what's labeled on the pi hat):
 SIGNAL_PIN = 17
 NOISE_PIN = 4
+POWER_LED_PIN = 19
 NETWORK_LED_PIN = 20
-POWER_LED_PIN = 26
 COUNTS_LED_PIN = 21
 
 # Note: GPIO.LOW  - 0V
