@@ -41,7 +41,7 @@ ANSI_GR = '\033[32m' + ANSI_BOLD
 #   and then get filled in later
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' --- {green}{{cpm}} +/- {{cpm_err}} cpm{reset}' +
+    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 
