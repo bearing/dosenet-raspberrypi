@@ -14,7 +14,13 @@
 
 from __future__ import print_function
 
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+    RPI = True
+except ImportError:
+    print('Not on a Raspberry Pi, proceeding anyway')
+    RPI = False
+
 import numpy as np
 import time
 import collections

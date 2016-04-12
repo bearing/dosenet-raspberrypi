@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+try:
+    import RPi.GPIO as GPIO
+    RPI = True
+except ImportError:
+    print('Not on a Raspberry Pi, proceeding anyway')
+    RPI = False
+
 import time
 import argparse
-import RPi.GPIO as GPIO
 
 from auxiliaries import LED, Config, PublicKey, NetworkStatus
 from auxiliaries import datetime_from_epoch

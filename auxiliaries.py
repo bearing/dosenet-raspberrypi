@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+try:
+    import RPi.GPIO as GPIO
+    RPI = True
+except ImportError:
+    print('Not on a Raspberry Pi, proceeding anyway')
+    RPI = False
+
 import datetime
 import multiprocessing
 import csv
 from time import sleep
 import os
-import RPi.GPIO as GPIO
 
 import cust_crypt
 
