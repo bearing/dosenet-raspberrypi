@@ -148,6 +148,7 @@ class Manager(object):
                        datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
+        strf = '%H:%M:%S'
 
         try:
             while self.running:
@@ -157,13 +158,16 @@ class Manager(object):
                 cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
                 counts = int(round(cpm * self.interval / 60))
 
+                start_text = datetime_from_epoch(this_start).strftime(strf)
+                end_text = datetime_from_epoch(this_end).strftime(strf)
+
                 print(CPM_DISPLAY_TEXT.format(
                     time=datetime_from_epoch(time.time()),
                     counts=counts,
                     cpm=cpm,
                     cpm_err=cpm_err,
-                    start_time=datetime_from_epoch(this_start),
-                    end_time=datetime_from_epoch(this_end),
+                    start_time=start_text,
+                    end_time=end_text,
                 ))
                 self.sender.send_cpm(cpm, cpm_err)
 
