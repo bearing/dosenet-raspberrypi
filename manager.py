@@ -31,6 +31,20 @@ DEFAULT_PORT = 5005
 DEFAULT_INTERVAL_NORMAL = 300
 DEFAULT_INTERVAL_TEST = 30
 
+# ANSI color codes
+ANSI_RESET = '\033[0m'
+ANSI_BOLD = '\033[1m'
+ANSI_YEL = '\033[33m' + ANSI_BOLD
+ANSI_GR = '\033[32m' + ANSI_BOLD
+
+# this is hacky, but, the {{}} get converted to {} in the first .format() call
+#   and then get filled in later
+CPM_DISPLAY_TEXT = (
+    '{{time}}: {yellow} {{counts}} cts{reset}' +
+    ' - {green}{{cpm}} +/- {{cpm_err}} cpm{reset}' +
+    ' ({start_time} to {end_time})'.format(
+        yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR))
+
 
 class Manager(object):
     """
@@ -113,6 +127,9 @@ class Manager(object):
         """
 
         this_start = time.time()
+        if self.v > 0:
+            print('Manager is starting to run at {} with interval={}s'.format(
+                datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
 
@@ -122,6 +139,16 @@ class Manager(object):
                 time.sleep(sleeptime)
                 assert time.time() > this_end
                 cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
+                counts = int(round(cpm * self.interval / 60))
+
+                print(CPM_DISPLAY_TEXT.format(
+                    time=datetime_from_epoch(time.time()),
+                    counts=counts,
+                    cpm=cpm,
+                    cpm_err=cpm_err,
+                    start_time=this_start,
+                    end_time=this_end,
+                ))
                 self.sender.send_cpm(cpm, cpm_err)
 
                 this_start = this_end
