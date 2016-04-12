@@ -42,15 +42,25 @@ class Sensor(object):
 
     counts_LED: an LED object
     max_accumulation_time_s: events are forgotten after this length of time
+    use_gpio: flag for actually using the GPIO pins. Set to False for testing
+    verbosity: 0-3
     """
 
     def __init__(self,
                  counts_LED=None,
                  max_accumulation_time_s=3600,
+                 use_gpio=None,
                  verbosity=1,
                  ):
 
         self.v = verbosity
+
+        if use_gpio is None:
+            self.use_gpio = RPI
+        else:
+            self.use_gpio = use_gpio
+        if not self.use_gpio:
+            print('Running Sensor in test mode - no GPIO interrupt')
 
         if counts_LED is None:
             print('No LED given for counts; will not flash LED!')
@@ -59,11 +69,12 @@ class Sensor(object):
         self.counts = collections.deque([])
         self.accum_time = max_accumulation_time_s
 
-        # use Broadcom GPIO numbering
-        GPIO.setmode(GPIO.BCM)
-        # set up signal pin
-        GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.add_interrupt()
+        if RPI:
+            # use Broadcom GPIO numbering
+            GPIO.setmode(GPIO.BCM)
+            # set up signal pin
+            GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            self.add_interrupt()
 
         # TODO: check_accumulation every 5 minutes or so?
         #       to prevent memory leak if it gets abandoned?
@@ -94,7 +105,7 @@ class Sensor(object):
         """
         Add one count to queue. (Callback for GPIO pin)
 
-        pin argument is automatically supplied by GPIO.add_event_detect
+        pin argument is supplied by GPIO.add_event_detect, do not remove
         """
 
         # add to queue
@@ -155,8 +166,9 @@ class Sensor(object):
         self.add_interrupt()
 
     def cleanup(self):
-        print('Cleaning up GPIO pins')
-        GPIO.cleanup()
+        if RPI:
+            print('Cleaning up GPIO pins')
+            GPIO.cleanup()
 
     def __del__(self):
         print('Deleting Sensor instance {}'.format(self))
