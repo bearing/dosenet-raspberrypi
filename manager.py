@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import time
 import argparse
+import RPi.GPIO as GPIO
 
 from auxiliaries import LED, Config, PublicKey, NetworkStatus
 from auxiliaries import datetime_from_epoch
@@ -124,6 +125,24 @@ class Manager(object):
     def stop(self):
         """Stop counting time."""
         self.running = False
+
+    def takedown(self):
+        """Delete self and child objects and clean up GPIO nicely."""
+
+        # sensor
+        self.sensor.cleanup()
+        del(self.sensor)
+
+        # network
+        self.network_up.cleanup()
+        del(self.network_up)
+
+        # power LED
+        self.power_LED.off()
+        GPIO.cleanup()
+
+        # self. can I even do this?
+        del(self)
 
     @classmethod
     def from_argparse(cls):

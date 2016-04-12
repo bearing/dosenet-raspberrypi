@@ -176,6 +176,9 @@ class NetworkStatus(object):
     def __bool__(self):
         return self.is_up
 
+    def cleanup(self):
+        GPIO.cleanup()
+
 
 class Config(object):
     """
