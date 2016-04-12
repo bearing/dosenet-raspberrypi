@@ -62,14 +62,27 @@ class Sensor(object):
         # TODO: check_accumulation every 5 minutes or so?
         #       to prevent memory leak if it gets abandoned?
 
-    def add_interrupt(self):
+    def add_interrupt(self, n_tries=3):
         """
         Setup GPIO for signal. (for initialization and GPIO reset)
         """
-        GPIO.add_event_detect(
-            SIGNAL_PIN, GPIO.FALLING,
-            callback=self.count,
-            bouncetime=1)
+
+        try:
+            GPIO.add_event_detect(
+                SIGNAL_PIN, GPIO.FALLING,
+                callback=self.count,
+                bouncetime=1)
+        except RuntimeError as e:
+            if self.v > 1:
+                print('GPIO interrupt setup failed',
+                      '({} tries remaining)'.format(n_tries))
+            # Happened once in testing. It worked on second try.
+
+            if n_tries < 1:
+                raise e
+            else:
+                time.sleep(1)
+                self.add_interrupt(n_tries=(n_tries - 1))
 
     def count(self, pin=SIGNAL_PIN):
         """
