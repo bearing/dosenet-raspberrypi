@@ -41,7 +41,7 @@ ANSI_GR = '\033[32m' + ANSI_BOLD
 #   and then get filled in later
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' - {green}{{cpm}} +/- {{cpm_err}} cpm{reset}' +
+    ' --- {green}{{cpm}} +/- {{cpm_err}} cpm{reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 
@@ -131,8 +131,9 @@ class Manager(object):
 
         this_start = time.time()
         if self.v > 0:
-            print('Manager is starting to run at {} with interval={}s'.format(
-                datetime_from_epoch(this_start), self.interval))
+            print(('Manager is starting to run at {}' +
+                   ' with intervals of {}s').format(
+                       datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
 
@@ -149,8 +150,8 @@ class Manager(object):
                     counts=counts,
                     cpm=cpm,
                     cpm_err=cpm_err,
-                    start_time=this_start,
-                    end_time=this_end,
+                    start_time=datetime_from_epoch(this_start),
+                    end_time=datetime_from_epoch(this_end),
                 ))
                 self.sender.send_cpm(cpm, cpm_err)
 
