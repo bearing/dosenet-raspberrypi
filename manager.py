@@ -4,7 +4,8 @@ from __future__ import print_function
 import time
 import argparse
 
-from auxiliaries import LED, Config, NetworkStatus, datetime_from_epoch
+from auxiliaries import LED, Config, PublicKey, NetworkStatus
+from auxiliaries import datetime_from_epoch
 from sensor import Sensor
 from sender import ServerSender
 
@@ -81,19 +82,17 @@ class Manager(object):
             self.config = None
 
         if publickey:
-            # TODO
-            pass
-            self.public_key = False
+            self.publickey = PublicKey(publickey)
         else:
-            pass
+            print('WARNING: no public key given. Not posting to server')
+            self.publickey = None
 
         self.power_LED.on()
         self.sensor = Sensor(counts_LED=self.counts_LED)
         self.network_up = NetworkStatus(network_led=self.network_LED)
-        self.sender = ServerSender(self)
+        self.sender = ServerSender(manager=self)
 
         self.interval = interval
-        # TODO: standardize all these timedeltas and floats in a nice way
         self.running = False
 
     def run(self):

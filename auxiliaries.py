@@ -8,6 +8,8 @@ from time import sleep
 import os
 import RPi.GPIO as GPIO
 
+import cust_crypt
+
 
 def datetime_from_epoch(timestamp):
     """
@@ -202,5 +204,10 @@ class PublicKey(object):
     """
 
     def __init__(self, filename):
-        # TODO
-        pass
+        try:
+            self.encrypter = cust_crypt.PublicDEncrypt(
+                key_file_lst=[self.manager.public_key])
+        except IOError:
+            print('IOError loading public key file.',
+                  'Check filename, path, permissions?')
+            return None
