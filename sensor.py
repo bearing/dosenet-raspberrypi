@@ -120,7 +120,14 @@ class Sensor(object):
         # there could be more optimal ways to pass around the data,
         #   but it only happens every ~5 minutes anyway.
         #   just as long as there's no memory issue.
-        n_counts = np.sum(counts > start_time & counts < end_time)
+
+        # debug
+        lg1 = counts > start_time
+        lg2 = counts < end_time
+        lg3 = lg1 & lg2
+        n_counts = np.sum(lg3)
+        # n_counts = np.sum(counts > start_time & counts < end_time)
+
         err_counts = np.sqrt(n_counts)
         dt = end_time - start_time
         cps = n_counts / dt
