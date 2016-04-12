@@ -60,6 +60,8 @@ class Manager(object):
                  verbosity=1,
                  ):
 
+        self.v = verbosity
+
         # resolve defaults that depend on test mode
         if test:
             if interval is None:
@@ -89,9 +91,15 @@ class Manager(object):
             self.publickey = None
 
         self.power_LED.on()
-        self.sensor = Sensor(counts_LED=self.counts_LED)
-        self.network_up = NetworkStatus(network_led=self.network_LED)
-        self.sender = ServerSender(manager=self)
+        self.sensor = Sensor(
+            counts_LED=self.counts_LED,
+            verbosity=self.v)
+        self.network_up = NetworkStatus(
+            network_led=self.network_LED,
+            verbosity=self.v)
+        self.sender = ServerSender(
+            manager=self,
+            verbosity=self.v)
 
         self.interval = interval
         self.running = False

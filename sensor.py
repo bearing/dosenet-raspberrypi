@@ -38,7 +38,13 @@ class Sensor(object):
     max_accumulation_time_s: events are forgotten after this length of time
     """
 
-    def __init__(self, counts_LED=None, max_accumulation_time_s=3600):
+    def __init__(self,
+                 counts_LED=None,
+                 max_accumulation_time_s=3600,
+                 verbosity=1,
+                 ):
+
+        self.v = verbosity
 
         if counts_LED is None:
             print('No LED given for counts; will not flash LED!')
@@ -81,8 +87,9 @@ class Sensor(object):
         print('\tCount at {}'.format(datetime_from_epoch(now)))
         if self.LED:
             self.LED.flash()
-        print('    Adding count to queue took no more than {} s'.format(
-            (now2 - now)))
+        if self.v > 1:
+            print('    Adding count to queue took no more than {} s'.format(
+                (now2 - now)))
 
     def get_all_counts(self):
         """Return the list of all counts"""

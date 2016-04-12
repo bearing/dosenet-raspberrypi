@@ -21,12 +21,15 @@ class ServerSender(object):
                  port=DEFAULT_PORT,
                  config=None,
                  publickey=None,
+                 verbosity=1,
                  ):
         """
         network_status, config, publickey loaded from manager if not provided.
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
+
+        self.v = verbosity
 
         if manager is None:
             print('ServerSender starting without Manager object')
