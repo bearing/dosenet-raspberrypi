@@ -42,8 +42,8 @@ ANSI_GR = '\033[32m' + ANSI_BOLD
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
     ' - {green}{{cpm}} +/- {{cpm_err}} cpm{reset}' +
-    ' ({{start_time}} to {{end_time}})'.format(
-        yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR))
+    ' ({{start_time}} to {{end_time}})').format(
+    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 
 
 class Manager(object):
@@ -123,7 +123,10 @@ class Manager(object):
         Start counting time.
 
         This method does NOT return, so run in a subprocess if you
-        want to keep control. However, setting self.running = False will stop.
+        want to keep control.
+
+        However, setting self.running = False will stop, as will a
+          KeyboardInterrupt.
         """
 
         this_start = time.time()
