@@ -94,9 +94,16 @@ class Manager(object):
             if publickey is None:
                 publickey = DEFAULT_PUBLICKEY
 
-        self.network_LED = LED(network_LED_pin)
-        self.power_LED = LED(power_LED_pin)
-        self.counts_LED = LED(counts_LED_pin)
+        if RPI:
+            self.power_LED = LED(power_LED_pin)
+            self.network_LED = LED(network_LED_pin)
+            self.counts_LED = LED(counts_LED_pin)
+
+            self.power_LED.on()
+        else:
+            self.power_LED = None
+            self.network_LED = None
+            self.counts_LED = None
 
         if config:
             self.config = Config(config)
@@ -110,7 +117,6 @@ class Manager(object):
             print('WARNING: no public key given. Not posting to server')
             self.publickey = None
 
-        self.power_LED.on()
         self.sensor = Sensor(
             counts_LED=self.counts_LED,
             verbosity=self.v)

@@ -50,10 +50,13 @@ class LED(object):
         Initialize a pin for operating an LED. pin is the Broadcom GPIO #
         """
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(pin, GPIO.OUT)
-        self.pin = pin
-        self.blinker = None
+        if RPI:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(pin, GPIO.OUT)
+            self.pin = pin
+            self.blinker = None
+        else:
+            raise EnvironmentError('Must be a Raspberry Pi to have an LED')
 
     def on(self):
         """Turn on the LED"""
