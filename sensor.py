@@ -121,19 +121,14 @@ class Sensor(object):
         #   but it only happens every ~5 minutes anyway.
         #   just as long as there's no memory issue.
 
-        # debug
-        lg1 = counts > start_time
-        lg2 = counts < end_time
-        lg3 = lg1 & lg2
-        n_counts = np.sum(lg3)
-        # n_counts = np.sum(counts > start_time & counts < end_time)
+        n_counts = np.sum((counts > start_time) & (counts < end_time))
 
         err_counts = np.sqrt(n_counts)
         dt = end_time - start_time
-        cps = n_counts / dt
-        cps_err = err_counts / dt
-        cpm = cps / 60
-        cpm_err = cps_err / 60
+        cps = float(n_counts) / dt
+        cps_err = float(err_counts) / dt
+        cpm = cps * 60
+        cpm_err = cps_err * 60
 
         return cpm, cpm_err
 
