@@ -206,7 +206,7 @@ class PublicKey(object):
     def __init__(self, filename):
         try:
             self.encrypter = cust_crypt.PublicDEncrypt(
-                key_file_lst=[self.manager.public_key])
+                key_file_lst=[filename])
         except IOError:
             print('IOError loading public key file.',
                   'Check filename, path, permissions?')
