@@ -107,15 +107,19 @@ class Manager(object):
         this_end = this_start + self.interval
         self.running = True
 
-        while self.running:
-            sleeptime = this_end - time.time()
-            time.sleep(sleeptime)
-            assert time.time() > this_end
-            cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
-            self.sender.send_cpm(cpm, cpm_err)
+        try:
+            while self.running:
+                sleeptime = this_end - time.time()
+                time.sleep(sleeptime)
+                assert time.time() > this_end
+                cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
+                self.sender.send_cpm(cpm, cpm_err)
 
-            this_start = this_end
-            this_end = this_end + self.interval
+                this_start = this_end
+                this_end = this_end + self.interval
+        except KeyboardInterrupt:
+            print('KeyboardInterrupt: stopping Manager run')
+            self.stop()
 
     def stop(self):
         """Stop counting time."""
