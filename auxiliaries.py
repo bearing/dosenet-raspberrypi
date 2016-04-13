@@ -53,6 +53,9 @@ def set_verbosity(class_instance, verbosity=None):
         The conditional print function, to be returned.
         """
 
+        print(level)
+        print(*args, **kwargs)
+
         if verbosity >= level:
             print(*args, **kwargs)
 
