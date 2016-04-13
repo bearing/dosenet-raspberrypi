@@ -12,7 +12,7 @@ import time
 import argparse
 
 from auxiliaries import LED, Config, PublicKey, NetworkStatus
-from auxiliaries import datetime_from_epoch
+from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
 
@@ -81,6 +81,7 @@ class Manager(object):
                  ):
 
         self.v = verbosity
+        set_verbosity(self)
 
         # resolve defaults that depend on test mode
         if test:
@@ -108,13 +109,15 @@ class Manager(object):
         if config:
             self.config = Config(config)
         else:
-            print('WARNING: no config file given. Not posting to server')
+            self.vprint(
+                1, 'WARNING: no config file given. Not posting to server')
             self.config = None
 
         if publickey:
             self.publickey = PublicKey(publickey)
         else:
-            print('WARNING: no public key given. Not posting to server')
+            self.vprint(
+                1, 'WARNING: no public key given. Not posting to server')
             self.publickey = None
 
         self.sensor = Sensor(
@@ -142,10 +145,10 @@ class Manager(object):
         """
 
         this_start = time.time()
-        if self.v > 0:
-            print(('Manager is starting to run at {}' +
-                   ' with intervals of {}s').format(
-                       datetime_from_epoch(this_start), self.interval))
+        self.vprint(
+            1, ('Manager is starting to run at {}' +
+                ' with intervals of {}s').format(
+                    datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
         strf = '%H:%M:%S'
@@ -174,10 +177,10 @@ class Manager(object):
                 this_start = this_end
                 this_end = this_end + self.interval
         except KeyboardInterrupt:
-            print('\nKeyboardInterrupt: stopping Manager run')
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
         except SystemExit:
-            print('\nSystemExit: taking down Manager')
+            self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
 

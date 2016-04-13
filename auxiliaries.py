@@ -30,6 +30,35 @@ def datetime_from_epoch(timestamp):
     return datetime_value
 
 
+def set_verbosity(class_instance, verbosity=None):
+    """
+    Define the verbosity level for any class instance,
+    by generating a custom print method, 'vprint', for the instance.
+
+    The vprint method can take arguments exactly like the print function,
+    except that first there is a required argument, v, which is the minimum
+    verbosity for the printing to happen.
+
+    If verbosity is not given, get it from class_instance.v.
+
+    Usage example:
+      def __init__(self, verbosity=1):
+          set_verbosity(self, verbosity=verbosity)
+      ...
+      self.vprint(2, 'This only prints if verbosity >= 2')
+    """
+
+    def vprint(level, *args, **kwargs):
+        """
+        The conditional print function, to be returned.
+        """
+
+        if verbosity >= level:
+            print(*args, **kwargs)
+
+    class_instance.vprint = vprint
+
+
 class LED(object):
     """
     Represents one LED, available for blinking or steady operation.
@@ -147,7 +176,9 @@ class NetworkStatus(object):
         self.down_interval_s = down_interval_s
         self.led = network_led
         self.blink_period_s = 1.5
+
         self.v = verbosity
+        set_verbosity(self)
 
         self.is_up = False
 
@@ -164,14 +195,12 @@ class NetworkStatus(object):
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
-            if self.v > 1:
-                print('  {} is UP'.format(self.hostname))
+            self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             self.is_up = False
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if self.v > 0:
-                print('  {} is DOWN!'.format(self.hostname))
+            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
 
     def _do_pings(self):
         """Runs forever - only call as a subprocess"""
@@ -198,14 +227,15 @@ class Config(object):
     Represents the CSV configuration file.
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, verbosity=1):
+        set_verbosity(self, verbosity=verbosity)
         try:
             with open(filename, 'rb') as config_file:
                 config_reader = csv.DictReader(config_file)
                 content = config_reader.next()
         except IOError:
-            print('IOError loading config file.',
-                  'Check filename, path, permissions?')
+            self.vprint(1, 'IOError loading config file.',
+                        'Check filename, path, permissions?')
             return None
 
         self.ID = content['stationID']
@@ -219,11 +249,12 @@ class PublicKey(object):
     Represents the public key file.
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, verbosity=1):
+        set_verbosity(self, verbosity=verbosity)
         try:
             self.encrypter = cust_crypt.PublicDEncrypt(
                 key_file_lst=[filename])
         except IOError:
-            print('IOError loading public key file.',
-                  'Check filename, path, permissions?')
+            self.vprint(1, 'IOError loading public key file.',
+                        'Check filename, path, permissions?')
             return None

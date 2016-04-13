@@ -25,7 +25,7 @@ import numpy as np
 import time
 import collections
 
-from auxiliaries import LED, datetime_from_epoch
+from auxiliaries import LED, datetime_from_epoch, set_verbosity
 
 # Standard pin numbers (Broadcom):
 SIGNAL_PIN = 17
@@ -54,16 +54,17 @@ class Sensor(object):
                  ):
 
         self.v = verbosity
+        set_verbosity(self)
 
         if use_gpio is None:
             self.use_gpio = RPI
         else:
             self.use_gpio = use_gpio
         if not self.use_gpio:
-            print('Running Sensor in test mode - no GPIO interrupt')
+            self.vprint(1, 'Running Sensor in test mode - no GPIO interrupt')
 
         if counts_LED is None:
-            print('No LED given for counts; will not flash LED!')
+            self.vprint(1, 'No LED given for counts; will not flash LED!')
         self.LED = counts_LED
         # initialize queue of datetime's
         self.counts = collections.deque([])
@@ -91,8 +92,8 @@ class Sensor(object):
                 bouncetime=1)
         except RuntimeError as e:
             if self.v > 1:
-                print('GPIO interrupt setup failed',
-                      '({} tries remaining)'.format(n_tries))
+                self.vprint(1, 'GPIO interrupt setup failed',
+                            '({} tries remaining)'.format(n_tries))
             # Happened once in testing. It worked on second try.
 
             if n_tries < 1:
@@ -114,11 +115,11 @@ class Sensor(object):
         now2 = time.time()
 
         # display(s)
-        print('\tCount at {}'.format(datetime_from_epoch(now)))
+        self.vprint(1, '\tCount at {}'.format(datetime_from_epoch(now)))
         if self.LED:
             self.LED.flash()
-        if self.v > 1:
-            print('    Adding count to queue took no more than {} s'.format(
+        self.vprint(
+            3, '    Adding count to queue took no more than {} s'.format(
                 (now2 - now)))
 
     def get_all_counts(self):
@@ -167,7 +168,7 @@ class Sensor(object):
 
     def cleanup(self):
         if RPI:
-            print('Cleaning up GPIO pins')
+            self.vprint(1, 'Cleaning up GPIO pins')
             GPIO.cleanup()
 
     def __del__(self):

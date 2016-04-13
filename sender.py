@@ -3,6 +3,8 @@ from __future__ import print_function
 
 import socket
 
+from auxiliaries import set_verbosity
+
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_PORT = 5005
 
@@ -11,8 +13,6 @@ class ServerSender(object):
     """
     Sends UDP packets to the DoseNet server.
     """
-
-    # TODO: include verbosity for test mode
 
     def __init__(self,
                  manager=None,
@@ -30,14 +30,16 @@ class ServerSender(object):
         """
 
         self.v = verbosity
+        set_verbosity(self)
 
         if manager is None:
-            print('ServerSender starting without Manager object')
+            self.vprint(1, 'ServerSender starting without Manager object')
         self.manager = manager
 
         if network_status is None:
             if manager is None:
-                print('ServerSender starting without network status object')
+                self.vprint(
+                    1, 'ServerSender starting without network status object')
             else:
                 self.network_up = manager.network_up
         else:
@@ -45,7 +47,7 @@ class ServerSender(object):
 
         if config is None:
             if manager is None:
-                print('ServerSender starting without config file')
+                self.vprint(1, 'ServerSender starting without config file')
                 self.config = None
             else:
                 self.config = manager.config
@@ -54,7 +56,7 @@ class ServerSender(object):
 
         if publickey is None:
             if manager is None:
-                print('ServerSender starting without publickey file')
+                self.vprint(1, 'ServerSender starting without publickey file')
                 self.encrypter = None
             else:
                 self.encrypter = manager.publickey.encrypter
@@ -82,26 +84,29 @@ class ServerSender(object):
                     self.encrypter.encrypt_message(raw_packet)[0])
                 return encrypted_packet
             else:
-                print('No publickey; cannot encrypt packet')
+                self.vprint(1, 'No publickey; cannot encrypt packet')
                 return None
         else:
-            print('No config file; cannot construct packet')
+            self.vprint(1, 'No config file; cannot construct packet')
             return None
 
     def send_packet(self, encrypted_packet):
         """basically copied from old code"""
 
-        try:
-            self.socket.sendto(encrypted_packet, (self.address, self.port))
-        except socket.error as e:
-            print('~ Socket error! {}'.format(e))
+        if self.network_up or self.network_up is None:
+            try:
+                self.socket.sendto(encrypted_packet, (self.address, self.port))
+            except socket.error as e:
+                self.vprint(1, '~ Socket error! {}'.format(e))
+        else:
+            self.vprint(2, 'Network DOWN, not sending packet')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Wrapper for construct_packet and send_packet"""
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         if packet is None:
-            print('Packet not sent')
+            self.vprint(2, 'Packet not sent')
             return None
         else:
             self.send_packet(packet)
