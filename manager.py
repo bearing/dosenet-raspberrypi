@@ -164,7 +164,7 @@ class Manager(object):
                 start_text = datetime_from_epoch(this_start).strftime(strf)
                 end_text = datetime_from_epoch(this_end).strftime(strf)
 
-                print(CPM_DISPLAY_TEXT.format(
+                self.vprint(1, CPM_DISPLAY_TEXT.format(
                     time=datetime_from_epoch(time.time()),
                     counts=counts,
                     cpm=cpm,
