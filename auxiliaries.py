@@ -219,11 +219,10 @@ class NetworkStatus(object):
         return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
 
     def __bool__(self):
-        # not sure why 'return self.is_up' always returns True...
-        if self.is_up:
-            return True
-        else:
-            return False
+        return self.is_up
+
+    # python2 uses __nonzero__ for __bool__
+    __nonzero__ = __bool__
 
     def cleanup(self):
         GPIO.cleanup()
