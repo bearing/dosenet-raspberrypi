@@ -98,6 +98,8 @@ class ServerSender(object):
                 self.socket.sendto(encrypted_packet, (self.address, self.port))
             except socket.error as e:
                 self.vprint(1, '~ Socket error! {}'.format(e))
+                # force update of network status - could be just no network
+                self.network_up.update()
         else:
             self.vprint(2, 'Network DOWN, not sending packet')
 
