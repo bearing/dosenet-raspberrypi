@@ -48,13 +48,13 @@ def set_verbosity(class_instance, verbosity=None):
       self.vprint(2, 'This only prints if verbosity >= 2')
     """
 
+    if verbosity is None:
+        verbosity = class_instance.v
+
     def vprint(level, *args, **kwargs):
         """
         The conditional print function, to be returned.
         """
-
-        print(level)
-        print(*args, **kwargs)
 
         if verbosity >= level:
             print(*args, **kwargs)
