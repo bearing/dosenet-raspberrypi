@@ -176,6 +176,10 @@ class Manager(object):
         except KeyboardInterrupt:
             print('\nKeyboardInterrupt: stopping Manager run')
             self.stop()
+        except SystemExit:
+            print('\nSystemExit: taking down Manager')
+            self.stop()
+            self.takedown()
 
     def stop(self):
         """Stop counting time."""
