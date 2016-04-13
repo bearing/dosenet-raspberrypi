@@ -174,7 +174,7 @@ class Manager(object):
                 this_start = this_end
                 this_end = this_end + self.interval
         except KeyboardInterrupt:
-            print('KeyboardInterrupt: stopping Manager run')
+            print('\nKeyboardInterrupt: stopping Manager run')
             self.stop()
 
     def stop(self):

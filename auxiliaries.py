@@ -64,7 +64,11 @@ class LED(object):
 
     def off(self):
         """Turn off the LED"""
-        GPIO.output(self.pin, False)
+        try:
+            GPIO.output(self.pin, False)
+        except RuntimeError:
+            # if GPIO is cleaned up too early
+            pass
 
     def flash(self):
         """Flash the LED once"""
