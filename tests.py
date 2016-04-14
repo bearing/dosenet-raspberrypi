@@ -26,10 +26,9 @@ class TestVerbosity(unittest.TestCase):
 
     def setUp(self):
         self.verbose_obj = TestVerbosity.Verbosity1(vlevel=1)
+        print('Testing set_verbosity()')
 
     def test_verbosity(self):
-
-        print('Testing set_verbosity()')
         print('Two words of {}green text{} should appear here: '.format(
             ANSI_GR, ANSI_RESET))
         self.verbose_obj.vprint(0, '{}one{}'.format(ANSI_GR, ANSI_RESET))
@@ -41,6 +40,7 @@ class TestVerbosity(unittest.TestCase):
 
     def tearDown(self):
         del(self.verbose_obj)
+        print()
 
 
 class TestLEDs(unittest.TestCase):
@@ -49,11 +49,10 @@ class TestLEDs(unittest.TestCase):
         if RPI:
             pins = (POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN)
             self.LEDs = [auxiliaries.LED(pin=p) for p in pins]
+            print('Testing LEDs',)
 
     def test_LED(self):
         if RPI:
-            print('Testing LEDs',)
-
             print('on')
             [LED.on() for LED in self.LEDs]
             time.sleep(1)
@@ -80,14 +79,108 @@ class TestLEDs(unittest.TestCase):
     def tearDown(self):
         if RPI:
             GPIO.cleanup()
+            print()
 
 
 class TestNetworkStatus(unittest.TestCase):
+    """
+    Doesn't use the auto pinging subprocess - just manually run methods
+    """
+
+    good_hostname = 'www.google.com'
+    bad_hostname = 'asnbdfmnasdbf.dosenet.dhcp.lbl.gov'
 
     def setUp(self):
         if RPI:
-            # self.LED = auxiliaries.LED(pin=)
-            pass
+            self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
+        else:
+            self.LED = None
+        print('Testing NetworkStatus')
+
+        self.net = auxiliaries.NetworkStatus(
+            hostname=self.good_hostname,
+            network_led=self.LED,
+            pinging=False,
+            verbosity=2)
+
+    def test_is_up(self):
+        self.net.update()
+        self.assertTrue(self.net.is_up)
+        self.assertTrue(self.net)
+
+    def test_is_down(self):
+        # give an invalid hostname
+        self.net.hostname = self.bad_hostname
+        self.net.update()
+
+        self.assertFalse(self.net.is_up)
+        self.assertFalse(self.net)
+
+        self.net.hostname = self.good_hostname
+        self.net.update()
+
+    def tearDown(self):
+        if RPI:
+            GPIO.cleanup()
+        del(self.net)
+        print()
+
+
+class TestNetworkStatusLive(TestNetworkStatus):
+    """
+    check the subprocess that pings at intervals
+    also check LED behavior
+    """
+
+    # inherit good_hostname, bad_hostname
+    # overwrite setUp(), tearDown(), test_is_up(), test_is_down()
+
+    def setUp(self):
+        if RPI:
+            self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
+        else:
+            self.LED = None
+        print('Testing NetworkStatus (live)')
+
+        self.net = auxiliaries.NetworkStatus(
+            hostname=self.good_hostname,
+            up_interval_s=3,
+            down_interval_s=1,
+            network_led=self.LED,
+            pinging=True,
+            verbosity=2)
+
+    def test_is_up(self):
+        print('test_is_up (live)...')
+        time.sleep(2)
+        self.assertTrue(self.net.is_up)
+        self.assertTrue(self.net)
+        time.sleep(6)
+        self.assertTrue(self.net.is_up)
+        self.assertTrue(self.net)
+
+    def test_is_down(self):
+        print('test_is_down (live)...')
+        # give an invalid hostname
+        self.net.hostname = self.bad_hostname
+
+        time.sleep(3)
+        self.assertFalse(self.net.is_up)
+        self.assertFalse(self.net)
+        time.sleep(3)
+
+        # restore connection
+        self.net.hostname = self.good_hostname
+
+        time.sleep(1)
+        self.assertTrue(self.net.is_up)
+        self.assertTrue(self.net)
+        time.sleep(3)
+        self.assertTrue(self.net.is_up)
+        self.assertTrue(self.net)
+
+    def tearDown(self):
+        self.net.stop_pinging()
 
 
 class TestConfig(unittest.TestCase):

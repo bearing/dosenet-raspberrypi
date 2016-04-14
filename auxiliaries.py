@@ -152,13 +152,15 @@ class NetworkStatus(object):
         this is the interval between pings, if the network was down
       network_led=None
         an instance of LED class
+      pinging=True
+        instantiate the object with live pinging
       verbosity=1
         verbosity 0: nothing printed
         verbosity 1: only network down printed
         verbosity 2: always printed
 
     Output:
-      use the __bool__() function
+      use the __nonzero__() function
       e.g.:
       ns = NetworkStatus()
       if ns:
@@ -170,6 +172,7 @@ class NetworkStatus(object):
                  up_interval_s=300,
                  down_interval_s=5,
                  network_led=None,
+                 pinging=True,
                  verbosity=1):
         self.hostname = hostname
         self.up_interval_s = up_interval_s
@@ -180,10 +183,27 @@ class NetworkStatus(object):
         self.v = verbosity
         set_verbosity(self)
 
-        self.is_up = False
+        self.is_up = None
 
+        self._p = None
+        if pinging:
+            self.start_pinging()
+        else:
+            self.pinging = False
+
+    def start_pinging(self):
+        """Start the subprocess that pings at intervals"""
+        if self._p:
+            self._p.terminate()
         self._p = multiprocessing.Process(target=self._do_pings)
         self._p.start()
+        self.pinging = True
+
+    def stop_pinging(self):
+        """Stop the subprocess that pings at intervals"""
+        if self._p:
+            self._p.terminate()
+        self.pinging = False
 
     def update(self):
         """Update network status"""
@@ -219,7 +239,8 @@ class NetworkStatus(object):
         return self.is_up
 
     # python2 uses __nonzero__ for __bool__
-    __nonzero__ = __bool__
+    def __nonzero__(self):
+        return self.is_up
 
     def cleanup(self):
         GPIO.cleanup()
