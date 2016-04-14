@@ -2,31 +2,20 @@
 
 from __future__ import print_function
 
-try:
-    import RPi.GPIO as GPIO
-    RPI = True
-except ImportError:
-    print('Not on a Raspberry Pi, proceeding anyway')
-    RPI = False
-
 import unittest
 import time
+
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
 
 import sensor
 import sender
 import auxiliaries
 import manager
 
-POWER_LED_PIN = 19
-NETWORK_LED_PIN = 20
-COUNTS_LED_PIN = 21
-
-# ANSI color codes
-ANSI_RESET = '\033[0m'
-ANSI_BOLD = '\033[1m'
-ANSI_YEL = '\033[33m' + ANSI_BOLD
-ANSI_GR = '\033[32m' + ANSI_BOLD
-ANSI_RED = '\033[31m' + ANSI_BOLD
+from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
 
 
 class TestVerbosity(unittest.TestCase):

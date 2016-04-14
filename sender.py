@@ -4,9 +4,7 @@ from __future__ import print_function
 import socket
 
 from auxiliaries import set_verbosity
-
-DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
-DEFAULT_PORT = 5005
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 
 
 class ServerSender(object):

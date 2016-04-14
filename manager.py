@@ -1,47 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-try:
-    import RPi.GPIO as GPIO
-    RPI = True
-except ImportError:
-    print('Not on a Raspberry Pi, proceeding anyway')
-    RPI = False
 
 import time
 import argparse
+
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
 
 from auxiliaries import LED, Config, PublicKey, NetworkStatus
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
 
-# SIG >> float (~3.3V) --> 0.69V --> EXP charge back to float (~3.3V)
-# NS  >> ~0V (GPIO.LOW) --> 3.3V (GPIO.HIGH) RPi rail
-
-# Standard pin numbers (Broadcom, a.k.a. what's labeled on the pi hat):
-SIGNAL_PIN = 17
-NOISE_PIN = 4
-POWER_LED_PIN = 19
-NETWORK_LED_PIN = 20
-COUNTS_LED_PIN = 21
-
-# Note: GPIO.LOW  - 0V
-#       GPIO.HIGH - 3.3V or 5V ???? (RPi rail voltage)
-
-DEFAULT_CONFIG = '/home/pi/config/config.csv'
-DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
-DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
-DEFAULT_PORT = 5005
-
-DEFAULT_INTERVAL_NORMAL = 300
-DEFAULT_INTERVAL_TEST = 30
-
-# ANSI color codes
-ANSI_RESET = '\033[0m'
-ANSI_BOLD = '\033[1m'
-ANSI_YEL = '\033[33m' + ANSI_BOLD
-ANSI_GR = '\033[32m' + ANSI_BOLD
+from globalvalues import SIGNAL_PIN, NOISE_PIN
+from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
+from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
+from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR
 
 # this is hacky, but, the {{}} get converted to {} in the first .format() call
 #   and then get filled in later

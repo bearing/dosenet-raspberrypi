@@ -14,25 +14,18 @@
 
 from __future__ import print_function
 
-try:
-    import RPi.GPIO as GPIO
-    RPI = True
-except ImportError:
-    print('Not on a Raspberry Pi, proceeding anyway')
-    RPI = False
-
 import numpy as np
 import time
 import collections
 
-from auxiliaries import LED, datetime_from_epoch, set_verbosity
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
 
-# Standard pin numbers (Broadcom):
-SIGNAL_PIN = 17
-NOISE_PIN = 4
-NETWORK_LED_PIN = 20
-POWER_LED_PIN = 26
-COUNTS_LED_PIN = 21
+from auxiliaries import LED, datetime_from_epoch, set_verbosity
+from globalvalues import SIGNAL_PIN, NOISE_PIN
+from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from globalvalues import DEFAULT_MAX_ACCUM_TIME
 
 
 class Sensor(object):
@@ -48,7 +41,7 @@ class Sensor(object):
 
     def __init__(self,
                  counts_LED=None,
-                 max_accumulation_time_s=3600,
+                 max_accumulation_time_s=DEFAULT_MAX_ACCUM_TIME,
                  use_gpio=None,
                  verbosity=1,
                  ):
