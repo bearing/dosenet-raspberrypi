@@ -5,6 +5,7 @@ from __future__ import print_function
 import unittest
 import time
 import os
+import warnings
 
 from globalvalues import RPI
 if RPI:
@@ -19,6 +20,22 @@ import cust_crypt
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
+
+if RPI:
+    test_config_path = DEFAULT_CONFIG
+    test_publickey_path = DEFAULT_PUBLICKEY
+else:
+    # obviously, for security, the config and public key should NOT be
+    #   included in the (public) repo!
+    # these paths are for Brian's LBL desktop, but you could put them
+    #   here for other machines too.
+    test_config_path = './testconfig/test1.csv'
+    test_publickey_path = './testconfig/id_rsa_lbl.pub'
+    if (os.path.exists(test_config_path) and
+            os.path.exists(test_publickey_path)):
+        configs_present = True
+    else:
+        configs_present = False
 
 
 class TestVerbosity(unittest.TestCase):
@@ -177,19 +194,10 @@ class TestNetworkStatusLive(TestNetworkStatus):
         GPIO.cleanup()
 
 
+@unittest.skipUnless(configs_present, "Config test requires config files")
 class TestConfig(unittest.TestCase):
 
     def test(self):
-        if RPI:
-            test_config_path = DEFAULT_CONFIG
-        else:
-            # obviously, for security, the config and public key should NOT be
-            #   included in the (public) repo!
-            # these paths are for Brian's LBL desktop, but you could put them
-            #   here for other machines too.
-            test_config_path = './testconfig/test1.csv'
-            if not os.path.exists(test_config_path):
-                raise unittest.SkipTest('No config file found for testing')
         config = auxiliaries.Config(test_config_path, verbosity=2)
         self.assertIsNotNone(config.ID)
         self.assertIsNotNone(config.hash)
@@ -197,19 +205,10 @@ class TestConfig(unittest.TestCase):
         self.assertIsNotNone(config.long)
 
 
+@unittest.skipUnless(configs_present, "PublicKey test requires config files")
 class TestPublicKey(unittest.TestCase):
 
     def setUp(self):
-        if RPI:
-            test_publickey_path = DEFAULT_PUBLICKEY
-        else:
-            # obviously, for security, the config and public key should NOT be
-            #   included in the (public) repo!
-            # these paths are for Brian's LBL desktop, but you could put them
-            #   here for other machines too.
-            test_publickey_path = './testconfig/id_rsa_lbl.pub'
-            if not os.path.exists(test_publickey_path):
-                raise unittest.SkipTest('No publickey file found for testing')
         self.publickey = auxiliaries.PublicKey(
             test_publickey_path, verbosity=2)
         self.assertIsInstance(
@@ -265,18 +264,26 @@ class TestSender(unittest.TestCase):
             network_status=None,
             config=None,
             publickey=None,
-            verbosity=2)
-        ss.send_cpm(0, 0)
+            verbosity=4)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', UserWarning)
+            ss.send_cpm(0, 0)
+            self.assertEqual(len(w), 1)
+            self.assertIn('config', w[-1].message)
 
-    @unittest.skipUnless(RPI, "Only run on RPi")
+    @unittest.skipUnless(configs_present, "Sender tests require config files")
     def test_missing_publickey(self):
         ss = sender.ServerSender(
             manager=None,
             network_status=None,
-            config=DEFAULT_CONFIG,
+            config=test_config_path,
             publickey=None,
             verbosity=2)
-        ss.send_cpm(0, 0)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', UserWarning)
+            ss.send_cpm(0, 0)
+            self.assertEqual(len(w), 1)
+            self.assertIn('publickey', w[-1].message)
 
     # ...
 

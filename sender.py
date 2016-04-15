@@ -2,6 +2,7 @@
 from __future__ import print_function
 
 import socket
+import warnings
 
 from auxiliaries import set_verbosity
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
@@ -88,9 +89,15 @@ class ServerSender(object):
                 return encrypted_packet
             else:
                 self.vprint(1, 'No publickey; cannot encrypt packet')
+                if self.v >= 4:
+                    warnings.warn(
+                        'No publickey; cannot encrypt packet', PacketWarning)
                 return None
         else:
             self.vprint(1, 'No config file; cannot construct packet')
+            if self.v >= 4:
+                warnings.warn(
+                    'No config file; cannot construct packet', PacketWarning)
             return None
 
     def send_packet(self, encrypted_packet):
@@ -118,3 +125,7 @@ class ServerSender(object):
             return None
         # TODO: handle errors?
         # TODO: return status?
+
+
+class PacketWarning(UserWarning):
+    pass
