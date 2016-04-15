@@ -22,9 +22,8 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, datetime_from_epoch, set_verbosity
-from globalvalues import SIGNAL_PIN, NOISE_PIN
-from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from auxiliaries import datetime_from_epoch, set_verbosity
+from globalvalues import SIGNAL_PIN
 from globalvalues import DEFAULT_MAX_ACCUM_TIME
 
 
@@ -175,98 +174,6 @@ class Sensor(object):
     def __exit__(self, *args):
         print('Exiting Sensor instance {}'.format(self))
         self.cleanup()
-
-
-def test():
-    """
-    Test suite
-    """
-
-    # Clean up everything in case of bad previous session
-    for pin in (
-            SIGNAL_PIN,
-            NOISE_PIN,
-            NETWORK_LED_PIN,
-            COUNTS_LED_PIN,
-            POWER_LED_PIN):
-        try:
-            GPIO.cleanup(pin)
-        except RuntimeWarning:
-            # 'No channels have been set up yet - nothing to clean up!'
-            pass
-
-    print('Testing LED class...')
-    test_LED()
-
-    print('Testing Sensor class. KeyboardInterrupt to skip..')
-    try:
-        test_Sensor()
-    except KeyboardInterrupt:
-        print('  Okay, skipping remaining Sensor tests!')
-
-
-def test_LED():
-    led = LED(pin=NETWORK_LED_PIN)
-    print('  LED on')
-    led.on()
-    time.sleep(1)
-    print('  LED off')
-    led.off()
-    time.sleep(1)
-    print('  LED flash')
-    led.flash()
-    time.sleep(1)
-    print('  LED start blink')
-    led.start_blink()
-    time.sleep(3.2)
-    # stop mid-blink. the LED should turn off.
-    print('  LED stop blink')
-    led.stop_blink()
-    time.sleep(0.5)
-
-
-def test_Sensor():
-    test_accum_time = 30
-    print('  Creating Sensor with max_accumulation_time_s={}'.format(
-        test_accum_time))
-    with Sensor(max_accumulation_time_s=test_accum_time) as d:
-        print('  Testing check_accumulation() on empty queue')
-        d.check_accumulation()
-        print('  Waiting for counts')
-        max_test_time_s = 300
-        start_time = time.time()
-
-        first_count_time_float = None
-        while time.time() - start_time < max_test_time_s:
-            time.sleep(10)
-            if d.get_all_counts():
-                first_count_time_float = d.get_all_counts()[0]
-                break
-        else:
-            # "break" skips over this
-            print('    Got no counts in {} seconds! May be a problem.'.format(
-                max_test_time_s),
-                'Skipping accumulation test')
-        if first_count_time_float:
-            # accumulation test
-            test_Sensor_accum(d, first_count_time_float, test_accum_time)
-
-
-def test_Sensor_accum(d, first_count_time_float, test_accum_time):
-    """ accumulation test """
-    end_time_s = first_count_time_float + test_accum_time + 5
-    wait_time_s = (end_time_s - time.time())
-    print('  Accumulation test; waiting another {} s'.format(wait_time_s))
-    time.sleep(wait_time_s)
-    # get_all_counts() calls check_accumulation(), so don't use it here
-    n = len(d.counts)
-
-    d.check_accumulation()
-    # the first count ought to be removed now
-    assert len(d.get_all_counts()) < n
-    # also make sure there are no counts within accum time
-    if d.get_all_counts():
-        assert time.time() - d.get_all_counts()[0] < test_accum_time
 
 
 if __name__ == '__main__':

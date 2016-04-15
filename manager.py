@@ -43,6 +43,7 @@ class Manager(object):
 
     # Note: keep the __init__() keywords identical to the keywords in argparse,
     #   in order to avoid unpacking them individually.
+    # The None's are handled differently, depending on whether test mode.
     def __init__(self,
                  network_LED_pin=NETWORK_LED_PIN,
                  power_LED_pin=POWER_LED_PIN,

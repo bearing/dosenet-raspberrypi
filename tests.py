@@ -184,5 +184,40 @@ class TestPublicKey(unittest.TestCase):
     pass
 
 
+class TestSensor(unittest.TestCase):
+
+    def setUp(self):
+        # fake sensor - only simulating counts
+        self.sensor = sensor.Sensor(max_accumulation_time_s=2, use_gpio=False)
+
+    def tearDown(self):
+        self.sensor.cleanup()
+        self.sensor = None
+
+    def test_basic_counts(self):
+        self.assertEqual(len(self.sensor.get_all_counts()), 0)
+        n = 3
+        [self.sensor.count() for _ in xrange(n)]
+        self.assertEqual(len(self.sensor.get_all_counts()), n)
+
+    def test_max_accum(self):
+        self.assertEqual(len(self.sensor.get_all_counts()), 0)
+
+        n1 = 3
+        [self.sensor.count() for _ in xrange(n1)]
+        self.assertEqual(len(self.sensor.get_all_counts()), n1)
+
+        time.sleep(1)
+        n2 = 4
+        [self.sensor.count() for _ in xrange(n2)]
+        self.assertEqual(len(self.sensor.get_all_counts()), n1 + n2)
+
+        time.sleep(1.5)
+        self.assertEqual(len(self.sensor.get_all_counts()), n2)
+
+        time.sleep(1)
+        self.assertEqual(len(self.sensor.get_all_counts()), 0)
+
+
 if __name__ == '__main__':
     unittest.main()
