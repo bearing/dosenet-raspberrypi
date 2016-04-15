@@ -183,7 +183,8 @@ class NetworkStatus(object):
         self.v = verbosity
         set_verbosity(self)
 
-        self.is_up = None
+        init_state = 'N'    # for None
+        self.up_state = multiprocessing.Value('c', init_state)
 
         self._p = None
         if pinging:
@@ -195,7 +196,9 @@ class NetworkStatus(object):
         """Start the subprocess that pings at intervals"""
         if self._p:
             self._p.terminate()
-        self._p = multiprocessing.Process(target=self._do_pings)
+        self._p = multiprocessing.Process(
+            target=self._do_pings,
+            args=(self.up_state,))
         self._p.start()
         self.pinging = True
 
@@ -205,27 +208,35 @@ class NetworkStatus(object):
             self._p.terminate()
         self.pinging = False
 
-    def update(self):
-        """Update network status"""
+    def update(self, up_state=None):
+        """
+        Update network status.
+
+        up_state is the shared memory object for the pinging process.
+        If calling update() manually, leave it as None (default).
+        """
+
+        if up_state is None:
+            up_state = self.up_state
 
         response = self._ping()
         if response == 0:
-            self.is_up = True
+            up_state.value = 'U'
             if self.led:
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
-            self.is_up = False
+            up_state.value = 'D'
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
 
-    def _do_pings(self):
+    def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
         while True:
-            self.update()
+            self.update(up_state=up_state)
             if self:
                 sleep(self.up_interval_s)
             else:
@@ -235,12 +246,21 @@ class NetworkStatus(object):
         """one ping"""
         return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
 
+    def _get_state(self):
+        if self.up_state.value == 'U':
+            return True
+        if self.up_state.value == 'D':
+            return False
+        else:
+            self.update()
+            return self._get_state()
+
     def __bool__(self):
-        return self.is_up
+        return self._get_state()
 
     # python2 uses __nonzero__ for __bool__
     def __nonzero__(self):
-        return self.is_up
+        return self._get_state()
 
     def cleanup(self):
         GPIO.cleanup()
