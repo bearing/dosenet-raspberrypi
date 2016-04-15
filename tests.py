@@ -15,6 +15,7 @@ import auxiliaries
 import manager
 
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
 
 
@@ -217,6 +218,30 @@ class TestSensor(unittest.TestCase):
 
         time.sleep(1)
         self.assertEqual(len(self.sensor.get_all_counts()), 0)
+
+
+class TestSender(unittest.TestCase):
+
+    def test_missing_config(self):
+        ss = sender.ServerSender(
+            manager=None,
+            network_status=None,
+            config=None,
+            publickey=None,
+            verbosity=2)
+        ss.send_cpm(0, 0)
+
+    @unittest.skipUnless(RPI, "Only run on RPi")
+    def test_missing_publickey(self):
+        ss = sender.ServerSender(
+            manager=None,
+            network_status=None,
+            config=DEFAULT_CONFIG,
+            publickey=None,
+            verbosity=2)
+        ss.send_cpm(0, 0)
+
+    # ...
 
 
 if __name__ == '__main__':

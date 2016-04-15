@@ -38,6 +38,7 @@ class ServerSender(object):
             if manager is None:
                 self.vprint(
                     1, 'ServerSender starting without network status object')
+                self.network_up = None
             else:
                 self.network_up = manager.network_up
         else:
