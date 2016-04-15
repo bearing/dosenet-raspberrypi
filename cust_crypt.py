@@ -7,6 +7,9 @@ class PublicDEncrypt:
 
     def __init__(self, key_file_lst=[]):
 
+        self.private_key = None
+        self.public_key = None
+
         for key_file in key_file_lst:
             key = self.read_key_file(key_file)
             if not key:
@@ -17,16 +20,20 @@ class PublicDEncrypt:
                 self.public_key = key
 
     def encrypt_message(self, message):
-        return self.public_key.encrypt(message, 32)
+        if self.public_key is None:
+            return None
+        else:
+            return self.public_key.encrypt(message, 32)
 
     def read_key_file(self, key_file):
         try:
-            f = open(key_file, 'r')
-        except:
-            print '\t\t\t ERROR'
-            print '\t\t ~~~~ Could not find key file - where is it? ~~~~'
+            with open(key_file, 'r') as f:
+                return rsa.importKey(f.read())
+        except IOError:
             return None
-        return rsa.importKey(f.read())
 
     def decrypt_message(self, message):
-        return self.private_key.decrypt(message)
+        if self.private_key is None:
+            return None
+        else:
+            return self.private_key.decrypt(message)

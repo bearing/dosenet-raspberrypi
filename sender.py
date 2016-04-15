@@ -72,7 +72,9 @@ class ServerSender(object):
         self.port = port
 
     def construct_packet(self, cpm, cpm_error, error_code=0):
-        """basically copied from old code"""
+        """
+        Construct the raw packet string. (basically copied from old code)
+        """
 
         if self.config is not None:
             c = ','
@@ -82,17 +84,7 @@ class ServerSender(object):
                 str(cpm) + c +
                 str(cpm_error) + c +
                 str(error_code))
-            if self.encrypter is not None:
-                encrypted_packet = (
-                    self.encrypter.encrypt_message(raw_packet)[0])
-                # encrypt_message() returns a length-1 tuple, hence the [0]
-                return encrypted_packet
-            else:
-                self.vprint(1, 'No publickey; cannot encrypt packet')
-                if self.v >= 4:
-                    warnings.warn(
-                        'No publickey; cannot encrypt packet', PacketWarning)
-                return None
+            return raw_packet
         else:
             self.vprint(1, 'No config file; cannot construct packet')
             if self.v >= 4:
@@ -100,12 +92,29 @@ class ServerSender(object):
                     'No config file; cannot construct packet', PacketWarning)
             return None
 
-    def send_packet(self, encrypted_packet):
-        """basically copied from old code"""
+    def encrypt_packet(self, raw_packet):
+        """Encrypt the raw packet"""
+
+        if not raw_packet:
+            return None
+        if self.encrypter is not None:
+            encrypted = self.encrypter.encrypt_message(raw_packet)[0]
+            return encrypted
+        else:
+            self.vprint(1, 'No publickey; cannot encrypt packet')
+            if self.v >= 4:
+                warnings.warn(
+                    'No publickey; cannot encrypt packet', PacketWarning)
+            return None
+
+    def send_packet(self, encrypted):
+        """
+        Send the encrypted packet. (basically copied from old code)
+        """
 
         if self.network_up or self.network_up is None:
             try:
-                self.socket.sendto(encrypted_packet, (self.address, self.port))
+                self.socket.sendto(encrypted, (self.address, self.port))
             except socket.error as e:
                 self.vprint(1, '~ Socket error! {}'.format(e))
                 # force update of network status - could be just no network
@@ -114,10 +123,11 @@ class ServerSender(object):
             self.vprint(2, 'Network DOWN, not sending packet')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
-        """Wrapper for construct_packet and send_packet"""
+        """Construct, encrypt, and send the packet"""
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
-        if packet is None:
+        encrypted = self.encrypt_packet(packet)
+        if encrypted is None:
             self.vprint(2, 'Packet not sent')
             return None
         else:

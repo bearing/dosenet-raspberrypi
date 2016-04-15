@@ -298,10 +298,10 @@ class PublicKey(object):
 
     def __init__(self, filename, verbosity=1):
         set_verbosity(self, verbosity=verbosity)
-        try:
-            self.encrypter = cust_crypt.PublicDEncrypt(
-                key_file_lst=[filename])
-        except IOError:
-            self.vprint(1, 'IOError loading public key file.',
-                        'Check filename, path, permissions?')
-            return None
+
+        self.encrypter = cust_crypt.PublicDEncrypt(
+            key_file_lst=[filename])
+        if not self.encrypter.public_key:
+            self.encrypter = None
+            self.vprint(
+                1, 'Failed to load public key file, {}!'.format(filename))
