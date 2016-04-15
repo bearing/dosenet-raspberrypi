@@ -100,7 +100,6 @@ class TestNetworkStatus(unittest.TestCase):
 
     def test_is_up(self):
         self.net.update()
-        self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
 
     def test_is_down(self):
@@ -108,7 +107,6 @@ class TestNetworkStatus(unittest.TestCase):
         self.net.hostname = self.bad_hostname
         self.net.update()
 
-        self.assertFalse(self.net.is_up)
         self.assertFalse(self.net)
 
         self.net.hostname = self.good_hostname
@@ -121,7 +119,8 @@ class TestNetworkStatus(unittest.TestCase):
         print()
 
 
-@unittest.skipUnless(RPI, "NetworkStatus test only operates on a Raspberry Pi")
+@unittest.skipUnless(
+    RPI, "NetworkStatus live test only operates on a Raspberry Pi")
 class TestNetworkStatusLive(TestNetworkStatus):
     """
     check the subprocess that pings at intervals
@@ -146,10 +145,8 @@ class TestNetworkStatusLive(TestNetworkStatus):
     def test_is_up(self):
         print('test_is_up (live)...')
         time.sleep(2)
-        self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
         time.sleep(6)
-        self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
 
     @unittest.skip(
@@ -161,7 +158,6 @@ class TestNetworkStatusLive(TestNetworkStatus):
         self.net.hostname = self.bad_hostname
 
         time.sleep(3)
-        self.assertFalse(self.net.is_up)
         self.assertFalse(self.net)
         time.sleep(3)
 
@@ -169,10 +165,8 @@ class TestNetworkStatusLive(TestNetworkStatus):
         self.net.hostname = self.good_hostname
 
         time.sleep(1)
-        self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
         time.sleep(3)
-        self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
 
     def tearDown(self):
