@@ -6,6 +6,7 @@ import unittest
 import time
 import os
 import warnings
+import ipdb as pdb
 
 from globalvalues import RPI
 if RPI:
@@ -269,21 +270,21 @@ class TestSender(unittest.TestCase):
             warnings.simplefilter('always', UserWarning)
             ss.send_cpm(0, 0)
             self.assertEqual(len(w), 1)
-            self.assertIn('config', w[-1].message)
+            self.assertIn('config', w[-1].message.message)
 
     @unittest.skipUnless(configs_present, "Sender tests require config files")
     def test_missing_publickey(self):
         ss = sender.ServerSender(
             manager=None,
             network_status=None,
-            config=test_config_path,
+            config=auxiliaries.Config(test_config_path),
             publickey=None,
-            verbosity=2)
+            verbosity=4)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always', UserWarning)
             ss.send_cpm(0, 0)
             self.assertEqual(len(w), 1)
-            self.assertIn('publickey', w[-1].message)
+            self.assertIn('publickey', w[-1].message.message)
 
     # ...
 
