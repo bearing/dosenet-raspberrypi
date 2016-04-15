@@ -43,43 +43,38 @@ class TestVerbosity(unittest.TestCase):
         print()
 
 
+@unittest.skipUnless(RPI)
 class TestLEDs(unittest.TestCase):
 
     def setUp(self):
-        if RPI:
-            pins = (POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN)
-            self.LEDs = [auxiliaries.LED(pin=p) for p in pins]
-            print('Testing LEDs',)
+        pins = (POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN)
+        self.LEDs = [auxiliaries.LED(pin=p) for p in pins]
+        print('Testing LEDs',)
 
     def test_LED(self):
-        if RPI:
-            print('on')
-            [LED.on() for LED in self.LEDs]
-            time.sleep(1)
+        print('on')
+        [LED.on() for LED in self.LEDs]
+        time.sleep(1)
 
-            print('off')
-            [LED.off() for LED in self.LEDs]
-            time.sleep(1)
+        print('off')
+        [LED.off() for LED in self.LEDs]
+        time.sleep(1)
 
-            print('flash')
-            [LED.flash() for LED in self.LEDs]
-            time.sleep(1)
+        print('flash')
+        [LED.flash() for LED in self.LEDs]
+        time.sleep(1)
 
-            print('start blink')
-            [LED.start_blink(interval=0.5) for LED in self.LEDs]
-            time.sleep(3)
+        print('start blink')
+        [LED.start_blink(interval=0.5) for LED in self.LEDs]
+        time.sleep(3)
 
-            print('stop blink')
-            [LED.stop_blink() for LED in self.LEDs]
-            time.sleep(1)
-        else:
-            print('Not on a Raspberry Pi - skipping LED tests')
-            self.assertTrue(True)
+        print('stop blink')
+        [LED.stop_blink() for LED in self.LEDs]
+        time.sleep(1)
 
     def tearDown(self):
-        if RPI:
-            GPIO.cleanup()
-            print()
+        GPIO.cleanup()
+        print()
 
 
 class TestNetworkStatus(unittest.TestCase):
@@ -126,6 +121,7 @@ class TestNetworkStatus(unittest.TestCase):
         print()
 
 
+@unittest.skipUnless(RPI)
 class TestNetworkStatusLive(TestNetworkStatus):
     """
     check the subprocess that pings at intervals
@@ -136,10 +132,7 @@ class TestNetworkStatusLive(TestNetworkStatus):
     # overwrite setUp(), tearDown(), test_is_up(), test_is_down()
 
     def setUp(self):
-        if RPI:
-            self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
-        else:
-            self.LED = None
+        self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
         print('Testing NetworkStatus (live)')
 
         self.net = auxiliaries.NetworkStatus(
@@ -159,6 +152,9 @@ class TestNetworkStatusLive(TestNetworkStatus):
         self.assertTrue(self.net.is_up)
         self.assertTrue(self.net)
 
+    @unittest.skip(
+        ("test_is_down (live) doesn't work until I can " +
+         "hack the system network settings..."))
     def test_is_down(self):
         print('test_is_down (live)...')
         # give an invalid hostname
@@ -181,6 +177,7 @@ class TestNetworkStatusLive(TestNetworkStatus):
 
     def tearDown(self):
         self.net.stop_pinging()
+        GPIO.cleanup()
 
 
 class TestConfig(unittest.TestCase):
