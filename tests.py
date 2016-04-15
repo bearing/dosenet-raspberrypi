@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import unittest
 import time
+import os
 
 from globalvalues import RPI
 if RPI:
@@ -13,6 +14,7 @@ import sensor
 import sender
 import auxiliaries
 import manager
+import cust_crypt
 
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
@@ -176,13 +178,48 @@ class TestNetworkStatusLive(TestNetworkStatus):
 
 
 class TestConfig(unittest.TestCase):
-    # TODO
-    pass
+
+    def test(self):
+        if RPI:
+            test_config_path = DEFAULT_CONFIG
+        else:
+            # obviously, for security, the config and public key should NOT be
+            #   included in the (public) repo!
+            # these paths are for Brian's LBL desktop, but you could put them
+            #   here for other machines too.
+            test_config_path = './testconfig/test1.csv'
+            if not os.path.exists(test_config_path):
+                raise unittest.SkipTest('No config file found for testing')
+        config = auxiliaries.Config(test_config_path, verbosity=2)
+        self.assertIsNotNone(config.ID)
+        self.assertIsNotNone(config.hash)
+        self.assertIsNotNone(config.lat)
+        self.assertIsNotNone(config.long)
 
 
 class TestPublicKey(unittest.TestCase):
-    # TODO
-    pass
+
+    def setUp(self):
+        if RPI:
+            test_publickey_path = DEFAULT_PUBLICKEY
+        else:
+            # obviously, for security, the config and public key should NOT be
+            #   included in the (public) repo!
+            # these paths are for Brian's LBL desktop, but you could put them
+            #   here for other machines too.
+            test_publickey_path = './testconfig/id_rsa_lbl.pub'
+            if not os.path.exists(test_publickey_path):
+                raise unittest.SkipTest('No publickey file found for testing')
+        self.publickey = auxiliaries.PublicKey(
+            test_publickey_path, verbosity=2)
+        self.assertIsInstance(
+            self.publickey.encrypter, cust_crypt.PublicDEncrypt)
+
+    def test_encrypt(self):
+        test_packet = 'This is a string with which we are testing encryption'
+        encrypted_packet = self.publickey.encrypter.encrypt_message(
+            test_packet)[0]
+        self.assertIsInstance(encrypted_packet, str)
 
 
 class TestSensor(unittest.TestCase):

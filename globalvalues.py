@@ -30,7 +30,7 @@ DEFAULT_INTERVAL_TEST = 30
 DEFAULT_MAX_ACCUM_TIME = 3600
 
 # ANSI color codes
-ANSI_RESET = '\033[0m'
+ANSI_RESET = '\033[37m' + '\033[22m'    # white and not bold
 ANSI_BOLD = '\033[1m'
 ANSI_RED = '\033[31m' + ANSI_BOLD
 ANSI_GR = '\033[32m' + ANSI_BOLD

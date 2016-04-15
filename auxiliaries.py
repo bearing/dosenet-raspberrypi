@@ -280,7 +280,10 @@ class Config(object):
         except IOError:
             self.vprint(1, 'IOError loading config file.',
                         'Check filename, path, permissions?')
-            return None
+            self.ID = None
+            self.hash = None
+            self.lat = None
+            self.long = None
 
         self.ID = content['stationID']
         self.hash = content['message_hash']

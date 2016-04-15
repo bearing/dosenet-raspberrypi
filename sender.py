@@ -84,6 +84,7 @@ class ServerSender(object):
             if self.encrypter is not None:
                 encrypted_packet = (
                     self.encrypter.encrypt_message(raw_packet)[0])
+                # encrypt_message() returns a length-1 tuple, hence the [0]
                 return encrypted_packet
             else:
                 self.vprint(1, 'No publickey; cannot encrypt packet')
