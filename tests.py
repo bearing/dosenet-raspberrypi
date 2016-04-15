@@ -43,7 +43,7 @@ class TestVerbosity(unittest.TestCase):
         print()
 
 
-@unittest.skipUnless(RPI)
+@unittest.skipUnless(RPI, "LED test only runs on a Raspberry Pi")
 class TestLEDs(unittest.TestCase):
 
     def setUp(self):
@@ -121,7 +121,7 @@ class TestNetworkStatus(unittest.TestCase):
         print()
 
 
-@unittest.skipUnless(RPI)
+@unittest.skipUnless(RPI, "NetworkStatus test only operates on a Raspberry Pi")
 class TestNetworkStatusLive(TestNetworkStatus):
     """
     check the subprocess that pings at intervals
