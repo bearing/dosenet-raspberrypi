@@ -56,6 +56,9 @@ class ServerSender(object):
             if manager is None:
                 self.vprint(1, 'ServerSender starting without publickey file')
                 self.encrypter = None
+            elif manager.publickey is None:
+                self.vprint(1, 'ServerSender starting without publickey file')
+                self.encrypter = None
             else:
                 self.encrypter = manager.publickey.encrypter
         else:
