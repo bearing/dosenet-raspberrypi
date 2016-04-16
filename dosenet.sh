@@ -14,6 +14,7 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
+
 CONFIGFILE=$CONFIGDIR/config.csv
 if [ ! -f $CONFIGFILE ]
 then
@@ -39,7 +40,7 @@ case "$1" in
     echo "Starting DoseNet script" >> $LOG
     echo "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/udp_sender.py -f $CONFIGFILE --public_key $PUBLICKEY
+    sudo screen -dm python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY
     date >> $LOG
     ;;
   stop)
@@ -51,7 +52,7 @@ case "$1" in
   test)
     echo "Testing DoseNet Script" >> $LOG
     echo "Testing DoseNet Script"
-    sudo python $DOSENET/udp_sender.py -f $CONFIGFILE --test
+    sudo python $DOSENET/manager.py -f $CONFIGFILE --test
     date >> $LOG
     ;;
   *)
