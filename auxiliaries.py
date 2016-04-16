@@ -279,7 +279,12 @@ class Config(object):
 
         self.ID = content['stationID']
         self.hash = content['message_hash']
-        self.lat = content['lat']
+        try:
+            self.lat = content['lat']
+        except KeyError:
+            self.vprint(1, "WARNING: config file key error.",
+                        "Check for 'lag' instead of 'lat'")
+            self.lat = content['lag']
         self.long = content['long']
 
 
