@@ -66,7 +66,6 @@ class Manager(object):
         self.running = False
 
         self.handle_input(interval, config, publickey)
-        self.interval = interval
 
         # LEDs
         if RPI:
@@ -104,6 +103,8 @@ class Manager(object):
                 config = DEFAULT_CONFIG
             if publickey is None:
                 publickey = DEFAULT_PUBLICKEY
+
+        self.interval = interval
 
         if config:
             try:
