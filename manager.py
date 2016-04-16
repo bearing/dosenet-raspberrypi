@@ -148,9 +148,7 @@ class Manager(object):
 
         try:
             while self.running:
-                sleeptime = this_end - time.time()
-                time.sleep(sleeptime)
-                assert time.time() > this_end
+                self.sleep_until(this_end)
                 self.handle_cpm(this_start, this_end)
 
                 this_start = this_end
@@ -166,6 +164,13 @@ class Manager(object):
     def stop(self):
         """Stop counting time."""
         self.running = False
+
+    def sleep_until(self, end_time):
+        """Sleep until the given timestamp."""
+
+        sleeptime = end_time - time.time()
+        time.sleep(sleeptime)
+        assert time.time() > end_time
 
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
