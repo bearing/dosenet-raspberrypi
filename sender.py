@@ -2,7 +2,6 @@
 from __future__ import print_function
 
 import socket
-import warnings
 
 from auxiliaries import set_verbosity
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
@@ -10,7 +9,8 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 
 class ServerSender(object):
     """
-    Sends UDP packets to the DoseNet server.
+    Provides ServerSender.send_cpm() for sending UDP packets to the DoseNet
+    server.
     """
 
     def __init__(self,
@@ -31,6 +31,16 @@ class ServerSender(object):
         self.v = verbosity
         set_verbosity(self)
 
+        self.handle_input(manager, network_status, config, publickey)
+
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        self.address = address
+        self.port = port
+
+    def handle_input(self, manager, network_status, config, publickey):
+
+        # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
             self.vprint(1, 'ServerSender starting without Manager object')
         self.manager = manager
@@ -65,11 +75,6 @@ class ServerSender(object):
                 self.encrypter = manager.publickey.encrypter
         else:
             self.encrypter = publickey.encrypter
-
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-        self.address = address
-        self.port = port
 
     def construct_packet(self, cpm, cpm_error, error_code=0):
         """
