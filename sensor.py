@@ -82,14 +82,14 @@ class Sensor(object):
                 SIGNAL_PIN, GPIO.FALLING,
                 callback=self.count,
                 bouncetime=1)
-        except RuntimeError as e:
+        except RuntimeError:
             if self.v > 1:
                 self.vprint(1, 'GPIO interrupt setup failed',
                             '({} tries remaining)'.format(n_tries))
             # Happened once in testing. It worked on second try.
 
             if n_tries < 1:
-                raise e
+                raise
             else:
                 time.sleep(1)
                 self.add_interrupt(n_tries=(n_tries - 1))
@@ -145,15 +145,16 @@ class Sensor(object):
     def check_accumulation(self):
         """Remove counts that are older than accum_time"""
 
-        while self.counts:      # gotta make sure it's not an empty queue
-            if self.counts[0] > time.time() - self.accum_time:
-                # done
-                break
-            self.counts.popleft()
+        try:
+            while self.counts[0] < time.time() - self.accum_time:
+                self.counts.popleft()
+        except IndexError:      # empty queue
+            pass
 
     def reset_GPIO(self):
         """
         Older code does this every loop. I don't know whether it's needed.
+        As of this refactoring, the device runs fine (for ~10 minutes) without.
         """
         GPIO.remove_event_detect(SIGNAL_PIN)
         self.add_interrupt()
