@@ -76,66 +76,55 @@ class ServerSender(object):
         Construct the raw packet string. (basically copied from old code)
         """
 
-        if self.config is not None:
-            c = ','
+        c = ','
+        try:
             raw_packet = (
                 str(self.config.hash) + c +
                 str(self.config.ID) + c +
                 str(cpm) + c +
                 str(cpm_error) + c +
                 str(error_code))
-            return raw_packet
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
         else:
-            self.vprint(1, 'No config file; cannot construct packet')
-            if self.v >= 4:
-                warnings.warn(
-                    'No config file; cannot construct packet', PacketWarning)
-            return None
+            return raw_packet
 
     def encrypt_packet(self, raw_packet):
         """Encrypt the raw packet"""
 
-        if not raw_packet:
-            return None
-        if self.encrypter is not None:
+        try:
             encrypted = self.encrypter.encrypt_message(raw_packet)[0]
-            return encrypted
+        except AttributeError:
+            raise MissingFile('Missing or broken PublicKey object')
         else:
-            self.vprint(1, 'No publickey; cannot encrypt packet')
-            if self.v >= 4:
-                warnings.warn(
-                    'No publickey; cannot encrypt packet', PacketWarning)
-            return None
+            return encrypted
 
     def send_packet(self, encrypted):
         """
         Send the encrypted packet. (basically copied from old code)
         """
 
-        if self.network_up or self.network_up is None:
-            try:
-                self.socket.sendto(encrypted, (self.address, self.port))
-            except socket.error as e:
-                self.vprint(1, '~ Socket error! {}'.format(e))
-                # force update of network status - could be just no network
-                self.network_up.update()
-        else:
-            self.vprint(2, 'Network DOWN, not sending packet')
+        self.socket.sendto(encrypted, (self.address, self.port))
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if encrypted is None:
-            self.vprint(2, 'Packet not sent')
-            return None
+        if self.network_up or self.network_up is None:
+            self.send_packet(encrypted)
+            # except socket.error as e:
+            #     self.vprint(1, '~ Socket error! {}'.format(e))
+            #     # force update of network status - could be just no network
+            #     self.network_up.update()
         else:
-            self.send_packet(packet)
-            return None
-        # TODO: handle errors?
-        # TODO: return status?
+            # TODO: feature add here
+            self.vprint(2, 'Network DOWN, not sending packet')
 
 
-class PacketWarning(UserWarning):
+class PacketError(Exception):
+    pass
+
+
+class MissingFile(PacketError):
     pass

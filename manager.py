@@ -160,6 +160,7 @@ class Manager(object):
                     end_time=end_text,
                 ))
                 self.sender.send_cpm(cpm, cpm_err)
+                # except socket.error as e:
 
                 this_start = this_end
                 this_end = this_end + self.interval
