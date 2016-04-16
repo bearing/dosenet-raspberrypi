@@ -5,8 +5,6 @@ from __future__ import print_function
 import unittest
 import time
 import os
-import warnings
-import ipdb as pdb
 
 from globalvalues import RPI
 if RPI:
@@ -25,6 +23,7 @@ from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
 if RPI:
     test_config_path = DEFAULT_CONFIG
     test_publickey_path = DEFAULT_PUBLICKEY
+    configs_present = True
 else:
     # obviously, for security, the config and public key should NOT be
     #   included in the (public) repo!
