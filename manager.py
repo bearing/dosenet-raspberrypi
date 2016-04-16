@@ -28,6 +28,7 @@ CPM_DISPLAY_TEXT = (
     ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
+strf = '%H:%M:%S'
 
 
 class Manager(object):
@@ -61,19 +62,13 @@ class Manager(object):
 
         self.v = verbosity
         set_verbosity(self)
+        self.test = test
+        self.running = False
 
-        # resolve defaults that depend on test mode
-        if test:
-            if interval is None:
-                interval = DEFAULT_INTERVAL_TEST
-        else:
-            if interval is None:
-                interval = DEFAULT_INTERVAL_NORMAL
-            if config is None:
-                config = DEFAULT_CONFIG
-            if publickey is None:
-                publickey = DEFAULT_PUBLICKEY
+        self.handle_input(interval, config, publickey)
+        self.interval = interval
 
+        # LEDs
         if RPI:
             self.power_LED = LED(power_LED_pin)
             self.network_LED = LED(network_LED_pin)
@@ -84,6 +79,31 @@ class Manager(object):
             self.power_LED = None
             self.network_LED = None
             self.counts_LED = None
+
+        # other objects
+        self.sensor = Sensor(
+            counts_LED=self.counts_LED,
+            verbosity=self.v)
+        self.network_up = NetworkStatus(
+            network_led=self.network_LED,
+            verbosity=self.v)
+        self.sender = ServerSender(
+            manager=self,
+            verbosity=self.v)
+
+    def handle_input(self, interval, config, publickey):
+
+        # resolve defaults that depend on test mode
+        if self.test:
+            if interval is None:
+                interval = DEFAULT_INTERVAL_TEST
+        else:
+            if interval is None:
+                interval = DEFAULT_INTERVAL_NORMAL
+            if config is None:
+                config = DEFAULT_CONFIG
+            if publickey is None:
+                publickey = DEFAULT_PUBLICKEY
 
         if config:
             try:
@@ -107,19 +127,6 @@ class Manager(object):
                 1, 'WARNING: no public key given. Not posting to server')
             self.publickey = None
 
-        self.sensor = Sensor(
-            counts_LED=self.counts_LED,
-            verbosity=self.v)
-        self.network_up = NetworkStatus(
-            network_led=self.network_LED,
-            verbosity=self.v)
-        self.sender = ServerSender(
-            manager=self,
-            verbosity=self.v)
-
-        self.interval = interval
-        self.running = False
-
     def run(self):
         """
         Start counting time.
@@ -138,29 +145,13 @@ class Manager(object):
                     datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
-        strf = '%H:%M:%S'
 
         try:
             while self.running:
                 sleeptime = this_end - time.time()
                 time.sleep(sleeptime)
                 assert time.time() > this_end
-                cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
-                counts = int(round(cpm * self.interval / 60))
-
-                start_text = datetime_from_epoch(this_start).strftime(strf)
-                end_text = datetime_from_epoch(this_end).strftime(strf)
-
-                self.vprint(1, CPM_DISPLAY_TEXT.format(
-                    time=datetime_from_epoch(time.time()),
-                    counts=counts,
-                    cpm=cpm,
-                    cpm_err=cpm_err,
-                    start_time=start_text,
-                    end_time=end_text,
-                ))
-                self.sender.send_cpm(cpm, cpm_err)
-                # except socket.error as e:
+                self.handle_cpm(this_start, this_end)
 
                 this_start = this_end
                 this_end = this_end + self.interval
@@ -175,6 +166,26 @@ class Manager(object):
     def stop(self):
         """Stop counting time."""
         self.running = False
+
+    def handle_cpm(self, this_start, this_end):
+        """Get CPM from sensor, display text, send to server."""
+
+        cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
+        counts = int(round(cpm * self.interval / 60))
+
+        start_text = datetime_from_epoch(this_start).strftime(strf)
+        end_text = datetime_from_epoch(this_end).strftime(strf)
+
+        self.vprint(1, CPM_DISPLAY_TEXT.format(
+            time=datetime_from_epoch(time.time()),
+            counts=counts,
+            cpm=cpm,
+            cpm_err=cpm_err,
+            start_time=start_text,
+            end_time=end_text,
+        ))
+        self.sender.send_cpm(cpm, cpm_err)
+        # TODO: except socket.error as e:
 
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
