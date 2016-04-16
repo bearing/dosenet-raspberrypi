@@ -266,11 +266,8 @@ class TestSender(unittest.TestCase):
             config=None,
             publickey=None,
             verbosity=4)
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always', UserWarning)
+        with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
-            self.assertEqual(len(w), 1)
-            self.assertIn('config', w[-1].message.message)
 
     @unittest.skipUnless(configs_present, "Sender tests require config files")
     def test_missing_publickey(self):
@@ -280,11 +277,8 @@ class TestSender(unittest.TestCase):
             config=auxiliaries.Config(test_config_path),
             publickey=None,
             verbosity=4)
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always', UserWarning)
+        with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
-            self.assertEqual(len(w), 1)
-            self.assertIn('publickey', w[-1].message.message)
 
     # ...
 
