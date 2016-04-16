@@ -273,17 +273,9 @@ class Config(object):
 
     def __init__(self, filename, verbosity=1):
         set_verbosity(self, verbosity=verbosity)
-        try:
-            with open(filename, 'rb') as config_file:
-                config_reader = csv.DictReader(config_file)
-                content = config_reader.next()
-        except IOError:
-            self.vprint(1, 'IOError loading config file.',
-                        'Check filename, path, permissions?')
-            self.ID = None
-            self.hash = None
-            self.lat = None
-            self.long = None
+        with open(filename, 'rb') as config_file:
+            config_reader = csv.DictReader(config_file)
+            content = config_reader.next()
 
         self.ID = content['stationID']
         self.hash = content['message_hash']

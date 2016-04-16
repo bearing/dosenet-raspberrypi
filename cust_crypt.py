@@ -26,11 +26,8 @@ class PublicDEncrypt:
             return self.public_key.encrypt(message, 32)
 
     def read_key_file(self, key_file):
-        try:
-            with open(key_file, 'r') as f:
-                return rsa.importKey(f.read())
-        except IOError:
-            return None
+        with open(key_file, 'r') as f:
+            return rsa.importKey(f.read())
 
     def decrypt_message(self, message):
         if self.private_key is None:

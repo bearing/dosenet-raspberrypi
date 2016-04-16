@@ -86,14 +86,22 @@ class Manager(object):
             self.counts_LED = None
 
         if config:
-            self.config = Config(config)
+            try:
+                self.config = Config(config)
+            except IOError:
+                raise IOError(
+                    'Unable to open config file {}!'.format(config))
         else:
             self.vprint(
                 1, 'WARNING: no config file given. Not posting to server')
             self.config = None
 
         if publickey:
-            self.publickey = PublicKey(publickey)
+            try:
+                self.publickey = PublicKey(publickey)
+            except IOError:
+                raise IOError(
+                    'Unable to load publickey file {}!'.format(publickey))
         else:
             self.vprint(
                 1, 'WARNING: no public key given. Not posting to server')
