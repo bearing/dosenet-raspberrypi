@@ -190,7 +190,9 @@ class Manager(object):
             start_time=start_text,
             end_time=end_text,
         ))
-        if not self.config:
+        if self.test:
+            self.vprint(1, "-- TEST MODE, not sending to server --")
+        elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
