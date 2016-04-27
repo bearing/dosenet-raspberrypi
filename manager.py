@@ -210,7 +210,7 @@ class Manager(object):
         ))
         if self.test:
             self.vprint(
-                1, ANSI_RED + " ~ Test mode, not sending to server ~" +
+                1, ANSI_RED + " * Test mode, not sending to server * " +
                 ANSI_RESET)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
@@ -267,7 +267,7 @@ class Manager(object):
                   ' (default 300 for normal mode)'))
         # verbosity
         parser.add_argument(
-            '--verbosity', '-v', type=int, default=1,
+            '--verbosity', '-v', type=int, default=None,
             help='Verbosity level (0 to 3) (default 1)')
         # config file and public key
         parser.add_argument(
