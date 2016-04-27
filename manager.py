@@ -190,8 +190,14 @@ class Manager(object):
             start_time=start_text,
             end_time=end_text,
         ))
-        self.sender.send_cpm(cpm, cpm_err)
-        # TODO: except socket.error as e:
+        if not self.config:
+            self.vprint(1, "Missing config file, not sending to server")
+        elif not self.publickey:
+            self.vprint(1, "Missing public key, not sending to server")
+        elif not self.network_up:
+            self.vprint(1, "Network down, not sending to server")
+        else:
+            self.sender.send_cpm(cpm, cpm_err)
 
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
