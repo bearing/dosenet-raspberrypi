@@ -19,7 +19,7 @@ from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR
+from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 # this is hacky, but, the {{}} get converted to {} in the first .format() call
 #   and then get filled in later
@@ -57,9 +57,14 @@ class Manager(object):
                  publickey=None,
                  hostname=DEFAULT_HOSTNAME,
                  port=DEFAULT_PORT,
-                 verbosity=1,
+                 verbosity=None,
                  ):
 
+        if verbosity is None:
+            if test:
+                verbosity = 2
+            else:
+                verbosity = 1
         self.v = verbosity
         set_verbosity(self)
         self.test = test
@@ -95,13 +100,21 @@ class Manager(object):
         # resolve defaults that depend on test mode
         if self.test:
             if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
         else:
             if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for NORMAL MODE")
                 interval = DEFAULT_INTERVAL_NORMAL
             if config is None:
+                self.vprint(2, "No config file given, " +
+                            "attempting to use default config path")
                 config = DEFAULT_CONFIG
             if publickey is None:
+                self.vprint(2, "No publickey file given, " +
+                            "attempting to use default publickey path")
                 publickey = DEFAULT_PUBLICKEY
 
         self.interval = interval
@@ -167,7 +180,12 @@ class Manager(object):
         self.running = False
 
     def sleep_until(self, end_time):
-        """Sleep until the given timestamp."""
+        """
+        Sleep until the given timestamp.
+
+        Input:
+          end_time: number of seconds since epoch, e.g. time.time()
+        """
 
         sleeptime = end_time - time.time()
         time.sleep(sleeptime)
@@ -191,7 +209,9 @@ class Manager(object):
             end_time=end_text,
         ))
         if self.test:
-            self.vprint(1, "-- TEST MODE, not sending to server --")
+            self.vprint(
+                1, ANSI_RED + " ~ Test mode, not sending to server ~" +
+                ANSI_RESET)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
         elif not self.publickey:
