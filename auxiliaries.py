@@ -194,7 +194,9 @@ class NetworkStatus(object):
                  down_interval_s=5,
                  network_led=None,
                  pinging=True,
-                 verbosity=1):
+                 verbosity=1,
+                 logfile=None,
+                 ):
         self.hostname = hostname
         self.up_interval_s = up_interval_s
         self.down_interval_s = down_interval_s
@@ -202,7 +204,7 @@ class NetworkStatus(object):
         self.blink_period_s = 1.5
 
         self.v = verbosity
-        set_verbosity(self)
+        set_verbosity(self, logfile=logfile)
 
         init_state = 'N'    # for None
         self.up_state = multiprocessing.Value('c', init_state)
@@ -292,8 +294,8 @@ class Config(object):
     Represents the CSV configuration file.
     """
 
-    def __init__(self, filename, verbosity=1):
-        set_verbosity(self, verbosity=verbosity)
+    def __init__(self, filename, verbosity=1, logfile=None):
+        set_verbosity(self, verbosity=verbosity, logfile=logfile)
         with open(filename, 'rb') as config_file:
             config_reader = csv.DictReader(config_file)
             content = config_reader.next()
@@ -314,8 +316,8 @@ class PublicKey(object):
     Represents the public key file.
     """
 
-    def __init__(self, filename, verbosity=1):
-        set_verbosity(self, verbosity=verbosity)
+    def __init__(self, filename, verbosity=1, logfile=None):
+        set_verbosity(self, verbosity=verbosity, logfile=logfile)
 
         self.encrypter = cust_crypt.PublicDEncrypt(
             key_file_lst=[filename])

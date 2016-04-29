@@ -29,7 +29,10 @@ class ServerSender(object):
         """
 
         self.v = verbosity
-        set_verbosity(self)
+        if manager:
+            set_verbosity(self, logfile=manager.logfile)
+        else:
+            set_verbosity(self)
 
         self.handle_input(manager, network_status, config, publickey)
 

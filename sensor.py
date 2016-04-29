@@ -43,10 +43,11 @@ class Sensor(object):
                  max_accumulation_time_s=DEFAULT_MAX_ACCUM_TIME,
                  use_gpio=None,
                  verbosity=1,
+                 logfile=None,
                  ):
 
         self.v = verbosity
-        set_verbosity(self)
+        set_verbosity(self, logfile=logfile)
 
         if use_gpio is None:
             self.use_gpio = RPI

@@ -80,13 +80,16 @@ class Manager(object):
         # other objects
         self.sensor = Sensor(
             counts_LED=self.counts_LED,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile)
         self.network_up = NetworkStatus(
             network_led=self.network_LED,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile)
         self.sender = ServerSender(
             manager=self,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile)
 
     def handle_input(self,
                      log, logfile, verbosity,
@@ -102,6 +105,8 @@ class Manager(object):
             log = True
         if log:
             self.logfile = logfile
+        else:
+            self.logfile = None
 
         # set up verbosity
         if verbosity is None:
@@ -139,7 +144,8 @@ class Manager(object):
 
         if config:
             try:
-                self.config = Config(config)
+                self.config = Config(config,
+                                     verbosity=self.v, logfile=self.logfile)
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -150,7 +156,8 @@ class Manager(object):
 
         if publickey:
             try:
-                self.publickey = PublicKey(publickey)
+                self.publickey = PublicKey(
+                    publickey, verbosity=self.v, logfile=self.logfile)
             except IOError:
                 raise IOError(
                     'Unable to load publickey file {}!'.format(publickey))
