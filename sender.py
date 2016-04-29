@@ -21,6 +21,7 @@ class ServerSender(object):
                  config=None,
                  publickey=None,
                  verbosity=1,
+                 logfile=None,
                  ):
         """
         network_status, config, publickey loaded from manager if not provided.
@@ -29,10 +30,10 @@ class ServerSender(object):
         """
 
         self.v = verbosity
-        if manager:
+        if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
         else:
-            set_verbosity(self)
+            set_verbosity(self, logfile=logfile)
 
         self.handle_input(manager, network_status, config, publickey)
 
