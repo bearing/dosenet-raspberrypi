@@ -71,9 +71,10 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
                 s = ''
                 for a in args:
                     s += a
+                full_string = str(datetime.datetime.now()) + s + '\n'
                 try:
                     with open(logfile, 'a') as lf:
-                        lf.write(s + '\n')
+                        lf.write(full_string)
                 except IOError:
                     print(' * Logging failed - IOError')
 

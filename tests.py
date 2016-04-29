@@ -92,9 +92,9 @@ class TestLogging(unittest.TestCase):
         print()
         with open(TEST_LOGFILE, 'r') as f:
             fline = f.readline()
-            self.assertEqual(fline, textlines[0] + '\n')
+            self.assertTrue(fline.endswith(textlines[0] + '\n'))
             fline = f.readline()
-            self.assertEqual(fline, textlines[1] + '\n')
+            self.assertTrue(fline.endswith(textlines[1] + '\n'))
             fline = f.readline()
             self.assertFalse(fline)
 
