@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import time
 import argparse
+import traceback
 
 from globalvalues import RPI
 if RPI:
@@ -328,4 +329,12 @@ class Manager(object):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
-    mgr.run()
+    try:
+        mgr.run()
+    except:
+        if mgr.logfile:
+            # print exception info to logfile
+            with open(mgr.logfile, 'a') as f:
+                traceback.print_exc(15, f)
+        # regardless, re-raise the error which will print to stderr
+        raise
