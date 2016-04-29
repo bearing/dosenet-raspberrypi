@@ -71,7 +71,7 @@ class TestLogging(unittest.TestCase):
         def __init__(self, vlevel=1, logfile=TEST_LOGFILE):
             try:
                 os.remove(logfile)
-            except IOError:
+            except OSError:
                 pass
             auxiliaries.set_verbosity(self, verbosity=vlevel, logfile=logfile)
 
@@ -102,7 +102,7 @@ class TestLogging(unittest.TestCase):
         del(self.verbose_obj)
         try:
             os.remove(TEST_LOGFILE)
-        except IOError:
+        except OSError:
             pass
         print()
 

@@ -52,7 +52,7 @@ case "$1" in
   test)
     echo "Testing DoseNet Script" >> $LOG
     echo "Testing DoseNet Script"
-    sudo python $DOSENET/manager.py -f $CONFIGFILE --test
+    sudo python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY --test
     date >> $LOG
     ;;
   *)

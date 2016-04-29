@@ -54,6 +54,10 @@ class Sensor(object):
             self.use_gpio = use_gpio
         if not self.use_gpio:
             self.vprint(1, 'Running Sensor in test mode - no GPIO interrupt')
+            # this "test mode" is not the same as manager.py test mode!
+            # manager test mode runs the sensor normally.
+            # sensor test mode is a software-only construct - no sensor
+            #   hardware involved
 
         if counts_LED is None:
             self.vprint(1, 'No LED given for counts; will not flash LED!')
@@ -154,7 +158,7 @@ class Sensor(object):
     def reset_GPIO(self):
         """
         Older code does this every loop. I don't know whether it's needed.
-        As of this refactoring, the device runs fine (for ~10 minutes) without.
+        As of this refactoring, the device runs fine (for 24 hrs) without.
         """
         GPIO.remove_event_detect(SIGNAL_PIN)
         self.add_interrupt()
