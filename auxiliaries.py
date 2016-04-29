@@ -6,6 +6,7 @@ import multiprocessing
 import csv
 from time import sleep
 import os
+import traceback
 
 from globalvalues import RPI
 if RPI:
@@ -204,6 +205,7 @@ class NetworkStatus(object):
         self.led = network_led
         self.blink_period_s = 1.5
 
+        self.logfile = logfile
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
 
@@ -259,12 +261,17 @@ class NetworkStatus(object):
 
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
-        while True:
-            self.update(up_state=up_state)
-            if self:
-                sleep(self.up_interval_s)
-            else:
-                sleep(self.down_interval_s)
+        try:
+            while True:
+                self.update(up_state=up_state)
+                if self:
+                    sleep(self.up_interval_s)
+                else:
+                    sleep(self.down_interval_s)
+        except:
+            if self.logfile:
+                with open(self.logfile, 'a') as f:
+                    traceback.print_exc(15, f)
 
     def _ping(self):
         """one ping"""
