@@ -37,6 +37,8 @@ else:
     else:
         configs_present = False
 
+TEST_LOGFILE = 'test.log'
+
 
 class TestVerbosity(unittest.TestCase):
 
@@ -60,6 +62,48 @@ class TestVerbosity(unittest.TestCase):
 
     def tearDown(self):
         del(self.verbose_obj)
+        print()
+
+
+class TestLogging(unittest.TestCase):
+
+    class Verbosity2(object):
+        def __init__(self, vlevel=1, logfile=TEST_LOGFILE):
+            try:
+                os.remove(logfile)
+            except IOError:
+                pass
+            auxiliaries.set_verbosity(self, verbosity=vlevel, logfile=logfile)
+
+    def setUp(self):
+        self.verbose_obj = TestLogging.Verbosity2(vlevel=1)
+        print('Testing logging')
+
+    def test_logging(self):
+        print('Two words of {}green text{} should appear here: '.format(
+            ANSI_GR, ANSI_RESET))
+        textlines = [
+            '{}one{}'.format(ANSI_GR, ANSI_RESET),
+            '{}two{}'.format(ANSI_GR, ANSI_RESET),
+            '{}three{}'.format(ANSI_RED, ANSI_RESET),
+            '{}four{}'.format(ANSI_RED, ANSI_RESET)
+        ]
+        [self.verbose_obj.vprint(i, textlines[i]) for i in range(4)]
+        print()
+        with open(TEST_LOGFILE, 'r') as f:
+            fline = f.readline()
+            self.assertEqual(fline, textlines[0] + '\n')
+            fline = f.readline()
+            self.assertEqual(fline, textlines[1] + '\n')
+            fline = f.readline()
+            self.assertFalse(fline)
+
+    def tearDown(self):
+        del(self.verbose_obj)
+        try:
+            os.remove(TEST_LOGFILE)
+        except IOError:
+            pass
         print()
 
 
