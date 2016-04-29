@@ -27,7 +27,7 @@ def datetime_from_epoch(timestamp):
     return datetime_value
 
 
-def set_verbosity(class_instance, verbosity=None):
+def set_verbosity(class_instance, verbosity=None, logfile=None):
     """
     Define the verbosity level for any class instance,
     by generating a custom print method, 'vprint', for the instance.
@@ -37,6 +37,10 @@ def set_verbosity(class_instance, verbosity=None):
     verbosity for the printing to happen.
 
     If verbosity is not given, get it from class_instance.v.
+
+    Additionally, logging is supported. If a logfile argument is passed,
+    it should be a string indicating a file to write into.
+    The log contains the same text that gets printed.
 
     Usage example:
       def __init__(self, verbosity=1):
@@ -48,6 +52,11 @@ def set_verbosity(class_instance, verbosity=None):
     if verbosity is None:
         verbosity = class_instance.v
 
+    if logfile is None:
+        logging = False
+    else:
+        logging = True
+
     def vprint(level, *args, **kwargs):
         """
         The conditional print function, to be returned.
@@ -55,6 +64,18 @@ def set_verbosity(class_instance, verbosity=None):
 
         if verbosity >= level:
             print(*args, **kwargs)
+            if logging:
+                # first, have to handle the print function
+                # there could be multiple string arguments which need
+                #   concatenating
+                s = ''
+                for a in args:
+                    s += a
+                try:
+                    with open(logfile, 'a') as lf:
+                        lf.write(s + '\n')
+                except IOError:
+                    print(' * Logging failed - IOError')
 
     class_instance.vprint = vprint
 

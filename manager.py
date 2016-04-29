@@ -16,7 +16,7 @@ from sender import ServerSender
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR
@@ -58,14 +58,12 @@ class Manager(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=DEFAULT_PORT,
                  verbosity=1,
+                 log=False,
+                 logfile=None,
                  ):
 
-        self.v = verbosity
-        set_verbosity(self)
-        self.test = test
-        self.running = False
-
-        self.handle_input(interval, config, publickey)
+        self.handle_input(log, logfile, verbosity,
+                          test, interval, config, publickey)
 
         # LEDs
         if RPI:
@@ -90,7 +88,27 @@ class Manager(object):
             manager=self,
             verbosity=self.v)
 
-    def handle_input(self, interval, config, publickey):
+    def handle_input(self,
+                     log, logfile, verbosity,
+                     test, interval, config, publickey):
+
+        # resolve logging defaults
+        if log and logfile is None:
+            # use default file if logging is enabled
+            logfile = DEFAULT_LOGFILE
+        if logfile and not log:
+            # enable logging if logfile is specified
+            #   (this overrides a log=False input which wouldn't make sense)
+            log = True
+        if log:
+            self.logfile = logfile
+
+        # set up verbosity
+        self.v = verbosity
+        set_verbosity(self, logfile=logfile)
+
+        self.test = test
+        self.running = False
 
         # resolve defaults that depend on test mode
         if self.test:
@@ -143,7 +161,7 @@ class Manager(object):
         self.vprint(
             1, ('Manager is starting to run at {}' +
                 ' with intervals of {}s').format(
-                    datetime_from_epoch(this_start), self.interval))
+                datetime_from_epoch(this_start), self.interval))
         this_end = this_start + self.interval
         self.running = True
 
@@ -241,6 +259,13 @@ class Manager(object):
         parser.add_argument(
             '--verbosity', '-v', type=int, default=1,
             help='Verbosity level (0 to 3) (default 1)')
+        parser.add_argument(
+            '--log', '-l', action='store_true', default=False,
+            help='Enable file logging of all verbose text (default off)')
+        parser.add_argument(
+            '--logfile', '-f', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE))
         # config file and public key
         parser.add_argument(
             '--config', '-c', default=None,
