@@ -118,6 +118,9 @@ class Manager(object):
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
 
+        if log:
+            self.vprint(1, '')
+            self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.test = test
         self.running = False
 
