@@ -181,21 +181,26 @@ class Manager(object):
           KeyboardInterrupt.
         """
 
-        this_start = time.time()
+        this_start, this_end = self.get_interval(time.time())
         self.vprint(
             1, ('Manager is starting to run at {}' +
                 ' with intervals of {}s').format(
                 datetime_from_epoch(this_start), self.interval))
-        this_end = this_start + self.interval
         self.running = True
 
         try:
             while self.running:
-                self.sleep_until(this_end)
-                self.handle_cpm(this_start, this_end)
-
-                this_start = this_end
-                this_end = this_end + self.interval
+                try:
+                    self.sleep_until(this_end)
+                except SleepError:
+                    self.vprint(1, 'SleepError: system clock skipped ahead!')
+                    # the previous start/end times are meaningless.
+                    #   so, start over.
+                    this_start, this_end = self.get_interval(time.time())
+                    self.sleep_until(this_end)
+                else:
+                    self.handle_cpm(this_start, this_end)
+                    this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
@@ -217,8 +222,18 @@ class Manager(object):
         """
 
         sleeptime = end_time - time.time()
+        if sleeptime < 290:
+            # raspberry pi clock reset during this interval
+            raise SleepError
         time.sleep(sleeptime)
         assert time.time() > end_time
+
+    def get_interval(self, start_time):
+        """
+        Return start and end time for interval, based on given start_time.
+        """
+        end_time = start_time + self.interval
+        return start_time, end_time
 
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
@@ -328,6 +343,10 @@ class Manager(object):
         mgr = Manager(**arg_dict)
 
         return mgr
+
+
+class SleepError(Exception):
+    pass
 
 
 if __name__ == '__main__':
