@@ -11,8 +11,8 @@
 #  it should check that it has not been run yet!
 
 case $1 in
-  "1")
-    echo "This is station #1"
+  "8")
+    echo "This is station #8"
     # commands for station 1 to run
     ;;
   *)

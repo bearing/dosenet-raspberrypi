@@ -7,7 +7,7 @@
 
 LOGTAG=dosenet
 CONFIGFILE=/home/pi/config/config.csv
-ID=$(cat config/config.csv | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
+ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
@@ -22,11 +22,12 @@ case $ID in
   "8")
     # James Logan High School: on branch logging-testing
     echo "JLHS"
-    BRANCH=master
+    BRANCH=active-logging
+    ;;
   "10005")
     # Test station at Brian's desk right now
     echo "I am sitting on Brian's desk"
-    BRANCH=master
+    BRANCH=scripting-#24
     ;;
   *)
     echo "I don't know who I am"
@@ -45,7 +46,9 @@ logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is doing a git pull..."
 sudo -u pi git pull --ff-only
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is calling system-update.sh..."
-sudo $DOSENETPATH/system-update.sh
+sudo $DOSENETPATH/system-update.sh $ID
+
+sleep 10
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is rebooting now"
 # the shutdown must be performed by superuser
