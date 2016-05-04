@@ -44,6 +44,9 @@ sudo -u pi git checkout $BRANCH
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is doing a git pull..."
 sudo -u pi git pull --ff-only
 
+logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is calling system-update.sh..."
+sudo $DOSENETPATH/system-update.sh
+
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is rebooting now"
 # the shutdown must be performed by superuser
 sudo shutdown -r now
