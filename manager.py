@@ -222,7 +222,7 @@ class Manager(object):
         """
 
         sleeptime = end_time - time.time()
-        if sleeptime < 290:
+        if sleeptime < 0 or sleeptime < self.interval - 5:
             # raspberry pi clock reset during this interval
             raise SleepError
         time.sleep(sleeptime)
