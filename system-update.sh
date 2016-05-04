@@ -11,9 +11,20 @@
 #  it should check that it has not been run yet!
 
 case $1 in
-  "8")
-    echo "This is station #8"
-    # commands for station 1 to run
+  "10005")
+    echo "This is station #10005"
+    # commands for station 10005 to run
+    
+    # example: system update FOO
+    FOOFILE=/home/pi/foo.test
+    if [ -f $FOOFILE ]
+    then
+      echo "System update FOO has already been done. Skipping"
+    else
+      echo "Performing system update FOO"
+      echo "This is system update FOO" >> $FOOFILE
+    fi
+    sleep 5
     ;;
   *)
     echo "This is everything else"

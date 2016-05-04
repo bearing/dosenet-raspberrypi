@@ -20,7 +20,7 @@ case $ID in
     BRANCH=master
     ;;
   "8")
-    # James Logan High School: on branch logging-testing
+    # James Logan High School
     echo "JLHS"
     BRANCH=active-logging
     ;;
@@ -30,7 +30,7 @@ case $ID in
     BRANCH=scripting-#24
     ;;
   *)
-    echo "I don't know who I am"
+    echo "I'm something else"
     BRANCH=master
     ;;
 esac
@@ -47,8 +47,6 @@ sudo -u pi git pull --ff-only
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is calling system-update.sh..."
 sudo $DOSENETPATH/system-update.sh $ID
-
-sleep 10
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is rebooting now"
 # the shutdown must be performed by superuser
