@@ -20,8 +20,7 @@ CONFIGFILE=$CONFIGDIR/config.csv
 if [ ! -f $CONFIGFILE ]
 then
   # no config file. exit with a user-defined exit code, 64
-  logger -i -t $LOGTAG "Config file $CONFIGFILE not found! Aborting"
-  echo "Config file $CONFIGFILE not found! Aborting"
+  logger --stderr --id --tag $LOGTAG "Config file $CONFIGFILE not found! Aborting"
   exit 64
 fi
 
@@ -29,26 +28,22 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 if [ ! -f $PUBLICKEY ]
 then
   # no publickey. exit with a user-defined exit code, 65
-  logger -i -t $LOGTAG "Public key file  $PUBLICKEY not found! Aborting"
-  echo "Public key file  $PUBLICKEY not found! Aborting"
+  logger --stderr --id --tag $LOGTAG "Public key file  $PUBLICKEY not found! Aborting"
   exit 65
 fi
 
 case "$1" in
   start)
-    logger -i -t $LOGTAG Starting DoseNet script
-    echo "Starting DoseNet script"
+    logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY
     ;;
   stop)
-    logger -i -t $LOGTAG Stopping DoseNet script
-    echo "Stopping DoseNet script"
+    logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
     sudo killall python &
     ;;
   test)
-    logger -i -t $LOGTAG Testing DoseNet script
-    echo "Testing DoseNet Script"
+    logger --stderr --id --tag $LOGTAG "Testing DoseNet script"
     sudo python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY --test
     ;;
   *)
