@@ -191,6 +191,9 @@ class Manager(object):
         try:
             while self.running:
                 try:
+                    self.vprint(3, 'Sleeping at {} until {}'.format(
+                        datetime_from_epoch(time.time()),
+                        datetime_from_epoch(this_end)))
                     self.sleep_until(this_end)
                 except SleepError:
                     self.vprint(1, 'SleepError: system clock skipped ahead!')
@@ -204,6 +207,9 @@ class Manager(object):
                     #    - but if the system clock was adjusted halfway through
                     #      the interval, the CPM will be too low.
                     # The second one is more acceptable.
+                    self.vprint(3, 'this_start = {}, this_end = {}'.format(
+                        datetime_from_epoch(this_start),
+                        datetime_from_epoch(this_end)))
                     this_start, this_end = self.get_interval(
                         time.time() - self.interval)
 
@@ -230,6 +236,7 @@ class Manager(object):
         """
 
         sleeptime = end_time - time.time()
+        self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0 or sleeptime < self.interval - 5:
             # raspberry pi clock reset during this interval
             raise SleepError
