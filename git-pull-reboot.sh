@@ -7,7 +7,16 @@
 
 LOGTAG=dosenet
 CONFIGFILE=/home/pi/config/config.csv
-ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
+
+# if local changes exist, should the script discard by forcing a git checkout or pull?
+FORCE_GIT=n
+
+if [ -f $CONFIGFILE ]
+then
+  ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
+else
+  ID=unknown
+fi
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
@@ -18,11 +27,6 @@ case $ID in
     # Foothill College: UDP blocked
     echo "Should switch to a TCP-enabled branch here"
     BRANCH=master
-    ;;
-  "8")
-    # James Logan High School
-    echo "JLHS"
-    BRANCH=active-logging
     ;;
   "10005")
     # Test station at Brian's desk right now
@@ -36,18 +40,38 @@ case $ID in
 esac
 
 # git operations:
-# `sudo -u pi` is required, because operations must be performed by 
+# `sudo -u pi` is required, because operations must be performed by
 #    user `pi`, not root
 
-logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is checking out branch $BRANCH ..."
 sudo -u pi git checkout $BRANCH
+if [ $? -eq 0 ]; then
+  logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
+elif [ $FORCE_GIT = "y" ]; then
+  sudo -u pi git checkout --force $BRANCH
+  if [ $? -eq 0 ]; then
+    logger --stderr --id --tag $LOGTAG "successfully (forcefully) checked out branch $BRANCH !"
+  else
+    logger --stderr --id --tag $LOGTAG "failed to (forcefully) check out branch $BRANCH !"
+  fi
+else
+  logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
+fi
 
-logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is doing a git pull..."
 sudo -u pi git pull --ff-only
+if [ $? -eq 0 ]; then
+  logger --stderr --id --tag $LOGTAG "git pull successful"
+# not sure how to force git here.
+else
+  logger --stderr --id --tag $LOGTAG "git pull failed !"
+fi
 
-logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is calling system-update.sh..."
 sudo $DOSENETPATH/system-update.sh $ID
+if [ $? -eq 0 ]; then
+  logger --stderr --id --tag $LOGTAG "successfully ran system-update.sh"
+else
+  logger --stderr --id --tag $LOGTAG "error in system-update.sh !"
+fi
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is rebooting now"
 # the shutdown must be performed by superuser
-sudo shutdown -r now
+# sudo shutdown -r now
