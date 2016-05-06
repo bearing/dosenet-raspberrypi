@@ -207,9 +207,10 @@ class Manager(object):
                     #    - but if the system clock was adjusted halfway through
                     #      the interval, the CPM will be too low.
                     # The second one is more acceptable.
-                    self.vprint(3, 'this_start = {}, this_end = {}'.format(
-                        datetime_from_epoch(this_start),
-                        datetime_from_epoch(this_end)))
+                    self.vprint(
+                        3, 'former this_start = {}, this_end = {}'.format(
+                            datetime_from_epoch(this_start),
+                            datetime_from_epoch(this_end)))
                     this_start, this_end = self.get_interval(
                         time.time() - self.interval)
 
@@ -241,7 +242,11 @@ class Manager(object):
             # this shouldn't happen now that SleepError is raised and handled
             raise RuntimeError
         time.sleep(sleeptime)
-        if time.time() - end_time > 5 or time.time() < end_time:
+        now = time.time()
+        self.vprint(
+            3, 'sleep_until offset is {} seconds'.format(now - end_time))
+        # if the clock hasn't changed, this offset should be very small
+        if now - end_time > 5 or now < end_time:
             # raspberry pi clock reset during this interval
             # normally the first half of the condition triggers it.
             raise SleepError
