@@ -237,11 +237,14 @@ class Manager(object):
 
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
-        if sleeptime < 0 or sleeptime < self.interval - 5:
-            # raspberry pi clock reset during this interval
-            raise SleepError
+        if sleeptime < 0:
+            # this shouldn't happen now that SleepError is raised and handled
+            raise RuntimeError
         time.sleep(sleeptime)
-        assert time.time() > end_time
+        if time.time() - end_time > 5 or time.time() < end_time:
+            # raspberry pi clock reset during this interval
+            # normally the first half of the condition triggers it.
+            raise SleepError
 
     def get_interval(self, start_time):
         """
