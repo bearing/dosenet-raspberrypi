@@ -244,9 +244,11 @@ class Manager(object):
         time.sleep(sleeptime)
         now = time.time()
         self.vprint(
-            3, 'sleep_until offset is {} seconds'.format(now - end_time))
-        # if the clock hasn't changed, this offset should be very small
-        if now - end_time > 5 or now < end_time:
+            2, 'sleep_until offset is {} seconds'.format(now - end_time))
+        # normally this offset is < 0.1 s
+        # although a reboot normally produces an offset of 9.5 s
+        #   on the first cycle
+        if now - end_time > 10 or now < end_time:
             # raspberry pi clock reset during this interval
             # normally the first half of the condition triggers it.
             raise SleepError
