@@ -111,6 +111,7 @@ class Sensor(object):
         # watching for stray errors... (temp?)
         try:
             # add to queue. (usually takes ~10 us)
+            now = time.time()
             self.counts.append(now)
 
             # display(s)
