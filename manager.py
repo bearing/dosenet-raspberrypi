@@ -195,12 +195,20 @@ class Manager(object):
                 except SleepError:
                     self.vprint(1, 'SleepError: system clock skipped ahead!')
                     # the previous start/end times are meaningless.
-                    #   so, start over.
-                    this_start, this_end = self.get_interval(time.time())
-                    self.sleep_until(this_end)
-                else:
-                    self.handle_cpm(this_start, this_end)
-                    this_start, this_end = self.get_interval(this_end)
+                    # There are a couple ways this could be handled.
+                    # 1. keep the same start time, but go until time.time()
+                    #    - but if there was actually an execution delay,
+                    #      the CPM will be too high.
+                    # 2. set start time to be time.time() - interval,
+                    #    and end time is time.time().
+                    #    - but if the system clock was adjusted halfway through
+                    #      the interval, the CPM will be too low.
+                    # The second one is more acceptable.
+                    this_start, this_end = self.get_interval(
+                        time.time() - self.interval)
+
+                self.handle_cpm(this_start, this_end)
+                this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
