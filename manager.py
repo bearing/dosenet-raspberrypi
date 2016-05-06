@@ -181,21 +181,41 @@ class Manager(object):
           KeyboardInterrupt.
         """
 
-        this_start = time.time()
+        this_start, this_end = self.get_interval(time.time())
         self.vprint(
             1, ('Manager is starting to run at {}' +
                 ' with intervals of {}s').format(
                 datetime_from_epoch(this_start), self.interval))
-        this_end = this_start + self.interval
         self.running = True
 
         try:
             while self.running:
-                self.sleep_until(this_end)
-                self.handle_cpm(this_start, this_end)
+                self.vprint(3, 'Sleeping at {} until {}'.format(
+                    datetime_from_epoch(time.time()),
+                    datetime_from_epoch(this_end)))
+                try:
+                    self.sleep_until(this_end)
+                except SleepError:
+                    self.vprint(1, 'SleepError: system clock skipped ahead!')
+                    # the previous start/end times are meaningless.
+                    # There are a couple ways this could be handled.
+                    # 1. keep the same start time, but go until time.time()
+                    #    - but if there was actually an execution delay,
+                    #      the CPM will be too high.
+                    # 2. set start time to be time.time() - interval,
+                    #    and end time is time.time().
+                    #    - but if the system clock was adjusted halfway through
+                    #      the interval, the CPM will be too low.
+                    # The second one is more acceptable.
+                    self.vprint(
+                        3, 'former this_start = {}, this_end = {}'.format(
+                            datetime_from_epoch(this_start),
+                            datetime_from_epoch(this_end)))
+                    this_start, this_end = self.get_interval(
+                        time.time() - self.interval)
 
-                this_start = this_end
-                this_end = this_end + self.interval
+                self.handle_cpm(this_start, this_end)
+                this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
@@ -217,8 +237,28 @@ class Manager(object):
         """
 
         sleeptime = end_time - time.time()
+        self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
+        if sleeptime < 0:
+            # this shouldn't happen now that SleepError is raised and handled
+            raise RuntimeError
         time.sleep(sleeptime)
-        assert time.time() > end_time
+        now = time.time()
+        self.vprint(
+            2, 'sleep_until offset is {} seconds'.format(now - end_time))
+        # normally this offset is < 0.1 s
+        # although a reboot normally produces an offset of 9.5 s
+        #   on the first cycle
+        if now - end_time > 10 or now < end_time:
+            # raspberry pi clock reset during this interval
+            # normally the first half of the condition triggers it.
+            raise SleepError
+
+    def get_interval(self, start_time):
+        """
+        Return start and end time for interval, based on given start_time.
+        """
+        end_time = start_time + self.interval
+        return start_time, end_time
 
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
@@ -328,6 +368,10 @@ class Manager(object):
         mgr = Manager(**arg_dict)
 
         return mgr
+
+
+class SleepError(Exception):
+    pass
 
 
 if __name__ == '__main__':

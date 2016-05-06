@@ -110,18 +110,14 @@ class Sensor(object):
 
         # watching for stray errors... (temp?)
         try:
-            # add to queue
+            # add to queue. (usually takes ~10 us)
             now = time.time()
             self.counts.append(now)
-            now2 = time.time()
 
             # display(s)
             self.vprint(1, '\tCount at {}'.format(datetime_from_epoch(now)))
             if self.LED:
                 self.LED.flash()
-            self.vprint(
-                3, '    Adding count to queue took no more than {} s'.format(
-                    (now2 - now)))
         except:
             if self.logfile:
                 with open(self.logfile, 'a') as f:
