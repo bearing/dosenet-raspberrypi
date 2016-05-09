@@ -24,9 +24,8 @@ case $1 in
     then
       echo "System update FOO has already been done. Skipping"
     else
-      :
-      # echo "Performing system update FOO"
-      # echo "This is system update FOO" >> $FOOFILE
+      echo "Performing system update FOO"
+      echo "This is system update FOO" >> $FOOFILE
     fi
     ;;
   *)
