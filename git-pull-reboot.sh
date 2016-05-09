@@ -11,12 +11,16 @@ CONFIGFILE=/home/pi/config/config.csv
 # if local changes exist, should the script discard by forcing a git checkout or pull?
 FORCE_GIT=n
 
+# what is my station ID?
 if [ -f $CONFIGFILE ]
 then
   ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
 else
   ID=unknown
 fi
+
+# what branch am I on? (in principle, this should be known from station ID)
+CURRENT_BRANCH=$(git status | head -n1 | sed 's/On branch //')
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
