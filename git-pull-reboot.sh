@@ -34,7 +34,6 @@ case $ID in
     BRANCH=scripting-#24
     ;;
   *)
-    echo "I'm something else"
     BRANCH=master
     ;;
 esac
@@ -73,5 +72,6 @@ else
 fi
 
 logger --stderr --id --tag $LOGTAG "git-pull-reboot.sh is rebooting now"
+
 # the shutdown must be performed by superuser
-# sudo shutdown -r now
+sudo shutdown -r now
