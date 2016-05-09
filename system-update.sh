@@ -24,14 +24,14 @@ case $1 in
     then
       echo "System update FOO has already been done. Skipping"
     else
-      echo "Performing system update FOO"
-      echo "This is system update FOO" >> $FOOFILE
+      :
+      # echo "Performing system update FOO"
+      # echo "This is system update FOO" >> $FOOFILE
     fi
-    sleep 5
     ;;
   *)
-    echo "This is everything else"
     # commands for all stations besides 10005 to run
+    :
     ;;
 esac
 
