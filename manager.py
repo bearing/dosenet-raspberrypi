@@ -19,6 +19,7 @@ from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT
+from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
@@ -53,6 +54,7 @@ class Manager(object):
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
                  test=False,
+                 sender_mode=DEFAULT_SENDER_MODE,
                  interval=None,
                  config=None,
                  publickey=None,
@@ -89,6 +91,7 @@ class Manager(object):
             logfile=self.logfile)
         self.sender = ServerSender(
             manager=self,
+            mode=sender_mode,
             verbosity=self.v,
             logfile=self.logfile)
 
@@ -362,6 +365,11 @@ class Manager(object):
             '--port', '-p', type=int, default=DEFAULT_UDP_PORT,
             help='Specify a port for the server (default {})'.format(
                 DEFAULT_UDP_PORT))
+        parser.add_argument(
+            '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
+            choices=['udp', 'tcp', 'UDP', 'TCP'],
+            help='The network protocol used in sending data ' +
+            '(default {})'.format(DEFAULT_SENDER_MODE))
 
         args = parser.parse_args()
         arg_dict = vars(args)

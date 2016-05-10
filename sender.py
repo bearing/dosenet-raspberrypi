@@ -270,9 +270,9 @@ if __name__ == '__main__':
         'Called directly, it will send 3 test packets to server. ' +
         'Specify udp or tcp on command line.')
     parser.add_argument(
-        'mode', choices=['udp', 'tcp'], nargs='?', default='udp',
+        'mode', choices=['udp', 'tcp', 'UDP', 'TCP'], nargs='?', default='udp',
         help='The network protocol to use in sending test packets')
     args = parser.parse_args()
 
-    send_test_packets(
-        mode=args.mode, config=DEFAULT_CONFIG, publickey=DEFAULT_PUBLICKEY)
+    send_test_packets(mode=args.mode.lower(),
+                      config=DEFAULT_CONFIG, publickey=DEFAULT_PUBLICKEY)
