@@ -158,8 +158,7 @@ class ServerSender(object):
             if e[0] == errno.ECONNREFUSED:
                 # TCP
                 # server is not accepting connections
-                self.vprint(1, 'Failed to send packet! ' +
-                            'Server not accepting TCP connection')
+                self.vprint(1, 'Failed to send packet! Connection refused')
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
