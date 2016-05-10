@@ -4,7 +4,6 @@ from __future__ import print_function
 import socket
 import argparse
 import time
-import multiprocessing
 from contextlib import closing
 import errno
 
@@ -12,6 +11,8 @@ from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+
+TCP_TIMEOUT = 5
 
 
 class ServerSender(object):
@@ -141,16 +142,12 @@ class ServerSender(object):
         Send data according to self.mode, and handle common errors
         """
 
+        self.vprint(3, 'Trying to send data by {}'.format(self.mode))
         try:
             if self.mode == 'udp':
                 self.send_udp(encrypted)
             elif self.mode == 'tcp':
-                # TCP handshake takes time. start a subprocess
-                # remove old process if it's still going somehow
-                if self.tcp_sender:
-                    self.tcp_sender.terminate()
-                self.tcp_sender = multiprocessing.Process(
-                    target=self.send_tcp, args=(encrypted,))
+                self.send_tcp(encrypted)
         except socket.gaierror as e:
             if e[0] == socket.EAI_AGAIN:
                 # TCP and UDP
@@ -170,25 +167,35 @@ class ServerSender(object):
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
                             '{}: {}'.format(*e))
+        except socket.timeout:
+            # TCP
+            self.vprint(1, 'Failed to send packet! Socket timeout')
+            self.network_up.update()
 
     def send_udp(self, encrypted):
         """
         Send the encrypted packet over UDP
         """
 
-        self.vprint(3, 'Sending encrypted UDP packet')
+        self.vprint(3, 'Sending encrypted UDP packet to {}:{}'.format(
+            self.address, self.port))
         with closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s:
             s.sendto(encrypted, (self.address, self.port))
+            self.vprint(
+                3, 'UDP packet sent successfully (no client-side error)')
 
     def send_tcp(self, encrypted):
         """
         Send the encrypted packet over TCP
         """
 
-        self.vprint(3, 'Sending encrypted TCP packet')
+        self.vprint(3, 'Sending encrypted TCP packet to {}:{}'.format(
+            self.address, self.port))
         with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+            s.settimeout(TCP_TIMEOUT)   # generous timeout
             s.connect((self.address, self.port))
             s.sendall(encrypted)
+            self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
@@ -214,6 +221,7 @@ def send_test_packets(
         mode=DEFAULT_SENDER_MODE,
         config=DEFAULT_CONFIG,
         publickey=DEFAULT_PUBLICKEY,
+        address=DEFAULT_HOSTNAME,
         n=3):
     """
     Send n (default 3) test packets to the DoseNet server.
@@ -229,7 +237,8 @@ def send_test_packets(
     key_obj = PublicKey(publickey)
 
     sender = ServerSender(
-        mode=mode, config=config_obj, publickey=key_obj, verbosity=3)
+        mode=mode, address=address,
+        config=config_obj, publickey=key_obj, verbosity=3)
 
     try:
         station_id = config_obj.ID
