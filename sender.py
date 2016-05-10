@@ -238,6 +238,7 @@ def send_test_packets(
         config=DEFAULT_CONFIG,
         publickey=DEFAULT_PUBLICKEY,
         address=DEFAULT_HOSTNAME,
+        port=None,
         n=3):
     """
     Send n (default 3) test packets to the DoseNet server.
@@ -253,7 +254,7 @@ def send_test_packets(
     key_obj = PublicKey(publickey)
 
     sender = ServerSender(
-        mode=mode, address=address,
+        mode=mode, address=address, port=port,
         config=config_obj, publickey=key_obj, verbosity=3)
 
     try:
@@ -280,7 +281,18 @@ if __name__ == '__main__':
     parser.add_argument(
         'mode', choices=['udp', 'tcp', 'UDP', 'TCP'], nargs='?', default='udp',
         help='The network protocol to use in sending test packets')
+    parser.add_argument('-n', type=int, default=3, help='# packets')
+    parser.add_argument('--config', '-c', type=str, default=DEFAULT_CONFIG,
+                        help='config file location')
+    parser.add_argument('--publickey', '-k', type=str,
+                        default=DEFAULT_PUBLICKEY,
+                        help='publickey file location')
+    parser.add_argument('--hostname', '-a', type=str, default=DEFAULT_HOSTNAME,
+                        help='hostname (web address or IP)')
+    parser.add_argument('--port', '-p', type=int, default=None,
+                        help='port')
     args = parser.parse_args()
 
-    send_test_packets(mode=args.mode.lower(),
-                      config=DEFAULT_CONFIG, publickey=DEFAULT_PUBLICKEY)
+    send_test_packets(
+        mode=args.mode.lower(), address=args.hostname, port=args.port,
+        config=args.config, publickey=args.publickey, n=args.n)
