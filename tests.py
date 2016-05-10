@@ -334,7 +334,17 @@ class TestSender(unittest.TestCase):
             config=test_config_path,
             publickey=test_publickey_path,
             n=1)
-        print(' ~ Check that the server received test UDP packets ~')
+        print(' ~ Check that the server received a test UDP packet ~')
+        self.assertTrue(True)
+
+    @unittest.skipUnless(configs_present, "Test packets require config files")
+    def test_send_test_tcp(self):
+        sender.send_test_packets(
+            mode='tcp',
+            config=test_config_path,
+            publickey=test_publickey_path,
+            n=1)
+        print(' ~ Check that the server received a test TCP packet ~')
         self.assertTrue(True)
 
 
