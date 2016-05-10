@@ -69,10 +69,8 @@ class ServerSender(object):
 
         if self.mode == 'udp':
             self.port = DEFAULT_UDP_PORT
-            self.send_data = self.send_udp
         elif self.mode == 'tcp':
             self.port = DEFAULT_TCP_PORT
-            self.send_data = self.send_tcp
 
         if network_status is None:
             if manager is None:
@@ -135,6 +133,27 @@ class ServerSender(object):
         else:
             return encrypted
 
+    def send_data(self, encrypted):
+        """
+        Send data according to self.mode, and handle common errors
+        """
+
+        try:
+            if self.mode == 'udp':
+                self.send_udp(encrypted)
+            elif self.mode == 'tcp':
+                self.send_tcp(encrypted)
+        except socket.gaierror as e:
+            if e[0] == socket.EAI_AGAIN:
+                # TCP and UDP
+                # network is down, but NetworkStatus didn't notice yet
+                self.vprint(
+                    1, 'Failed to send packet! Address resolution error')
+            else:
+                self.vprint(
+                    1, 'Failed to send packet! Unknown address error: ' +
+                    '{}: {}'.format(*e))
+
     def send_udp(self, encrypted):
         """
         Send the encrypted packet over UDP
@@ -160,11 +179,7 @@ class ServerSender(object):
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
-            try:
-                self.send_data(encrypted)
-            except socket.gaierror as e:
-                import ipdb; ipdb.set_trace()
-                self.vprint(1, 'Failed to send packet! Address resolution error')
+            self.send_data(encrypted)
             # except socket.error as e:
             #     self.vprint(1, '~ Socket error! {}'.format(e))
             #     # force update of network status - could be just no network
