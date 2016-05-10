@@ -113,11 +113,13 @@ class ServerSender(object):
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
+            self.vprint(3, 'Constructed packet')
             return raw_packet
 
     def encrypt_packet(self, raw_packet):
         """Encrypt the raw packet"""
 
+        self.vprint(3, 'Encrypting packet: {}'.format(raw_packet))
         try:
             encrypted = self.encrypter.encrypt_message(raw_packet)[0]
         except AttributeError:
@@ -130,6 +132,7 @@ class ServerSender(object):
         Send the encrypted packet. (basically copied from old code)
         """
 
+        self.vprint(3, 'Sending encrypted packet')
         self.socket.sendto(encrypted, (self.address, self.port))
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
@@ -198,7 +201,9 @@ if __name__ == '__main__':
         'Normally called from manager.py. ' +
         'Called directly, it will send 3 test packets to server. ' +
         'Specify udp or tcp on command line.')
-    parser.add_argument('mode', choices=['udp', 'tcp'], default='udp')
+    parser.add_argument(
+        'mode', choices=['udp', 'tcp'], nargs='?', default='udp',
+        help='The network protocol to use in sending test packets')
     args = parser.parse_args()
 
     send_test_packets(
