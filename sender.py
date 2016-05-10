@@ -44,11 +44,9 @@ class ServerSender(object):
         else:
             set_verbosity(self, logfile=logfile)
 
+        self.address = address
         self.handle_input(
             manager, mode, port, network_status, config, publickey)
-
-        self.tcp_sender = None
-        self.address = address
 
     def handle_input(
             self, manager, mode, port, network_status, config, publickey):
@@ -72,9 +70,19 @@ class ServerSender(object):
             raise RuntimeError('Invalid ServerSender mode (choose TCP or UDP)')
 
         if self.mode == 'udp':
-            self.port = DEFAULT_UDP_PORT
+            if port is None:
+                self.port = DEFAULT_UDP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using UDP for {}:{}'.format(
+                self.address, self.port))
         elif self.mode == 'tcp':
-            self.port = DEFAULT_TCP_PORT
+            if port is None:
+                self.port = DEFAULT_TCP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
+                self.address, self.port))
 
         if network_status is None:
             if manager is None:
