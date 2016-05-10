@@ -5,6 +5,7 @@ import socket
 import argparse
 import time
 from contextlib import closing
+import errno
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
@@ -151,9 +152,18 @@ class ServerSender(object):
                     1, 'Failed to send packet! Address resolution error')
                 self.network_up.update()
             else:
-                self.vprint(
-                    1, 'Failed to send packet! Unknown address error: ' +
-                    '{}: {}'.format(*e))
+                self.vprint(1, 'Failed to send packet! Address error: ' +
+                            '{}: {}'.format(*e))
+        except socket.error as e:
+            if e[0] == errno.ECONNREFUSED:
+                # TCP
+                # server is not accepting connections
+                self.vprint(1, 'Failed to send packet! ' +
+                            'Server not accepting TCP connection')
+            else:
+                # consider handling errno.ECONNABORTED, errno.ECONNRESET
+                self.vprint(1, 'Failed to send packet! Socket error: ' +
+                            '{}: {}'.format(*e))
 
     def send_udp(self, encrypted):
         """
