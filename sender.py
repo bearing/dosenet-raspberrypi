@@ -4,6 +4,7 @@ from __future__ import print_function
 import socket
 import argparse
 import time
+from contextlib import closing
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
@@ -43,8 +44,6 @@ class ServerSender(object):
         self.handle_input(
             manager, mode, port, network_status, config, publickey)
 
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         self.address = address
 
     def handle_input(
@@ -70,8 +69,10 @@ class ServerSender(object):
 
         if self.mode == 'udp':
             self.port = DEFAULT_UDP_PORT
+            self.send_data = self.send_udp
         elif self.mode == 'tcp':
             self.port = DEFAULT_TCP_PORT
+            self.send_data = self.send_tcp
 
         if network_status is None:
             if manager is None:
@@ -134,13 +135,24 @@ class ServerSender(object):
         else:
             return encrypted
 
-    def send_packet(self, encrypted):
+    def send_udp(self, encrypted):
         """
-        Send the encrypted packet. (basically copied from old code)
+        Send the encrypted packet over UDP
         """
 
-        self.vprint(3, 'Sending encrypted packet')
-        self.socket.sendto(encrypted, (self.address, self.port))
+        self.vprint(3, 'Sending encrypted UDP packet')
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s:
+            s.sendto(encrypted, (self.address, self.port))
+
+    def send_tcp(self, encrypted):
+        """
+        Send the encrypted packet over TCP
+        """
+
+        self.vprint(3, 'Sending encrypted TCP packet')
+        with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+            s.connect((self.address, self.port))
+            s.sendall(encrypted)
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
@@ -148,7 +160,7 @@ class ServerSender(object):
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
-            self.send_packet(encrypted)
+            self.send_data(encrypted)
             # except socket.error as e:
             #     self.vprint(1, '~ Socket error! {}'.format(e))
             #     # force update of network status - could be just no network
@@ -197,7 +209,7 @@ def send_test_packets(
     encrypted = sender.encrypt_packet(raw_packet)
 
     for _ in xrange(n):
-        sender.send_packet(encrypted)
+        sender.send_data(encrypted)
         time.sleep(sleep_time)
 
 
