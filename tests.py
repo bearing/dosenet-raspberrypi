@@ -29,12 +29,14 @@ else:
     #   included in the (public) repo!
     # these paths are for Brian's LBL desktop, but you could put them
     #   here for other machines too.
-    test_config_path = './testconfig/test1.csv'
+    test_config_path = './testconfig/config.csv'
     test_publickey_path = './testconfig/id_rsa_lbl.pub'
     if (os.path.exists(test_config_path) and
             os.path.exists(test_publickey_path)):
+        print('Found config files')
         configs_present = True
     else:
+        print('Config files not found!')
         configs_present = False
 
 TEST_LOGFILE = 'test.log'
@@ -324,6 +326,16 @@ class TestSender(unittest.TestCase):
             ss.send_cpm(0, 0)
 
     # ...
+
+    @unittest.skipUnless(configs_present, "Test packets require config files")
+    def test_send_test_udp(self):
+        sender.send_test_packets(
+            mode='udp',
+            config=test_config_path,
+            publickey=test_publickey_path,
+            n=1)
+        print(' ~ Check that the server received test UDP packets ~')
+        self.assertTrue(True)
 
 
 if __name__ == '__main__':
