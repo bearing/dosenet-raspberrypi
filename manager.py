@@ -18,7 +18,7 @@ from sender import ServerSender
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
@@ -57,7 +57,7 @@ class Manager(object):
                  config=None,
                  publickey=None,
                  hostname=DEFAULT_HOSTNAME,
-                 port=DEFAULT_PORT,
+                 port=DEFAULT_UDP_PORT,
                  verbosity=None,
                  log=False,
                  logfile=None,
@@ -359,9 +359,9 @@ class Manager(object):
             help='Specify a server hostname (default {})'.format(
                 DEFAULT_HOSTNAME))
         parser.add_argument(
-            '--port', '-p', type=int, default=DEFAULT_PORT,
+            '--port', '-p', type=int, default=DEFAULT_UDP_PORT,
             help='Specify a port for the server (default {})'.format(
-                DEFAULT_PORT))
+                DEFAULT_UDP_PORT))
 
         args = parser.parse_args()
         arg_dict = vars(args)

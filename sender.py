@@ -6,7 +6,8 @@ import argparse
 import time
 
 from auxiliaries import set_verbosity, Config, PublicKey
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_SENDER_MODE
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
+from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 
 
@@ -20,7 +21,7 @@ class ServerSender(object):
                  manager=None,
                  network_status=None,
                  address=DEFAULT_HOSTNAME,
-                 port=DEFAULT_PORT,
+                 port=None,
                  config=None,
                  publickey=None,
                  verbosity=1,
@@ -39,14 +40,15 @@ class ServerSender(object):
         else:
             set_verbosity(self, logfile=logfile)
 
-        self.handle_input(manager, mode, network_status, config, publickey)
+        self.handle_input(
+            manager, mode, port, network_status, config, publickey)
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self.address = address
-        self.port = port
 
-    def handle_input(self, manager, mode, network_status, config, publickey):
+    def handle_input(
+            self, manager, mode, port, network_status, config, publickey):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
@@ -65,6 +67,11 @@ class ServerSender(object):
                     'Invalid ServerSender mode (choose TCP or UDP)')
         except AttributeError:
             raise RuntimeError('Invalid ServerSender mode (choose TCP or UDP)')
+
+        if self.mode == 'udp':
+            self.port = DEFAULT_UDP_PORT
+        elif self.mode == 'tcp':
+            self.port = DEFAULT_TCP_PORT
 
         if network_status is None:
             if manager is None:
