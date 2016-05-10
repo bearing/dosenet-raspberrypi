@@ -160,7 +160,11 @@ class ServerSender(object):
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
-            self.send_data(encrypted)
+            try:
+                self.send_data(encrypted)
+            except socket.gaierror as e:
+                import ipdb; ipdb.set_trace()
+                self.vprint(1, 'Failed to send packet! Address resolution error')
             # except socket.error as e:
             #     self.vprint(1, '~ Socket error! {}'.format(e))
             #     # force update of network status - could be just no network
