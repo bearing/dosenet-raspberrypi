@@ -4,6 +4,7 @@ from __future__ import print_function
 import socket
 import argparse
 import time
+import multiprocessing
 from contextlib import closing
 import errno
 
@@ -45,6 +46,7 @@ class ServerSender(object):
         self.handle_input(
             manager, mode, port, network_status, config, publickey)
 
+        self.tcp_sender = None
         self.address = address
 
     def handle_input(
@@ -143,7 +145,12 @@ class ServerSender(object):
             if self.mode == 'udp':
                 self.send_udp(encrypted)
             elif self.mode == 'tcp':
-                self.send_tcp(encrypted)
+                # TCP handshake takes time. start a subprocess
+                # remove old process if it's still going somehow
+                if self.tcp_sender:
+                    self.tcp_sender.terminate()
+                self.tcp_sender = multiprocessing.Process(
+                    target=self.send_tcp, args=(encrypted,))
         except socket.gaierror as e:
             if e[0] == socket.EAI_AGAIN:
                 # TCP and UDP
