@@ -2,9 +2,12 @@
 from __future__ import print_function
 
 import socket
+import argparse
+import time
 
-from auxiliaries import set_verbosity
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
+from auxiliaries import set_verbosity, Config, PublicKey
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_SENDER_MODE
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 
 
 class ServerSender(object):
@@ -22,6 +25,7 @@ class ServerSender(object):
                  publickey=None,
                  verbosity=1,
                  logfile=None,
+                 mode=None,
                  ):
         """
         network_status, config, publickey loaded from manager if not provided.
@@ -35,19 +39,32 @@ class ServerSender(object):
         else:
             set_verbosity(self, logfile=logfile)
 
-        self.handle_input(manager, network_status, config, publickey)
+        self.handle_input(manager, mode, network_status, config, publickey)
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self.address = address
         self.port = port
 
-    def handle_input(self, manager, network_status, config, publickey):
+    def handle_input(self, manager, mode, network_status, config, publickey):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
             self.vprint(1, 'ServerSender starting without Manager object')
         self.manager = manager
+
+        try:
+            if mode is None:
+                self.mode = DEFAULT_SENDER_MODE
+            if mode.lower() == 'udp':
+                self.mode = 'udp'
+            elif mode.lower() == 'tcp':
+                self.mode = 'tcp'
+            else:
+                raise RuntimeError(
+                    'Invalid ServerSender mode (choose TCP or UDP)')
+        except AttributeError:
+            raise RuntimeError('Invalid ServerSender mode (choose TCP or UDP)')
 
         if network_status is None:
             if manager is None:
@@ -137,3 +154,52 @@ class PacketError(Exception):
 
 class MissingFile(PacketError):
     pass
+
+
+def send_test_packets(
+        mode=DEFAULT_SENDER_MODE,
+        config=DEFAULT_CONFIG,
+        publickey=DEFAULT_PUBLICKEY,
+        n=3):
+    """
+    Send n (default 3) test packets to the DoseNet server.
+    """
+
+    sleep_time = 2      # seconds
+
+    try:
+        config_obj = Config(config)
+    except IOError:
+        # file doesn't exist
+        config_obj = None
+    key_obj = PublicKey(publickey)
+
+    sender = ServerSender(
+        mode=mode, config=config_obj, publickey=key_obj, verbosity=3)
+
+    try:
+        station_id = config_obj.ID
+    except AttributeError:
+        station_id = '?'
+    raw_packet = 'Test packet from station {} by mode {}'.format(
+        station_id, mode)
+
+    encrypted = sender.encrypt_packet(raw_packet)
+
+    for _ in xrange(n):
+        sender.send_packet(encrypted)
+        time.sleep(sleep_time)
+
+
+if __name__ == '__main__':
+    # send test packets
+    parser = argparse.ArgumentParser(
+        description='Sender for UDP/TCP data packets. ' +
+        'Normally called from manager.py. ' +
+        'Called directly, it will send 3 test packets to server. ' +
+        'Specify udp or tcp on command line.')
+    parser.add_argument('mode', choices=['udp', 'tcp'], default='udp')
+    args = parser.parse_args()
+
+    send_test_packets(
+        mode=args.mode, config=DEFAULT_CONFIG, publickey=DEFAULT_PUBLICKEY)
