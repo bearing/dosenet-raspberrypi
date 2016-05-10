@@ -152,6 +152,7 @@ class ServerSender(object):
             if e[0] == socket.EAI_AGAIN:
                 # TCP and UDP
                 # network is down, but NetworkStatus didn't notice yet
+                # (resolving DNS like dosenet.dhcp.lbl.gov)
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
                 self.network_up.update()
@@ -163,6 +164,13 @@ class ServerSender(object):
                 # TCP
                 # server is not accepting connections
                 self.vprint(1, 'Failed to send packet! Connection refused')
+            elif e[0] == errno.ENETUNREACH:
+                # TCP and UDP
+                # network is down, but NetworkStatus didn't notice yet
+                # (IP like 131.243.51.241)
+                self.vprint(
+                    1, 'Failed to send packet! Network is unreachable')
+                self.network_up.update()
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
