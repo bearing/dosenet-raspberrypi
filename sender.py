@@ -149,6 +149,7 @@ class ServerSender(object):
                 # network is down, but NetworkStatus didn't notice yet
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
+                self.network_up.update()
             else:
                 self.vprint(
                     1, 'Failed to send packet! Unknown address error: ' +
@@ -180,10 +181,6 @@ class ServerSender(object):
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
             self.send_data(encrypted)
-            # except socket.error as e:
-            #     self.vprint(1, '~ Socket error! {}'.format(e))
-            #     # force update of network status - could be just no network
-            #     self.network_up.update()
         else:
             # TODO: feature add here
             self.vprint(2, 'Network DOWN, not sending packet')
