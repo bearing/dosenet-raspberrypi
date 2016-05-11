@@ -22,6 +22,12 @@ fi
 # what branch am I on? (in principle, this should be known from station ID)
 CURRENT_BRANCH=$(git status | head -n1 | sed 's/On branch //')
 
+LABEL_TEXT="Changes not staged for commit:"
+ANY_UNSTAGED=$(git status | grep -c "$LABEL_TEXT")
+
+LABEL_TEXT="Changes to be committed:"
+ANY_STAGED=$(git status | grep -c "$LABEL_TEXT")
+
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
 
