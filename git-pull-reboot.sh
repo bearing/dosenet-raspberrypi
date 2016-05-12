@@ -65,7 +65,9 @@ if [ $ANY_COMMITS = 1 -o $ANY_DIVERGENCE = 1 ]; then
   logger --stderr --id --tag $LOGTAG $LOGMSG
   git branch $NEW_BRANCH_NAME
   EXIT1=$?
-  git reset --hard origin/$BRANCH
+  # don't reset to $BRANCH, or else $CURRENT_BRANCH will point to $BRANCH
+  #   and be all messed up (divergent)
+  git reset --hard origin/$CURRENT_BRANCH
   EXIT2=$?
   if [ $EXIT1 -ne 0 ]; then
     logger --stderr --id --tag $LOGTAG "Failed to create stash branch!"
