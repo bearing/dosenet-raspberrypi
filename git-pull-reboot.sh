@@ -19,15 +19,6 @@ else
   ID=unknown
 fi
 
-# what branch am I on? (in principle, this should be known from station ID)
-CURRENT_BRANCH=$(git status | head -n1 | sed 's/On branch //')
-
-LABEL_TEXT="Changes not staged for commit:"
-ANY_UNSTAGED=$(git status | grep -c "$LABEL_TEXT")
-
-LABEL_TEXT="Changes to be committed:"
-ANY_STAGED=$(git status | grep -c "$LABEL_TEXT")
-
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
 
@@ -52,15 +43,65 @@ esac
 # `sudo -u pi` is required, because operations must be performed by
 #    user `pi`, not root
 
+#--- Clean up the index, working directory, and/or bad history ---
+# 1. Get the status
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+LABEL_TEXT="Changes not staged for commit:"
+ANY_UNSTAGED=$(git status | grep -c "$LABEL_TEXT")
+
+LABEL_TEXT="Changes to be committed:"
+ANY_STAGED=$(git status | grep -c "$LABEL_TEXT")
+
+LABEL_TEXT="Your branch is ahead of "
+ANY_COMMITS=$(git status | grep -c "$LABEL_TEXT")
+
+LABEL_TEXT=" have diverged,"
+ANY_DIVERGENCE=$(git status | grep -c "$LABEL_TEXT")
+
+# 2. start with local commits that didn't get pushed (really shouldn't happen)
+if [ $ANY_COMMITS = 1 -o $ANY_DIVERGENCE = 1 ]; then
+  TMP=$(date | sed 's/^[A-Z][a-z][a-z]/localchanges/')
+  TMP=$(echo $TMP | sed 's/ [0-9][0-9]:[0-9][0-9]:[0-9][0-9] [A-Z]* [0-9]*//')
+  NEW_BRANCH_NAME=$(echo $TMP | sed 's/ /-/g')
+  # generates a string in the form 'localchanges-May-11'
+  LOGMSG="Found local commits! Stashing them in branch $NEW_BRANCH_NAME"
+  logger --stderr --id --tag $LOGTAG $LOGMSG
+  git branch $NEW_BRANCH_NAME
+  EXIT1=$?
+  git reset --hard origin/$BRANCH
+  EXIT2=$?
+  if [ $EXIT1 -ne 0 ]; then
+    logger --stderr --id --tag $LOGTAG "Failed to create stash branch!"
+  fi
+  if [ $EXIT2 -ne 0 ]; then
+    logger --stderr --id --tag $LOGTAG "Failed to reset branch $BRANCH !"
+  fi
+fi
+
+# 3. now stash any uncommited local changes in index or working dir
+if [ $ANY_UNSTAGED = 1 -o $ANY_STAGED = 1 ]; then
+  LOGMSG="Found uncommited local changes! Putting in a git-stash"
+  logger --stderr --id --tag $LOGTAG $LOGMSG
+  git stash
+  if [ $? -ne 0 ]; then
+    logger --stderr --id --tag $LOGTAG "Failed to git-stash!"
+  fi
+fi
+
+# now, finally, there should be no reason for checkout and pull to fail.
+
 sudo -u pi git checkout $BRANCH
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
 elif [ $FORCE_GIT = "y" ]; then
   sudo -u pi git checkout --force $BRANCH
   if [ $? -eq 0 ]; then
-    logger --stderr --id --tag $LOGTAG "successfully (forcefully) checked out branch $BRANCH !"
+    LOGMSG="successfully (forcefully) checked out branch $BRANCH !"
+    logger --stderr --id --tag $LOGTAG $LOGMSG
   else
-    logger --stderr --id --tag $LOGTAG "failed to (forcefully) check out branch $BRANCH !"
+    LOGMSG="failed to (forcefully) check out branch $BRANCH !"
+    logger --stderr --id --tag $LOGTAG $LOGMSG
   fi
 else
   logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
