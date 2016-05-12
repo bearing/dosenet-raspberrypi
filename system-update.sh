@@ -51,17 +51,17 @@ CUR_GIT_NAME=$(git config --get user.name)
 if [ ! "$CUR_GIT_EMAIL" = "$GIT_EMAIL" ]; then
   git config user.email "$GIT_EMAIL"
   if [ $? -eq 0 ]; then
-    logger --stederr --id --tag $LOGTAG "Successfully updated git user.email"
+    logger --stderr --id --tag $LOGTAG "Successfully updated git user.email"
   else
-    logger --stederr --id --tag $LOGTAG "Failed to update git user.email!"
+    logger --stderr --id --tag $LOGTAG "Failed to update git user.email!"
   fi
 fi
 if [ ! "$CUR_GIT_NAME" = "$GIT_NAME" ]; then
   git config user.name "$GIT_NAME"
   if [ $? -eq 0 ]; then
-    logger --stederr --id --tag $LOGTAG "Successfully updated git user.name"
+    logger --stderr --id --tag $LOGTAG "Successfully updated git user.name"
   else
-    logger --stederr --id --tag $LOGTAG "Failed to update git user.name!"
+    logger --stderr --id --tag $LOGTAG "Failed to update git user.name!"
   fi
 fi
 #--------------------------------------------------------------------------
