@@ -8,9 +8,6 @@
 LOGTAG=dosenet
 CONFIGFILE=/home/pi/config/config.csv
 
-# if local changes exist, should the script discard by forcing a git checkout or pull?
-FORCE_GIT=n
-
 # what is my station ID?
 if [ -f $CONFIGFILE ]
 then
@@ -94,15 +91,6 @@ fi
 sudo -u pi git checkout $BRANCH
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
-elif [ $FORCE_GIT = "y" ]; then
-  sudo -u pi git checkout --force $BRANCH
-  if [ $? -eq 0 ]; then
-    LOGMSG="successfully (forcefully) checked out branch $BRANCH !"
-    logger --stderr --id --tag $LOGTAG $LOGMSG
-  else
-    LOGMSG="failed to (forcefully) check out branch $BRANCH !"
-    logger --stderr --id --tag $LOGTAG $LOGMSG
-  fi
 else
   logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
 fi
@@ -110,12 +98,12 @@ fi
 sudo -u pi git pull --ff-only
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "git pull successful"
-# not sure how to force git here.
 else
   logger --stderr --id --tag $LOGTAG "git pull failed !"
 fi
 
 sudo $DOSENETPATH/system-update.sh $ID
+
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "successfully ran system-update.sh"
 else
