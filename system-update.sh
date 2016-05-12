@@ -20,14 +20,6 @@ case $1 in
     echo "This is station #10005"
     # commands for station 10005 to run
 
-    # example: system update FOO
-    FOOFILE=/home/pi/foo.test
-    if [ -f $FOOFILE ]; then
-      echo "System update FOO has already been done. Skipping"
-    else
-      echo "Performing system update FOO"
-      echo "This is system update FOO" >> $FOOFILE
-    fi
     ;;
   *)
     # commands for all stations besides 10005 to run

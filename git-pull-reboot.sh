@@ -25,11 +25,6 @@ case $ID in
     echo "Should switch to a TCP-enabled branch here"
     BRANCH=master
     ;;
-  "10005")
-    # Test station at Brian's desk right now
-    echo "I am sitting on Brian's desk"
-    BRANCH=scripting-#24
-    ;;
   *)
     BRANCH=master
     ;;
