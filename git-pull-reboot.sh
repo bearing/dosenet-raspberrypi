@@ -9,8 +9,7 @@ LOGTAG=dosenet
 CONFIGFILE=/home/pi/config/config.csv
 
 # what is my station ID?
-if [ -f $CONFIGFILE ]
-then
+if [ -f $CONFIGFILE ]; then
   ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
 else
   ID=unknown
