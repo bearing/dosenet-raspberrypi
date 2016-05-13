@@ -23,7 +23,7 @@ case $ID in
   "7")
     # Foothill College: UDP blocked
     echo "Should switch to a TCP-enabled branch here"
-    BRANCH=master
+    BRANCH=tcp-and-udp
     ;;
   *)
     BRANCH=master
