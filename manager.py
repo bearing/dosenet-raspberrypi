@@ -38,7 +38,7 @@ strf = '%H:%M:%S'
 
 def signal_term_handler(signal, frame):
     print 'got SIGTERM'
-    sys.exit(0)
+    sys.exit(130)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 signal.CTRL_C_EVENT()
