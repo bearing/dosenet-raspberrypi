@@ -40,7 +40,7 @@ def signal_term_handler(signal, frame):
     print 'got SIGTERM'
     sys.exit(0)
 
-
+signal.signal(signal.SIGTERM, signal_term_handler)
 class Manager(object):
     """
     Master object for dosimeter operation.
@@ -231,7 +231,7 @@ class Manager(object):
             #new
             self.takedown()
         except SystemExit:
-            signal.signal(signal.SIGTERM, signal_term_handler)
+            
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
