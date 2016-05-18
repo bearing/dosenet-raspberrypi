@@ -41,6 +41,7 @@ def signal_term_handler(signal, frame):
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
+signal.CTRL_C_EVENT()
 class Manager(object):
     """
     Master object for dosimeter operation.
