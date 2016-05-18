@@ -217,7 +217,7 @@ class Manager(object):
                 self.handle_cpm(this_start, this_end)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
-            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run please')
             self.stop()
             
         except SystemExit:
