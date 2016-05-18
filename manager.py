@@ -225,9 +225,7 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
-        except Exception: 
-            self.stop()
-            self.takedown()
+        
 
     def stop(self):
         """Stop counting time."""
