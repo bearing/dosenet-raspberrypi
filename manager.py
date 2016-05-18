@@ -22,6 +22,11 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
+import signal
+import sys
+
+
+
 # this is hacky, but, the {{}} get converted to {} in the first .format() call
 #   and then get filled in later
 CPM_DISPLAY_TEXT = (
@@ -31,7 +36,11 @@ CPM_DISPLAY_TEXT = (
     yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 strf = '%H:%M:%S'
 
+def signal_term_handler(signal, frame):
+    print 'got SIGTERM'
+    sys.exit(0)
 
+signal.signal(signal.SIGTERM, signal_term_handler)
 class Manager(object):
     """
     Master object for dosimeter operation.
