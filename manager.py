@@ -219,20 +219,7 @@ class Manager(object):
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
-            # sensor
-        self.sensor.cleanup()
-        del(self.sensor)
-
-        # network
-        self.network_up.cleanup()
-        del(self.network_up)
-
-        # power LED
-        self.power_LED.off()
-        GPIO.cleanup()
-
-        # self. can I even do this?
-        del(self)
+            
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
