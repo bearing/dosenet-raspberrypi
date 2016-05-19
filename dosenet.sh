@@ -28,7 +28,7 @@ case "$1" in
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
-    sudo screen -dm python $DOSENET/sigterm.py
+    
     sudo killall python &
     ;;
   test)
