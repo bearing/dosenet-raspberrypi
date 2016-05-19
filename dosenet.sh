@@ -27,7 +27,6 @@ case "$1" in
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
-    
     sudo killall python &
     ;;
   test)
