@@ -22,8 +22,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
-import signal
-import sys
+
 
 
 
@@ -382,12 +381,7 @@ class Manager(object):
 class SleepError(Exception):
     pass
 
-def handler(signum, frame):
-    print 'Shutting down...'
-    sys.exit(1)
 
-
-signal.signal(signal.SIGTERM, handler)
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
