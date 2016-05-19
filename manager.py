@@ -229,7 +229,6 @@ class Manager(object):
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
-            #new
             self.takedown()
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
