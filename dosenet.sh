@@ -12,7 +12,7 @@
 #Line 15 either has /dev or not 
 # setup paths and check config files
 HOME=/home/pi
-DOSENET=$HOME/dev/dosenet-raspberrypi
+DOSENET=$HOME/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
