@@ -36,12 +36,7 @@ CPM_DISPLAY_TEXT = (
     yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 strf = '%H:%M:%S'
 
-def signal_term_handler(signal, frame):
-    print 'got SIGTERM'
-    sys.exit(0)
 
-signal.signal(signal.SIGTERM, signal_term_handler)
-signal.CTRL_C_EVENT()
 class Manager(object):
     """
     Master object for dosimeter operation.
