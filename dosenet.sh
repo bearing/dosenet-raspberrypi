@@ -9,6 +9,7 @@
 # X-Interactive: false
 # Short-Description: DoseNet - sends data for the DoseNet project
 ### END INIT INFO
+
 # setup paths and check config files
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
