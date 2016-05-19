@@ -235,11 +235,9 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
-        
     def stop(self):
         """Stop counting time."""
         self.running = False
-        
     def sleep_until(self, end_time):
         """
         Sleep until the given timestamp.
