@@ -27,11 +27,10 @@ import sys
 
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
+    #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
-
-
 
 # this is hacky, but, the {{}} get converted to {} in the first .format() call
 #   and then get filled in later
@@ -228,17 +227,15 @@ class Manager(object):
                 self.handle_cpm(this_start, this_end)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
-            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run please')
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
             #new
             self.takedown()
         except SystemExit:
-            
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
         
-
     def stop(self):
         """Stop counting time."""
         self.running = False
