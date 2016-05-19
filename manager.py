@@ -22,6 +22,16 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
+import signal
+import sys
+
+def signal_term_handler(signal, frame):
+    print('got SIGTERM')
+    #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_term_handler)
+
 # this is hacky, but, the {{}} get converted to {} in the first .format() call
 #   and then get filled in later
 CPM_DISPLAY_TEXT = (
@@ -219,6 +229,7 @@ class Manager(object):
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
+            self.takedown()
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
