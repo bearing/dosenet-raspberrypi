@@ -22,7 +22,14 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
+import signal
+import sys
 
+def signal_term_handler(signal, frame):
+    print 'got SIGTERM'
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_term_handler)
 
 
 
