@@ -382,6 +382,12 @@ class Manager(object):
 class SleepError(Exception):
     pass
 
+def handler(signum, frame):
+    print 'Shutting down...'
+    sys.exit(1)
+
+
+signal.signal(signal.SIGTERM, handler)
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
