@@ -304,11 +304,11 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
 
-    def write_to_txt(self, first, second, third, fourth):
+    def write_to_txt(self, first, second, third, four):
         f.write(str(first))
         f.write(str(second))
-        f.write(str(third)
-        f.write(str(fourth))
+        f.write(str(third))
+        f.write(str(four))
 
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
