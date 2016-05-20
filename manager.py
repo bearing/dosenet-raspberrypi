@@ -227,7 +227,6 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
-                self.write_to_txt(self, this_start, this_end, cpm, cpm_err)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -303,12 +302,10 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
-
-    def write_to_txt(self, first, second, third, four):
-        f.write(str(first))
-        f.write(str(second))
-        f.write(str(third))
-        f.write(str(four))
+            f.write(str(this_start))
+            f.write(str(this_end))
+            f.write(str(cpm))
+            f.write(str(cpm_err))
 
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
