@@ -303,6 +303,7 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
             f.write(str(start_time) + '|' + str(end_time) + '|' + str(cpm) + '\n')
+            f.close()
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
