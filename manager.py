@@ -25,9 +25,13 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
-f = open('data-log', 'w')
-f.write('Start Time, End Time, Counts per Minute\n')
+import json
+
+f = open('data-log', 'a')
+json.dump(['End Time', Counts per Minute'], f)
+f.write('\n')
 f.close()
+
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -304,7 +308,8 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
             f = open('data-log', 'a')
-            f.write(str(start_text) + ',' + ' ' + str(end_text) + ',' + ' ' + str(cpm) + '\n')
+            json.dump([end_text, cpm], f)
+            f.write('\n')
             f.close()
             
     def takedown(self):
