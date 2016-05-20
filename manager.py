@@ -26,7 +26,8 @@ import signal
 import sys
 
 f = open('data-log', 'w')
-
+f.write('Start Time, End Time, Counts per Minute')
+f.close()
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -302,8 +303,9 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
-            f.write(str(start_text) + ' ' + str(end_text) + ' ' + str(cpm) + '\n')
-            
+            f = open('data-log', 'a')
+            f.write(str(start_text) + ',' + ' ' + str(end_text) + ',' + ' ' + str(cpm) + '\n')
+            f.close()
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
