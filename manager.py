@@ -28,7 +28,7 @@ import sys
 import json
 
 f = open('data-log', 'a')
-json.dump(['End Time', 'Counts per Minute'], f)
+json.dump([date ,'End Time', 'Counts per Minute'], f)
 f.write('\n')
 f.close()
 
@@ -308,7 +308,7 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
             f = open('data-log', 'a')
-            json.dump([end_text, cpm], f)
+            json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
             f.write('\n')
             f.close()
             
