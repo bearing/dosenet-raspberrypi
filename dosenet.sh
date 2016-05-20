@@ -12,7 +12,7 @@
 
 # setup paths and check config files
 HOME=/home/pi
-DOSENET=$HOME/dev/data-log/dosenet-raspberrypi
+DOSENET=$HOME/dev/datalog/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
