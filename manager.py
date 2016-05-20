@@ -25,6 +25,8 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
+f = open('data-log', 'w')
+
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -225,6 +227,7 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                self.write_to_txt(self, this_start, this_end, cpm, cpm_err)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -300,6 +303,12 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
+
+    def write_to_txt(self, this_start, this_end, cpm, cpm_err):
+        f.write(str(this_start))
+        f.write(str(this_end))
+        f.write(str(cpm))
+        f.write(str(cpm_err))
 
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
