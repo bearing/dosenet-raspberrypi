@@ -26,7 +26,7 @@ import signal
 import sys
 
 f = open('data-log', 'w')
-f.write('Start Time, End Time, Counts per Minute')
+f.write('Start Time, End Time, Counts per Minute\n')
 f.close()
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
