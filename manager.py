@@ -28,7 +28,7 @@ import sys
 import json
 
 f = open('data-log', 'a')
-json.dump(['End Time', Counts per Minute'], f)
+json.dump(['End Time', 'Counts per Minute'], f)
 f.write('\n')
 f.close()
 
