@@ -302,11 +302,8 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
-            f.write(str(this_start))
-            f.write(str(this_end))
             f.write(str(cpm))
-            f.write(str(cpm_err))
-
+            
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
