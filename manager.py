@@ -302,7 +302,7 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
-            f.write(str(this_start) + ' ' + str(this_end) + ' ' + str(cpm) + '\n')
+            f.write(str(start_text) + ' ' + str(end_text) + ' ' + str(cpm) + '\n')
             
             
     def takedown(self):
