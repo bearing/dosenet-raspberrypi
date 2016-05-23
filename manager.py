@@ -286,6 +286,13 @@ class Manager(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
+    def data_log(self, file, end_time, cpm):
+        """Writes cpm to data-log"""
+        f = open(file, 'a')
+        json.dump([time.strftime("%m/%d/%Y"), end_time, cpm], f)
+        f.write('\n')
+        f.close()
+    
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
@@ -310,31 +317,20 @@ class Manager(object):
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
              #appends cpm data to the local file every 5 minutes
-            f = open('data-log', 'a')
-            json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
-            f.write('\n')
-            f.close()
+            self.data_log('data-log', end_text, cpm)
+            
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
              #appends cpm data to the local file every 5 minutes
-            f = open('data-log', 'a')
-            json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
-            f.write('\n')
-            f.close()
+           self.data_log('data-log', end_text, cpm)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
              #appends cpm data to the local file every 5 minutes
-            f = open('data-log', 'a')
-            json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
-            f.write('\n')
-            f.close()
+            self.data_log('data-log', end_text, cpm)
         else:
             self.sender.send_cpm(cpm, cpm_err)
             #appends cpm data to the local file every 5 minutes
-            f = open('data-log', 'a')
-            json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
-            f.write('\n')
-            f.close()
+            self.data_log('data-log', end_text, cpm)
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
