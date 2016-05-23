@@ -29,13 +29,13 @@ import json
 import os
 
 #creates a local file in case the file does not yet exist
-f = open('data-log', 'a')
+f = open('/home/pi/data-log', 'a')
 f.close()
 
 #if the file is empty, it appends the legend to the top of the .txt file
 #if the file already has data in it, nothing happens
-if os.stat('data-log').st_size == 0:
-    f = open('data-log', 'a')
+if os.stat('/home/pi/data-log').st_size == 0:
+    f = open('/home/pi/data-log', 'a')
     json.dump(['date' ,'End Time', 'Counts per Minute'], f)
     f.write('\n')
     f.close()
@@ -316,17 +316,17 @@ class Manager(object):
                 ANSI_RESET)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
-            self.data_log('data-log', end_text, cpm)
+            self.data_log('/home/pi/data-log', end_text, cpm)
             
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
-            self.data_log('data-log', end_text, cpm)
+            self.data_log('/home/pi/data-log', end_text, cpm)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
-            self.data_log('data-log', end_text, cpm)
+            self.data_log('/home/pi/data-log', end_text, cpm)
         else:
             self.sender.send_cpm(cpm, cpm_err)
-            self.data_log('data-log', end_text, cpm)
+            self.data_log('/home/pi/data-log', end_text, cpm)
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
