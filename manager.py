@@ -28,9 +28,12 @@ import sys
 import json
 import os
 
+#creates a local file in case the file does not yet exist
 f = open('data-log', 'a')
 f.close()
 
+#if the file is empty, it appends the legend to the top of the .txt file
+#if the file already has data in it, nothing happens
 if os.stat('data-log').st_size == 0:
     f = open('data-log', 'a')
     json.dump(['date' ,'End Time', 'Counts per Minute'], f)
@@ -312,6 +315,7 @@ class Manager(object):
             self.vprint(1, "Network down, not sending to server")
         else:
             self.sender.send_cpm(cpm, cpm_err)
+            #appends cpm data to the local file every 5 minutes
             f = open('data-log', 'a')
             json.dump([time.strftime("%m/%d/%Y"), end_text, cpm], f)
             f.write('\n')
