@@ -322,7 +322,7 @@ class Manager(object):
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
              #appends cpm data to the local file every 5 minutes
-           self.data_log('data-log', end_text, cpm)
+            self.data_log('data-log', end_text, cpm)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
              #appends cpm data to the local file every 5 minutes
