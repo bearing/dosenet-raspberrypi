@@ -31,11 +31,12 @@ import json
 data_log = open('data-log')
 content = data_log.readlines(0)
 data_log.close()
-print(content[0])
-f = open('data-log', 'a')
-json.dump(['date' ,'End Time', 'Counts per Minute'], f)
-f.write('\n')
-f.close()
+#new
+if content[0] != ["date", "End Time", "Counts per Minute"}:
+    f = open('data-log', 'a')
+    json.dump(['date' ,'End Time', 'Counts per Minute'], f)
+    f.write('\n')
+    f.close()
 
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
