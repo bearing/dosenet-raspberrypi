@@ -305,7 +305,7 @@ class Manager(object):
         """Writes cpm to data-log"""
         if self.data:    
             f = open(file, 'a')
-            json.dump([time.strftime("%m/%d/%Y"), end_time, cpm], f)
+            json.dump([time, cpm], f) #time.strftime("%m/%d/%Y"), end_time
             f.write('\n')
             f.close()
     
