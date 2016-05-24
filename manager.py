@@ -332,17 +332,16 @@ class Manager(object):
                 ANSI_RESET)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
-            self.data_log('/home/pi/data-log', end_text, cpm)
-            
+            self.data_log(self.datalog, end_text, cpm)
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
-            self.data_log('/home/pi/data-log', end_text, cpm)
+            self.data_log(self.datalog, end_text, cpm)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
-            self.data_log('/home/pi/data-log', end_text, cpm)
+            self.data_log(self.datalog, end_text, cpm)
         else:
             self.sender.send_cpm(cpm, cpm_err)
-            self.data_log('/home/pi/data-log', end_text, cpm)
+            self.data_log(self.datalog, end_text, cpm)
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
