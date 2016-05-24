@@ -126,11 +126,11 @@ class Manager(object):
         if self.data:
             f = open(file, 'a')
             f.close()
-            if os.stat(file).st_size == 0:
-                f = open(file, 'a')
-                json.dump(['Time', 'Counts per Minute', 'Error'], f)
-                f.write('\n')
-                f.close()
+           # if os.stat(file).st_size == 0:
+                #f = open(file, 'a')
+                #json.dump(['Time', 'Counts per Minute', 'Error'], f)
+                #f.write('\n')
+                #f.close()
 
     def handle_input(self,
                      log, logfile, verbosity,
@@ -305,7 +305,7 @@ class Manager(object):
         """Writes cpm to data-log"""
         if self.data:    
             f = open(file, 'a')
-            json.dump([time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err], f) #time.strftime("%m/%d/%Y"), end_time
+            f.write('time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err') #time.strftime("%m/%d/%Y"), end_time
             f.write('\n')
             f.close()
     
