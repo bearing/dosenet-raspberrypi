@@ -75,7 +75,7 @@ class Manager(object):
                  verbosity=None,
                  log=False,
                  logfile=None,
-                 datalog=DEFAULT_DATALOG,
+                 datalog=None,
                  data=False
                  ):
 
@@ -408,9 +408,9 @@ class Manager(object):
                 DEFAULT_PORT))
         #datalog
         parser.add_argument(
-            '--datalog', '-d', default=DEFAULT_DATALOG,
+            '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG))
+                None))
         parser.add_argument(
             '--data', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
