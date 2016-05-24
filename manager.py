@@ -128,7 +128,7 @@ class Manager(object):
             f.close()
             if os.stat(file).st_size == 0:
                 f = open(file, 'a')
-                json.dump(['date', 'End Time', 'Counts per Minute'], f)
+                json.dump(['Time', 'Counts per Minute', 'Error'], f)
                 f.write('\n')
                 f.close()
 
@@ -301,11 +301,11 @@ class Manager(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
-    def data_log(self, file, end_time, cpm):
+    def data_log(self, file, cpm, cpm_err):
         """Writes cpm to data-log"""
         if self.data:    
             f = open(file, 'a')
-            json.dump([time, cpm], f) #time.strftime("%m/%d/%Y"), end_time
+            json.dump([time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err], f) #time.strftime("%m/%d/%Y"), end_time
             f.write('\n')
             f.close()
     
