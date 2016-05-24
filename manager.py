@@ -29,18 +29,6 @@ import sys
 import json
 import os
 
-#creates a local file in case the file does not yet exist
-f = open('/home/pi/data-log', 'a')
-f.close()
-
-#if the file is empty, it appends the legend to the top of the .txt file
-#if the file already has data in it, nothing happens
-if os.stat('/home/pi/data-log').st_size == 0:
-    f = open('/home/pi/data-log', 'a')
-    json.dump(['date' ,'End Time', 'Counts per Minute'], f)
-    f.write('\n')
-    f.close()
-
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
