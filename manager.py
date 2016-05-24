@@ -26,8 +26,8 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
-import json
-import os
+#import json
+#import os
 
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
@@ -126,12 +126,7 @@ class Manager(object):
         if self.data:
             f = open(file, 'a')
             f.close()
-           # if os.stat(file).st_size == 0:
-                #f = open(file, 'a')
-                #json.dump(['Time', 'Counts per Minute', 'Error'], f)
-                #f.write('\n')
-                #f.close()
-
+           
     def handle_input(self,
                      log, logfile, verbosity,
                      test, interval, config, publickey):
@@ -305,7 +300,7 @@ class Manager(object):
         """Writes cpm to data-log"""
         if self.data:    
             f = open(file, 'a')
-            f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err)) #time.strftime("%m/%d/%Y"), end_time
+            f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err))
             f.write('\n')
             f.close()
     
