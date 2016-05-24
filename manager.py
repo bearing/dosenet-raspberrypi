@@ -305,7 +305,7 @@ class Manager(object):
         """Writes cpm to data-log"""
         if self.data:    
             f = open(file, 'a')
-            f.write('time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err') #time.strftime("%m/%d/%Y"), end_time
+            f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err)) #time.strftime("%m/%d/%Y"), end_time
             f.write('\n')
             f.close()
     
