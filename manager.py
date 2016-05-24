@@ -20,6 +20,7 @@ from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
+from globalvalues import DEFAULT_DATALOG
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 import signal
@@ -86,6 +87,8 @@ class Manager(object):
                  verbosity=None,
                  log=False,
                  logfile=None,
+                 datalog=DEFAULT_DATALOG,
+                 data=False
                  ):
 
         self.handle_input(log, logfile, verbosity,
@@ -116,6 +119,20 @@ class Manager(object):
             manager=self,
             verbosity=self.v,
             logfile=self.logfile)
+        self.datalog = datalog
+        self.data = data
+        
+        self.make_data_log(self.datalog)
+        
+    def make_data_log(self, file): 
+        if self.data:
+            f = open(file, 'a')
+            f.close()
+            if os.stat(file).st_size == 0:
+                f open(file, 'a')
+                json.dump(['date', 'End Time', 'Counts per Minute'], f)
+                f.write('\n')
+                f.close()
 
     def handle_input(self,
                      log, logfile, verbosity,
@@ -288,10 +305,11 @@ class Manager(object):
 
     def data_log(self, file, end_time, cpm):
         """Writes cpm to data-log"""
-        f = open(file, 'a')
-        json.dump([time.strftime("%m/%d/%Y"), end_time, cpm], f)
-        f.write('\n')
-        f.close()
+        if self.data:    
+            f = open(file, 'a')
+            json.dump([time.strftime("%m/%d/%Y"), end_time, cpm], f)
+            f.write('\n')
+            f.close()
     
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
@@ -400,7 +418,15 @@ class Manager(object):
             '--port', '-p', type=int, default=DEFAULT_PORT,
             help='Specify a port for the server (default {})'.format(
                 DEFAULT_PORT))
-
+        #datalog
+        parser.add_argument(
+            '--datalog', '-d', default=DEFAULT_DATALOG,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG))
+        parser.add_argument(
+            '--data', '-a', action='store_true', default=False,
+            help='Enable logging local data (default off)')
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
