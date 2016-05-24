@@ -26,9 +26,6 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
-#import json
-#import os
-
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
