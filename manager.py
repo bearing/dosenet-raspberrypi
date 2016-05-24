@@ -129,7 +129,7 @@ class Manager(object):
             f = open(file, 'a')
             f.close()
             if os.stat(file).st_size == 0:
-                f open(file, 'a')
+                f = open(file, 'a')
                 json.dump(['date', 'End Time', 'Counts per Minute'], f)
                 f.write('\n')
                 f.close()
