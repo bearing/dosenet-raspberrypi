@@ -339,7 +339,8 @@ class TestZdataLog(unittest.TestCase):
     def test_get_data(self):
         output = get_data()
         self.assertIsNotNone(output)
-        
+        print(output)
+    
     def tearDown(self):
         print('That was local data')
        
