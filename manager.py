@@ -118,6 +118,7 @@ class Manager(object):
     def d_flag(self):
         if self.datalog:
             self.data = True
+            DEFAULT_DATALOG = self.datalog
     
     def make_data_log(self, file): 
         if self.data:
