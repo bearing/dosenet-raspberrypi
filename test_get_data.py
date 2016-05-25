@@ -1,5 +1,5 @@
 from auxiliaries import get_data
-from manager import mgr.datalog
+from manager import datalog
 
-x = get_data(mgr.datalog)
+x = get_data(datalog)
 print(x)
