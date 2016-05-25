@@ -329,7 +329,7 @@ class TestSender(unittest.TestCase):
             ss.send_cpm(0, 0)
 
     # ...
-
+'''
 class TestDataLog(unittest.TestCase):
     
     def setUp(self):
@@ -343,7 +343,7 @@ class TestDataLog(unittest.TestCase):
     def test_get_data(self):
         output = get_data()
         print(output)
-        
+'''
 
 if __name__ == '__main__':
     unittest.main()
