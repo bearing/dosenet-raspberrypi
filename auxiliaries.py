@@ -81,13 +81,9 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 
     class_instance.vprint = vprint
 
-def get_data(base_path="/home/pi/"):
-    '''file is the path of the datalog'''
-    for r,d,f in os.walk(base_path):
-        for files in f:
-            if files == "data-log":
-                file_path = os.path.join(r,files)
-    with open(file_path) as inputfile:
+def get_data(base_path="/home/pi/data-log"):
+    '''Argument is the path where the data-log is. Default is /home/pi/data-log'''
+    with open(base_path) as inputfile:
         results = list(csv.reader(inputfile))
     return results
 
