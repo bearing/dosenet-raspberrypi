@@ -1,2 +1,2 @@
 import os
-file =  os.path.abspath("something.exe")
+file_path =  os.path.abspath("something.exe")
