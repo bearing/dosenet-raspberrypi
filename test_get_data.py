@@ -1,6 +1,6 @@
-from auxiliaries import get_data
-from manager import mgr
+from manager import get_data
+#from manager import mgr
 
-NEW_DATALOG = mgr.datalog
-x = get_data(NEW_DATALOG)
+
+x = get_data()
 print(x)
