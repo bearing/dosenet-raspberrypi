@@ -335,7 +335,7 @@ class TestDataLog(unittest.TestCase):
     def setUp(self):
         # fake sensor - only simulating counts
          mgr = Manager(data=True, test=True, interval=1)
- +    
+         
     def tearDown(self):
         mgr.stop()
         mgr.takedown()
