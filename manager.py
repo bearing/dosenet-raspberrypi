@@ -120,6 +120,7 @@ class Manager(object):
     def d_flag(self):
         if self.datalog:
             self.data = True
+            NEW_DATALOG = self.datalog
             
     def make_data_log(self, file): 
         if self.data:
@@ -431,7 +432,6 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
-    NEW_DATALOG = mgr.datalog
     try:
         mgr.run()
     except:
