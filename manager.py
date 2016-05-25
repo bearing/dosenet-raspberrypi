@@ -28,8 +28,6 @@ import sys
 
 import csv
 
-DATA = 0
-
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -77,7 +75,8 @@ class Manager(object):
                  log=False,
                  logfile=None,
                  datalog=None,
-                 data=False
+                 data=False,
+                 output = 0
                  ):
 
         self.handle_input(log, logfile, verbosity,
@@ -110,6 +109,7 @@ class Manager(object):
             logfile=self.logfile)
         self.datalog = datalog
         self.data = data
+        self.output = output
         
         self.a_flag()
         self.d_flag()
@@ -329,19 +329,19 @@ class Manager(object):
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
             self.data_log(self.datalog, cpm, cpm_err)
-            DATA = self.get_data()
+            self.output = self.get_data()
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
             self.data_log(self.datalog, cpm, cpm_err)
-            DATA = self.get_data()
+            self.output = self.get_data()
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
             self.data_log(self.datalog, cpm, cpm_err)
-            DATA = self.get_data()
+            self.output = self.get_data()
         else:
             self.sender.send_cpm(cpm, cpm_err)
             self.data_log(self.datalog, cpm, cpm_err)
-            DATA = self.get_data()
+            self.output = self.get_data()
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
@@ -363,9 +363,10 @@ class Manager(object):
     
     def get_data(self):
         '''file is the path of the datalog'''
-        with open(self.datalog) as inputfile:
-            results = list(csv.reader(inputfile))
-        return results
+        if self.data:
+            with open(self.datalog) as inputfile:
+                results = list(csv.reader(inputfile))
+            return results
     
     @classmethod
     def from_argparse(cls):
