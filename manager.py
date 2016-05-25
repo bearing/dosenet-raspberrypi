@@ -324,6 +324,7 @@ class Manager(object):
             self.vprint(
                 1, ANSI_RED + " * Test mode, not sending to server * " +
                 ANSI_RESET)
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
             self.data_log(self.datalog, cpm, cpm_err)
