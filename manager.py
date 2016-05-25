@@ -26,6 +26,8 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
+NEW_DATALOG = None
+
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -429,6 +431,7 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
+    NEW_DATALOG = mgr.datalog
     try:
         mgr.run()
     except:
@@ -438,4 +441,3 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
-NEW_DATALOG = mgr.datalog
