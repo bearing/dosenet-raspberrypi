@@ -20,6 +20,7 @@ import cust_crypt
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_DATALOG
 
 if RPI:
     test_config_path = DEFAULT_CONFIG
