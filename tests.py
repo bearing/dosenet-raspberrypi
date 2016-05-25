@@ -44,6 +44,7 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
+ mgr = Manager(data=True, test=True, interval=1)
 
 class TestVerbosity(unittest.TestCase):
 
@@ -330,18 +331,13 @@ class TestSender(unittest.TestCase):
 
     # ...
 
-class TestDataLog(unittest.TestCase):
+class TestZdataLog(unittest.TestCase):
     
     def setUp(self):
-        # fake sensor - only simulating counts
-         mgr = Manager(data=True, test=True, interval=1)
-         
-    def tearDown(self):
-        del(mgr)
-        
-    def test_get_data(self):
         output = get_data()
         print(output)
-
+    def tearDown(self):
+        print('That was local data')
+        del(mgr)
 if __name__ == '__main__':
     unittest.main()
