@@ -335,8 +335,7 @@ class TestDataLog(unittest.TestCase):
     def setUp(self):
         # fake sensor - only simulating counts
         self.sensor = sensor.Sensor(max_accumulation_time_s=2, use_gpio=False)
-        mgr = Manager(data=True, test=True, interval=10)
-    
+        
     def tearDown(self):
         self.sensor.cleanup()
         self.sensor = None
