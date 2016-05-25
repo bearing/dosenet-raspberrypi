@@ -1,3 +1,5 @@
-output = __import__('manager').output
+import manager
+
+output = mgr.output
 
 print(output)
