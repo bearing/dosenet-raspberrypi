@@ -81,9 +81,9 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 
     class_instance.vprint = vprint
 
-def get_data():
+def get_data(base_path="/home/pi/"):
     '''file is the path of the datalog'''
-    for r,d,f in os.walk("/home/pi/"):
+    for r,d,f in os.walk(base_path):
         for files in f:
             if files == "data-log":
                 file_path = os.path.join(r,files)
