@@ -334,14 +334,15 @@ class TestSender(unittest.TestCase):
 class TestZdataLog(unittest.TestCase):
     
     def setUp(self):
-        output = get_data()
+        print('Checking local data')
         
     def test_get_data(self):
+        output = get_data()
         self.assertIsNotNone(output)
         
     def tearDown(self):
         print('That was local data')
-        del(mgr)
+       
         
 if __name__ == '__main__':
     unittest.main()
