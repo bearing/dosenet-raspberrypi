@@ -438,3 +438,4 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+NEW_DATALOG = mgr.datalog
