@@ -76,7 +76,6 @@ class Manager(object):
                  logfile=None,
                  datalog=None,
                  data=False,
-                 output = 0
                  ):
 
         self.handle_input(log, logfile, verbosity,
