@@ -335,12 +335,13 @@ class TestZdataLog(unittest.TestCase):
         print('Checking local data')
         
     def test_get_data(self):
-        mgr = Manager(data=True, test=True, interval=1)
+        mgr = Manager(data=True, test=True)
         time.sleep(300)
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
         mgr.takedown()
+        os.remove(DEFAULT_DATALOG)
     
     def tearDown(self):
         print('That was local data')
