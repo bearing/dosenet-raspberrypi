@@ -336,6 +336,11 @@ class TestDataLog(unittest.TestCase):
     def tearDown(self):
         self.sensor.cleanup()
         self.sensor = None
+        
+    def test_get_data(self):
+        output = get_data()
+        print(output)
+        
 
 if __name__ == '__main__':
     unittest.main()
