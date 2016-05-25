@@ -1,5 +1,2 @@
-import manager
-
-output = mgr.output
-
-print(output)
+import os
+file =  os.path.abspath("something.exe")
