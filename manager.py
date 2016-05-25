@@ -352,7 +352,13 @@ class Manager(object):
 
         # self. can I even do this?
         del(self)
-
+    
+    def get_data():
+    '''file is the path of the datalog'''
+        with open(self.datalog) as inputfile:
+            results = list(csv.reader(inputfile))
+        return results
+    
     @classmethod
     def from_argparse(cls):
         """
@@ -421,12 +427,6 @@ class Manager(object):
         mgr = Manager(**arg_dict)
 
         return mgr
-
-def get_data():
-    '''file is the path of the datalog'''
-    with open(mgr.datalog) as inputfile:
-        results = list(csv.reader(inputfile))
-    return results
 
 class SleepError(Exception):
     pass
