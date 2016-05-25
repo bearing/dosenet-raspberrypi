@@ -26,6 +26,8 @@ from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 import signal
 import sys
 
+import csv
+
 DATA = 0
 
 def signal_term_handler(signal, frame):
