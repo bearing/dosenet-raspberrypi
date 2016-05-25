@@ -328,6 +328,13 @@ class TestSender(unittest.TestCase):
 
 class TestDataLog(unittest.TestCase):
     
+    def setUp(self):
+        # fake sensor - only simulating counts
+        self.sensor = sensor.Sensor(max_accumulation_time_s=2, use_gpio=False)
+
+    def tearDown(self):
+        self.sensor.cleanup()
+        self.sensor = None
 
 if __name__ == '__main__':
     unittest.main()
