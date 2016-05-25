@@ -335,9 +335,13 @@ class TestZdataLog(unittest.TestCase):
     
     def setUp(self):
         output = get_data()
-        print(output)
+        
+    def test_get_data(self):
+        self.assertIsNotNone(output)
+        
     def tearDown(self):
         print('That was local data')
         del(mgr)
+        
 if __name__ == '__main__':
     unittest.main()
