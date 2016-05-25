@@ -329,21 +329,20 @@ class TestSender(unittest.TestCase):
             ss.send_cpm(0, 0)
 
     # ...
-'''
+
 class TestDataLog(unittest.TestCase):
     
     def setUp(self):
         # fake sensor - only simulating counts
-        self.sensor = sensor.Sensor(max_accumulation_time_s=2, use_gpio=False)
-        
+         mgr = Manager(data=True, test=True, interval=1)
+ +    
     def tearDown(self):
-        self.sensor.cleanup()
-        self.sensor = None
+        mgr.stop()
+        mgr.takedown()
         
     def test_get_data(self):
         output = get_data()
         print(output)
-'''
 
 if __name__ == '__main__':
     unittest.main()
