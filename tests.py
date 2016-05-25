@@ -17,6 +17,8 @@ import auxiliaries
 import manager
 import cust_crypt
 
+from auxiliaries import get_data
+
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
