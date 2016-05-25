@@ -118,8 +118,7 @@ class Manager(object):
     def d_flag(self):
         if self.datalog:
             self.data = True
-            DEFAULT_DATALOG = self.datalog
-    
+            
     def make_data_log(self, file): 
         if self.data:
             f = open(file, 'a')
@@ -432,6 +431,7 @@ if __name__ == '__main__':
     mgr = Manager.from_argparse()
     try:
         mgr.run()
+        DEFAULT_DATALOG = mgr.datalog #new
     except:
         if mgr.logfile:
             # print exception info to logfile
