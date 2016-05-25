@@ -1,6 +1,3 @@
-from manager import Manager
-from manager import get_data
+from manager import DATA
 
-
-x = get_data()
-print(x)
+print(DATA)
