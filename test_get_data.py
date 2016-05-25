@@ -1,3 +1,3 @@
-from manager import DATA
+output = __import__('manager.py').mgr.output
 
-print(DATA)
+print(output)
