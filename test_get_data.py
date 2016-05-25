@@ -1,5 +1,5 @@
 from auxiliaries import get_data
-from manager import DEFAULT_DATALOG
+from manager import NEW_DATALOG
 
-x = get_data(DEFAULT_DATALOG)
+x = get_data(NEW_DATALOG)
 print(x)
