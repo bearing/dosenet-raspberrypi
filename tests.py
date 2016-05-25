@@ -337,8 +337,7 @@ class TestDataLog(unittest.TestCase):
          mgr = Manager(data=True, test=True, interval=1)
          
     def tearDown(self):
-        mgr.stop()
-        mgr.takedown()
+        del(mgr)
         
     def test_get_data(self):
         output = get_data()
