@@ -1,3 +1,3 @@
-output = __import__('manager').manager.output
+output = __import__('manager').output
 
 print(output)
