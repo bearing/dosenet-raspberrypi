@@ -44,8 +44,6 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
-mgr = Manager(data=True, test=True, interval=1)
-
 class TestVerbosity(unittest.TestCase):
 
     class Verbosity1(object):
@@ -337,9 +335,11 @@ class TestZdataLog(unittest.TestCase):
         print('Checking local data')
         
     def test_get_data(self):
+        mgr = Manager(data=True, test=True, interval=1)
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
+        mgr.takedown()
     
     def tearDown(self):
         print('That was local data')
