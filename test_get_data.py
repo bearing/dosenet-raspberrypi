@@ -1,5 +1,5 @@
-from manager import get_data
-#from manager import mgr
+import manager
+
 
 
 x = get_data()
