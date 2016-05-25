@@ -82,7 +82,7 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
     class_instance.vprint = vprint
 
 def get_data(file):
-    with open(file, newline='') as inputfile:
+    with open(file) as inputfile:
         results = list(csv.reader(inputfile))
     return results
 
