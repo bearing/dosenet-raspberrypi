@@ -44,7 +44,7 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
- mgr = Manager(data=True, test=True, interval=1)
+mgr = Manager(data=True, test=True, interval=1)
 
 class TestVerbosity(unittest.TestCase):
 
