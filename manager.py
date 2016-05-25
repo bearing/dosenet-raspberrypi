@@ -431,7 +431,7 @@ if __name__ == '__main__':
     mgr = Manager.from_argparse()
     try:
         mgr.run()
-        DEFAULT_DATALOG = mgr.datalog #new
+        NEW_DATALOG = mgr.datalog #new
     except:
         if mgr.logfile:
             # print exception info to logfile
