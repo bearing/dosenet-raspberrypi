@@ -336,6 +336,7 @@ class TestZdataLog(unittest.TestCase):
         
     def test_get_data(self):
         mgr = Manager(data=True, test=True, interval=1)
+        time.sleep(60)
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
