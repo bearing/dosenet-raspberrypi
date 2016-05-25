@@ -118,7 +118,6 @@ class Manager(object):
     def d_flag(self):
         if self.datalog:
             self.data = True
-            NEW_DATALOG = self.datalog
             
     def make_data_log(self, file): 
         if self.data:
@@ -423,6 +422,11 @@ class Manager(object):
 
         return mgr
 
+def get_data():
+    '''file is the path of the datalog'''
+    with open(mgr.datalog) as inputfile:
+        results = list(csv.reader(inputfile))
+    return results
 
 class SleepError(Exception):
     pass
