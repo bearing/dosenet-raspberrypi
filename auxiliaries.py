@@ -84,9 +84,9 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 def get_data():
     '''file is the path of the datalog'''
     for r,d,f in os.walk("/home/pi/"):
-    for files in f:
-         if files == "data-log":
-              file_path = os.path.join(r,files)
+        for files in f:
+            if files == "data-log":
+                file_path = os.path.join(r,files)
     with open(file_path) as inputfile:
         results = list(csv.reader(inputfile))
     return results
