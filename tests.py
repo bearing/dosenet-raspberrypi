@@ -5,6 +5,7 @@ from __future__ import print_function
 import unittest
 import time
 import os
+import csv
 
 from globalvalues import RPI
 if RPI:
@@ -325,6 +326,8 @@ class TestSender(unittest.TestCase):
 
     # ...
 
+class TestDataLog(unittest.TestCase):
+    
 
 if __name__ == '__main__':
     unittest.main()
