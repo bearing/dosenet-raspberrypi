@@ -327,8 +327,7 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-    # ...
-
+    
 class TestZdataLog(unittest.TestCase):
     
     def setUp(self):
@@ -347,11 +346,9 @@ class TestZdataLog(unittest.TestCase):
         os.remove(DEFAULT_DATALOG)
         
     def tearDown(self):
-        print('That was local data')
+        print()
     
     # ...   
 
 if __name__ == '__main__':
     unittest.main()
-
-os.exit(0)
