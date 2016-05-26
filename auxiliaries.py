@@ -21,6 +21,7 @@ def datetime_from_epoch(timestamp):
     """
     Return a datetime object equivalent to the number of seconds since
     Unix epoch (Jan 1, 1970).
+    
     The datetime object is in UTC.
     """
 
@@ -33,13 +34,17 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
     """
     Define the verbosity level for any class instance,
     by generating a custom print method, 'vprint', for the instance.
+    
     The vprint method can take arguments exactly like the print function,
     except that first there is a required argument, v, which is the minimum
     verbosity for the printing to happen.
+    
     If verbosity is not given, get it from class_instance.v.
+    
     Additionally, logging is supported. If a logfile argument is passed,
     it should be a string indicating a file to write into.
     The log contains the same text that gets printed.
+    
     Usage example:
       def __init__(self, verbosity=1):
           set_verbosity(self, verbosity=verbosity)
