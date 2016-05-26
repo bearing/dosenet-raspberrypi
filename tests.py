@@ -343,7 +343,7 @@ class TestdataLog(unittest.TestCase):
         mgr.handle_cpm(this_start, this_end)
         output = get_data()
         self.assertIsNotNone(output)
-        self.assertEqual(len(output), 1)
+        self.assertEqual(len(output), 2)
         print(output)
         mgr.takedown()
         mgr.stop()
