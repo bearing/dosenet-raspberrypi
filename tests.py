@@ -6,7 +6,6 @@ import unittest
 import time
 import os
 import csv
-import sys
 
 from globalvalues import RPI
 if RPI:
@@ -328,7 +327,7 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-'''    
+  
 class TestdataLog(unittest.TestCase):
     
     def setUp(self):
@@ -348,9 +347,8 @@ class TestdataLog(unittest.TestCase):
         
     def tearDown(self):
         print()
-'''    
+
     # ...   
 
 if __name__ == '__main__':
     unittest.main()
-
