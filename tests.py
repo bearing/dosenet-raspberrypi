@@ -335,9 +335,9 @@ class TestZdataLog(unittest.TestCase):
         print('Checking local data')
         
     def test_get_data(self):
-        mgr = Manager(data=True, test=True)
+        mgr = Manager(data=True, test=True, interval=10)
         this_start, this_end = mgr.get_interval(time.time())
-        time.sleep(30)
+        time.sleep(10)
         mgr.handle_cpm(this_start, this_end)
         output = get_data()
         self.assertIsNotNone(output)
