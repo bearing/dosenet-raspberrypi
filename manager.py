@@ -20,10 +20,13 @@ from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
+from globalvalues import DEFAULT_DATALOG
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 import signal
 import sys
+
+import csv
 
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
@@ -45,10 +48,8 @@ strf = '%H:%M:%S'
 class Manager(object):
     """
     Master object for dosimeter operation.
-
     Initializes other classes, tracks time intervals, and converts the counts
     from Sensor into a CPM to give to the server.
-
     time_interval is the interval (in seconds) over for which CPM is
     calculated.
     """
@@ -71,6 +72,8 @@ class Manager(object):
                  verbosity=None,
                  log=False,
                  logfile=None,
+                 datalog=None,
+                 data=False,
                  ):
 
         self.handle_input(log, logfile, verbosity,
@@ -101,7 +104,26 @@ class Manager(object):
             manager=self,
             verbosity=self.v,
             logfile=self.logfile)
-
+        self.datalog = datalog
+        self.data = data
+        
+        self.a_flag()
+        self.d_flag()
+        self.make_data_log(self.datalog)
+    
+    def a_flag(self):
+        if self.data:
+            self.datalog = DEFAULT_DATALOG
+    
+    def d_flag(self):
+        if self.datalog:
+            self.data = True
+            
+    def make_data_log(self, file): 
+        if self.data:
+            f = open(file, 'a')
+            f.close()
+           
     def handle_input(self,
                      log, logfile, verbosity,
                      test, interval, config, publickey):
@@ -183,10 +205,8 @@ class Manager(object):
     def run(self):
         """
         Start counting time.
-
         This method does NOT return, so run in a subprocess if you
         want to keep control.
-
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
@@ -242,7 +262,6 @@ class Manager(object):
     def sleep_until(self, end_time):
         """
         Sleep until the given timestamp.
-
         Input:
           end_time: number of seconds since epoch, e.g. time.time()
         """
@@ -271,6 +290,14 @@ class Manager(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
+    def data_log(self, file, cpm, cpm_err):
+        """Writes cpm to data-log"""
+        if self.data:    
+            f = open(file, 'a')
+            f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err))
+            f.write('\n')
+            f.close()
+    
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
@@ -292,15 +319,20 @@ class Manager(object):
             self.vprint(
                 1, ANSI_RED + " * Test mode, not sending to server * " +
                 ANSI_RESET)
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         else:
             self.sender.send_cpm(cpm, cpm_err)
-
+            self.data_log(self.datalog, cpm, cpm_err)
+            
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
@@ -323,7 +355,6 @@ class Manager(object):
     def from_argparse(cls):
         """
         Initialize a Manager instance using arguments from the command line.
-
         For usage:
         python manager.py -h
         """
@@ -373,13 +404,20 @@ class Manager(object):
             '--port', '-p', type=int, default=DEFAULT_PORT,
             help='Specify a port for the server (default {})'.format(
                 DEFAULT_PORT))
-
+        #datalog
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                None))
+        parser.add_argument(
+            '--data', '-a', action='store_true', default=False,
+            help='Enable logging local data (default off)')
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
 
         return mgr
-
 
 class SleepError(Exception):
     pass
