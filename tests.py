@@ -5,6 +5,7 @@ from __future__ import print_function
 import unittest
 import time
 import os
+import csv
 
 from globalvalues import RPI
 if RPI:
@@ -16,9 +17,13 @@ import auxiliaries
 import manager
 import cust_crypt
 
+from auxiliaries import get_data
+from manager import Manager
+
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_DATALOG
 
 if RPI:
     test_config_path = DEFAULT_CONFIG
@@ -38,7 +43,6 @@ else:
         configs_present = False
 
 TEST_LOGFILE = 'test.log'
-
 
 class TestVerbosity(unittest.TestCase):
 
@@ -323,8 +327,32 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-    # ...
+  
+class TestDataLog(unittest.TestCase):
+    
+    def setUp(self):
+        print('Checking local data')
+        
+    def test_get_data(self):
+        mgr = Manager(data=True, test=True, interval=10)
+        this_start, this_end = mgr.get_interval(time.time())
+        time.sleep(10)
+        mgr.handle_cpm(this_start, this_end)
+        this_start, this_end = mgr.get_interval(time.time())
+        time.sleep(10)
+        mgr.handle_cpm(this_start, this_end)
+        output = get_data()
+        self.assertIsNotNone(output)
+        self.assertEqual(len(output), 2)
+        print(output)
+        mgr.takedown()
+        mgr.stop()
+        os.remove(DEFAULT_DATALOG)
+        
+    def tearDown(self):
+        print()
 
+    # ...   
 
 if __name__ == '__main__':
     unittest.main()
