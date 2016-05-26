@@ -75,7 +75,7 @@ class Manager(object):
                  log=False,
                  logfile=None,
                  datalog=None,
-                 data=False,
+                 datalogflag=False,
                  ):
 
         self.handle_input(log, logfile, verbosity,
@@ -108,22 +108,22 @@ class Manager(object):
             logfile=self.logfile)
 
         self.datalog = datalog
-        self.data = data
+        self.datalogflag = datalogflag
         
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
     
     def a_flag(self):
-        if self.data:
+        if self.datalogflag:
             self.datalog = DEFAULT_DATALOG
     
     def d_flag(self):
         if self.datalog:
-            self.data = True
+            self.datalogflag = True
             
     def make_data_log(self, file): 
-        if self.data:
+        if self.datalogflag:
             f = open(file, 'a')
             f.close()
            
@@ -298,7 +298,7 @@ class Manager(object):
 
     def data_log(self, file, cpm, cpm_err):
         """Writes cpm to data-log"""
-        if self.data:    
+        if self.datalogflag:    
             f = open(file, 'a')
             f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err))
             f.write('\n')
@@ -417,7 +417,7 @@ class Manager(object):
             help='Specify a path for the datalog (default {})'.format(
                 None))
         parser.add_argument(
-            '--data', '-a', action='store_true', default=False,
+            '--datalogflag', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
         
         args = parser.parse_args()
