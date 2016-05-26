@@ -12,6 +12,8 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
+from globalvalues import DEFAULT_DATALOG
+
 import cust_crypt
 
 
@@ -81,8 +83,11 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 
     class_instance.vprint = vprint
 
-def get_data(base_path="/home/pi/data-log"):
-    '''Argument is the path where the data-log is. Default is /home/pi/data-log'''
+def get_data(base_path=DEFAULT_DATALOG):
+    """
+    Argument is the path where the data-log is. Default is DEFAULT_DATALOG
+    """
+    
     with open(base_path) as inputfile:
         results = list(csv.reader(inputfile))
     return results
