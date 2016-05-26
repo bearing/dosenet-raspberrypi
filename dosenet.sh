@@ -12,7 +12,7 @@
 
 # setup paths and check config files
 HOME=/home/pi
-DOSENET=$HOME/dev/datalog/dosenet-raspberrypi
+DOSENET=$HOME/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
@@ -22,7 +22,7 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
-    logger --stderr --id --tag $LOGTAG "Starting DoseNet script please"
+    logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py
     ;;
