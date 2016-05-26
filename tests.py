@@ -44,6 +44,7 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
+
 class TestVerbosity(unittest.TestCase):
 
     class Verbosity1(object):
