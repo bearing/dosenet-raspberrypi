@@ -343,6 +343,7 @@ class TestZdataLog(unittest.TestCase):
         self.assertIsNotNone(output)
         print(output)
         mgr.takedown()
+        mgr.stop()
         os.remove(DEFAULT_DATALOG)
     
     def tearDown(self):
