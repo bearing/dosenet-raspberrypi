@@ -106,6 +106,7 @@ class Manager(object):
             manager=self,
             verbosity=self.v,
             logfile=self.logfile)
+
         self.datalog = datalog
         self.data = data
         
