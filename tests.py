@@ -337,15 +337,14 @@ class TestZdataLog(unittest.TestCase):
     def test_get_data(self):
         mgr = Manager(data=True, test=True)
         this_start, this_end = mgr.get_interval(time.time())
+        time.sleep(30)
         mgr.handle_cpm(this_start, this_end)
-        #time.sleep(300)
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
         mgr.takedown()
         mgr.stop()
         os.remove(DEFAULT_DATALOG)
-        del(mgr)
         
     def tearDown(self):
         print('That was local data')
