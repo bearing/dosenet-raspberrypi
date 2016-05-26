@@ -48,8 +48,10 @@ strf = '%H:%M:%S'
 class Manager(object):
     """
     Master object for dosimeter operation.
+
     Initializes other classes, tracks time intervals, and converts the counts
     from Sensor into a CPM to give to the server.
+
     time_interval is the interval (in seconds) over for which CPM is
     calculated.
     """
@@ -205,8 +207,10 @@ class Manager(object):
     def run(self):
         """
         Start counting time.
+        
         This method does NOT return, so run in a subprocess if you
         want to keep control.
+        
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
@@ -262,6 +266,7 @@ class Manager(object):
     def sleep_until(self, end_time):
         """
         Sleep until the given timestamp.
+
         Input:
           end_time: number of seconds since epoch, e.g. time.time()
         """
@@ -355,6 +360,7 @@ class Manager(object):
     def from_argparse(cls):
         """
         Initialize a Manager instance using arguments from the command line.
+
         For usage:
         python manager.py -h
         """
