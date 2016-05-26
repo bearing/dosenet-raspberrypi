@@ -338,7 +338,7 @@ class TestZdataLog(unittest.TestCase):
         mgr = Manager(data=True, test=True)
         this_start, this_end = mgr.get_interval(time.time())
         mgr.handle_cpm(this_start, this_end)
-        time.sleep(300)
+        #time.sleep(300)
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
