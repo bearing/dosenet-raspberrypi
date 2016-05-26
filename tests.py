@@ -345,10 +345,10 @@ class TestZdataLog(unittest.TestCase):
         #mgr.takedown()
         #mgr.stop()
         #os.remove(DEFAULT_DATALOG)
-    
+        del(mgr)
+        
     def tearDown(self):
         print('That was local data')
-        del(mgr)
         
 if __name__ == '__main__':
     unittest.main()
