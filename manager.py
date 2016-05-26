@@ -207,10 +207,10 @@ class Manager(object):
     def run(self):
         """
         Start counting time.
-        
+
         This method does NOT return, so run in a subprocess if you
         want to keep control.
-        
+
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
