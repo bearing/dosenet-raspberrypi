@@ -328,7 +328,7 @@ class TestSender(unittest.TestCase):
             ss.send_cpm(0, 0)
 
     
-class TestZdataLog(unittest.TestCase):
+class TestdataLog(unittest.TestCase):
     
     def setUp(self):
         print('Checking local data')
