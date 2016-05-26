@@ -6,6 +6,7 @@ import unittest
 import time
 import os
 import csv
+import sys
 
 from globalvalues import RPI
 if RPI:
