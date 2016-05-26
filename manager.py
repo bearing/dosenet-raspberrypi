@@ -115,10 +115,21 @@ class Manager(object):
         self.make_data_log(self.datalog)
     
     def a_flag(self):
+        """
+        Checks if the -a from_argparse is called.
+        
+        If it is called, sets the path of the data-log to 
+        DEFAULT_DATALOG.
+        """
         if self.datalogflag:
             self.datalog = DEFAULT_DATALOG
     
     def d_flag(self):
+        """
+        Checks if the -d from_argparse is called.
+        
+        If it is called, sets datalogflag to True.
+        """
         if self.datalog:
             self.datalogflag = True
             
@@ -297,7 +308,9 @@ class Manager(object):
         return start_time, end_time
 
     def data_log(self, file, cpm, cpm_err):
-        """Writes cpm to data-log"""
+        """
+        Writes cpm to data-log.
+        """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         if self.datalogflag:    
             with open(file, 'a') as f:
