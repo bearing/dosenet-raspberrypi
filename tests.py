@@ -342,9 +342,9 @@ class TestZdataLog(unittest.TestCase):
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
-        #mgr.takedown()
-        #mgr.stop()
-        #os.remove(DEFAULT_DATALOG)
+        mgr.takedown()
+        mgr.stop()
+        os.remove(DEFAULT_DATALOG)
         del(mgr)
         
     def tearDown(self):
