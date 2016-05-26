@@ -298,12 +298,12 @@ class Manager(object):
 
     def data_log(self, file, cpm, cpm_err):
         """Writes cpm to data-log"""
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         if self.datalogflag:    
-            f = open(file, 'a')
-            f.write('{0}, {1}, {2}'.format(time.strftime("%Y-%m-%d %H:%M:%S"), cpm, cpm_err))
-            f.write('\n')
-            f.close()
-    
+            with open(file, 'a') as f:
+                f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
+                f.write('\n')
+            
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
