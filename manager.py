@@ -225,6 +225,7 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                self.write_to_txt(self, this_start, this_end, cpm, cpm_err)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')

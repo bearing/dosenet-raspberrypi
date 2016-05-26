@@ -81,6 +81,11 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 
     class_instance.vprint = vprint
 
+def get_data(base_path="/home/pi/data-log"):
+    '''Argument is the path where the data-log is. Default is /home/pi/data-log'''
+    with open(base_path) as inputfile:
+        results = list(csv.reader(inputfile))
+    return results
 
 class LED(object):
     """
