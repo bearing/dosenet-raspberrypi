@@ -328,7 +328,7 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-    
+'''    
 class TestdataLog(unittest.TestCase):
     
     def setUp(self):
@@ -348,7 +348,7 @@ class TestdataLog(unittest.TestCase):
         
     def tearDown(self):
         print()
-    
+'''    
     # ...   
 
 if __name__ == '__main__':
