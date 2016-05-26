@@ -348,7 +348,7 @@ class TestZdataLog(unittest.TestCase):
     
     def tearDown(self):
         print('That was local data')
-       
+        del(self)
         
 if __name__ == '__main__':
     unittest.main()
