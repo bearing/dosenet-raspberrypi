@@ -342,14 +342,14 @@ class TestZdataLog(unittest.TestCase):
         output = get_data()
         self.assertIsNotNone(output)
         print(output)
-        mgr.takedown()
-        mgr.stop()
-        os.remove(DEFAULT_DATALOG)
+        #mgr.takedown()
+        #mgr.stop()
+        #os.remove(DEFAULT_DATALOG)
     
     def tearDown(self):
         print('That was local data')
-        del(self)
+        del(mgr)
         
 if __name__ == '__main__':
     unittest.main()
-exit()
+
