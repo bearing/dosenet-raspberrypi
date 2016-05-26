@@ -124,8 +124,8 @@ class Manager(object):
             
     def make_data_log(self, file): 
         if self.datalogflag:
-            f = open(file, 'a')
-            f.close()
+            with open(file, 'a') as f:
+                pass
            
     def handle_input(self,
                      log, logfile, verbosity,
