@@ -335,6 +335,7 @@ class TestDataLog(unittest.TestCase):
         print('Checking local data')
         
     def test_get_data(self):
+        """
         mgr = Manager(data=True, test=True, interval=10)
         this_start, this_end = mgr.get_interval(time.time())
         time.sleep(10)
@@ -349,7 +350,21 @@ class TestDataLog(unittest.TestCase):
         mgr.takedown()
         mgr.stop()
         os.remove(DEFAULT_DATALOG)
-        
+        """
+    mgr = Manager(data=True, test=True, interval=10)
+    
+    now = time.time()
+    mgr.handle_cpm(now - 10, now)
+    [mgr.sensor.count() for _ in xrange(2)]
+    mgr.handle_cpm(now, now + 10)
+    output = get_data() #add non-default argument
+    
+    self.assertIsNotNone(output)
+    self.assertEqual(len(output), 2)
+    #add vprint
+    os.remove(DEFAULT_DATALOG) #change
+    mgr.takedown() #change perhaps
+    
     def tearDown(self):
         print()
 
