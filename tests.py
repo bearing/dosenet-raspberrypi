@@ -351,19 +351,19 @@ class TestDataLog(unittest.TestCase):
         mgr.stop()
         os.remove(DEFAULT_DATALOG)
         """
-    mgr = Manager(data=True, test=True, interval=10)
+    mgr = Manager(datalogflag=True, test=True, datalog='/home/pi/data-log-testfile.txt')
     
     now = time.time()
     mgr.handle_cpm(now - 10, now)
     [mgr.sensor.count() for _ in xrange(2)]
     mgr.handle_cpm(now, now + 10)
-    output = get_data() #add non-default argument
+    output = get_data('/home/pi/data-log-testfile.txt') #add non-default argument
     
     self.assertIsNotNone(output)
     self.assertEqual(len(output), 2)
     #add vprint
-    os.remove(DEFAULT_DATALOG) #change
-    mgr.takedown() #change perhaps
+    os.remove('/home/pi/data-log-testfile.txt')
+    mgr.takedown()
     
     def tearDown(self):
         print()
