@@ -351,8 +351,8 @@ class TestDataLog(unittest.TestCase):
         mgr.stop()
         os.remove(DEFAULT_DATALOG)
         """
-    mgr = Manager(datalogflag=True, test=True, datalog='/home/pi/data-log-testfile.txt')
-    
+    mgr = Manager(test=True, datalog='/home/pi/data-log-testfile.txt')
+    #removed datalogflag
     now = time.time()
     mgr.handle_cpm(now - 10, now)
     [mgr.sensor.count() for _ in xrange(2)]
