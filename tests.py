@@ -342,7 +342,7 @@ class TestDataLog(unittest.TestCase):
         checks that the test data log was created, 
         checks that there are 2 counts, and then deletes the test datalog.
         """
-    mgr = Manager(test=True, DEFAULT_TEST_DATALOG)
+    mgr = Manager(test=True, datalog=DEFAULT_TEST_DATALOG)
     
     now = time.time()
     mgr.handle_cpm(now - 10, now)
