@@ -140,7 +140,7 @@ class Manager(object):
            
     def handle_input(self,
                      log, logfile, verbosity,
-                     test, interval, config, publickey):
+                     test, interval, config, publickey, datalogflag, datalog):
 
         # resolve logging defaults
         if log and logfile is None:
@@ -176,6 +176,10 @@ class Manager(object):
                 self.vprint(
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
+                
+        if datalogflag:
+            self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
+        
         else:
             if interval is None:
                 self.vprint(
@@ -316,6 +320,7 @@ class Manager(object):
             with open(file, 'a') as f:
                 f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
                 f.write('\n')
+                self.vprint(2, 'Writing CPM to data log at {}'.format(file))
             
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
