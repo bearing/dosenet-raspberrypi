@@ -351,8 +351,8 @@ class TestDataLog(unittest.TestCase):
     output = get_data(DEFAULT_TEST_DATALOG)
     print(output)
     
-    #self.assertIsNotNone(output)
-    #self.assertEqual(len(output), 2)
+    self.assertIsNotNone(output)
+    self.assertEqual(len(output), 2)
     
     os.remove(DEFAULT_TEST_DATALOG)
     mgr.takedown()
