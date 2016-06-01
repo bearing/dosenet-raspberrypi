@@ -342,20 +342,20 @@ class TestDataLog(unittest.TestCase):
         checks that the test data log was created, 
         checks that there are 2 counts, and then deletes the test datalog.
         """
-    mgr = Manager(test=True, datalog=DEFAULT_TEST_DATALOG)
+        mgr = Manager(test=True, datalog=DEFAULT_TEST_DATALOG)
     
-    now = time.time()
-    mgr.handle_cpm(now - 10, now)
-    [mgr.sensor.count() for _ in xrange(2)]
-    mgr.handle_cpm(now, now + 10)
-    output = get_data(DEFAULT_TEST_DATALOG)
-    print(output)
+        now = time.time()
+        mgr.handle_cpm(now - 10, now)
+        [mgr.sensor.count() for _ in xrange(2)]
+        mgr.handle_cpm(now, now + 10)
+        output = get_data(DEFAULT_TEST_DATALOG)
+        print(output)
     
-    self.assertIsNotNone(output)
-    self.assertEqual(len(output), 2)
+        self.assertIsNotNone(output)
+        self.assertEqual(len(output), 2)
     
-    os.remove(DEFAULT_TEST_DATALOG)
-    mgr.takedown()
+        os.remove(DEFAULT_TEST_DATALOG)
+        mgr.takedown()
     
     def tearDown(self):
         print()
