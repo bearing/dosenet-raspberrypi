@@ -25,6 +25,8 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATALOG, DEFAULT_TEST_DATALOG
 
+import signal
+import sys
 if RPI:
     test_config_path = DEFAULT_CONFIG
     test_publickey_path = DEFAULT_PUBLICKEY
