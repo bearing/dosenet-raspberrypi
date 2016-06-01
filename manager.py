@@ -140,7 +140,7 @@ class Manager(object):
            
     def handle_input(self,
                      log, logfile, verbosity,
-                     test, interval, config, publickey, datalogflag, datalog):
+                     test, interval, config, publickey):
 
         # resolve logging defaults
         if log and logfile is None:
@@ -177,7 +177,7 @@ class Manager(object):
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
                 
-        if datalogflag:
+        if self.datalogflag:
             self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
         
         else:
