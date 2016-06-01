@@ -353,7 +353,6 @@ class TestDataLog(unittest.TestCase):
     
         GPIO.cleanup()
         del(mgr)
-        #mgr.takedown()
         
         self.assertIsNotNone(output)
         self.assertEqual(len(output), 2)
