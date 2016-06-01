@@ -351,12 +351,11 @@ class TestDataLog(unittest.TestCase):
         output = get_data(DEFAULT_TEST_DATALOG)
         print(output)
     
+        mgr.takedown()
+        
         self.assertIsNotNone(output)
         self.assertEqual(len(output), 3)
-    
-        #os.remove(DEFAULT_TEST_DATALOG)
-        mgr.takedown()
-    
+
     def tearDown(self):
         os.remove(DEFAULT_TEST_DATALOG)
         print()
