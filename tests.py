@@ -328,7 +328,7 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-  
+'''  
 class TestDataLog(unittest.TestCase):
     
     def setUp(self):
@@ -360,7 +360,7 @@ class TestDataLog(unittest.TestCase):
     def tearDown(self):
         os.remove(DEFAULT_TEST_DATALOG)
         print()
-
+'''
     # ...   
 
 if __name__ == '__main__':
