@@ -355,11 +355,10 @@ class TestDataLog(unittest.TestCase):
         self.assertEqual(len(output), 3)
     
         #os.remove(DEFAULT_TEST_DATALOG)
-        #mgr.takedown()
+        mgr.takedown()
     
     def tearDown(self):
         os.remove(DEFAULT_TEST_DATALOG)
-        mgr.takedown()
         print()
 
     # ...   
