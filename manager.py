@@ -78,6 +78,13 @@ class Manager(object):
                  datalogflag=False,
                  ):
 
+        self.datalog = datalog
+        self.datalogflag = datalogflag
+        
+        self.a_flag()
+        self.d_flag()
+        self.make_data_log(self.datalog)
+        
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
 
@@ -107,13 +114,6 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
 
-        self.datalog = datalog
-        self.datalogflag = datalogflag
-        
-        self.a_flag()
-        self.d_flag()
-        self.make_data_log(self.datalog)
-    
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
@@ -177,8 +177,8 @@ class Manager(object):
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
                 
-        if datalogflag:
-            self.vprint(1, 'Writing CPM to data log at {}'.format(datalog))
+        if self.datalogflag:
+            self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
         
         else:
             if interval is None:
