@@ -44,6 +44,12 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
+def signal_term_handler(signal, frame):
+    print('got SIGTERM')
+    #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_term_handler)
 
 class TestVerbosity(unittest.TestCase):
 
