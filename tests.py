@@ -354,7 +354,7 @@ class TestDataLog(unittest.TestCase):
         mgr.takedown()
         
         self.assertIsNotNone(output)
-        self.assertEqual(len(output), 3)
+        self.assertEqual(len(output), 2)
 
     def tearDown(self):
         os.remove(DEFAULT_TEST_DATALOG)
