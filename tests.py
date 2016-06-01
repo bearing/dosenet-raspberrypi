@@ -25,8 +25,6 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATALOG, DEFAULT_TEST_DATALOG
 
-import signal
-import sys
 if RPI:
     test_config_path = DEFAULT_CONFIG
     test_publickey_path = DEFAULT_PUBLICKEY
@@ -46,12 +44,6 @@ else:
 
 TEST_LOGFILE = 'test.log'
 
-def signal_term_handler(signal, frame):
-    print('got SIGTERM')
-    #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
-    sys.exit(0)
-
-signal.signal(signal.SIGTERM, signal_term_handler)
 
 class TestVerbosity(unittest.TestCase):
 
