@@ -351,7 +351,9 @@ class TestDataLog(unittest.TestCase):
         output = get_data(DEFAULT_TEST_DATALOG)
         print(output)
     
-        mgr.takedown()
+        GPIO.cleanup()
+        del(mgr)
+        #mgr.takedown()
         
         self.assertIsNotNone(output)
         self.assertEqual(len(output), 2)
