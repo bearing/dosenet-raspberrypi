@@ -341,21 +341,6 @@ class TestDataLog(unittest.TestCase):
         Creates a test data log, simulates 2 counts, 
         checks that the test data log was created, 
         checks that there are 2 counts, and then deletes the test datalog.
-        
-        mgr = Manager(data=True, test=True, interval=10)
-        this_start, this_end = mgr.get_interval(time.time())
-        time.sleep(10)
-        mgr.handle_cpm(this_start, this_end)
-        this_start, this_end = mgr.get_interval(time.time())
-        time.sleep(10)
-        mgr.handle_cpm(this_start, this_end)
-        output = get_data()
-        self.assertIsNotNone(output)
-        self.assertEqual(len(output), 2)
-        print(output)
-        mgr.takedown()
-        mgr.stop()
-        os.remove(DEFAULT_DATALOG)
         """
     mgr = Manager(test=True, DEFAULT_TEST_DATALOG)
     
