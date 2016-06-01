@@ -348,7 +348,8 @@ class TestDataLog(unittest.TestCase):
     mgr.handle_cpm(now - 10, now)
     [mgr.sensor.count() for _ in xrange(2)]
     mgr.handle_cpm(now, now + 10)
-    output = get_data(DEFAULT_TEST_DATALOG) 
+    output = get_data(DEFAULT_TEST_DATALOG)
+    print(output)
     
     #self.assertIsNotNone(output)
     #self.assertEqual(len(output), 2)
