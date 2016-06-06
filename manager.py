@@ -429,7 +429,7 @@ class Manager(object):
             '--port', '-p', type=int, default=DEFAULT_PORT,
             help='Specify a port for the server (default {})'.format(
                 DEFAULT_PORT))
-        #datalog
+        # datalog
         parser.add_argument(
             '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
