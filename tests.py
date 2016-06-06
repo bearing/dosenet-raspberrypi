@@ -23,7 +23,8 @@ from manager import Manager
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
-from globalvalues import DEFAULT_DATALOG, DEFAULT_TEST_DATALOG
+
+TEST_DATALOG = 'data-log-testfile.txt'
 
 if RPI:
     test_config_path = DEFAULT_CONFIG
@@ -342,13 +343,13 @@ class TestDataLog(unittest.TestCase):
         checks that the test data log was created, 
         checks that there are 2 counts, and then deletes the test datalog.
         """
-        mgr = Manager(test=True, datalog='data-log-testfile.txt')
+        mgr = Manager(test=True, datalog=TEST_DATALOG)
     
         now = time.time()
         mgr.handle_cpm(now - 10, now)
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
-        output = get_data('data-log-testfile.txt')
+        output = get_data(TEST_DATALOG)
         print(output)
     
         GPIO.cleanup()
@@ -358,7 +359,7 @@ class TestDataLog(unittest.TestCase):
         self.assertEqual(len(output), 2)
 
     def tearDown(self):
-        os.remove('data-log-testfile.txt')
+        os.remove(TEST_DATALOG)
         print()
 
     # ...   
