@@ -177,9 +177,6 @@ class Manager(object):
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
                 
-        #if self.datalogflag:
-            #self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
-        
         else:
             if interval is None:
                 self.vprint(
@@ -196,6 +193,9 @@ class Manager(object):
 
         self.interval = interval
 
+        if self.datalogflag:
+            self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
+        
         if config:
             try:
                 self.config = Config(config,
