@@ -24,11 +24,11 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 DATALOGFILE=$DATALOGDIR/this_is_confusing.txt
 
 case "$1" in
-  start)
+  start -d)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
-    sudo screen -dm python $DOSENET/manager.py 
+    #sudo screen -dm python $DOSENET/manager.py 
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
