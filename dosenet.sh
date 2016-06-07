@@ -12,7 +12,7 @@
 
 # setup paths and check config files
 HOME=/home/pi
-DOSENET=$HOME/dev/dev/dosenet-raspberrypi
+DOSENET=$HOME/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
@@ -20,20 +20,11 @@ CONFIGFILE=$CONFIGDIR/config.csv
 PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 # if either file is missing, in normal mode, let manager.py raise the IOError
 
-# path for datalog
-DATALOGFILE=$HOME/confused/this_is_confusing.txt
-
 case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
-    # normal is:
-    # sudo screen -dm python $DOSENET/manager.py 
-    
-    # to run the datalog to a specfic file, a path needs to be define like above 
-    # in DATALOGFILE
-    # also the directory needs to exist before hand as well
+    sudo screen -dm python $DOSENET/manager.py 
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
