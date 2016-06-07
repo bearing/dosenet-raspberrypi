@@ -431,7 +431,7 @@ class Manager(object):
                 DEFAULT_PORT))
         # datalog
         parser.add_argument(
-            '--datalog', '-d', default=DEFAULT_DATALOG,
+            '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
                 None))
         parser.add_argument(
