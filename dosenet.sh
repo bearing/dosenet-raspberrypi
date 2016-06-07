@@ -21,7 +21,7 @@ CONFIGFILE=$CONFIGDIR/config.csv
 PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 # if either file is missing, in normal mode, let manager.py raise the IOError
 
-DATALOGFILE=$DATALOGDIR/data-log.txt
+DATALOGFILE=$DATALOGDIR/this_is_confusing.txt
 
 case "$1" in
   start)
