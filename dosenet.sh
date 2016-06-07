@@ -31,6 +31,7 @@ case "$1" in
       sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
     else
       sudo screen -dm python $DOSENET/manager.py
+    fi
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
