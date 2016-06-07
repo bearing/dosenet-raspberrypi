@@ -20,14 +20,17 @@ from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
+from globalvalues import DEFAULT_DATALOG
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 import signal
 import sys
 
+import csv
+
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
-    #If SIGTERM signal is intercepted, the SystemExit exception routines are ran
+    # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
@@ -71,8 +74,17 @@ class Manager(object):
                  verbosity=None,
                  log=False,
                  logfile=None,
+                 datalog=None,
+                 datalogflag=False,
                  ):
 
+        self.datalog = datalog
+        self.datalogflag = datalogflag
+        
+        self.a_flag()
+        self.d_flag()
+        self.make_data_log(self.datalog)
+        
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
 
@@ -102,6 +114,30 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
 
+    def a_flag(self):
+        """
+        Checks if the -a from_argparse is called.
+        
+        If it is called, sets the path of the data-log to 
+        DEFAULT_DATALOG.
+        """
+        if self.datalogflag:
+            self.datalog = DEFAULT_DATALOG
+    
+    def d_flag(self):
+        """
+        Checks if the -d from_argparse is called.
+        
+        If it is called, sets datalogflag to True.
+        """
+        if self.datalog:
+            self.datalogflag = True
+            
+    def make_data_log(self, file): 
+        if self.datalogflag:
+            with open(file, 'a') as f:
+                pass
+           
     def handle_input(self,
                      log, logfile, verbosity,
                      test, interval, config, publickey):
@@ -140,6 +176,7 @@ class Manager(object):
                 self.vprint(
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
+                
         else:
             if interval is None:
                 self.vprint(
@@ -156,6 +193,9 @@ class Manager(object):
 
         self.interval = interval
 
+        if self.datalogflag:
+            self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
+        
         if config:
             try:
                 self.config = Config(config,
@@ -271,6 +311,17 @@ class Manager(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
+    def data_log(self, file, cpm, cpm_err):
+        """
+        Writes cpm to data-log.
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        if self.datalogflag:    
+            with open(file, 'a') as f:
+                f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
+                f.write('\n')
+                self.vprint(2, 'Writing CPM to data log at {}'.format(file))
+            
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
@@ -292,15 +343,20 @@ class Manager(object):
             self.vprint(
                 1, ANSI_RED + " * Test mode, not sending to server * " +
                 ANSI_RESET)
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.config:
             self.vprint(1, "Missing config file, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.publickey:
             self.vprint(1, "Missing public key, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
+            self.data_log(self.datalog, cpm, cpm_err)
         else:
             self.sender.send_cpm(cpm, cpm_err)
-
+            self.data_log(self.datalog, cpm, cpm_err)
+            
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
@@ -373,7 +429,15 @@ class Manager(object):
             '--port', '-p', type=int, default=DEFAULT_PORT,
             help='Specify a port for the server (default {})'.format(
                 DEFAULT_PORT))
-
+        # datalog
+        parser.add_argument(
+            '--datalog', '-d', default=DEFAULT_DATALOG,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG))
+        parser.add_argument(
+            '--datalogflag', '-a', action='store_true', default=False,
+            help='Enable logging local data (default off)')
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
