@@ -27,11 +27,7 @@ case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    if [-f $DATALOGFILE]; then
-      sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
-    else
-      sudo screen -dm python $DOSENET/manager.py
-    fi
+    sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
