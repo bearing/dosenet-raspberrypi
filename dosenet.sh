@@ -15,16 +15,19 @@ HOME=/home/pi
 DOSENET=$HOME/dev/dev/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
+DATALOGDIR=$HOME/datalog
 
 CONFIGFILE=$CONFIGDIR/config.csv
 PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 # if either file is missing, in normal mode, let manager.py raise the IOError
 
+DATALOGFILE=$DATALOGDIR/data-log.txt
+
 case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager.py
+    sudo screen -dm python $DOSENET/manager.py -d $DATALOGFILE
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
