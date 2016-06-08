@@ -28,8 +28,6 @@ import sys
 
 import csv
 
-from collections import deque
-
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -79,8 +77,6 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  ):
-        
-        self.queue = deque('')
         
         self.datalog = datalog
         self.datalogflag = datalogflag
