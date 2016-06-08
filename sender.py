@@ -119,7 +119,6 @@ class ServerSender(object):
         """Construct, encrypt, and send the packet"""
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
-        print(packet)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
             self.send_packet(encrypted)
