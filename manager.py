@@ -325,6 +325,13 @@ class Manager(object):
                 f.write('\n')
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
             
+    def send_to_queue(self, cpm, cpm_err): 
+        """
+        Adds the time, cpm, and cpm_err to the deque object.
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.queue.append([time_string, cpm, cpm_err])
+    
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
@@ -356,6 +363,7 @@ class Manager(object):
         elif not self.network_up:
             self.vprint(1, "Network down, not sending to server")
             self.data_log(self.datalog, cpm, cpm_err)
+            self.send_to_queue(cpm, cpm_err)
         else:
             self.sender.send_cpm(cpm, cpm_err)
             self.data_log(self.datalog, cpm, cpm_err)
