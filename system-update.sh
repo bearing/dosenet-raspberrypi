@@ -21,6 +21,33 @@ case $1 in
     # commands for station 10005 to run
 
     ;;
+  "7")
+    echo "Foothill College: checking static IP"
+    # check for update already happening
+    $OLD_INTERFACES = "/etc/network/interfaces_OLD"
+    $UPDATE_LOG = "/home/pi/foothill_update.log"
+    if [ -f $OLD_INTERFACES ]; then
+      echo "Found $OLD_INTERFACES so static IP update was already performed"
+    elif [ -f $UPDATE_LOG ]; then
+      echo "Found $UPDATE_LOG so static IP update was already performed"
+    else
+      $NEW_INTERFACES = "/home/pi/dosenet-raspberrypi/interfaces_foothill_new"
+      $REAL_INTERFACES = "/etc/network/interfaces"
+
+      echo "" >> $UPDATE_LOG
+      echo "Attempting Foothill College network update" >> $UPDATE_LOG
+      date >> $UPDATE_LOG
+      echo  "> sudo cp $REAL_INTERFACES $OLD_INTERFACES" >> $UPDATE_LOG
+      sudo cp $REAL_INTERFACES $OLD_INTERFACES
+      echo "exit status $?" >> $UPDATE_LOG
+
+      echo "sudo cp $NEW_INTERFACES $REAL_INTERFACES" >> $UPDATE_LOG
+      sudo cp $NEW_INTERFACES $REAL_INTERFACES
+      echo "exit status $?" >> $UPDATE_LOG
+      date >> $UPDATE_LOG
+      echo "Foothill College network update complete!" >> $UPDATE_LOG
+    fi
+    ;;
   *)
     # commands for all stations besides 10005 to run
     :
