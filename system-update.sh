@@ -21,7 +21,7 @@ case $1 in
     # commands for station 10005 to run
 
     ;;
-  "7")
+  "10004")
     echo "Foothill College: checking static IP"
     # check for update already happening
     $OLD_INTERFACES = "/etc/network/interfaces_OLD"
