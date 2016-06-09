@@ -29,6 +29,8 @@ import csv
 
 from collections import deque
 
+import socket
+
 def signal_term_handler(signal, frame):
     print('got SIGTERM')
     # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
@@ -366,9 +368,11 @@ class Manager(object):
             self.data_log(self.datalog, cpm, cpm_err)
             self.send_to_queue(cpm, cpm_err)
         else:
-            self.sender.send_cpm(cpm, cpm_err)
-            self.data_log(self.datalog, cpm, cpm_err)
-            self.send_to_queue(cpm, cpm_err)
+            try:
+                self.data_log(self.datalog, cpm, cpm_err)
+                self.sender.send_cpm(cpm, cpm_err)
+            except socket.error:    
+                self.send_to_queue(cpm, cpm_err)
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
