@@ -5,6 +5,7 @@ from __future__ import print_function
 import unittest
 import time
 import os
+import csv
 
 from globalvalues import RPI
 if RPI:
@@ -16,9 +17,14 @@ import auxiliaries
 import manager
 import cust_crypt
 
+from auxiliaries import get_data
+from manager import Manager
+
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED
+
+TEST_DATALOG = 'data-log-testfile.txt'
 
 if RPI:
     test_config_path = DEFAULT_CONFIG
@@ -325,8 +331,6 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
-    # ...
-
     @unittest.skipUnless(configs_present, "Test packets require config files")
     def test_send_test_udp(self):
         sender.send_test_packets(
@@ -346,6 +350,39 @@ class TestSender(unittest.TestCase):
             n=1)
         print(' ~ Check that the server received a test TCP packet ~')
         self.assertTrue(True)
+
+
+class TestDataLog(unittest.TestCase):
+
+    def setUp(self):
+        print('Checking local data')
+
+    def test_get_data(self):
+        """
+        Checks the data log functionality.
+
+        Creates a test data log, simulates 2 counts,
+        checks that the test data log was created,
+        checks that there are 2 counts, and then deletes the test datalog.
+        """
+        mgr = Manager(test=True, datalog=TEST_DATALOG)
+
+        now = time.time()
+        mgr.handle_cpm(now - 10, now)
+        [mgr.sensor.count() for _ in xrange(2)]
+        mgr.handle_cpm(now, now + 10)
+        output = get_data(TEST_DATALOG)
+        print(output)
+
+        GPIO.cleanup()
+        del(mgr)
+
+        self.assertIsNotNone(output)
+        self.assertEqual(len(output), 2)
+
+    def tearDown(self):
+        os.remove(TEST_DATALOG)
+        print()
 
 
 if __name__ == '__main__':
