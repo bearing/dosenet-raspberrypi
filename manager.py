@@ -331,6 +331,7 @@ class Manager(object):
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         self.queue.append([time_string, cpm, cpm_err])
+        print(self.queue)
     
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
@@ -367,6 +368,7 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
             self.data_log(self.datalog, cpm, cpm_err)
+            self.send_to_queue(cpm, cpm_err)
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
