@@ -8,8 +8,15 @@ source-directory /etc/network/interfaces.d
 
 auto lo
 iface lo inet loopback
+
 #iface eth0 inet manual
-iface eth0 inet dhcp
+# Below added for Foothill device as per static IP provided
+auto eth0
+iface eth0 inet static
+  address 153.18.34.170
+  netmask 255.255.240.0
+  gateway 153.18.47.254
+  dns-nameservers 153.18.144.8 153.18.96.30
 
 allow-hotplug wlan0
 #iface wlan0 inet manual
@@ -19,14 +26,14 @@ iface wlan0 inet static
   address 192.168.5.1
   netmask 255.255.255.0
   wireless-channel 1
-  wireless-essid RPiAdHocNetwork10006
+  wireless-essid RPiAdHocNetwork7
     wireless-mode ad-hoc
 
 # WiFi internet on wlan1: see templates below
 # (requires a second wireless interface, a.k.a. second dongle)
 
 ## ~~~Unsecured/open network template
-## Replace "ssid" with the ssid of the network 
+## Replace "ssid" with the ssid of the network
 ## (NO quotes here, even if the SSID has spaces)
 #
 # allow-hotplug wlan1
@@ -45,4 +52,3 @@ iface wlan0 inet static
 #   wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 #
 ## ~~~end WPA template
-
