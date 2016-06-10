@@ -3,6 +3,7 @@ from sender import ServerSender
 from sensor import Sensor
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RED
+from collections import deque
 
 class Data_Handler(object):
 	"""
