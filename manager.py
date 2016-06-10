@@ -120,7 +120,8 @@ class Manager(object):
             logfile=self.logfile)
         self.data_handler = Data_Handler(
             manager=self,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile)
 
     def a_flag(self):
         """
