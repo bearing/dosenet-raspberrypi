@@ -66,7 +66,7 @@ class Data_Handler(object):
 	            self.send_to_queue(cpm, cpm_err)
 
     	def main(self, datalog, cpm, cpm_err):
-	    	cpm, cpm_err = manager.sensor.get_cpm(manager.this_start, manager.this_end)
+	    	#cpm, cpm_err = manager.sensor.get_cpm(manager.this_start, manager.this_end)
 	    	counts = int(round(cpm * manager.interval / 60))
 	
 	    	start_text = datetime_from_epoch(manager.this_start).strftime(strf)
