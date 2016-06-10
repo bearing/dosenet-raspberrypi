@@ -7,6 +7,8 @@ from globalvalues import ANSI_RED
 from collections import deque
 import socket
 
+strf = '%H:%M:%S'
+
 class Data_Handler(object):
 	"""
 	Object for sending data to server. 
