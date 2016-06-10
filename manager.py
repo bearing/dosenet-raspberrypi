@@ -341,7 +341,7 @@ class Manager(object):
         print(self.queue)
     
     def handle_cpm(self, this_start, this_end):
-        self.data_handler_main(self.datalog, cpm, cpm_err)
+        self.data_handler.main(self.datalog, cpm, cpm_err)
         """
         Get CPM from sensor, display text, send to server
 
