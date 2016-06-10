@@ -6,6 +6,7 @@ from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from collections import deque
 import socket
+import time
 
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
