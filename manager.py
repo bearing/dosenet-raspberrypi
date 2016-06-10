@@ -342,7 +342,7 @@ class Manager(object):
     
     def handle_cpm(self, this_start, this_end):
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
-        self.data_handler.main(self.datalog, cpm, cpm_err)
+        self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end)
         
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
