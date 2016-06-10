@@ -67,9 +67,9 @@ class Data_Handler(object):
 	        except socket.error:    
 	            manager.send_to_queue(cpm, cpm_err)
 
-    	def main(self, datalog, cpm, cpm_err, this_start, this_end):
+    	def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
 	    	#cpm, cpm_err = manager.sensor.get_cpm(manager.this_start, manager.this_end)
-	    	counts = int(round(cpm * manager.interval / 60))
+	    	#counts = int(round(cpm * manager.interval / 60))
 	
 	    	start_text = datetime_from_epoch(this_start).strftime(strf)
 	    	end_text = datetime_from_epoch(this_end).strftime(strf)
