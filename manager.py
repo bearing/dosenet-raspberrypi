@@ -341,7 +341,7 @@ class Manager(object):
         print(self.queue)
     
     def handle_cpm(self, this_start, this_end):
-        cpm, cpm_err = self.sensor.get_cpm(self.this_start, self.this_end)
+        cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         self.data_handler.main(self.datalog, cpm, cpm_err)
         
     def takedown(self):
