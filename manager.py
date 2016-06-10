@@ -342,46 +342,7 @@ class Manager(object):
     
     def handle_cpm(self, this_start, this_end):
         self.data_handler.main(self.datalog, cpm, cpm_err)
-        """
-        Get CPM from sensor, display text, send to server
-
-        cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
-        counts = int(round(cpm * self.interval / 60))
-
-        start_text = datetime_from_epoch(this_start).strftime(strf)
-        end_text = datetime_from_epoch(this_end).strftime(strf)
-
-        self.vprint(1, CPM_DISPLAY_TEXT.format(
-            time=datetime_from_epoch(time.time()),
-            counts=counts,
-            cpm=cpm,
-            cpm_err=cpm_err,
-            start_time=start_text,
-            end_time=end_text,
-        ))
-        if self.test:
-            self.vprint(
-                1, ANSI_RED + " * Test mode, not sending to server * " +
-                ANSI_RESET)
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.config:
-            self.vprint(1, "Missing config file, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.publickey:
-            self.vprint(1, "Missing public key, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.network_up:
-            self.vprint(1, "Network down, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-            self.send_to_queue(cpm, cpm_err)
-        else:
-            try:
-                self.data_log(self.datalog, cpm, cpm_err)
-                self.sender.send_cpm(cpm, cpm_err)
-            except socket.error:    
-                self.send_to_queue(cpm, cpm_err)
-        """
-            
+        
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
