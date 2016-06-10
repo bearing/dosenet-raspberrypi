@@ -13,6 +13,7 @@ from auxiliaries import LED, Config, PublicKey, NetworkStatus
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
+from data_handler import Data_Handler
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -340,7 +341,9 @@ class Manager(object):
         print(self.queue)
     
     def handle_cpm(self, this_start, this_end):
-        """Get CPM from sensor, display text, send to server."""
+        self.data_handler_main(self.datalog, cpm, cpm_err)
+        """
+        Get CPM from sensor, display text, send to server
 
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
@@ -377,6 +380,7 @@ class Manager(object):
                 self.sender.send_cpm(cpm, cpm_err)
             except socket.error:    
                 self.send_to_queue(cpm, cpm_err)
+        """
             
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
