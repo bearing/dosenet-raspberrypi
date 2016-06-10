@@ -16,11 +16,11 @@ class Data_Handler(object):
 		        manager=None,
 		        verbosity=1):
 
-	self.v = verbosity
-	if manager and logfile is None:
-		set_verbosity(self, logfile=manager.logfile)
-	else:
-		set_verbosity(self, logfile=logfile)
+		self.v = verbosity
+		if manager and logfile is None:
+			set_verbosity(self, logfile=manager.logfile)
+		else:
+			set_verbosity(self, logfile=logfile)
 
 	def test_send(self, datalog, cpm, cpm_err):
 		"""
