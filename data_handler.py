@@ -3,10 +3,15 @@ from sender import ServerSender
 from sensor import Sensor
 #from manager import Manager
 from auxiliaries import set_verbosity
-from globalvalues import ANSI_RED
+from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from collections import deque
 import socket
 
+CPM_DISPLAY_TEXT = (
+    '{{time}}: {yellow} {{counts}} cts{reset}' +
+    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
+    ' ({{start_time}} to {{end_time}})').format(
+    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 strf = '%H:%M:%S'
 
 class Data_Handler(object):
