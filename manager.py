@@ -342,7 +342,7 @@ class Manager(object):
     
     def handle_cpm(self, this_start, this_end):
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
-        counts = int(round(cpm * manager.interval / 60))
+        counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
         
     def takedown(self):
