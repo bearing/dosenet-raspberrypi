@@ -13,7 +13,7 @@ class Data_Handler(object):
 	"""
 
 	def __init__(self,
-		        manager=None
+		        manager=None,
 		        verbosity=1):
 
 	self.v = verbosity
