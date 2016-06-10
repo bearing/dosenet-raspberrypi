@@ -1,7 +1,7 @@
 from auxiliaries import datetime_from_epoch
 from sender import ServerSender
 from sensor import Sensor
-from manager import Manager
+#from manager import Manager
 from globalvalues import ANSI_RED
 # 
 class Data_Handler(object):
