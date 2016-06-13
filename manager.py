@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+
 import time
 import argparse
 import traceback
@@ -341,6 +342,9 @@ class Manager(object):
         print(self.queue)
     
     def handle_cpm(self, this_start, this_end):
+        """
+        Get CPM from sensor, display text, send to server.
+        """
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
