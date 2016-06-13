@@ -41,39 +41,39 @@ class Data_Handler(object):
 		self.vprint(
 			1, ANSI_RED + " * Test mode, not sending to server * " +
     		ANSI_RESET)
-		manager.data_log(datalog, cpm, cpm_err)
+		self.manager.data_log(datalog, cpm, cpm_err)
 
 	def no_config_send(self, datalog, cpm, cpm_err):
 		"""
 		Configuration file not present
 		"""
 		self.vprint(1, "Missing config file, not sending to server")
-        	manager.data_log(datalog, cpm, cpm_err)
+        	self.manager.data_log(datalog, cpm, cpm_err)
 
 	def no_publickey_send(self, datalog, cpm, cpm_err):
     		"""
 	    	Publickey not present
 	    	"""
 	    	self.vprint(1, "Missing public key, not sending to server")
-	        manager.data_log(datalog, cpm, cpm_err)
+	        self.manager.data_log(datalog, cpm, cpm_err)
 
     	def no_network_send(self, datalog, cpm, cpm_err):
 	    	"""
 	    	Network is not up
 	    	"""
 	    	self.vprint(1, "Network down, not sending to server")
-	        manager.data_log(datalog, cpm, cpm_err)
-	        manager.send_to_queue(cpm, cpm_err)
+	        self.manager.data_log(datalog, cpm, cpm_err)
+	        self.manager.send_to_queue(cpm, cpm_err)
 
     	def regular_send(self, datalog, cpm, cpm_err):
 	    	"""
 	    	Normal send
 	    	"""
 	    	try:
-	            manager.data_log(datalog, cpm, cpm_err)
-	            manager.sender.send_cpm(cpm, cpm_err)
+	            self.manager.data_log(datalog, cpm, cpm_err)
+	            self.manager.sender.send_cpm(cpm, cpm_err)
 	        except socket.error:    
-	            manager.send_to_queue(cpm, cpm_err)
+	            self.manager.send_to_queue(cpm, cpm_err)
 
     	def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
 	    	#cpm, cpm_err = manager.sensor.get_cpm(manager.this_start, manager.this_end)
@@ -91,13 +91,13 @@ class Data_Handler(object):
 	       		end_time=end_text,
 	    	))
 
-	    	if manager.test:
+	    	if self.manager.test:
 	    		self.test_send(datalog, cpm, cpm_err)
-	    	elif not manager.config:
+	    	elif not self.manager.config:
 	    		self.no_config_send(datalog, cpm, cpm_err)
-	    	elif not manager.publickey:
+	    	elif not self.manager.publickey:
 	    		self.no_publickey_send(datalog, cpm, cpm_err)
-	    	elif not manager.network_up:
+	    	elif not self.manager.network_up:
 	    		self.no_network_send(datalog, cpm, cpm_err)
 	    	else:
 	    		self.regular_send(datalog, cpm, cpm_err)
