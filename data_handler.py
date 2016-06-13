@@ -33,7 +33,8 @@ class Data_Handler(object):
 			set_verbosity(self, logfile=manager.logfile)
 		else:
 			set_verbosity(self, logfile=logfile)
-
+		
+		self.manager = manager
 	def test_send(self, datalog, cpm, cpm_err):
 		"""
 		Test Mode
