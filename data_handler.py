@@ -1,7 +1,6 @@
 from auxiliaries import datetime_from_epoch
 from sender import ServerSender
 from sensor import Sensor
-#from manager import Manager
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from collections import deque
