@@ -22,7 +22,7 @@ scp dosenet@dosenet.dhcp.lbl.gov:~/config-files/$NAME $CONFIGDIR/config.csv
 echo "station ID:"
 read ID
 
-awk -F " " '$1=="wireless-essid" { printf "  %s %s\n",$1,"RPiAdHocNetwork${ID}"; next; } { print; }' /etc/network/interfaces > interfaces
+awk -v var="RPiAdHocNetwork${ID}" '$1=="wireless-essid" { $0="  "$1" "var } { print; }' /etc/network/interfaces > interfaces
 sudo mv interfaces /etc/network/interfaces
 
 echo "configuration updated for station ${ID}!"
