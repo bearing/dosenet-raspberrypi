@@ -39,8 +39,8 @@ class Data_Handler(object):
 		Test Mode
 		"""
 		self.vprint(
-			1, ANSI_RED + " * Test mode, not sending to server * " +
-    		ANSI_RESET)
+		     1, ANSI_RED + " * Test mode, not sending to server * " +
+    		     ANSI_RESET)
 		self.manager.data_log(datalog, cpm, cpm_err)
 
 	def no_config_send(self, datalog, cpm, cpm_err):
