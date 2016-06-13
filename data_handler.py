@@ -23,9 +23,9 @@ class Data_Handler(object):
 	"""
 
 	def __init__(self,
-		        manager=None,
-		        verbosity=1,
-		        logfile=None):
+		     manager=None,
+		     verbosity=1,
+		     logfile=None):
 
 		self.v = verbosity
 		if manager and logfile is None:
@@ -76,9 +76,9 @@ class Data_Handler(object):
 	            self.manager.send_to_queue(cpm, cpm_err)
 
     	def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
-	    	#cpm, cpm_err = manager.sensor.get_cpm(manager.this_start, manager.this_end)
-	    	#counts = int(round(cpm * manager.interval / 60))
-	
+    		"""
+    		Determines how to handle the cpm data.
+    		"""
 	    	start_text = datetime_from_epoch(this_start).strftime(strf)
 	    	end_text = datetime_from_epoch(this_end).strftime(strf)
 	
