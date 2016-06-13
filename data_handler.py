@@ -34,43 +34,38 @@ class Data_Handler(object):
 	    set_verbosity(self, logfile=logfile)
 		
 	self.manager = manager
-    def test_send(self, datalog, cpm, cpm_err):
+    def test_send(self, cpm, cpm_err):
         """
 	Test Mode
 	"""
 	self.vprint(
 	    1, ANSI_RED + " * Test mode, not sending to server * " +
 	    ANSI_RESET)
-	self.manager.data_log(datalog, cpm, cpm_err)
 
-    def no_config_send(self, datalog, cpm, cpm_err):
+    def no_config_send(self, cpm, cpm_err):
 	"""
 	Configuration file not present
 	"""
 	self.vprint(1, "Missing config file, not sending to server")
-        self.manager.data_log(datalog, cpm, cpm_err)
 
-    def no_publickey_send(self, datalog, cpm, cpm_err):
+    def no_publickey_send(self, cpm, cpm_err):
     	"""
 	Publickey not present
 	"""
 	self.vprint(1, "Missing public key, not sending to server")
-	self.manager.data_log(datalog, cpm, cpm_err)
 
-    def no_network_send(self, datalog, cpm, cpm_err):
+    def no_network_send(self, cpm, cpm_err):
         """
 	Network is not up
 	"""
 	self.vprint(1, "Network down, not sending to server")
-	self.manager.data_log(datalog, cpm, cpm_err)
 	self.manager.send_to_queue(cpm, cpm_err)
 
-    def regular_send(self, datalog, cpm, cpm_err):
+    def regular_send(self, cpm, cpm_err):
         """
 	Normal send
 	"""
 	try:
-	    self.manager.data_log(datalog, cpm, cpm_err)
 	    self.manager.sender.send_cpm(cpm, cpm_err)
 	except socket.error:    
 	    self.manager.send_to_queue(cpm, cpm_err)
@@ -90,16 +85,18 @@ class Data_Handler(object):
 	     start_time=start_text,
 	     end_time=end_text,
 	))
+	
+	self.manager.data_log(datalog, cpm, cpm_err)
 
 	if self.manager.test:
-	    self.test_send(datalog, cpm, cpm_err)
+	    self.test_send(cpm, cpm_err)
 	elif not self.manager.config:
-	    self.no_config_send(datalog, cpm, cpm_err)
+	    self.no_config_send(cpm, cpm_err)
 	elif not self.manager.publickey:
-	    self.no_publickey_send(datalog, cpm, cpm_err)
+	    self.no_publickey_send(cpm, cpm_err)
 	elif not self.manager.network_up:
-	     self.no_network_send(datalog, cpm, cpm_err)
+	    self.no_network_send(cpm, cpm_err)
 	else:
-	     self.regular_send(datalog, cpm, cpm_err)
+	    self.regular_send(cpm, cpm_err)
 
 
