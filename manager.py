@@ -83,6 +83,7 @@ class Manager(object):
                  datalogflag=False,
                  ):
         
+        
         self.queue = deque('')
         
         self.datalog = datalog
