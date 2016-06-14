@@ -365,7 +365,7 @@ class TestDataLog(unittest.TestCase):
 class DataHandle(unittest.TestCase):
     
     def setUp(self):
-        print('Testing Data Handle')
+        print('Testing Deque Object')
     
     def test_no_network(self):
         mgr = Manager()
@@ -375,6 +375,9 @@ class DataHandle(unittest.TestCase):
         mgr.handle_cpm(now - 10, now)
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
+        
+        self.assertIsNotNone(mgr.queue)
+        self.assertEqual(mgr.queue, 2)
         
         GPIO.cleanup()
         del(mgr)
