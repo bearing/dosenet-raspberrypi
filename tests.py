@@ -368,6 +368,12 @@ class DequeObject(unittest.TestCase):
         print('Testing Deque Object')
     
     def test_no_network(self):
+        """
+        Creates a deque data structure, runs manager with no network, 
+        checks if deque was created, checks if cpm data was added to 
+        the deque object, checks if the Data_Handler class was 
+        created. 
+        """
         mgr = Manager()
         mgr.network_up = False
         
