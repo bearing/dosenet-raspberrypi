@@ -386,6 +386,10 @@ class DequeObject(unittest.TestCase):
         self.assertEqual(len(mgr.queue), 2)
         self.assertIsNotNone(mgr.data_handler)
         
+        mgr.network_up = True
+        mgr.handle_cpm(now + 10, now + 20)
+        print(mgr.queue)
+        
         GPIO.cleanup()
         del(mgr)
     
