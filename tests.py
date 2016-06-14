@@ -362,6 +362,26 @@ class TestDataLog(unittest.TestCase):
         os.remove(TEST_DATALOG)
         print()
 
+class DataHandle(unittest.TestCase):
+    
+    def setUp(self):
+        print('Testing Data Handle')
+    
+    def test_no_network(self):
+        mgr = Manager()
+        mgr.network_up = False
+        
+        now = time.time()
+        mgr.handle_cpm(now - 10, now)
+        [mgr.sensor.count() for _ in xrange(2)]
+        mgr.handle_cpm(now, now + 10)
+        
+        GPIO.cleanup()
+        del(mgr)
+    
+    def tearDown(self):
+        print()
+
     # ...   
 
 if __name__ == '__main__':
