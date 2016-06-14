@@ -21,7 +21,7 @@ from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import DEFAULT_DATALOG
+from globalvalues import DEFAULT_DATALOG, DEFAULT_SEND_TO_SERVER
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 import signal
@@ -363,7 +363,14 @@ class Manager(object):
         # power LED
         self.power_LED.off()
         GPIO.cleanup()
-
+        
+        # send the rest of the queue object to DEFAULT_SEND_TO_SERVER upon shutdown
+        if len(self.queue) != 0:
+            with open(DEFAULT_SEND_TO_SERVER, 'a') as f:
+                for i in self.queue:
+                    f.write('{0}'.format(self.queue.popleft()))
+                    f.write('\n')
+        
         # self. can I even do this?
         del(self)
 
