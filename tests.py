@@ -378,7 +378,7 @@ class DequeObject(unittest.TestCase):
         
         self.assertIsNotNone(mgr.queue)
         self.assertEqual(len(mgr.queue), 2)
-        #self.assertIsNotNone(Data_Handler)
+        self.assertIsNotNone(mgr.data_handler)
         
         GPIO.cleanup()
         del(mgr)
