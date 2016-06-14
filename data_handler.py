@@ -67,6 +67,9 @@ class Data_Handler(object):
 	"""
 	try:
 	    self.manager.sender.send_cpm(cpm, cpm_err)
+	    if len(self.manager.queue) != 0:
+	        for i in self.manager.queue:
+	    	    self.manager.sender.send_cpm(cpm[i][1], cpm_err[i][2])
 	except socket.error:    
 	    self.manager.send_to_queue(cpm, cpm_err)
 
