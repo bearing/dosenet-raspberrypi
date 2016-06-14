@@ -70,7 +70,7 @@ class Data_Handler(object):
 	    if len(self.manager.queue) != 0:
 	        for i in self.manager.queue:
 	    	    trash = self.manager.queue.popleft()
-	    	    self.manager.sender.send_cpm(trash[1], trash[1])
+	    	    self.manager.sender.send_cpm(trash[1], trash[2])
 	except socket.error:    
 	    self.manager.send_to_queue(cpm, cpm_err)
 
