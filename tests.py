@@ -377,7 +377,7 @@ class DataHandle(unittest.TestCase):
         mgr.handle_cpm(now, now + 10)
         
         self.assertIsNotNone(mgr.queue)
-        self.assertEqual(mgr.queue, 2)
+        self.assertEqual(len(mgr.queue), 2)
         
         GPIO.cleanup()
         del(mgr)
