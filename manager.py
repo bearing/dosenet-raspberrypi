@@ -367,7 +367,7 @@ class Manager(object):
         # send the rest of the queue object to DEFAULT_SEND_TO_SERVER upon shutdown
         if len(self.queue) != 0:
             with open(DEFAULT_SEND_TO_SERVER, 'a') as f:
-                for i in self.queue:
+                while self.queue:
                     f.write('{0}'.format(self.queue.popleft()))
                     f.write('\n')
         
