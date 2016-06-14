@@ -362,7 +362,7 @@ class TestDataLog(unittest.TestCase):
         os.remove(TEST_DATALOG)
         print()
 
-class DataHandle(unittest.TestCase):
+class DequeObject(unittest.TestCase):
     
     def setUp(self):
         print('Testing Deque Object')
@@ -378,6 +378,7 @@ class DataHandle(unittest.TestCase):
         
         self.assertIsNotNone(mgr.queue)
         self.assertEqual(len(mgr.queue), 2)
+        self.assertIsNotNone(Data_Handler)
         
         GPIO.cleanup()
         del(mgr)
