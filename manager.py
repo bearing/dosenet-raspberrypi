@@ -114,6 +114,7 @@ class Manager(object):
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
+            port=port,
             verbosity=self.v,
             logfile=self.logfile)
 
