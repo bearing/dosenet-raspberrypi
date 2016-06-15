@@ -295,11 +295,12 @@ if __name__ == '__main__':
                         help='hostname (web address or IP)')
     parser.add_argument('--port', '-p', type=int, default=None,
                         help='port')
-    parser.add_argument('--encrypted', '-e', type=bool, default=True,
+    parser.add_argument('--no-encrypt', '-e', dest='encrypt',
+                        action='store_false',
                         help='encrypt packet or don''t encrypt')
     args = parser.parse_args()
 
     send_test_packets(
         mode=args.mode.lower(), address=args.hostname, port=args.port,
         config=args.config, publickey=args.publickey, n=args.n,
-        encrypt=args.encrypted)
+        encrypt=args.encrypt)
