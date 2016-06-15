@@ -239,7 +239,8 @@ def send_test_packets(
         publickey=DEFAULT_PUBLICKEY,
         address=DEFAULT_HOSTNAME,
         port=None,
-        n=3):
+        n=3,
+        encrypt=True):
     """
     Send n (default 3) test packets to the DoseNet server.
     """
@@ -264,10 +265,13 @@ def send_test_packets(
     raw_packet = 'Test packet from station {} by mode {}'.format(
         station_id, mode)
 
-    encrypted = sender.encrypt_packet(raw_packet)
+    if encrypt:
+        packet_to_send = sender.encrypt_packet(raw_packet)
+    else:
+        packet_to_send = raw_packet
 
     for _ in xrange(n):
-        sender.send_data(encrypted)
+        sender.send_data(packet_to_send)
         time.sleep(sleep_time)
 
 
@@ -291,8 +295,11 @@ if __name__ == '__main__':
                         help='hostname (web address or IP)')
     parser.add_argument('--port', '-p', type=int, default=None,
                         help='port')
+    parser.add_argument('--encrypted', '-e', type=bool, default=True,
+                        help='encrypt packet or don''t encrypt')
     args = parser.parse_args()
 
     send_test_packets(
         mode=args.mode.lower(), address=args.hostname, port=args.port,
-        config=args.config, publickey=args.publickey, n=args.n)
+        config=args.config, publickey=args.publickey, n=args.n,
+        encrypt=args.encrypted)
