@@ -18,7 +18,8 @@ from sender import ServerSender
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_PORT
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
+from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
@@ -66,11 +67,12 @@ class Manager(object):
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
                  test=False,
+                 sender_mode=DEFAULT_SENDER_MODE,
                  interval=None,
                  config=None,
                  publickey=None,
                  hostname=DEFAULT_HOSTNAME,
-                 port=DEFAULT_PORT,
+                 port=None,
                  verbosity=None,
                  log=False,
                  logfile=None,
@@ -80,11 +82,11 @@ class Manager(object):
 
         self.datalog = datalog
         self.datalogflag = datalogflag
-        
+
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
-        
+
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
 
@@ -111,33 +113,36 @@ class Manager(object):
             logfile=self.logfile)
         self.sender = ServerSender(
             manager=self,
+            mode=sender_mode,
+            port=port,
             verbosity=self.v,
             logfile=self.logfile)
+        # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
-        
-        If it is called, sets the path of the data-log to 
+
+        If it is called, sets the path of the data-log to
         DEFAULT_DATALOG.
         """
         if self.datalogflag:
             self.datalog = DEFAULT_DATALOG
-    
+
     def d_flag(self):
         """
         Checks if the -d from_argparse is called.
-        
+
         If it is called, sets datalogflag to True.
         """
         if self.datalog:
             self.datalogflag = True
-            
-    def make_data_log(self, file): 
+
+    def make_data_log(self, file):
         if self.datalogflag:
             with open(file, 'a') as f:
                 pass
-           
+
     def handle_input(self,
                      log, logfile, verbosity,
                      test, interval, config, publickey):
@@ -176,7 +181,7 @@ class Manager(object):
                 self.vprint(
                     2, "No interval given, using default for TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST
-                
+
         else:
             if interval is None:
                 self.vprint(
@@ -195,7 +200,7 @@ class Manager(object):
 
         if self.datalogflag:
             self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
-        
+
         if config:
             try:
                 self.config = Config(config,
@@ -316,12 +321,12 @@ class Manager(object):
         Writes cpm to data-log.
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        if self.datalogflag:    
+        if self.datalogflag:
             with open(file, 'a') as f:
                 f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
                 f.write('\n')
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
-            
+
     def handle_cpm(self, this_start, this_end):
         """Get CPM from sensor, display text, send to server."""
 
@@ -356,7 +361,7 @@ class Manager(object):
         else:
             self.sender.send_cpm(cpm, cpm_err)
             self.data_log(self.datalog, cpm, cpm_err)
-            
+
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
@@ -426,9 +431,16 @@ class Manager(object):
             help='Specify a server hostname (default {})'.format(
                 DEFAULT_HOSTNAME))
         parser.add_argument(
-            '--port', '-p', type=int, default=DEFAULT_PORT,
-            help='Specify a port for the server (default {})'.format(
-                DEFAULT_PORT))
+            '--port', '-p', type=int, default=None,
+            help='Specify a port for the server ' +
+            '(default {} for UDP, {} for TCP)'.format(
+                DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
+        parser.add_argument(
+            '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
+            choices=['udp', 'tcp', 'UDP', 'TCP'],
+            help='The network protocol used in sending data ' +
+            '(default {})'.format(DEFAULT_SENDER_MODE))
+
         # datalog
         parser.add_argument(
             '--datalog', '-d', default=None,
@@ -437,7 +449,7 @@ class Manager(object):
         parser.add_argument(
             '--datalogflag', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
-        
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
