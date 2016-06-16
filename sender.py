@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+If you call sender.py from the command line, it will send 3 test packets.
+See argparse for options.
+
+Otherwise, this module is loaded to provide the ServerSender class.
+"""
+
 from __future__ import print_function
 
 import socket
@@ -67,6 +74,7 @@ class ServerSender(object):
                 raise RuntimeError(
                     'Invalid ServerSender mode (choose TCP or UDP)')
         except AttributeError:
+            # if mode is not a string or None, then mode.lower() raises this
             raise RuntimeError('Invalid ServerSender mode (choose TCP or UDP)')
 
         if self.mode == 'udp':
