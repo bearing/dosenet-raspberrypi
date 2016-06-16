@@ -140,7 +140,7 @@ class Manager(object):
         """
         if os.path.isfile(path) and self.network_up:
             with open(path, 'r') as f:
-                data =f.read()
+                data = f.read()
             data = ast.literal_eval(data)
             for i in data:
                 self.sender.send_cpm(i[1], i[2])
