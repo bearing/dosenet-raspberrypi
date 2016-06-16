@@ -18,7 +18,7 @@ from sender import ServerSender
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
@@ -72,7 +72,7 @@ class Manager(object):
                  config=None,
                  publickey=None,
                  hostname=DEFAULT_HOSTNAME,
-                 port=DEFAULT_UDP_PORT,
+                 port=None,
                  verbosity=None,
                  log=False,
                  logfile=None,
@@ -117,6 +117,7 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
+        # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
     def a_flag(self):
         """
@@ -430,9 +431,10 @@ class Manager(object):
             help='Specify a server hostname (default {})'.format(
                 DEFAULT_HOSTNAME))
         parser.add_argument(
-            '--port', '-p', type=int, default=DEFAULT_UDP_PORT,
-            help='Specify a port for the server (default {})'.format(
-                DEFAULT_UDP_PORT))
+            '--port', '-p', type=int, default=None,
+            help='Specify a port for the server ' +
+            '(default {} for UDP, {} for TCP)'.format(
+                DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
         parser.add_argument(
             '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
             choices=['udp', 'tcp', 'UDP', 'TCP'],
