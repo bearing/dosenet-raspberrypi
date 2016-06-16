@@ -373,9 +373,8 @@ class Manager(object):
         if len(self.queue) != 0:
             with open(DEFAULT_SEND_TO_SERVER, 'a') as f:
                 while self.queue:
-                    f.write('{0}'.format(self.queue.popleft()))
-                    f.write('\n')
-        
+                    f.write('{0}, '.format(self.queue.popleft()))
+
         # self. can I even do this?
         del(self)
 
