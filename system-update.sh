@@ -23,7 +23,7 @@ case $1 in
     ;;
   *)
     # commands for all stations besides 10005 to run
-    python /home/pi/dosenet-raspberrypi/sender.py tcp -p 5100 -n 1
+    :
     ;;
 esac
 
