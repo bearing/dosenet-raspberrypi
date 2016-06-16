@@ -36,7 +36,7 @@ import os
 import socket
 
 def signal_term_handler(signal, frame):
-    print('got SIGTERM')
+    # print('got SIGTERM')
     # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
     sys.exit(0)
 
