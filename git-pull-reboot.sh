@@ -20,10 +20,9 @@ cd $DOSENETPATH
 
 # Station-specific stuff
 case $ID in
-  "7")
-    # Foothill College: UDP blocked
-    echo "Should switch to a TCP-enabled branch here"
-    BRANCH=tcp-and-udp
+  "9999")
+    # template
+    BRANCH=master
     ;;
   *)
     BRANCH=master

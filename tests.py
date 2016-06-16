@@ -35,12 +35,14 @@ else:
     #   included in the (public) repo!
     # these paths are for Brian's LBL desktop, but you could put them
     #   here for other machines too.
-    test_config_path = './testconfig/test1.csv'
+    test_config_path = './testconfig/config.csv'
     test_publickey_path = './testconfig/id_rsa_lbl.pub'
     if (os.path.exists(test_config_path) and
             os.path.exists(test_publickey_path)):
+        print('Found config files')
         configs_present = True
     else:
+        print('Config files not found!')
         configs_present = False
 
 TEST_LOGFILE = 'test.log'
@@ -329,32 +331,52 @@ class TestSender(unittest.TestCase):
         with self.assertRaises(sender.MissingFile):
             ss.send_cpm(0, 0)
 
- 
+    @unittest.skipUnless(configs_present, "Test packets require config files")
+    def test_send_test_udp(self):
+        sender.send_test_packets(
+            mode='udp',
+            config=test_config_path,
+            publickey=test_publickey_path,
+            n=1)
+        print(' ~ Check that the server received a test UDP packet ~')
+        self.assertTrue(True)
+
+    @unittest.skipUnless(configs_present, "Test packets require config files")
+    def test_send_test_tcp(self):
+        sender.send_test_packets(
+            mode='tcp',
+            config=test_config_path,
+            publickey=test_publickey_path,
+            n=1)
+        print(' ~ Check that the server received a test TCP packet ~')
+        self.assertTrue(True)
+
+
 class TestDataLog(unittest.TestCase):
-    
+
     def setUp(self):
         print('Checking local data')
-        
+
     def test_get_data(self):
         """
-        Checks the data log functionality. 
-        
-        Creates a test data log, simulates 2 counts, 
-        checks that the test data log was created, 
+        Checks the data log functionality.
+
+        Creates a test data log, simulates 2 counts,
+        checks that the test data log was created,
         checks that there are 2 counts, and then deletes the test datalog.
         """
         mgr = Manager(test=True, datalog=TEST_DATALOG)
-    
+
         now = time.time()
         mgr.handle_cpm(now - 10, now)
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
         output = get_data(TEST_DATALOG)
         print(output)
-    
+
         GPIO.cleanup()
         del(mgr)
-        
+
         self.assertIsNotNone(output)
         self.assertEqual(len(output), 2)
 
@@ -362,7 +384,6 @@ class TestDataLog(unittest.TestCase):
         os.remove(TEST_DATALOG)
         print()
 
-    # ...   
 
 if __name__ == '__main__':
     unittest.main()
