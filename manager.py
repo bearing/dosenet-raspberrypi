@@ -29,7 +29,7 @@ import signal
 import sys
 
 import csv
-
+import ast
 from collections import deque
 
 import socket
@@ -130,6 +130,24 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
 
+        self.flush_send_to_server()
+        
+    def flush_send_to_server(self, path=DEFAULT_SEND_TO_SERVER):
+        """
+        Sends the cpm data from DEFAULT_SEND_TO_SERVER if network is up.
+        
+        Also deletes the file.
+        """
+        if os.path.isfile(path) and self.network_up:
+            with open(path, 'r') as f:
+                data =f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                self.sender.send_cpm(i[1], i[2])
+            os.remove(path)
+        else:
+            pass
+        
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
