@@ -42,16 +42,6 @@ def signal_term_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
-# this is hacky, but, the {{}} get converted to {} in the first .format() call
-#   and then get filled in later
-CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
-strf = '%H:%M:%S'
-
-
 class Manager(object):
     """
     Master object for dosimeter operation.
