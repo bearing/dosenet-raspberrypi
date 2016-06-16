@@ -22,7 +22,7 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import DEFAULT_DATALOG, DEFAULT_SEND_TO_SERVER
+from globalvalues import DEFAULT_DATALOG, DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 
 import signal
@@ -123,9 +123,9 @@ class Manager(object):
 
         self.flush_send_to_server()
         
-    def flush_send_to_server(self, path=DEFAULT_SEND_TO_SERVER):
+    def flush_send_to_server(self, path=DEFAULT_DATA_BACKLOG_FILE):
         """
-        Sends the cpm data from DEFAULT_SEND_TO_SERVER if network is up.
+        Sends the cpm data from DEFAULT_DATA_BACKLOG_FILE if network is up.
         
         Also deletes the file.
         """
@@ -378,9 +378,9 @@ class Manager(object):
         self.power_LED.off()
         GPIO.cleanup()
         
-        # send the rest of the queue object to DEFAULT_SEND_TO_SERVER upon shutdown
+        # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon shutdown
         if len(self.queue) != 0:
-            with open(DEFAULT_SEND_TO_SERVER, 'a') as f:
+            with open(DEFAULT_DATA_BACKLOG_FILE, 'a') as f:
                 while self.queue:
                     f.write('{0}, '.format(self.queue.popleft()))
 
