@@ -217,6 +217,7 @@ class NetworkStatus(object):
         self.led = network_led
         self.blink_period_s = 1.5
         self.last_up_time = None
+        self.last_up_time_update = None
         
         self.logfile = logfile
         self.v = verbosity
@@ -254,7 +255,8 @@ class NetworkStatus(object):
         up_state is the shared memory object for the pinging process.
         If calling update() manually, leave it as None (default).
         """
-        self.last_up_time = time.time()
+        if not self.last_up_time:
+            self.last_up_time = time.time()
         
         if up_state is None:
             up_state = self.up_state
@@ -262,6 +264,7 @@ class NetworkStatus(object):
         response = self._ping()
         if response == 0:
             self.last_up_time = None
+            self.last_up_time_update = None
             up_state.value = 'U'
             if self.led:
                 if self.led.blinker:
@@ -270,13 +273,13 @@ class NetworkStatus(object):
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             up_state.value = 'D'
-            self.last_up_time = time.time() - self.last_up_time
-            self.vprint(1, ' {} down'.format(self.last_up_time))
+            self.last_up_time_update = time.time() - self.last_up_time
+            self.vprint(1, ' {} down'.format(self.last_up_time_update))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if self.last_up_time >= 30 and self.last_up_time < 60:
+            if self.last_up_time_update >= 30 and self.last_up_time_update < 60:
                 subprocess.call("sudo ifdown wlan1")
-            if self.last_up_time > 60:
+            if self.last_up_time_update > 60:
                 subprocess.call("sudo ifup wlan1")
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             
