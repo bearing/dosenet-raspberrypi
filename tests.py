@@ -405,8 +405,8 @@ class DequeObject(unittest.TestCase):
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
         
-        self.assertIsNotNone(mgr.queue)
-        self.assertEqual(len(mgr.queue), 2)
+        self.assertIsNotNone(mgr.data_handler.queue)
+        self.assertEqual(len(mgr.data_handler.queue), 2)
         self.assertIsNotNone(mgr.data_handler)
 
         GPIO.cleanup()
