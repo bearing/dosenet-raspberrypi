@@ -272,9 +272,9 @@ class NetworkStatus(object):
             self.last_up_time = time.time() - self.last_up_time
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if self.last_up_time >= 1800 and self.last_up_time < 3600:
+            if self.last_up_time >= 30 and self.last_up_time < 60:
                 subprocess.call("sudo ifdown wlan1")
-            if self.last_up_time > 3600:
+            if self.last_up_time > 60:
                 subprocess.call("sudo ifup wlan1")
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             
