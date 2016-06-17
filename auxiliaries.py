@@ -215,7 +215,8 @@ class NetworkStatus(object):
         self.down_interval_s = down_interval_s
         self.led = network_led
         self.blink_period_s = 1.5
-
+        self.last_up_time = None
+        
         self.logfile = logfile
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
@@ -252,12 +253,14 @@ class NetworkStatus(object):
         up_state is the shared memory object for the pinging process.
         If calling update() manually, leave it as None (default).
         """
-
+        self.last_up_time = time.time()
+        
         if up_state is None:
             up_state = self.up_state
 
         response = self._ping()
         if response == 0:
+            self.last_up_time = None
             up_state.value = 'U'
             if self.led:
                 if self.led.blinker:
@@ -266,10 +269,15 @@ class NetworkStatus(object):
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             up_state.value = 'D'
+            self.last_up_time = time.time() - self.last_up_time
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
+            if self.last_up_time >= 1800 and self.last_up_time < 3600:
+                subprocess.call("sudo ifdown wlan1")
+            if self.last_up_time > 3600:
+                subprocess.call("sudo ifup wlan1")
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
-
+            
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
         try:
