@@ -34,7 +34,9 @@ class Data_Handler(object):
 	    set_verbosity(self, logfile=logfile)
 		
 	self.manager = manager
-    
+    	
+    	self.queue = deque('')
+    	
     def test_send(self, cpm, cpm_err):
         """
 	Test Mode
