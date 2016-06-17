@@ -271,6 +271,7 @@ class NetworkStatus(object):
         else:
             up_state.value = 'D'
             self.last_up_time = time.time() - self.last_up_time
+            self.vprint(1, ' {} down'.format(self.last_up_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
             if self.last_up_time >= 30 and self.last_up_time < 60:
