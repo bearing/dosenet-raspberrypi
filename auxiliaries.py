@@ -7,6 +7,7 @@ import csv
 from time import sleep
 import os
 import traceback
+import subprocess
 
 from globalvalues import RPI
 if RPI:
