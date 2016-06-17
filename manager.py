@@ -76,8 +76,6 @@ class Manager(object):
                  datalogflag=False,
                  ):
 
-        self.queue = deque('')
-        
         self.datalog = datalog
         self.datalogflag = datalogflag
 
@@ -352,8 +350,8 @@ class Manager(object):
         Adds the time, cpm, and cpm_err to the deque object.
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        self.queue.append([time_string, cpm, cpm_err])
-        print(self.queue)
+        self.data_handler.queue.append([time_string, cpm, cpm_err])
+        print(self.data_handler.queue)
     
     def handle_cpm(self, this_start, this_end):
         """
@@ -379,10 +377,10 @@ class Manager(object):
         GPIO.cleanup()
         
         # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon shutdown
-        if len(self.queue) != 0:
+        if self.data_handler.queue:
             with open(DEFAULT_DATA_BACKLOG_FILE, 'a') as f:
-                while self.queue:
-                    f.write('{0}, '.format(self.queue.popleft()))
+                while self.data_handler.queue:
+                    f.write('{0}, '.format(self.data_handler.queue.popleft()))
 
         # self. can I even do this?
         del(self)
