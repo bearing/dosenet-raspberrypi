@@ -7,7 +7,6 @@ import csv
 from time import sleep
 import os
 import traceback
-import subprocess
 import time
 
 from globalvalues import RPI
@@ -275,12 +274,11 @@ class NetworkStatus(object):
             self.vprint(1, 'Network down for {} seconds'.format(time.time() - self.last_up_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if time.time() - self.last_up_time >= 30:
+            if time.time() - self.last_up_time >= 1800:
                 self.vprint(1, 'Making network go back up')
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_up_time = time.time()
-            #self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
