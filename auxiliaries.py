@@ -255,16 +255,15 @@ class NetworkStatus(object):
         up_state is the shared memory object for the pinging process.
         If calling update() manually, leave it as None (default).
         """
-        if not self.last_up_time:
-            self.last_up_time = time.time()
+        #if not self.last_up_time:
+            #self.last_up_time = time.time()
         
         if up_state is None:
             up_state = self.up_state
 
         response = self._ping()
         if response == 0:
-            self.last_up_time = None
-            self.last_up_time_update = None
+            self.last_up_time = time.time()
             up_state.value = 'U'
             if self.led:
                 if self.led.blinker:
@@ -273,11 +272,11 @@ class NetworkStatus(object):
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             up_state.value = 'D'
-            self.last_up_time_update = time.time() - self.last_up_time
-            self.vprint(1, ' {} down'.format(self.last_up_time_update))
+            #self.last_up_time_update = time.time() - self.last_up_time
+            self.vprint(1, ' {} down'.format(time.time() - self.last_up_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if self.last_up_time_update >= 30 and self.last_up_time_update < 60:
+            if time.time() - self.last_up_time >= 30 and time.time() - self.last_up_time < 60:
                 print('Making network go back up')
                 os.system("sudo ifup wlan1")
             #if self.last_up_time_update > 60:
