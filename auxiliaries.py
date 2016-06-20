@@ -217,7 +217,6 @@ class NetworkStatus(object):
         self.led = network_led
         self.blink_period_s = 1.5
         self.last_up_time = None
-        self.last_up_time_update = None
         
         self.logfile = logfile
         self.v = verbosity
@@ -272,16 +271,16 @@ class NetworkStatus(object):
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             up_state.value = 'D'
-            #self.last_up_time_update = time.time() - self.last_up_time
-            self.vprint(1, ' {} down'.format(time.time() - self.last_up_time))
+            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
+            self.vprint(1, 'Network down for {} seconds'.format(time.time() - self.last_up_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
-            if time.time() - self.last_up_time >= 30 and time.time() - self.last_up_time < 60:
-                print('Making network go back up')
+            if time.time() - self.last_up_time >= 30:
+                self.vprint(1, 'Making network go back up')
+                os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
-            #if self.last_up_time_update > 60:
-                #subprocess.call("sudo ifup wlan1")
-            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
+                self.last_up_time = time.time()
+            #self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
