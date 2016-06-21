@@ -99,9 +99,7 @@ class Data_Handler(object):
             for i in data:
                 self.manager.sender.send_cpm(i[1], i[2])
             os.remove(path)
-        else:
-            pass
-    
+        
     def send_to_queue(self, cpm, cpm_err): 
         """
         Adds the time, cpm, and cpm_err to the deque object.
