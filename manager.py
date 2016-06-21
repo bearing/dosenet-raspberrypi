@@ -123,6 +123,7 @@ class Manager(object):
             logfile=self.logfile)
         
         self.data_handler.flush_send_to_server()
+        print('backlog flushed to server')
             
     def a_flag(self):
         """
