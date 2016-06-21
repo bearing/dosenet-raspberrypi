@@ -66,7 +66,7 @@ class Data_Handler(object):
 	Network is not up
 	"""
 	self.vprint(1, "Network down, not sending to server")
-	self.manager.send_to_queue(cpm, cpm_err)
+	self.send_to_queue(cpm, cpm_err)
 
     def regular_send(self, cpm, cpm_err):
         """
@@ -78,7 +78,7 @@ class Data_Handler(object):
 	    	trash = self.queue.popleft()
 	    	self.manager.sender.send_cpm(trash[1], trash[2])
 	except socket.error:    
-	    self.manager.send_to_queue(cpm, cpm_err)
+	    self.send_to_queue(cpm, cpm_err)
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
     	if self.queue:
@@ -101,6 +101,14 @@ class Data_Handler(object):
             os.remove(path)
         else:
             pass
+    
+    def send_to_queue(self, cpm, cpm_err): 
+        """
+        Adds the time, cpm, and cpm_err to the deque object.
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.queue.append([time_string, cpm, cpm_err])
+        print(self.queue)
     
     def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
         """
