@@ -74,10 +74,10 @@ class Manager(object):
                  logfile=None,
                  datalog=None,
                  datalogflag=False,
-                 protocal=DEFAULT_PROTOCAL,
+                 protoc0l=DEFAULT_PROTOCoL,
                  ):
         
-        self.protocal = protocal
+        self.protocol = protocol
         
         self.datalog = datalog
         self.datalogflag = datalogflag
@@ -431,9 +431,9 @@ class Manager(object):
         
         # communication protocal
         parser.add_argument(
-            '--protocal', '-r', default=None,
-            help='Specify what communication protocal is to be used (default {})'.format(
-                DEFAULT_PROTOCAL)
+            '--protocol', '-r', default=DEFAULT_PROTOCOL,
+            help='Specify what communication protocol is to be used (default {})'.format(
+                DEFAULT_PROTOCOL)
         
         args = parser.parse_args()
         arg_dict = vars(args)
