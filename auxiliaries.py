@@ -253,8 +253,8 @@ class NetworkStatus(object):
         up_state is the shared memory object for the pinging process.
         If calling update() manually, leave it as None (default).
         """
-        #if not self.last_try_time:
-            #self.last_try_time = time.time()
+        if not self.last_try_time:
+            self.last_try_time = time.time()
         
         if up_state is None:
             up_state = self.up_state
