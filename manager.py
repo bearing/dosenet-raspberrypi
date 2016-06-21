@@ -74,7 +74,7 @@ class Manager(object):
                  logfile=None,
                  datalog=None,
                  datalogflag=False,
-                 protoc0l=DEFAULT_PROTOCoL,
+                 protocol=DEFAULT_PROTOCOL,
                  ):
         
         self.protocol = protocol
