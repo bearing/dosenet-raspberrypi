@@ -23,9 +23,10 @@ class Data_Handler(object):
     """
 
     def __init__(self,
-                 manager=None,
+        	 manager=None,
 		 verbosity=1,
-		 logfile=None):
+	         logfile=None
+	         ):
 
         self.v = verbosity
 	if manager and logfile is None:
