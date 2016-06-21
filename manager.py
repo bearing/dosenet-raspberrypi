@@ -118,7 +118,7 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
 
-        self.data_handler.flush_send_to_server()
+        #self.data_handler.flush_send_to_server()
         
     def a_flag(self):
         """
