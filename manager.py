@@ -376,11 +376,8 @@ class Manager(object):
         GPIO.cleanup()
         
         # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon shutdown
-        if self.data_handler.queue:
-            with open(DEFAULT_DATA_BACKLOG_FILE, 'a') as f:
-                while self.data_handler.queue:
-                    f.write('{0}, '.format(self.data_handler.queue.popleft()))
-
+        self.data_handler.send_all_to_backlog()
+        
         # self. can I even do this?
         del(self)
 
