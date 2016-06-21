@@ -7,6 +7,8 @@ from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from collections import deque
 import socket
 import time
+import ast
+import os
 
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
@@ -83,6 +85,22 @@ class Data_Handler(object):
             with open(path, 'a') as f:
                 while self.queue:
                     f.write('{0}, '.format(self.queue.popleft()))
+    
+    def flush_send_to_server(self, path=DEFAULT_DATA_BACKLOG_FILE):
+        """
+        Sends the cpm data from DEFAULT_DATA_BACKLOG_FILE if network is up.
+        
+        Also deletes the file.
+        """
+        if os.path.isfile(path) and manager.network_up:
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                manager.sender.send_cpm(i[1], i[2])
+            os.remove(path)
+        else:
+            pass
     
     def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
         """
