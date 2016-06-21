@@ -118,23 +118,7 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
 
-        self.flush_send_to_server()
-        
-    def flush_send_to_server(self, path=DEFAULT_DATA_BACKLOG_FILE):
-        """
-        Sends the cpm data from DEFAULT_DATA_BACKLOG_FILE if network is up.
-        
-        Also deletes the file.
-        """
-        if os.path.isfile(path) and self.network_up:
-            with open(path, 'r') as f:
-                data = f.read()
-            data = ast.literal_eval(data)
-            for i in data:
-                self.sender.send_cpm(i[1], i[2])
-            os.remove(path)
-        else:
-            pass
+        self.data_handler.flush_send_to_server()
         
     def a_flag(self):
         """
