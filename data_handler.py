@@ -135,6 +135,7 @@ class Data_Handler(object):
 	elif not self.manager.network_up:
 	    self.no_network_send(cpm, cpm_err)
 	else:
+	    self.flush_send_to_server()
 	    self.regular_send(cpm, cpm_err)
 
 
