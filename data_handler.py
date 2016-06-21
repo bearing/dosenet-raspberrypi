@@ -3,6 +3,7 @@ from sender import ServerSender
 from sensor import Sensor
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from collections import deque
 import socket
 import time
@@ -77,6 +78,12 @@ class Data_Handler(object):
 	except socket.error:    
 	    self.manager.send_to_queue(cpm, cpm_err)
 
+    def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
+    	if self.queue:
+            with open(path, 'a') as f:
+                while self.queue:
+                    f.write('{0}, '.format(self.queue.popleft()))
+    
     def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
         """
     	Determines how to handle the cpm data.
