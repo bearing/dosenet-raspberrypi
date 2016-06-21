@@ -24,6 +24,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_PROTOCAL
 
 import signal
 import sys
@@ -424,7 +425,13 @@ class Manager(object):
         parser.add_argument(
             '--datalogflag', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
-
+        
+        # communication protocal
+        parser.add_argument(
+            '--protocal', '-r', default=None,
+            help='Specify what communication protocal is to be used (default {})'.format(
+                DEFAULT_PROTOCAL)
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
