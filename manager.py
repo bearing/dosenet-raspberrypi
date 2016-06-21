@@ -435,7 +435,7 @@ class Manager(object):
         parser.add_argument(
             '--protocol', '-r', default=DEFAULT_PROTOCOL,
             help='Specify what communication protocol is to be used (default {})'.format(
-                DEFAULT_PROTOCOL)
+                DEFAULT_PROTOCOL))
         
         args = parser.parse_args()
         arg_dict = vars(args)
