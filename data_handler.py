@@ -92,12 +92,12 @@ class Data_Handler(object):
         
         Also deletes the file.
         """
-        if os.path.isfile(path) and manager.network_up:
+        if os.path.isfile(path) and self.manager.network_up:
             with open(path, 'r') as f:
                 data = f.read()
             data = ast.literal_eval(data)
             for i in data:
-                manager.sender.send_cpm(i[1], i[2])
+                self.manager.sender.send_cpm(i[1], i[2])
             os.remove(path)
         else:
             pass
