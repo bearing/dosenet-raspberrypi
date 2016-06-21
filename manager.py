@@ -327,14 +327,6 @@ class Manager(object):
                 f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
                 f.write('\n')
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
-  
-    def send_to_queue(self, cpm, cpm_err): 
-        """
-        Adds the time, cpm, and cpm_err to the deque object.
-        """
-        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        self.data_handler.queue.append([time_string, cpm, cpm_err])
-        print(self.data_handler.queue)
     
     def handle_cpm(self, this_start, this_end):
         """
