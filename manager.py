@@ -24,7 +24,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
-from globalvalues import DEFAULT_PROTOCAL
+from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
