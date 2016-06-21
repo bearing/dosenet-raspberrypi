@@ -122,6 +122,8 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         
+        self.datahandler.flush_send_to_server()
+            
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
