@@ -74,8 +74,11 @@ class Manager(object):
                  logfile=None,
                  datalog=None,
                  datalogflag=False,
+                 protocal=DEFAULT_PROTOCAL,
                  ):
-
+        
+        self.protocal = protocal
+        
         self.datalog = datalog
         self.datalogflag = datalogflag
 
