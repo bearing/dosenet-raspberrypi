@@ -31,6 +31,9 @@ case "$1" in
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
     sudo killall python &
     ;;
+  finish)
+    sudo kill -s SIGQUIT
+    ;;
   test)
     logger --stderr --id --tag $LOGTAG "Testing DoseNet script"
     # allow testing without configfile and/or publickey
