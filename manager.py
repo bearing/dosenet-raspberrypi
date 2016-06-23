@@ -467,3 +467,12 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+    
+    def signal_quit_handler(signal, frame):
+        # If SIGQUIT signal is intercepted, the SystemExit exception routines are ran if its right after an interval
+        while time.time() - mgr.time_between_intervals > 10:
+            pass
+            else:
+                sys.exit(0)
+    
+    signal.signal(signal.SIGQUIT, signal_quit_handler)
