@@ -78,7 +78,10 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
+                 time_between_intervals=time.time(),
                  ):
+        
+        self.time_between_intervals = time_between_intervals
         
         self.protocol = protocol
         
@@ -343,6 +346,7 @@ class Manager(object):
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
+        self.time_between_intervals = time.time()
         
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
