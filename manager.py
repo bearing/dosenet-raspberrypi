@@ -303,7 +303,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time):
+    def sleep_until(self, end_time, retry=True):
         """
         Sleep until the given timestamp.
 
@@ -317,6 +317,8 @@ class Manager(object):
             # this shouldn't happen now that SleepError is raised and handled
             raise RuntimeError
         time.sleep(sleeptime)
+        if self.quit_after_interval and retry:
+            self.sleep_until(end_time, retry=False)
         now = time.time()
         self.vprint(
             2, 'sleep_until offset is {} seconds'.format(now - end_time))
