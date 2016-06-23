@@ -316,7 +316,9 @@ class NetworkStatus(object):
 
     def cleanup(self):
         GPIO.cleanup()
-
+        if self._p:
+            self._p.terminate()
+        self.pinging = False
 
 class Config(object):
     """
