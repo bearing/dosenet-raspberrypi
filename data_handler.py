@@ -117,7 +117,7 @@ class Data_Handler(object):
     	        data = f.read()
     	    data = ast.literal_eval(data)
     	    for i in data:
-    	    	self.queue.appened([i[0], i[1], i[2]])
+    	    	self.queue.append([i[0], i[1], i[2]])
     	    print(self.queue)
     	    os.remove(path)
     
