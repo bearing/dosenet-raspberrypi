@@ -267,8 +267,6 @@ class Manager(object):
                     datetime_from_epoch(this_end)))
                 try:
                     self.sleep_until(this_end)
-                    if self.quit_after_interval:
-                        sys.exit(0)
                 except SleepError:
                     self.vprint(1, 'SleepError: system clock skipped ahead!')
                     # the previous start/end times are meaningless.
@@ -289,6 +287,8 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                if self.quit_after_interval:
+                    sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
