@@ -39,9 +39,6 @@ import socket
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
     sys.exit(0)
-    
-# def signal_quit_handler(signal, frame):
-    # 
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
@@ -78,10 +75,10 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
-                 time_between_intervals=time.time(),
+                 quit_after_interval=False,
                  ):
         
-        self.time_between_intervals = time_between_intervals
+        self.quit_after_interval = quit_after_interval
         
         self.protocol = protocol
         
@@ -254,7 +251,10 @@ class Manager(object):
                 ' with intervals of {}s').format(
                 datetime_from_epoch(this_start), self.interval))
         self.running = True
-
+        
+        if self.quit_after_interval:
+            sys.exit(0)
+        
         try:
             while self.running:
                 self.vprint(3, 'Sleeping at {} until {}'.format(
@@ -346,7 +346,6 @@ class Manager(object):
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
-        self.time_between_intervals = time.time()
         
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
@@ -470,9 +469,6 @@ if __name__ == '__main__':
     
     def signal_quit_handler(signal, frame):
         # If SIGQUIT signal is intercepted, the SystemExit exception routines are ran if its right after an interval
-        while time.time() - mgr.time_between_intervals > 10:
-            pass
-            else:
-                sys.exit(0)
+        mgr.quit_after_interval = true
     
     signal.signal(signal.SIGQUIT, signal_quit_handler)
