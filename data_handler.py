@@ -107,6 +107,19 @@ class Data_Handler(object):
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         self.queue.append([time_string, cpm, cpm_err])
         print(self.queue)
+        
+    def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE):
+    	"""
+    	Sends data in backlog to queue and deletes the backlog
+    	"""
+    	if os.path.isfile(path):
+    	    with open(path, 'r') as f:
+    	        data = f.read()
+    	    data = ast.literal_eval(data)
+    	    for i in data:
+    	    	self.queue.appened([i[0], i[1], i[2])
+    	    print(self.queue)
+    	    os.remove(path)
     
     def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
         """
