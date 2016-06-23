@@ -252,9 +252,6 @@ class Manager(object):
                 datetime_from_epoch(this_start), self.interval))
         self.running = True
         
-        if self.quit_after_interval:
-            sys.exit(0)
-        
         try:
             while self.running:
                 self.vprint(3, 'Sleeping at {} until {}'.format(
@@ -262,6 +259,8 @@ class Manager(object):
                     datetime_from_epoch(this_end)))
                 try:
                     self.sleep_until(this_end)
+                    if self.quit_after_interval:
+                        sys.exit(0)
                 except SleepError:
                     self.vprint(1, 'SleepError: system clock skipped ahead!')
                     # the previous start/end times are meaningless.
@@ -470,5 +469,7 @@ if __name__ == '__main__':
     def signal_quit_handler(signal, frame):
         # If SIGQUIT signal is intercepted, the SystemExit exception routines are ran if its right after an interval
         mgr.quit_after_interval = true
+        print('got sigquit')
+        print(mgr.quit_after_interval)
     
     signal.signal(signal.SIGQUIT, signal_quit_handler)
