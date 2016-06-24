@@ -66,7 +66,8 @@ class Data_Handler(object):
 	Network is not up
 	"""
 	self.vprint(1, "Network down, not sending to server")
-	self.send_to_queue(cpm, cpm_err)
+	if self.manager.protocol == 'new':
+	    self.send_to_queue(cpm, cpm_err)
 
     def regular_send(self, cpm, cpm_err):
         """
@@ -74,17 +75,20 @@ class Data_Handler(object):
 	"""
 	try:
 	    self.manager.sender.send_cpm(cpm, cpm_err)
-	    while self.queue:
-	    	trash = self.queue.popleft()
-	    	self.manager.sender.send_cpm(trash[1], trash[2])
+	    if self.manager.protocol == 'new':
+	        while self.queue:
+	    	    trash = self.queue.popleft()
+	    	    self.manager.sender.send_cpm(trash[1], trash[2])
 	except socket.error:    
-	    self.send_to_queue(cpm, cpm_err)
+	    if self.manager.protocol == 'new':
+	    	self.send_to_queue(cpm, cpm_err)
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
-    	if self.queue:
-            with open(path, 'a') as f:
-                while self.queue:
-                    f.write('{0}, '.format(self.queue.popleft()))
+        if self.manager.protocol == 'new'
+    	    if self.queue:
+                with open(path, 'a') as f:
+                    while self.queue:
+                        f.write('{0}, '.format(self.queue.popleft()))
     
     def flush_send_to_server(self, path=DEFAULT_DATA_BACKLOG_FILE):
         """
@@ -104,22 +108,24 @@ class Data_Handler(object):
         """
         Adds the time, cpm, and cpm_err to the deque object.
         """
-        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        self.queue.append([time_string, cpm, cpm_err])
-        print(self.queue)
+        if self.manager.protocol == 'new':
+            time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+            self.queue.append([time_string, cpm, cpm_err])
+            print(self.queue)
         
     def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE):
     	"""
     	Sends data in backlog to queue and deletes the backlog
     	"""
-    	if os.path.isfile(path):
-    	    with open(path, 'r') as f:
-    	        data = f.read()
-    	    data = ast.literal_eval(data)
-    	    for i in data:
-    	    	self.queue.append([i[0], i[1], i[2]])
-    	    print(self.queue)
-    	    os.remove(path)
+    	if self.manager.protocol == 'new':
+    	    if os.path.isfile(path):
+    	        with open(path, 'r') as f:
+    	            data = f.read()
+    	        data = ast.literal_eval(data)
+    	        for i in data:
+    	    	    self.queue.append([i[0], i[1], i[2]])
+    	        print(self.queue)
+    	        os.remove(path)
     
     def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
         """
@@ -148,7 +154,6 @@ class Data_Handler(object):
 	elif not self.manager.network_up:
 	    self.no_network_send(cpm, cpm_err)
 	else:
-	    #self.flush_send_to_server()
 	    self.regular_send(cpm, cpm_err)
 
 
