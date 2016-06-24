@@ -89,20 +89,6 @@ class Data_Handler(object):
                 with open(path, 'a') as f:
                     while self.queue:
                         f.write('{0}, '.format(self.queue.popleft()))
-    
-    def flush_send_to_server(self, path=DEFAULT_DATA_BACKLOG_FILE):
-        """
-        Sends the cpm data from DEFAULT_DATA_BACKLOG_FILE if network is up.
-        
-        Also deletes the file.
-        """
-        if os.path.isfile(path) and self.manager.network_up:
-            with open(path, 'r') as f:
-                data = f.read()
-            data = ast.literal_eval(data)
-            for i in data:
-                self.manager.sender.send_cpm(i[1], i[2])
-            os.remove(path)
         
     def send_to_queue(self, cpm, cpm_err): 
         """
