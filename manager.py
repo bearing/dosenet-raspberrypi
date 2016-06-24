@@ -256,7 +256,7 @@ class Manager(object):
                 ' with intervals of {}s').format(
                 datetime_from_epoch(this_start), self.interval))
         self.running = True
-        
+
         try:
             while self.running:
                 self.vprint(3, 'Sleeping at {} until {}'.format(
@@ -342,7 +342,7 @@ class Manager(object):
                 f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
                 f.write('\n')
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
-    
+
     def handle_cpm(self, this_start, this_end):
         """
         Get CPM from sensor, display text, send to server.
