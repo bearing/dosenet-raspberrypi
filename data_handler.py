@@ -71,18 +71,20 @@ class Data_Handler(object):
 	else:
 	    self.vprint(1, "Network down, not sending to server")  
 
-    def regular_send(self, cpm, cpm_err):
+    def regular_send(self, this_end, cpm, cpm_err):
         """
 	Normal send
 	"""
 	try:
-	    self.manager.sender.send_cpm(cpm, cpm_err)
 	    if self.manager.protocol == 'new':
+	        self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
 	        if self.queue:
 	            self.vprint(1, "Flushing memory queue to server")
 	        while self.queue:
 	    	    trash = self.queue.popleft()
-	    	    self.manager.sender.send_cpm(trash[1], trash[2])
+	    	    self.manager.sender.send_cpm_new(trash[0], trash[1], trash[2])
+	    else:
+	    	self.manager.sender.send_cpm(cpm, cpm_err)
 	except socket.error:    
 	    if self.manager.protocol == 'new':
 	    	self.send_to_queue(cpm, cpm_err)
@@ -149,6 +151,6 @@ class Data_Handler(object):
 	elif not self.manager.network_up:
 	    self.no_network_send(cpm, cpm_err)
 	else:
-	    self.regular_send(cpm, cpm_err)
+	    self.regular_send(this_end, cpm, cpm_err)
 
 
