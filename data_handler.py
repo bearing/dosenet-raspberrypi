@@ -78,6 +78,7 @@ class Data_Handler(object):
 	try:
 	    self.manager.sender.send_cpm(cpm, cpm_err)
 	    if self.manager.protocol == 'new':
+	        vprint(1, "Flushing memory queue to server")
 	        while self.queue:
 	    	    trash = self.queue.popleft()
 	    	    self.manager.sender.send_cpm(trash[1], trash[2])
