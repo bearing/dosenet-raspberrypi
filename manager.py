@@ -81,10 +81,9 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
-                 quit_after_interval=False,
                  ):
         
-        self.quit_after_interval = quit_after_interval
+        self.quit_after_interval = False
         
         self.protocol = protocol
         
