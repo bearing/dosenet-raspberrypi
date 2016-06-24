@@ -84,7 +84,7 @@ class Data_Handler(object):
 	    	self.send_to_queue(cpm, cpm_err)
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
-        if self.manager.protocol == 'new'
+        if self.manager.protocol == 'new':
     	    if self.queue:
                 with open(path, 'a') as f:
                     while self.queue:
