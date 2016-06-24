@@ -283,6 +283,8 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                if self.quit_after_interval:
+                    sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -351,8 +353,6 @@ class Manager(object):
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
-        if self.quit_after_interval:
-            sys.exit(0)
         
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
