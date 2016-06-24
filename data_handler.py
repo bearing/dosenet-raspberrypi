@@ -79,7 +79,7 @@ class Data_Handler(object):
 	    self.manager.sender.send_cpm(cpm, cpm_err)
 	    if self.manager.protocol == 'new':
 	        if self.queue:
-	            vprint(1, "Flushing memory queue to server")
+	            self.vprint(1, "Flushing memory queue to server")
 	        while self.queue:
 	    	    trash = self.queue.popleft()
 	    	    self.manager.sender.send_cpm(trash[1], trash[2])
@@ -93,7 +93,7 @@ class Data_Handler(object):
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
     	    if self.queue:
-    	    	vprint(1, "Flushing memory queue to backlog file")
+    	    	self.vprint(1, "Flushing memory queue to backlog file")
                 with open(path, 'a') as f:
                     while self.queue:
                         f.write('{0}, '.format(self.queue.popleft()))
@@ -113,7 +113,7 @@ class Data_Handler(object):
     	"""
     	if self.manager.protocol == 'new':
     	    if os.path.isfile(path):
-    	        vprint(2, "Flushing backlog file to memory queue")
+    	        self.vprint(2, "Flushing backlog file to memory queue")
     	        with open(path, 'r') as f:
     	            data = f.read()
     	        data = ast.literal_eval(data)
