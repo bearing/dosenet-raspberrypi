@@ -92,6 +92,7 @@ class Data_Handler(object):
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
     	    if self.queue:
+    	    	vprint(1, "Flushing memory queue to backlog file")
                 with open(path, 'a') as f:
                     while self.queue:
                         f.write('{0}, '.format(self.queue.popleft()))
