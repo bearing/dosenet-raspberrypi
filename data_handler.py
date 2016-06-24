@@ -84,6 +84,9 @@ class Data_Handler(object):
 	except socket.error:    
 	    if self.manager.protocol == 'new':
 	    	self.send_to_queue(cpm, cpm_err)
+		self.vprint(1, "Socket error: saving to queue in memory")
+	    else:
+	    	self.vprint(1, "Socket error: data not sent")
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
