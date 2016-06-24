@@ -23,7 +23,7 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
-    ntp-wait -n 3 -s 30
+    ntp-wait -n 10 -s 30
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py
     ;;
