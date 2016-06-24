@@ -65,9 +65,11 @@ class Data_Handler(object):
         """
 	Network is not up
 	"""
-	self.vprint(1, "Network down, not sending to server")
 	if self.manager.protocol == 'new':
 	    self.send_to_queue(cpm, cpm_err)
+	    self.vprint(1, "Network down, saving to queue in memory")
+	else:
+	    self.vprint(1, "Network down, not sending to server")  
 
     def regular_send(self, cpm, cpm_err):
         """
