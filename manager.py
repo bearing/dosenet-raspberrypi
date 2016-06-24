@@ -312,6 +312,8 @@ class Manager(object):
             raise RuntimeError
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
+            # SIGQUIT signal somehow interrupts time.sleep 
+            # which makes the retry argument needed
             self.sleep_until(end_time, retry=False)
         now = time.time()
         self.vprint(
