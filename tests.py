@@ -397,7 +397,7 @@ class DequeObject(unittest.TestCase):
         the deque object, checks if the Data_Handler class was 
         created. 
         """
-        mgr = Manager()
+        mgr = Manager(protocol='new')
         mgr.network_up = False
         
         now = time.time()
