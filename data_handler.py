@@ -112,6 +112,7 @@ class Data_Handler(object):
     	"""
     	if self.manager.protocol == 'new':
     	    if os.path.isfile(path):
+    	        vprint(2, "Flushing backlog file to memory queue")
     	        with open(path, 'r') as f:
     	            data = f.read()
     	        data = ast.literal_eval(data)
