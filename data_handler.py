@@ -105,7 +105,7 @@ class Data_Handler(object):
         Adds the time, cpm, and cpm_err to the deque object.
         """
         if self.manager.protocol == 'new':
-            time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+            time_string = time.time()
             self.queue.append([time_string, cpm, cpm_err])
             print(self.queue)
         
