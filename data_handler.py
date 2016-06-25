@@ -107,7 +107,6 @@ class Data_Handler(object):
         if self.manager.protocol == 'new':
             time_string = time.time()
             self.queue.append([time_string, cpm, cpm_err])
-            print(self.queue)
         
     def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE):
     	"""
