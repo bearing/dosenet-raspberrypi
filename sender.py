@@ -256,7 +256,7 @@ class ServerSender(object):
         """
         New protocol for send_cpm
         """
-        packet = self.construct_packet_new(tmestamp, cpm, cpm_error, error_code=error_code)
+        packet = self.construct_packet_new(timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
             self.send_data(encrypted)
