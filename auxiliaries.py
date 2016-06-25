@@ -271,7 +271,7 @@ class NetworkStatus(object):
         else:
             up_state.value = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
-            self.vprint(1, 'Network down for {} seconds'.format(time.time() - self.last_try_time))
+            self.vprint(3, 'Network down for {} seconds'.format(time.time() - self.last_try_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
             if time.time() - self.last_try_time >= 1800:
