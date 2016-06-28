@@ -14,6 +14,7 @@ from auxiliaries import LED, Config, PublicKey, NetworkStatus
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
+from data_handler import Data_Handler
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -21,30 +22,31 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import DEFAULT_DATALOG
+from globalvalues import DEFAULT_DATALOG, DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
 
 import csv
+import ast
+from collections import deque
+import os
+
+import socket
 
 def signal_term_handler(signal, frame):
-    print('got SIGTERM')
     # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
-# this is hacky, but, the {{}} get converted to {} in the first .format() call
-#   and then get filled in later
-CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
-strf = '%H:%M:%S'
+def signal_quit_handler(signal, frame):
+    # If SIGQUIT signal is intercepted, the SystemExit exception routines are ran if its right after an interval
+    mgr.quit_after_interval = True
 
+signal.signal(signal.SIGQUIT, signal_quit_handler)
 
 class Manager(object):
     """
@@ -78,8 +80,13 @@ class Manager(object):
                  logfile=None,
                  datalog=None,
                  datalogflag=False,
+                 protocol=DEFAULT_PROTOCOL,
                  ):
-
+        
+        self.quit_after_interval = False
+        
+        self.protocol = protocol
+        
         self.datalog = datalog
         self.datalogflag = datalogflag
 
@@ -118,7 +125,13 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-
+        self.data_handler = Data_Handler(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile)
+        
+        self.data_handler.backlog_to_queue()
+            
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
@@ -270,6 +283,8 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                if self.quit_after_interval:
+                    sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -284,7 +299,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time):
+    def sleep_until(self, end_time, retry=True):
         """
         Sleep until the given timestamp.
 
@@ -298,6 +313,10 @@ class Manager(object):
             # this shouldn't happen now that SleepError is raised and handled
             raise RuntimeError
         time.sleep(sleeptime)
+        if self.quit_after_interval and retry:
+            # SIGQUIT signal somehow interrupts time.sleep 
+            # which makes the retry argument needed
+            self.sleep_until(end_time, retry=False)
         now = time.time()
         self.vprint(
             2, 'sleep_until offset is {} seconds'.format(now - end_time))
@@ -328,40 +347,13 @@ class Manager(object):
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
 
     def handle_cpm(self, this_start, this_end):
-        """Get CPM from sensor, display text, send to server."""
-
+        """
+        Get CPM from sensor, display text, send to server.
+        """
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
-
-        start_text = datetime_from_epoch(this_start).strftime(strf)
-        end_text = datetime_from_epoch(this_end).strftime(strf)
-
-        self.vprint(1, CPM_DISPLAY_TEXT.format(
-            time=datetime_from_epoch(time.time()),
-            counts=counts,
-            cpm=cpm,
-            cpm_err=cpm_err,
-            start_time=start_text,
-            end_time=end_text,
-        ))
-        if self.test:
-            self.vprint(
-                1, ANSI_RED + " * Test mode, not sending to server * " +
-                ANSI_RESET)
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.config:
-            self.vprint(1, "Missing config file, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.publickey:
-            self.vprint(1, "Missing public key, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-        elif not self.network_up:
-            self.vprint(1, "Network down, not sending to server")
-            self.data_log(self.datalog, cpm, cpm_err)
-        else:
-            self.sender.send_cpm(cpm, cpm_err)
-            self.data_log(self.datalog, cpm, cpm_err)
-
+        self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
+        
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
@@ -376,7 +368,10 @@ class Manager(object):
         # power LED
         self.power_LED.off()
         GPIO.cleanup()
-
+        
+        # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon shutdown
+        self.data_handler.send_all_to_backlog()
+        
         # self. can I even do this?
         del(self)
 
@@ -449,7 +444,13 @@ class Manager(object):
         parser.add_argument(
             '--datalogflag', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
-
+        
+        # communication protocal
+        parser.add_argument(
+            '--protocol', '-r', default=DEFAULT_PROTOCOL,
+            help='Specify what communication protocol is to be used (default {})'.format(
+                DEFAULT_PROTOCOL))
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
@@ -472,3 +473,4 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+

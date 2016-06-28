@@ -12,7 +12,7 @@
 
 # setup paths and check config files
 HOME=/home/pi
-DOSENET=$HOME/dosenet-raspberrypi
+DOSENET=$HOME/dev/memory/dosenet-raspberrypi
 CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
@@ -22,6 +22,8 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
+    logger --stderr --id --tag $LOGTAG "Waiting for NTP to be synced..."
+    ntp-wait -n 10 -s 30
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py
@@ -29,6 +31,9 @@ case "$1" in
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
     sudo killall python &
+    ;;
+  finish)
+    sudo kill -s SIGQUIT
     ;;
   test)
     logger --stderr --id --tag $LOGTAG "Testing DoseNet script"

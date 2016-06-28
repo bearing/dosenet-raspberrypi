@@ -141,6 +141,26 @@ class ServerSender(object):
         else:
             self.vprint(3, 'Constructed packet')
             return raw_packet
+            
+    def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
+        """
+        New protocol version of construct packet.
+        """
+        
+        c = ','
+        try:
+            raw_packet = (
+                str(self.config.hash) + c +
+                str(self.config.ID) + c +
+                str(timestamp) + c +
+                str(cpm) + c +
+                str(cpm_error) + c +
+                str(error_code))
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
 
     def encrypt_packet(self, raw_packet):
         """Encrypt the raw packet"""
@@ -225,6 +245,18 @@ class ServerSender(object):
         """Construct, encrypt, and send the packet"""
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        if self.network_up or self.network_up is None:
+            self.send_data(encrypted)
+        else:
+            # TODO: feature add here
+            self.vprint(2, 'Network DOWN, not sending packet')
+            
+    def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
+        """
+        New protocol for send_cpm
+        """
+        packet = self.construct_packet_new(timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
             self.send_data(encrypted)
