@@ -22,31 +22,28 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import DEFAULT_DATALOG, DEFAULT_DATA_BACKLOG_FILE
-from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
 
-import csv
-import ast
-from collections import deque
-import os
-
-import socket
 
 def signal_term_handler(signal, frame):
-    # If SIGTERM signal is intercepted, the SystemExit exception routines are ran
+    # If SIGTERM signal is intercepted, the SystemExit exception routines
+    #   get run
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
+
 def signal_quit_handler(signal, frame):
-    # If SIGQUIT signal is intercepted, the SystemExit exception routines are ran if its right after an interval
+    # If SIGQUIT signal is intercepted, the SystemExit exception routines
+    #   get run if it's right after an interval
     mgr.quit_after_interval = True
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
+
 
 class Manager(object):
     """
@@ -82,11 +79,11 @@ class Manager(object):
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
                  ):
-        
+
         self.quit_after_interval = False
-        
+
         self.protocol = protocol
-        
+
         self.datalog = datalog
         self.datalogflag = datalogflag
 
@@ -129,9 +126,9 @@ class Manager(object):
             manager=self,
             verbosity=self.v,
             logfile=self.logfile)
-        
+
         self.data_handler.backlog_to_queue()
-            
+
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
@@ -212,7 +209,8 @@ class Manager(object):
         self.interval = interval
 
         if self.datalogflag:
-            self.vprint(1, 'Writing CPM to data log at {}'.format(self.datalog))
+            self.vprint(
+                1, 'Writing CPM to data log at {}'.format(self.datalog))
 
         if config:
             try:
@@ -314,7 +312,7 @@ class Manager(object):
             raise RuntimeError
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
-            # SIGQUIT signal somehow interrupts time.sleep 
+            # SIGQUIT signal somehow interrupts time.sleep
             # which makes the retry argument needed
             self.sleep_until(end_time, retry=False)
         now = time.time()
@@ -352,8 +350,9 @@ class Manager(object):
         """
         cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
         counts = int(round(cpm * self.interval / 60))
-        self.data_handler.main(self.datalog, cpm, cpm_err, this_start, this_end, counts)
-        
+        self.data_handler.main(
+            self.datalog, cpm, cpm_err, this_start, this_end, counts)
+
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
@@ -368,10 +367,11 @@ class Manager(object):
         # power LED
         self.power_LED.off()
         GPIO.cleanup()
-        
-        # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon shutdown
+
+        # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon
+        #   shutdown
         self.data_handler.send_all_to_backlog()
-        
+
         # self. can I even do this?
         del(self)
 
@@ -444,13 +444,13 @@ class Manager(object):
         parser.add_argument(
             '--datalogflag', '-a', action='store_true', default=False,
             help='Enable logging local data (default off)')
-        
+
         # communication protocal
         parser.add_argument(
             '--protocol', '-r', default=DEFAULT_PROTOCOL,
-            help='Specify what communication protocol is to be used (default {})'.format(
-                DEFAULT_PROTOCOL))
-        
+            help='Specify what communication protocol is to be used ' +
+            '(default {})'.format(DEFAULT_PROTOCOL))
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager(**arg_dict)
@@ -473,4 +473,3 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
-

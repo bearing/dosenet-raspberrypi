@@ -141,12 +141,12 @@ class ServerSender(object):
         else:
             self.vprint(3, 'Constructed packet')
             return raw_packet
-            
+
     def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol version of construct packet.
         """
-        
+
         c = ','
         try:
             raw_packet = (
@@ -251,12 +251,13 @@ class ServerSender(object):
         else:
             # TODO: feature add here
             self.vprint(2, 'Network DOWN, not sending packet')
-            
+
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol for send_cpm
         """
-        packet = self.construct_packet_new(timestamp, cpm, cpm_error, error_code=error_code)
+        packet = self.construct_packet_new(
+            timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         if self.network_up or self.network_up is None:
             self.send_data(encrypted)

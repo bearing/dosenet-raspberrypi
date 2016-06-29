@@ -84,14 +84,16 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
 
     class_instance.vprint = vprint
 
+
 def get_data(base_path=DEFAULT_DATALOG):
     """
     Argument is the path where the data-log is. Default is DEFAULT_DATALOG
     """
-    
+
     with open(base_path) as inputfile:
         results = list(csv.reader(inputfile))
     return results
+
 
 class LED(object):
     """
@@ -216,7 +218,7 @@ class NetworkStatus(object):
         self.led = network_led
         self.blink_period_s = 1.5
         self.last_try_time = None
-        
+
         self.logfile = logfile
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
@@ -255,7 +257,7 @@ class NetworkStatus(object):
         """
         if not self.last_try_time:
             self.last_try_time = time.time()
-        
+
         if up_state is None:
             up_state = self.up_state
 
@@ -271,7 +273,8 @@ class NetworkStatus(object):
         else:
             up_state.value = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
-            self.vprint(3, 'Network down for {} seconds'.format(time.time() - self.last_try_time))
+            self.vprint(3, 'Network down for {} seconds'.format(
+                time.time() - self.last_try_time))
             if self.led:
                 self.led.start_blink(interval=self.blink_period_s)
             if time.time() - self.last_try_time >= 1800:
@@ -279,7 +282,7 @@ class NetworkStatus(object):
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_try_time = time.time()
-            
+
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
         try:
@@ -319,6 +322,7 @@ class NetworkStatus(object):
         if self._p:
             self._p.terminate()
         self.pinging = False
+
 
 class Config(object):
     """

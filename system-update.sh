@@ -16,10 +16,9 @@
 LOGTAG=dosenet
 
 case $1 in
-  "10005")
-    echo "This is station #10005"
-    # commands for station 10005 to run
-
+  "9999")
+    echo "This is station #9999"
+    # commands for station 9999 to run
     ;;
   *)
     # commands for all stations besides 10005 to run

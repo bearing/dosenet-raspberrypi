@@ -14,7 +14,6 @@ if RPI:
 import sensor
 import sender
 import auxiliaries
-import manager
 import cust_crypt
 
 from auxiliaries import get_data
@@ -386,36 +385,34 @@ class TestDataLog(unittest.TestCase):
 
 
 class DequeObject(unittest.TestCase):
-    
+
     def setUp(self):
         print('Testing Deque Object')
-    
+
     def test_no_network(self):
         """
-        Creates a deque data structure, runs manager with no network, 
-        checks if deque was created, checks if cpm data was added to 
-        the deque object, checks if the Data_Handler class was 
-        created. 
+        Creates a deque data structure, runs manager with no network,
+        checks if deque was created, checks if cpm data was added to
+        the deque object, checks if the Data_Handler class was
+        created.
         """
         mgr = Manager(protocol='new')
         mgr.network_up = False
-        
+
         now = time.time()
         mgr.handle_cpm(now - 10, now)
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
-        
+
         self.assertIsNotNone(mgr.data_handler.queue)
         self.assertEqual(len(mgr.data_handler.queue), 2)
         self.assertIsNotNone(mgr.data_handler)
 
         GPIO.cleanup()
         del(mgr)
-    
+
     def tearDown(self):
         print()
-
-    # ...   
 
 
 if __name__ == '__main__':
