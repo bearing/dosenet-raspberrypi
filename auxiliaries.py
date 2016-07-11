@@ -174,7 +174,7 @@ class LED(object):
             self.off()
             sleep(interval / 2.0)
 
-
+'''
 class NetworkStatus(object):
     """
     Keep track of network status.
@@ -322,7 +322,7 @@ class NetworkStatus(object):
         if self._p:
             self._p.terminate()
         self.pinging = False
-
+'''
 
 class Config(object):
     """
