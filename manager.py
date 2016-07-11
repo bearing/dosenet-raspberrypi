@@ -10,7 +10,7 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, Config, PublicKey, #NetworkStatus
+from auxiliaries import LED, Config, PublicKey #NetworkStatus
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
