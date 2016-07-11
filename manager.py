@@ -17,7 +17,7 @@ from sender import ServerSender
 from data_handler import Data_Handler
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
-from globalvalues import POWER_LED_PIN, '''NETWORK_LED_PIN,''' COUNTS_LED_PIN
+from globalvalues import POWER_LED_PIN, COUNTS_LED_PIN #NETWORK_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
