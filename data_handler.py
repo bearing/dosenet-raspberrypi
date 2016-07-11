@@ -27,8 +27,13 @@ class Data_Handler(object):
     def __init__(self,
                  manager=None,
                  verbosity=1,
-                 logfile=None):
+                 logfile=None,
+                 hostname='dosenet.dhcp.lbl.gov',
+                 ):
 
+        self.hostname = hostname
+        self.last_try_time = None
+        
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -38,6 +43,31 @@ class Data_Handler(object):
         self.manager = manager
         self.queue = deque('')
 
+    def _ping(self):
+        """one ping"""
+        return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
+        
+    def update(self):
+        """
+        Update Network Status
+        """
+        if not self.last_try_time:
+            self.last_try_time = time.time()
+        
+        response = self._ping()
+        if response == 0:
+            self.last_try_time = time.time()
+            self.vprint(2, '  {} is UP'.format(self.hostname))
+        else:
+            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
+            self.vprint(3, 'Network down for {} seconds'.format(
+                time.time() - self.last_try_time))
+            if time.time() - self.last_try_time >= 1800:
+                self.vprint(1, 'Making network go back up')
+                os.system("sudo ifdown wlan1")
+                os.system("sudo ifup wlan1")
+                self.last_try_time = time.time()
+    
     def test_send(self, cpm, cpm_err):
         """
         Test Mode
@@ -138,7 +168,8 @@ class Data_Handler(object):
                 end_time=end_text))
 
         self.manager.data_log(datalog, cpm, cpm_err)
-
+        self.update()
+        
         if self.manager.test:
             self.test_send(cpm, cpm_err)
         elif not self.manager.config:
