@@ -44,7 +44,8 @@ class ServerSender(object):
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
-
+        self.manager = manager
+        
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -61,7 +62,7 @@ class ServerSender(object):
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
             self.vprint(1, 'ServerSender starting without Manager object')
-        self.manager = manager
+        #self.manager = manager
 
         try:
             if mode is None:
