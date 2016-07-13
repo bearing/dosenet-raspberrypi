@@ -10,6 +10,10 @@ import time
 import ast
 import os
 
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
+
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
     ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
