@@ -354,7 +354,7 @@ class Manager(object):
         del(self.sensor)
         
         # network
-        
+        self.data_handler.network_LED.off()
         
         # power LED
         self.power_LED.off()
