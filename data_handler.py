@@ -75,17 +75,17 @@ class Data_Handler(object):
             self.last_try_time = time.time()
             self.network_up = True
             if self.network_LED:
-                if self.network_led.blinker:
-                    self.network_led.stop_blink()
-                self.network_led.on()
+                if self.network_LED.blinker:
+                    self.network_LED.stop_blink()
+                self.network_LED.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             self.network_up = False
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
                 time.time() - self.last_try_time))
-            if self.network_led:
-                self.network_led.start_blink(interval=self.blink_period_s)
+            if self.network_LED:
+                self.network_LED.start_blink(interval=self.blink_period_s)
             if time.time() - self.last_try_time >= 1800:
                 self.vprint(1, 'Making network go back up')
                 os.system("sudo ifdown wlan1")
