@@ -47,7 +47,6 @@ class ServerSender(object):
           publickey, address and port will not be used.
         """
         self.manager = manager
-        self.data_handle = self.manager.data_handler
         
         self.v = verbosity
         if manager and logfile is None:
@@ -102,7 +101,7 @@ class ServerSender(object):
                     1, 'ServerSender starting without network status object')
                 self.network_up = None
             else:
-                self.network_up = self.data_handle.network_up
+                self.network_up = self.manager.data_handler.network_up
         else:
             self.network_up = network_status
 
