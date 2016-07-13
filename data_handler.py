@@ -36,6 +36,8 @@ class Data_Handler(object):
 
         self.hostname = hostname
         self.last_try_time = None
+        self.blink_period_s = 1.5
+        self.network_up = None
         
         self.v = verbosity
         if manager and logfile is None:
@@ -65,12 +67,14 @@ class Data_Handler(object):
         response = self._ping()
         if response == 0:
             self.last_try_time = time.time()
+            self.network_up = True
             if self.network_LED:
                 if self.network_led.blinker:
                     self.network_led.stop_blink()
                 self.network_led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
+            self.network_up = False
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
                 time.time() - self.last_try_time))
@@ -190,7 +194,7 @@ class Data_Handler(object):
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
             self.no_publickey_send(cpm, cpm_err)
-        elif not self.manager.network_up:
+        elif not self.network_up:
             self.no_network_send(cpm, cpm_err)
         else:
             self.regular_send(this_end, cpm, cpm_err)
