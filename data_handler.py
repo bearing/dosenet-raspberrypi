@@ -1,7 +1,9 @@
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
+from auxillaries import LED
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
+from globalvalues import NETWORK_LED_PIN
 from collections import deque
 import socket
 import time
@@ -29,6 +31,7 @@ class Data_Handler(object):
                  verbosity=1,
                  logfile=None,
                  hostname='dosenet.dhcp.lbl.gov',
+                 network_LED_pin=NETWORK_LED_PIN,
                  ):
 
         self.hostname = hostname
@@ -42,6 +45,11 @@ class Data_Handler(object):
 
         self.manager = manager
         self.queue = deque('')
+        
+        if RPI:
+            self.network_LED = LED(network_LED_pin)
+        else:
+            self.network_LED = None
 
     def _ping(self):
         """one ping"""
@@ -57,11 +65,17 @@ class Data_Handler(object):
         response = self._ping()
         if response == 0:
             self.last_try_time = time.time()
+            if self.network_LED:
+                if self.network_led.blinker:
+                    self.network_led.stop_blink()
+                self.network_led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
                 time.time() - self.last_try_time))
+            if self.network_led:
+                self.network_led.start_blink(interval=self.blink_period_s)
             if time.time() - self.last_try_time >= 1800:
                 self.vprint(1, 'Making network go back up')
                 os.system("sudo ifdown wlan1")
