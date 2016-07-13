@@ -1,6 +1,6 @@
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
-from auxillaries import LED
+from auxiliaries import LED
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import NETWORK_LED_PIN
