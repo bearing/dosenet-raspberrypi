@@ -98,7 +98,7 @@ class ServerSender(object):
                     1, 'ServerSender starting without network status object')
                 self.network_up = None
             else:
-                self.network_up = manager.data_handler.network_up
+                self.network_up = self.manager.data_handler.network_up
         else:
             self.network_up = network_status
 
