@@ -98,7 +98,7 @@ class ServerSender(object):
                     1, 'ServerSender starting without network status object')
                 self.network_up = None
             else:
-                self.network_up = manager.network_up
+                self.network_up = manager.data_handler.network_up
         else:
             self.network_up = network_status
 
@@ -191,7 +191,7 @@ class ServerSender(object):
                 # (resolving DNS like dosenet.dhcp.lbl.gov)
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
-                self.network_up.update()
+                self.manager.data_handler.update()
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
                             '{}: {}'.format(*e))
@@ -206,7 +206,7 @@ class ServerSender(object):
                 # (IP like 131.243.51.241)
                 self.vprint(
                     1, 'Failed to send packet! Network is unreachable')
-                self.network_up.update()
+                self.manager.data_handler.update()
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
@@ -214,7 +214,7 @@ class ServerSender(object):
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.network_up.update()
+            self.manager.data_handler.update()
 
     def send_udp(self, encrypted):
         """
