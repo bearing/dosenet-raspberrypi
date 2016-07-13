@@ -54,7 +54,7 @@ class ServerSender(object):
 
         self.address = address
         self.handle_input(
-            manager, mode, port, network_status, config, publickey)
+            self.manager, mode, port, network_status, config, publickey)
 
     def handle_input(
             self, manager, mode, port, network_status, config, publickey):
