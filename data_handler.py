@@ -52,6 +52,8 @@ class Data_Handler(object):
             self.network_LED = LED(network_LED_pin)
         else:
             self.network_LED = None
+        
+        self.update()
 
     def _ping(self):
         """one ping"""
