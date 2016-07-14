@@ -58,7 +58,7 @@ class Data_Handler(object):
         if not self.last_try_time:
             self.last_try_time = time.time()
         
-        response = self._ping()
+        #response = self._ping()
         '''if response == 0:
             self.last_try_time = time.time()
             self.network_up = True
