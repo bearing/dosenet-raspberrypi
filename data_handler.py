@@ -1,18 +1,12 @@
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
-from auxiliaries import LED
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
-from globalvalues import NETWORK_LED_PIN
 from collections import deque
 import socket
 import time
 import ast
 import os
-
-from globalvalues import RPI
-if RPI:
-    import RPi.GPIO as GPIO
 
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
@@ -35,7 +29,6 @@ class Data_Handler(object):
                  verbosity=1,
                  logfile=None,
                  hostname='dosenet.dhcp.lbl.gov',
-                 network_LED_pin=NETWORK_LED_PIN,
                  ):
 
         self.hostname = hostname
@@ -52,10 +45,7 @@ class Data_Handler(object):
         self.manager = manager
         self.queue = deque('')
         
-        if RPI:
-            self.network_LED = LED(network_LED_pin)
-        else:
-            self.network_LED = None
+        self.network_LED = self.manager.network_LED
         
         self.update()
 
