@@ -68,7 +68,7 @@ class Data_Handler(object):
                 time.time() - self.last_try_time))
             if self.network_LED:
                 self.network_LED.start_blink(interval=self.blink_period_s)
-            if time.time() - self.last_try_time >= 1800:
+            if time.time() - self.last_try_time >= 18:
                 self.vprint(1, 'Making network go back up')
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
