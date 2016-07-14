@@ -59,7 +59,7 @@ class Data_Handler(object):
             self.last_try_time = time.time()
         
         response = self._ping()
-        if response == 0:
+        '''if response == 0:
             self.last_try_time = time.time()
             self.network_up = True
             '''if self.network_LED:
@@ -79,7 +79,7 @@ class Data_Handler(object):
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_try_time = time.time()
-    
+        '''
     def test_send(self, cpm, cpm_err):
         """
         Test Mode
