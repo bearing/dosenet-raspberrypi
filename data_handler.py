@@ -73,6 +73,7 @@ class Data_Handler(object):
                 os.system("sudo ifdown eth0")
                 os.system("sudo ifup eth0")
                 self.last_try_time = time.time()
+                self.network_up = True
 
     def test_send(self, cpm, cpm_err):
         """
@@ -98,6 +99,7 @@ class Data_Handler(object):
         """
         Network is not up
         """
+        self.update(1)
         if self.manager.protocol == 'new':
             self.send_to_queue(cpm, cpm_err)
             self.vprint(1, "Network down, saving to queue in memory")
