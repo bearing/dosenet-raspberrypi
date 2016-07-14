@@ -355,7 +355,7 @@ class Manager(object):
         # sensor
         self.sensor.cleanup()
         del(self.sensor)
-        
+
         # network
         self.data_handler.network_LED.off()
         
