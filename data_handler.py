@@ -47,13 +47,13 @@ class Data_Handler(object):
         
         self.network_LED = self.manager.network_LED
         
-    def update(self):
+    def update(self, mode):
         """
         Update Network Status
         """
         if not self.last_try_time:
             self.last_try_time = time.time()
-        try: 
+        if mode == 0:
             self.last_try_time = time.time()
             self.network_up = True
             if self.network_LED:
@@ -61,7 +61,7 @@ class Data_Handler(object):
                     self.nework_LED.stop_blink()
                 self.network_LED.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
-        except socket.error:
+        if mode == 1:
             self.network_up = False
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
@@ -103,32 +103,12 @@ class Data_Handler(object):
             self.vprint(1, "Network down, saving to queue in memory")
         else:
             self.vprint(1, "Network down, not sending to server")
-        self.network_up = False
-        self.vprint(1, '  {} is DOWN!'.format(self.hostname))
-        self.vprint(3, 'Network down for {} seconds'.format(
-            time.time() - self.last_try_time))
-        if self.network_LED:
-            self.network_LED.start_blink(interval=self.blink_period_s)
-        if time.time() - self.last_try_time >= 18:
-            self.vprint(1, 'Making network go back up')
-            os.system("sudo ifdown wlan1")
-            os.system("sudo ifup wlan1")
-            self.last_try_time = time.time()
 
     def regular_send(self, this_end, cpm, cpm_err):
         """
         Normal send
         """
-        if not self.last_try_time:
-            self.last_try_time = time.time()
         try:
-            self.last_try_time = time.time()
-            self.network_up = True
-            if self.network_LED:
-                if self.network_LED.blinker:
-                    self.nework_LED.stop_blink()
-                self.network_LED.on()
-            self.vprint(2, '  {} is UP'.format(self.hostname))
             if self.manager.protocol == 'new':
                 self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
                 if self.queue:
@@ -145,17 +125,6 @@ class Data_Handler(object):
                 self.vprint(1, "Socket error: saving to queue in memory")
             else:
                 self.vprint(1, "Socket error: data not sent")
-            self.network_up = False
-            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
-            self.vprint(3, 'Network down for {} seconds'.format(
-                time.time() - self.last_try_time))
-            if self.network_LED:
-                self.network_LED.start_blink(interval=self.blink_period_s)
-            if time.time() - self.last_try_time >= 18:
-                self.vprint(1, 'Making network go back up')
-                os.system("sudo ifdown wlan1")
-                os.system("sudo ifup wlan1")
-                self.last_try_time = time.time()
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
@@ -205,7 +174,6 @@ class Data_Handler(object):
                 end_time=end_text))
 
         self.manager.data_log(datalog, cpm, cpm_err)
-        #self.update()
         
         if self.manager.test:
             self.test_send(cpm, cpm_err)
