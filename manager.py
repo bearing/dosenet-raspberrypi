@@ -17,7 +17,7 @@ from sender import ServerSender
 from data_handler import Data_Handler
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
-from globalvalues import POWER_LED_PIN, COUNTS_LED_PIN
+from globalvalues import POWER_LED_PIN, COUNTS_LED_PIN, NETWORK_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
@@ -60,6 +60,7 @@ class Manager(object):
     #   in order to avoid unpacking them individually.
     # The None's are handled differently, depending on whether test mode.
     def __init__(self,
+                 network_LED_pin=NETWORK_LED_PIN,
                  power_LED_pin=POWER_LED_PIN,
                  counts_LED_pin=COUNTS_LED_PIN,
                  signal_pin=SIGNAL_PIN,
@@ -96,11 +97,13 @@ class Manager(object):
         # LEDs
         if RPI:
             self.power_LED = LED(power_LED_pin)
+            self.network_LED = LED(network_LED_pin)
             self.counts_LED = LED(counts_LED_pin)
 
             self.power_LED.on()
         else:
             self.power_LED = None
+            self.network_LED = None
             self.counts_LED = None
 
         # other objects
