@@ -14,8 +14,6 @@ import time
 from contextlib import closing
 import errno
 
-from data_handler import Data_Handler
-
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
