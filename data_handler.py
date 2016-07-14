@@ -46,10 +46,6 @@ class Data_Handler(object):
         self.queue = deque('')
         
         self.network_LED = self.manager.network_LED
-
-    def _ping(self):
-        """one ping"""
-        return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
         
     def update(self):
         """
@@ -57,17 +53,15 @@ class Data_Handler(object):
         """
         if not self.last_try_time:
             self.last_try_time = time.time()
-        
-        #response = self._ping()
-        '''if response == 0:
+        try: 
             self.last_try_time = time.time()
-            self.network_up = True
+            self.network_up = true
             if self.network_LED:
                 if self.network_LED.blinker:
-                    self.network_LED.stop_blink()
+                    self.nework_LED.stop_blink()
                 self.network_LED.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
-        else:
+        except socket.error:
             self.network_up = False
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
@@ -79,7 +73,7 @@ class Data_Handler(object):
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_try_time = time.time()
-        '''
+
     def test_send(self, cpm, cpm_err):
         """
         Test Mode
