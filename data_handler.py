@@ -46,8 +46,6 @@ class Data_Handler(object):
         self.queue = deque('')
         
         self.network_LED = self.manager.network_LED
-        
-        #self.update()
 
     def _ping(self):
         """one ping"""
