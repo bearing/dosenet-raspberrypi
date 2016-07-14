@@ -62,10 +62,10 @@ class Data_Handler(object):
         '''if response == 0:
             self.last_try_time = time.time()
             self.network_up = True
-            '''if self.network_LED:
+            if self.network_LED:
                 if self.network_LED.blinker:
                     self.network_LED.stop_blink()
-                self.network_LED.on()'''
+                self.network_LED.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
             self.network_up = False
