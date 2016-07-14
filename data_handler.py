@@ -55,7 +55,7 @@ class Data_Handler(object):
             self.last_try_time = time.time()
         try: 
             self.last_try_time = time.time()
-            self.network_up = true
+            self.network_up = True
             if self.network_LED:
                 if self.network_LED.blinker:
                     self.nework_LED.stop_blink()
