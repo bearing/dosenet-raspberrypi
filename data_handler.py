@@ -58,7 +58,7 @@ class Data_Handler(object):
             self.network_up = True
             if self.network_LED:
                 if self.network_LED.blinker:
-                    self.nework_LED.stop_blink()
+                    self.network_LED.stop_blink()
                 self.network_LED.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         if mode == 1:
