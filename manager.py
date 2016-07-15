@@ -302,14 +302,11 @@ class Manager(object):
           end_time: number of seconds since epoch, e.g. time.time()
         """
         
-        print(time.time())
         sleeptime = end_time - time.time()
-        print(sleeptime)
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0:
             # this shouldn't happen now that SleepError is raised and handled
             raise RuntimeError
-        ''' Was raising error when turning back on internet '''
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
