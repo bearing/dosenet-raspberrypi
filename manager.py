@@ -281,6 +281,7 @@ class Manager(object):
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
                 self.data_handler.update(2)
+                print('done')
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
