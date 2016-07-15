@@ -306,11 +306,11 @@ class Manager(object):
         sleeptime = end_time - time.time()
         print(sleeptime)
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
-        #if sleeptime < 0:
+        if sleeptime < 0:
             # this shouldn't happen now that SleepError is raised and handled
-            #raise RuntimeError
+            raise RuntimeError
         ''' Was raising error when turning back on internet '''
-        time.sleep(self.interval)
+        time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
             # which makes the retry argument needed
