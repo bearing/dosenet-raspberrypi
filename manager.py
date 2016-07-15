@@ -309,7 +309,8 @@ class Manager(object):
         #if sleeptime < 0:
             # this shouldn't happen now that SleepError is raised and handled
             #raise RuntimeError
-        time.sleep(sleeptime)
+        ''' Was raising error when turning back on internet '''
+        time.sleep(self.interval)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
             # which makes the retry argument needed
