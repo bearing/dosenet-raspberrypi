@@ -303,9 +303,9 @@ class Manager(object):
 
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
-        if sleeptime < 0:
+        #if sleeptime < 0:
             # this shouldn't happen now that SleepError is raised and handled
-            raise RuntimeError
+            #raise RuntimeError
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
