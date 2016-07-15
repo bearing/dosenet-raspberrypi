@@ -301,7 +301,8 @@ class Manager(object):
         Input:
           end_time: number of seconds since epoch, e.g. time.time()
         """
-
+        
+        print(time.time())
         sleeptime = end_time - time.time()
         print(sleeptime)
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
