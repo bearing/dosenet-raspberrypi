@@ -280,6 +280,7 @@ class Manager(object):
                 if self.quit_after_interval:
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
+                self.data_handler.update(2)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
