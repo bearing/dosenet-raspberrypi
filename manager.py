@@ -256,7 +256,6 @@ class Manager(object):
                     datetime_from_epoch(time.time()),
                     datetime_from_epoch(this_end)))
                 try:
-                    print(this_end)
                     self.sleep_until(this_end)
                 except SleepError:
                     self.vprint(1, 'SleepError: system clock skipped ahead!')
@@ -301,7 +300,7 @@ class Manager(object):
         Input:
           end_time: number of seconds since epoch, e.g. time.time()
         """
-        
+
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0:
