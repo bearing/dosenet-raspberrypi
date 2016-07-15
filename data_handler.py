@@ -75,7 +75,6 @@ class Data_Handler(object):
                 os.system("sudo ifup eth0")
                 self.last_try_time = time.time()
                 self.network_up = True
-                self.manager.run()
     
     def test_send(self, cpm, cpm_err):
         """
