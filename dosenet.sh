@@ -22,6 +22,15 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
+    ping -c4 192.168.1.1 > /dev/null
+ 
+    if [ $? != 0 ] 
+    then
+      echo "No network connection, restarting eth0"
+      sudo ifdown eth0
+      sleep 5
+      sudo ifup eth0
+    fi
     logger --stderr --id --tag $LOGTAG "Waiting for NTP to be synced..."
     sudo service ntp stop
     sudo ntpd -gq
