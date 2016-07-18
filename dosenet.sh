@@ -22,7 +22,7 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
-    ping -c4 192.168.1.1 > /dev/null
+    ping -c4 192.168.5.1 > /dev/null
  
     if [ $? != 0 ] 
     then
