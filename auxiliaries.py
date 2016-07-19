@@ -218,7 +218,7 @@ class NetworkStatus(object):
         self.led = network_led
         self.blink_period_s = 1.5
         self.last_try_time = None
-        self.upstate = None
+        self.up_state = None
         
         self.logfile = logfile
         self.v = verbosity
