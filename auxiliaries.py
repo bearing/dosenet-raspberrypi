@@ -225,13 +225,14 @@ class NetworkStatus(object):
 
         init_state = 'N'    # for None
         self.up_state = multiprocessing.Value('c', init_state)
-
+    '''
         self._p = None
         if pinging:
             self.start_pinging()
         else:
             self.pinging = False
-
+    '''
+    '''
     def start_pinging(self):
         """Start the subprocess that pings at intervals"""
         if self._p:
@@ -247,7 +248,7 @@ class NetworkStatus(object):
         if self._p:
             self._p.terminate()
         self.pinging = False
-
+    '''
     def update(self, up_state=None):
         """
         Update network status.
@@ -282,7 +283,7 @@ class NetworkStatus(object):
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_try_time = time.time()
-
+    '''
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
         try:
@@ -296,7 +297,7 @@ class NetworkStatus(object):
             if self.logfile:
                 with open(self.logfile, 'a') as f:
                     traceback.print_exc(15, f)
-
+    '''
     def _ping(self):
         """one ping"""
         return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
@@ -319,10 +320,11 @@ class NetworkStatus(object):
 
     def cleanup(self):
         GPIO.cleanup()
+        '''
         if self._p:
             self._p.terminate()
         self.pinging = False
-
+        '''
 
 class Config(object):
     """
