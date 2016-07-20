@@ -223,12 +223,12 @@ class NetworkStatus(object):
         self.logfile = logfile
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
-    '''
+    
         init_state = 'N'    # for None
         self.up_state = multiprocessing.Value('c', init_state)
-    '''
-    '''
+    
         self._p = None
+    '''
         if pinging:
             self.start_pinging()
         else:
@@ -261,20 +261,20 @@ class NetworkStatus(object):
         if not self.last_try_time:
             self.last_try_time = time.time()
         
-        #if up_state is None:
-            #up_state = self.up_state
+        if up_state is None:
+            up_state = self.up_state
         
         response = self._ping()
         if response == 0:
             self.last_try_time = time.time()
-            self.up_state = True
+            up_state.value = 'U'
             if self.led:
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         else:
-            self.up_state = False
+            up_state.value = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
                 time.time() - self.last_try_time))
@@ -305,9 +305,9 @@ class NetworkStatus(object):
         return os.system('ping -c 1 {} > /dev/null'.format(self.hostname))
 
     def _get_state(self):
-        if self.up_state == True:
+        if self.up_state.value == 'U':
             return True
-        if self.up_state == False:
+        if self.up_state == 'D':
             return False
         else:
             self.update()
