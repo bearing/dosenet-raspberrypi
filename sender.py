@@ -44,7 +44,7 @@ class ServerSender(object):
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
-
+        
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -195,11 +195,14 @@ class ServerSender(object):
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
                             '{}: {}'.format(*e))
+                self.network_down = True
+                self.network_up.update()
         except socket.error as e:
             if e[0] == errno.ECONNREFUSED:
                 # TCP
                 # server is not accepting connections
                 self.vprint(1, 'Failed to send packet! Connection refused')
+                self.network_up.update()
             elif e[0] == errno.ENETUNREACH:
                 # TCP and UDP
                 # network is down, but NetworkStatus didn't notice yet
@@ -211,6 +214,7 @@ class ServerSender(object):
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
                             '{}: {}'.format(*e))
+                self.network_up.update()
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
