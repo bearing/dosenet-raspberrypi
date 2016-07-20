@@ -260,8 +260,8 @@ class NetworkStatus(object):
 
         if up_state is None:
             up_state = self.up_state
-
-        response = self._ping()
+        response = 0
+        #response = self._ping()
         if response == 0:
             self.last_try_time = time.time()
             up_state.value = 'U'
