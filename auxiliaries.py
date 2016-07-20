@@ -237,14 +237,14 @@ class NetworkStatus(object):
         if not self.last_try_time:
             self.last_try_time = time.time()
         
-        if self.manager.sender.network_down == False:
-            self.last_try_time = time.time()
-            self.up_state = 'U'
-            if self.led:
-                if self.led.blinker:
-                    self.led.stop_blink()
-                self.led.on()
-            self.vprint(2, '  {} is UP'.format(self.hostname))
+        self.last_try_time = time.time()
+        self.up_state = 'U'
+        if self.led:
+            if self.led.blinker:
+                self.led.stop_blink()
+            self.led.on()
+        self.vprint(2, '  {} is UP'.format(self.hostname))
+        '''
         else:
             self.up_state = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
@@ -259,7 +259,7 @@ class NetworkStatus(object):
                 #os.system("sudo ifup wlan1")
                 #self.last_try_time = time.time()
                 #self.manager.sender.network_down = False
-
+        '''
     def _get_state(self):
         if self.up_state == 'U':
             return True
