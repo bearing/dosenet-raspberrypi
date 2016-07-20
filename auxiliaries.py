@@ -8,6 +8,7 @@ from time import sleep
 import os
 import traceback
 import time
+import socket
 
 from globalvalues import RPI
 if RPI:
@@ -264,8 +265,9 @@ class NetworkStatus(object):
         if up_state is None:
             up_state = self.up_state
         
-        response = self._ping()
-        if response == 0:
+        #response = self._ping()
+        try:
+        #if response == 0:
             self.last_try_time = time.time()
             up_state.value = 'U'
             if self.led:
@@ -273,7 +275,8 @@ class NetworkStatus(object):
                     self.led.stop_blink()
                 self.led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
-        else:
+        #else:
+        except socket.error:
             up_state.value = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
