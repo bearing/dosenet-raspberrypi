@@ -114,7 +114,8 @@ class Manager(object):
         self.network_up = NetworkStatus(
             network_led=self.network_LED,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            manager=self)
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
