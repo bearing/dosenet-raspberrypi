@@ -212,7 +212,9 @@ class NetworkStatus(object):
                  pinging=True,
                  verbosity=1,
                  logfile=None,
+                 manager=None,
                  ):
+        self.manager = manager
         self.hostname = hostname
         self.up_interval_s = up_interval_s
         self.down_interval_s = down_interval_s
