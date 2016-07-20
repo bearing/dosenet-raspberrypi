@@ -290,6 +290,7 @@ class NetworkStatus(object):
                 os.system("sudo ifdown wlan1")
                 os.system("sudo ifup wlan1")
                 self.last_try_time = time.time()
+                self.manager.sender.network_down = False
     '''
     def _do_pings(self, up_state):
         """Runs forever - only call as a subprocess"""
