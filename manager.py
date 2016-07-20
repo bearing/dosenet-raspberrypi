@@ -10,14 +10,14 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, Config, PublicKey, NetworkStatus
+from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
 from data_handler import Data_Handler
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN
-from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
+from globalvalues import POWER_LED_PIN, COUNTS_LED_PIN, NETWORK_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
@@ -111,8 +111,8 @@ class Manager(object):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.network_up = NetworkStatus(
-            network_led=self.network_LED,
+        self.data_handler = Data_Handler(
+            manager=self,
             verbosity=self.v,
             logfile=self.logfile)
         self.sender = ServerSender(
@@ -122,10 +122,6 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        self.data_handler = Data_Handler(
-            manager=self,
-            verbosity=self.v,
-            logfile=self.logfile)
 
         self.data_handler.backlog_to_queue()
 
@@ -284,6 +280,8 @@ class Manager(object):
                 if self.quit_after_interval:
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
+                #self.data_handler.update(2)
+                #print('done')
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
@@ -361,9 +359,8 @@ class Manager(object):
         del(self.sensor)
 
         # network
-        self.network_up.cleanup()
-        del(self.network_up)
-
+        self.data_handler.network_LED.off()
+        
         # power LED
         self.power_LED.off()
         GPIO.cleanup()

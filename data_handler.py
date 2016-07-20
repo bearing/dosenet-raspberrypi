@@ -27,8 +27,15 @@ class Data_Handler(object):
     def __init__(self,
                  manager=None,
                  verbosity=1,
-                 logfile=None):
+                 logfile=None,
+                 hostname='dosenet.dhcp.lbl.gov',
+                 ):
 
+        self.hostname = hostname
+        self.last_try_time = None
+        self.blink_period_s = 1.5
+        self.network_up = True
+        
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -37,7 +44,38 @@ class Data_Handler(object):
 
         self.manager = manager
         self.queue = deque('')
-
+        
+        self.network_LED = self.manager.network_LED
+        
+    def update(self, mode):
+        """
+        Update Network Status
+        """
+        if not self.last_try_time:
+            self.last_try_time = time.time()
+        if mode == 0:
+            self.last_try_time = time.time()
+            self.network_up = True
+            if self.network_LED:
+                if self.network_LED.blinker:
+                    self.network_LED.stop_blink()
+                self.network_LED.on()
+            self.vprint(2, '  {} is UP'.format(self.hostname))
+        if mode == 1:
+            self.network_up = False
+            self.vprint(1, '  {} is DOWN!'.format(self.hostname))
+            self.vprint(3, 'Network down for {} seconds'.format(
+                time.time() - self.last_try_time))
+            if self.network_LED:
+                self.network_LED.start_blink(interval=self.blink_period_s)
+        if mode == 2:    
+            if time.time() - self.last_try_time >= 18:
+                self.vprint(1, 'Making network go back up')
+                os.system("sudo ifdown eth0")
+                os.system("sudo ifup eth0")
+                self.last_try_time = time.time()
+                self.network_up = True
+    
     def test_send(self, cpm, cpm_err):
         """
         Test Mode
@@ -62,6 +100,7 @@ class Data_Handler(object):
         """
         Network is not up
         """
+        self.update(1)
         if self.manager.protocol == 'new':
             self.send_to_queue(cpm, cpm_err)
             self.vprint(1, "Network down, saving to queue in memory")
@@ -138,14 +177,14 @@ class Data_Handler(object):
                 end_time=end_text))
 
         self.manager.data_log(datalog, cpm, cpm_err)
-
+        
         if self.manager.test:
             self.test_send(cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
             self.no_publickey_send(cpm, cpm_err)
-        elif not self.manager.network_up:
+        elif not self.network_up:
             self.no_network_send(cpm, cpm_err)
         else:
             self.regular_send(this_end, cpm, cpm_err)
