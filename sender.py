@@ -45,7 +45,7 @@ class ServerSender(object):
           publickey, address and port will not be used.
         """
 
-        self.network_down = True
+        self.network_down = False
         
         self.v = verbosity
         if manager and logfile is None:
