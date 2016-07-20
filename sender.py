@@ -44,8 +44,6 @@ class ServerSender(object):
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
-
-        self.network_down = False
         
         self.v = verbosity
         if manager and logfile is None:
@@ -193,7 +191,6 @@ class ServerSender(object):
                 # (resolving DNS like dosenet.dhcp.lbl.gov)
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
-                self.network_down = True
                 self.network_up.update()
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
@@ -205,7 +202,6 @@ class ServerSender(object):
                 # TCP
                 # server is not accepting connections
                 self.vprint(1, 'Failed to send packet! Connection refused')
-                self.network_down = True
                 self.network_up.update()
             elif e[0] == errno.ENETUNREACH:
                 # TCP and UDP
@@ -213,18 +209,15 @@ class ServerSender(object):
                 # (IP like 131.243.51.241)
                 self.vprint(
                     1, 'Failed to send packet! Network is unreachable')
-                self.network_down = True
                 self.network_up.update()
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
                             '{}: {}'.format(*e))
-                self.network_down = True
                 self.network_up.update()
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.network_down = True
             self.network_up.update()
 
     def send_udp(self, encrypted):
