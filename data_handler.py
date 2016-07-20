@@ -62,6 +62,7 @@ class Data_Handler(object):
         """
         Network is not up
         """
+        self.manager.network_up.update()
         if self.manager.protocol == 'new':
             self.send_to_queue(cpm, cpm_err)
             self.vprint(1, "Network down, saving to queue in memory")
