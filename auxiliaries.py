@@ -266,7 +266,7 @@ class NetworkStatus(object):
             up_state = self.up_state
         
         #response = self._ping()
-        try:
+        if self.manager.send.network down == False:
         #if response == 0:
             self.last_try_time = time.time()
             up_state.value = 'U'
@@ -276,7 +276,7 @@ class NetworkStatus(object):
                 self.led.on()
             self.vprint(2, '  {} is UP'.format(self.hostname))
         #else:
-        except socket.error:
+        else:
             up_state.value = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
             self.vprint(3, 'Network down for {} seconds'.format(
