@@ -281,6 +281,7 @@ class NetworkStatus(object):
         else:
             self.up_state = 'D'
             self.vprint(1, '  {} is DOWN!'.format(self.hostname))
+            print(time.time() - self.last_try_time)
             self.vprint(3, 'Network down for {} seconds'.format(
                 time.time() - self.last_try_time))
             if self.led:
