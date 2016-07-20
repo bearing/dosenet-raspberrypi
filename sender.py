@@ -45,6 +45,8 @@ class ServerSender(object):
           publickey, address and port will not be used.
         """
 
+        self.network_down = None
+        
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -182,8 +184,10 @@ class ServerSender(object):
         try:
             if self.mode == 'udp':
                 self.send_udp(encrypted)
+                self.network_down = False
             elif self.mode == 'tcp':
                 self.send_tcp(encrypted)
+                self.network_down = False
         except socket.gaierror as e:
             if e[0] == socket.EAI_AGAIN:
                 # TCP and UDP
@@ -214,6 +218,7 @@ class ServerSender(object):
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
+            self.network_down = True
             self.network_up.update()
 
     def send_udp(self, encrypted):
