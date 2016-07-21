@@ -180,33 +180,27 @@ class ServerSender(object):
                 # (resolving DNS like dosenet.dhcp.lbl.gov)
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
-                self.manager.data_handler.flag = True
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
                             '{}: {}'.format(*e))
-                self.manager.data_handler.flag = True
         except socket.error as e:
             if e[0] == errno.ECONNREFUSED:
                 # TCP
                 # server is not accepting connections
                 self.vprint(1, 'Failed to send packet! Connection refused')
-                self.manager.data_handler.flag = True
             elif e[0] == errno.ENETUNREACH:
                 # TCP and UDP
                 # network is down, but NetworkStatus didn't notice yet
                 # (IP like 131.243.51.241)
                 self.vprint(
                     1, 'Failed to send packet! Network is unreachable')
-                self.manager.data_handler.flag = True
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
                             '{}: {}'.format(*e))
-                self.manager.data_handler.flag = True
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.manager.data_handler.flag = True
 
     def send_udp(self, encrypted):
         """
@@ -238,10 +232,11 @@ class ServerSender(object):
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.manager.data_handler.flag == False:
+        try:
             self.send_data(encrypted)
-        else:
+        except socket.error:
             # TODO: feature add here
+            self.manager.data_handler.no_network_send(cpm, cpm_error)
             self.vprint(2, 'Network DOWN, not sending packet')
 
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
@@ -251,10 +246,11 @@ class ServerSender(object):
         packet = self.construct_packet_new(
             timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.manager.data_handler.flag == False:
+        try:
             self.send_data(encrypted)
-        else:
+        except socket.error:
             # TODO: feature add here
+            self.manager.data_handler.no_network_send(cpm, cpm_error)
             self.vprint(2, 'Network DOWN, not sending packet')
 
 
