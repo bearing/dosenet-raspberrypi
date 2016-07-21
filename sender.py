@@ -174,7 +174,7 @@ class ServerSender(object):
             elif self.mode == 'tcp':
                 self.send_tcp(encrypted)
 
-    def send_udp(self, encrypted):
+   def send_udp(self, encrypted):
         """
         Send the encrypted packet over UDP
         """
