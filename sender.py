@@ -168,13 +168,12 @@ class ServerSender(object):
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
-        try:
-            if self.mode == 'udp':
-                self.send_udp(encrypted)
-            elif self.mode == 'tcp':
-                self.send_tcp(encrypted)
+        if self.mode == 'udp':
+            self.send_udp(encrypted)
+        elif self.mode == 'tcp':
+            self.send_tcp(encrypted)
 
-def send_udp(self, encrypted):
+    def send_udp(self, encrypted):
         """
         Send the encrypted packet over UDP
         """
