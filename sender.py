@@ -183,7 +183,7 @@ class ServerSender(object):
                 self.manager.data_handler.no_network_send(cpm, cpm_error)
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
-                            '{}: {}'.format(*e)
+                            '{}: {}'.format(*e))
                 self.manager.data_handler.no_network_send(cpm, cpm_error)
         except socket.error as e:
             if e[0] == errno.ECONNREFUSED:
