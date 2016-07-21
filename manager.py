@@ -78,6 +78,7 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
+                 test = None,
                  ):
 
         self.quit_after_interval = False
@@ -93,6 +94,8 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
+        
+        self.test = test
 
         # LEDs
         if RPI:
