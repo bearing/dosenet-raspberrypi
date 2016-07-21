@@ -53,10 +53,10 @@ class ServerSender(object):
 
         self.address = address
         self.handle_input(
-            manager, mode, port, network_status, config, publickey)
+            manager, mode, port, config, publickey)
 
     def handle_input(
-            self, manager, mode, port, network_status, config, publickey):
+            self, manager, mode, port, config, publickey):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
@@ -91,16 +91,6 @@ class ServerSender(object):
                 self.port = port
             self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
                 self.address, self.port))
-
-        if network_status is None:
-            if manager is None:
-                self.vprint(
-                    1, 'ServerSender starting without network status object')
-                self.network_up = None
-            else:
-                self.network_up = manager.network_up
-        else:
-            self.network_up = network_status
 
         if config is None:
             if manager is None:
@@ -191,30 +181,33 @@ class ServerSender(object):
                 # (resolving DNS like dosenet.dhcp.lbl.gov)
                 self.vprint(
                     1, 'Failed to send packet! Address resolution error')
-                self.network_up.update()
+                self.manager.data_handler.flag = True
             else:
                 self.vprint(1, 'Failed to send packet! Address error: ' +
                             '{}: {}'.format(*e))
+                self.manager.data_handler.flag = True
         except socket.error as e:
             if e[0] == errno.ECONNREFUSED:
                 # TCP
                 # server is not accepting connections
                 self.vprint(1, 'Failed to send packet! Connection refused')
+                self.manager.data_handler.flag = True
             elif e[0] == errno.ENETUNREACH:
                 # TCP and UDP
                 # network is down, but NetworkStatus didn't notice yet
                 # (IP like 131.243.51.241)
                 self.vprint(
                     1, 'Failed to send packet! Network is unreachable')
-                self.network_up.update()
+                self.manager.data_handler.flag = True
             else:
                 # consider handling errno.ECONNABORTED, errno.ECONNRESET
                 self.vprint(1, 'Failed to send packet! Socket error: ' +
                             '{}: {}'.format(*e))
+                self.manager.data_handler.flag = True
         except socket.timeout:
             # TCP
             self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.network_up.update()
+            self.manager.data_handler.flag = True
 
     def send_udp(self, encrypted):
         """
@@ -246,7 +239,7 @@ class ServerSender(object):
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.network_up or self.network_up is None:
+        if self.manager.data_handler.flag == False:
             self.send_data(encrypted)
         else:
             # TODO: feature add here
@@ -259,7 +252,7 @@ class ServerSender(object):
         packet = self.construct_packet_new(
             timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.network_up or self.network_up is None:
+        if self.manager.data_handler.flag == False:
             self.send_data(encrypted)
         else:
             # TODO: feature add here
