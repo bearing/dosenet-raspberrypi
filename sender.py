@@ -162,7 +162,7 @@ class ServerSender(object):
         else:
             return encrypted
 
-    def send_data(self, encrypted, cpm, cpm_err):
+    def send_data(self, encrypted, cpm=None, cpm_err=None):
         """
         Send data according to self.mode, and handle common errors
         """
