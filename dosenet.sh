@@ -28,7 +28,7 @@ case "$1" in
     sudo service ntp start
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager.py
+    sudo screen -dm python $DOSENET/manager.py -i 10
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
