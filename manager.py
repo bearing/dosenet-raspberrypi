@@ -114,7 +114,8 @@ class Manager(object):
         self.data_handler = Data_Handler(
             manager=self,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            network_led=self.network_LED)
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
