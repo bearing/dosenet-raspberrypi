@@ -111,8 +111,8 @@ class Manager(object):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.network_up = NetworkStatus(
-            network_led=self.network_LED,
+        self.data_handler = Data_Handler(
+            manager=self,
             verbosity=self.v,
             logfile=self.logfile)
         self.sender = ServerSender(
@@ -122,10 +122,6 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        self.data_handler = Data_Handler(
-            manager=self,
-            verbosity=self.v,
-            logfile=self.logfile)
 
         self.data_handler.backlog_to_queue()
 
