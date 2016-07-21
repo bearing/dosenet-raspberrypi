@@ -30,7 +30,6 @@ class ServerSender(object):
 
     def __init__(self,
                  manager=None,
-                 network_status=None,
                  address=DEFAULT_HOSTNAME,
                  port=None,
                  config=None,
