@@ -151,7 +151,7 @@ class Data_Handler(object):
         self.manager.data_log(datalog, cpm, cpm_err)
 
         if self.manager.test:
-            self.no_network_send(cpm_err)
+            self.no_network_send(cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
