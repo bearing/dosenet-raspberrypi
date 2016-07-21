@@ -301,8 +301,10 @@ class DequeObject(unittest.TestCase):
 
         now = time.time()
         mgr.handle_cpm(now - 10, now)
+        print(mgr.data_hander.queue)
         [mgr.sensor.count() for _ in xrange(2)]
         mgr.handle_cpm(now, now + 10)
+        print(mgr.data_handler.queue)
 
         self.assertIsNotNone(mgr.data_handler.queue)
         self.assertEqual(len(mgr.data_handler.queue), 2)
