@@ -173,42 +173,7 @@ class ServerSender(object):
                 self.send_udp(encrypted)
             elif self.mode == 'tcp':
                 self.send_tcp(encrypted)
-        '''
-        except socket.gaierror as e:
-            if e[0] == socket.EAI_AGAIN:
-                # TCP and UDP
-                # network is down, but NetworkStatus didn't notice yet
-                # (resolving DNS like dosenet.dhcp.lbl.gov)
-                self.vprint(
-                    1, 'Failed to send packet! Address resolution error')
-                self.manager.data_handler.no_network_send(cpm, cpm_error)
-            else:
-                self.vprint(1, 'Failed to send packet! Address error: ' +
-                            '{}: {}'.format(*e))
-                self.manager.data_handler.no_network_send(cpm, cpm_error)
-        except socket.error as e:
-            if e[0] == errno.ECONNREFUSED:
-                # TCP
-                # server is not accepting connections
-                self.vprint(1, 'Failed to send packet! Connection refused')
-                self.manager.data_handler.no_network_send(cpm, cpm_error)
-            elif e[0] == errno.ENETUNREACH:
-                # TCP and UDP
-                # network is down, but NetworkStatus didn't notice yet
-                # (IP like 131.243.51.241)
-                self.vprint(
-                    1, 'Failed to send packet! Network is unreachable')
-                self.manager.data_handler.no_network_send(cpm, cpm_error)
-            else:
-                # consider handling errno.ECONNABORTED, errno.ECONNRESET
-                self.vprint(1, 'Failed to send packet! Socket error: ' +
-                            '{}: {}'.format(*e))
-                self.manager.data_handler.no_network_send(cpm, cpm_error)
-        except socket.timeout:
-            # TCP
-            self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.manager.data_handler.no_network_send(cpm, cpm_error)
-'''
+
     def send_udp(self, encrypted):
         """
         Send the encrypted packet over UDP
