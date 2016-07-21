@@ -10,7 +10,7 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, Config, PublicKey, NetworkStatus
+from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
@@ -355,10 +355,6 @@ class Manager(object):
         # sensor
         self.sensor.cleanup()
         del(self.sensor)
-
-        # network
-        self.network_up.cleanup()
-        del(self.network_up)
 
         # power LED
         self.power_LED.off()
