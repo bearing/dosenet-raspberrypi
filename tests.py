@@ -148,103 +148,6 @@ class TestLEDs(unittest.TestCase):
         print()
 
 
-class TestNetworkStatus(unittest.TestCase):
-    """
-    Doesn't use the auto pinging subprocess - just manually run methods
-    """
-
-    good_hostname = 'www.google.com'
-    bad_hostname = 'asnbdfmnasdbf.dosenet.dhcp.lbl.gov'
-
-    def setUp(self):
-        if RPI:
-            self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
-        else:
-            self.LED = None
-        print('Testing NetworkStatus')
-
-        self.net = auxiliaries.NetworkStatus(
-            hostname=self.good_hostname,
-            network_led=self.LED,
-            pinging=False,
-            verbosity=2)
-
-    def test_is_up(self):
-        self.net.update()
-        self.assertTrue(self.net)
-
-    def test_is_down(self):
-        # give an invalid hostname
-        self.net.hostname = self.bad_hostname
-        self.net.update()
-
-        self.assertFalse(self.net)
-
-        self.net.hostname = self.good_hostname
-        self.net.update()
-
-    def tearDown(self):
-        if RPI:
-            GPIO.cleanup()
-        del(self.net)
-        print()
-
-
-@unittest.skipUnless(
-    RPI, "NetworkStatus live test only operates on a Raspberry Pi")
-class TestNetworkStatusLive(TestNetworkStatus):
-    """
-    check the subprocess that pings at intervals
-    also check LED behavior
-    """
-
-    # inherit good_hostname, bad_hostname
-    # overwrite setUp(), tearDown(), test_is_up(), test_is_down()
-
-    def setUp(self):
-        self.LED = auxiliaries.LED(pin=NETWORK_LED_PIN)
-        print('Testing NetworkStatus (live)')
-
-        self.net = auxiliaries.NetworkStatus(
-            hostname=self.good_hostname,
-            up_interval_s=3,
-            down_interval_s=1,
-            network_led=self.LED,
-            pinging=True,
-            verbosity=2)
-
-    def test_is_up(self):
-        print('test_is_up (live)...')
-        time.sleep(2)
-        self.assertTrue(self.net)
-        time.sleep(6)
-        self.assertTrue(self.net)
-
-    @unittest.skip(
-        ("test_is_down (live) doesn't work until I can " +
-         "hack the system network settings..."))
-    def test_is_down(self):
-        print('test_is_down (live)...')
-        # give an invalid hostname
-        self.net.hostname = self.bad_hostname
-
-        time.sleep(3)
-        self.assertFalse(self.net)
-        time.sleep(3)
-
-        # restore connection
-        self.net.hostname = self.good_hostname
-
-        time.sleep(1)
-        self.assertTrue(self.net)
-        time.sleep(3)
-        self.assertTrue(self.net)
-
-    def tearDown(self):
-        self.net.stop_pinging()
-        GPIO.cleanup()
-
-
 @unittest.skipUnless(configs_present, "Config test requires config files")
 class TestConfig(unittest.TestCase):
 
@@ -312,7 +215,6 @@ class TestSender(unittest.TestCase):
     def test_missing_config(self):
         ss = sender.ServerSender(
             manager=None,
-            network_status=None,
             config=None,
             publickey=None,
             verbosity=4)
@@ -323,7 +225,6 @@ class TestSender(unittest.TestCase):
     def test_missing_publickey(self):
         ss = sender.ServerSender(
             manager=None,
-            network_status=None,
             config=auxiliaries.Config(test_config_path),
             publickey=None,
             verbosity=4)
@@ -397,7 +298,6 @@ class DequeObject(unittest.TestCase):
         created.
         """
         mgr = Manager(protocol='new')
-        mgr.network_up = False
 
         now = time.time()
         mgr.handle_cpm(now - 10, now)
