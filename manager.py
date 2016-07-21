@@ -65,7 +65,6 @@ class Manager(object):
                  counts_LED_pin=COUNTS_LED_PIN,
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
-                 test=False,
                  sender_mode=DEFAULT_SENDER_MODE,
                  interval=None,
                  config=None,
