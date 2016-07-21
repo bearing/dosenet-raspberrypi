@@ -42,7 +42,6 @@ class Data_Handler(object):
         
         self.blink_period_s = 1.5
         self.led = network_led
-        self.flag = False
         
     def test_send(self, cpm, cpm_err):
         """
