@@ -40,7 +40,6 @@ class Data_Handler(object):
         self.manager = manager
         self.queue = deque('')
         
-        self.flag = False
         self.blink_period_s = 1.5
         self.led = network_led
         
@@ -75,7 +74,6 @@ class Data_Handler(object):
             self.vprint(1, "Network down, saving to queue in memory")
         else:
             self.vprint(1, "Network down, not sending to server")
-        self.flag = False
 
     def regular_send(self, this_end, cpm, cpm_err):
         """
@@ -158,7 +156,5 @@ class Data_Handler(object):
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
             self.no_publickey_send(cpm, cpm_err)
-        elif self.flag:
-            self.no_network_send(cpm, cpm_err)
         else:
             self.regular_send(this_end, cpm, cpm_err)
