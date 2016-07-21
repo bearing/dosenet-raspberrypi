@@ -27,7 +27,9 @@ class Data_Handler(object):
     def __init__(self,
                  manager=None,
                  verbosity=1,
-                 logfile=None):
+                 logfile=None,
+                 network_led=None,
+                 ):
 
         self.v = verbosity
         if manager and logfile is None:
@@ -37,7 +39,11 @@ class Data_Handler(object):
 
         self.manager = manager
         self.queue = deque('')
-
+        
+        self.flag = False
+        self.blink_period_s = 1.5
+        self.led = network_led
+        
     def test_send(self, cpm, cpm_err):
         """
         Test Mode
@@ -62,16 +68,23 @@ class Data_Handler(object):
         """
         Network is not up
         """
+        if self.led:
+            self.led.start_blink(interval=self.blink_period_s)
         if self.manager.protocol == 'new':
             self.send_to_queue(cpm, cpm_err)
             self.vprint(1, "Network down, saving to queue in memory")
         else:
             self.vprint(1, "Network down, not sending to server")
+        self.flag = False
 
     def regular_send(self, this_end, cpm, cpm_err):
         """
         Normal send
         """
+        if self.led:
+            if self.led.blinker:
+                self.led.stop_blink()
+            self.led.on()
         try:
             if self.manager.protocol == 'new':
                 self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
@@ -145,7 +158,7 @@ class Data_Handler(object):
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
             self.no_publickey_send(cpm, cpm_err)
-        elif not self.manager.network_up:
+        elif self.flag:
             self.no_network_send(cpm, cpm_err)
         else:
             self.regular_send(this_end, cpm, cpm_err)
