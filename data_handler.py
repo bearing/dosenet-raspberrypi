@@ -159,38 +159,34 @@ class Data_Handler(object):
         else:
             try:
                 self.regular_send(this_end, cpm, cpm_err)
-            except socket.gaierror as e:
-                if e[0] == socket.EAI_AGAIN:
-                    # TCP and UDP
-                    # network is down, but NetworkStatus didn't notice yet
-                    # (resolving DNS like dosenet.dhcp.lbl.gov)
-                    self.vprint(
-                        1, 'Failed to send packet! Address resolution error')
-                    self.send_to_memory(cpm, cpm_error)
-                else:
-                    self.vprint(1, 'Failed to send packet! Address error: ' +
-                                '{}: {}'.format(*e))
-                    self.send_to_memory(cpm, cpm_error)
-            except socket.error as e:
-                if e[0] == errno.ECONNREFUSED:
+            except (socket.gaierror, socket.error, socket.timeout) as e:
+                if e == socket.gaierror:
+                    if e[0] == socket.EAI_AGAIN:
+                        # TCP and UDP
+                        # network is down, but NetworkStatus didn't notice yet
+                        # (resolving DNS like dosenet.dhcp.lbl.gov)
+                        self.vprint(
+                            1, 'Failed to send packet! Address resolution error')
+                    else:
+                        self.vprint(1, 'Failed to send packet! Address error: ' +
+                                    '{}: {}'.format(*e))
+                elif e == socket.error:
+                    if e[0] == errno.ECONNREFUSED:
+                        # TCP
+                        # server is not accepting connections
+                        self.vprint(1, 'Failed to send packet! Connection refused')
+                    elif e[0] == errno.ENETUNREACH:
+                        # TCP and UDP
+                        # network is down, but NetworkStatus didn't notice yet
+                        # (IP like 131.243.51.241)
+                        self.vprint(
+                            1, 'Failed to send packet! Network is unreachable')
+                    else:
+                        # consider handling errno.ECONNABORTED, errno.ECONNRESET
+                        self.vprint(1, 'Failed to send packet! Socket error: ' +
+                                    '{}: {}'.format(*e))
+                elif e == socket.timeout:
                     # TCP
-                    # server is not accepting connections
-                    self.vprint(1, 'Failed to send packet! Connection refused')
-                    self.send_to_memory(cpm, cpm_error)
-                elif e[0] == errno.ENETUNREACH:
-                    # TCP and UDP
-                    # network is down, but NetworkStatus didn't notice yet
-                    # (IP like 131.243.51.241)
-                    self.vprint(
-                        1, 'Failed to send packet! Network is unreachable')
-                    self.send_to_memory(cpm, cpm_error)
-                else:
-                    # consider handling errno.ECONNABORTED, errno.ECONNRESET
-                    self.vprint(1, 'Failed to send packet! Socket error: ' +
-                                '{}: {}'.format(*e))
-                    self.send_to_memory(cpm, cpm_error)
-            except socket.timeout:
-                # TCP
-                self.vprint(1, 'Failed to send packet! Socket timeout')
+                    self.vprint(1, 'Failed to send packet! Socket timeout')
                 self.send_to_memory(cpm, cpm_error)
 
