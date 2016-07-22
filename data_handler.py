@@ -77,13 +77,12 @@ class Data_Handler(object):
 
     def regular_send(self, this_end, cpm, cpm_err):
         """
-        Normal send
+        Normal send. Socket errors are handled in the main method.
         """
         if self.led:
             if self.led.blinker:
                 self.led.stop_blink()
             self.led.on()
-        #try:
         if self.manager.protocol == 'new':
             self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
             if self.queue:
@@ -94,12 +93,6 @@ class Data_Handler(object):
                     trash[0], trash[1], trash[2])
         else:
             self.manager.sender.send_cpm(cpm, cpm_err)
-        #except socket.error:
-            #if self.manager.protocol == 'new':
-                #self.send_to_queue(cpm, cpm_err)
-                #self.vprint(1, "Socket error: saving to queue in memory")
-            #else:
-                #self.vprint(1, "Socket error: data not sent")
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
