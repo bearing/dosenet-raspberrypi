@@ -83,23 +83,23 @@ class Data_Handler(object):
             if self.led.blinker:
                 self.led.stop_blink()
             self.led.on()
-        try:
-            if self.manager.protocol == 'new':
-                self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
-                if self.queue:
-                    self.vprint(1, "Flushing memory queue to server")
-                while self.queue:
-                    trash = self.queue.popleft()
-                    self.manager.sender.send_cpm_new(
-                        trash[0], trash[1], trash[2])
-            else:
-                self.manager.sender.send_cpm(cpm, cpm_err)
-        except socket.error:
-            if self.manager.protocol == 'new':
-                self.send_to_queue(cpm, cpm_err)
-                self.vprint(1, "Socket error: saving to queue in memory")
-            else:
-                self.vprint(1, "Socket error: data not sent")
+        #try:
+        if self.manager.protocol == 'new':
+            self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
+            if self.queue:
+                self.vprint(1, "Flushing memory queue to server")
+            while self.queue:
+                trash = self.queue.popleft()
+                self.manager.sender.send_cpm_new(
+                    trash[0], trash[1], trash[2])
+        else:
+            self.manager.sender.send_cpm(cpm, cpm_err)
+        #except socket.error:
+            #if self.manager.protocol == 'new':
+                #self.send_to_queue(cpm, cpm_err)
+                #self.vprint(1, "Socket error: saving to queue in memory")
+            #else:
+                #self.vprint(1, "Socket error: data not sent")
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE):
         if self.manager.protocol == 'new':
