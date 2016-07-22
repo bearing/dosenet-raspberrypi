@@ -41,7 +41,7 @@ def main():
             serial = reading[0]
             dev_count = reading[1]
             if serial not in done_devices:
-                print reading
+                print reading[2]
             if dev_count >= count > 0:
                 done_devices.add(serial)
                 controller.stop_collector(serial)
