@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
     args = parser.parse_args()
     
-    total = np.zeros(4000, 1)
+    total = np.zeros((4000, 1))
     lst = np.array([])
 
     interval = int(args.interval)
