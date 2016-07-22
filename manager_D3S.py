@@ -45,7 +45,7 @@ def main():
                 total = reading[4]
                 print(len(total))
             else:
-                total += reading[4]
+                sum(total, reading[4])
                 print(len(total))
             lst.append(reading[4])
             serial = reading[0]
