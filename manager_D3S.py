@@ -42,10 +42,10 @@ def main():
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
             if total == 0:
-                total = reading[4]
+                total = np.array(reading[4])
                 print(len(total))
             else:
-                sum(total, reading[4])
+                total += np.array(reading[4])
                 print(len(total))
             lst.append(reading[4])
             serial = reading[0]
