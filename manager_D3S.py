@@ -50,7 +50,7 @@ def main():
             lst.append(reading[4])
             serial = reading[0]
             dev_count = reading[1]
-            if serial not in done_devices:
+           # if serial not in done_devices:
                 #print reading[4]
                # print total
                # print lst
