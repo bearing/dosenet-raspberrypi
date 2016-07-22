@@ -9,7 +9,7 @@ import numpy as np
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--transport', '-t', dest='transport', default='any')
-    parser.add_argument('--interval', '-i', dest='interval', default=1)
+    parser.add_argument('--interval', '-i', dest='interval', default=30)
     parser.add_argument('--count', '-c', dest='count', default=0)
     parser.add_argument('--device', '-d', dest='device', default='all')
     parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
