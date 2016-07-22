@@ -77,7 +77,7 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
-                 test = None,
+                 test=None,
                  ):
 
         self.quit_after_interval = False
