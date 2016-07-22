@@ -52,7 +52,7 @@ def main():
             dev_count = reading[1]
             if serial not in done_devices:
                 #print reading[4]
-                print total
+               # print total
                # print lst
             if dev_count >= count > 0:
                 done_devices.add(serial)
