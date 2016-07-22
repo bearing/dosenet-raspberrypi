@@ -17,6 +17,7 @@ def main():
     
     total = None
     lst = []
+    flag = True
 
     interval = int(args.interval)
     count = int(args.count)
@@ -41,9 +42,10 @@ def main():
     done_devices = set()
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
-            if not total:
+            if flag:
                 total = np.array(reading[4])
                 print(len(total))
+                flag = False
             else:
                 total += np.array(reading[4])
                 print(len(total))
