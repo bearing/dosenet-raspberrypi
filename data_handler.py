@@ -63,7 +63,7 @@ class Data_Handler(object):
         """
         self.vprint(1, "Missing public key, not sending to server")
 
-    def no_network_send(self, cpm, cpm_err):
+    def send_to_memory(self, cpm, cpm_err):
         """
         Network is not up
         """
@@ -151,7 +151,7 @@ class Data_Handler(object):
         self.manager.data_log(datalog, cpm, cpm_err)
 
         if self.manager.test:
-            self.no_network_send(cpm, cpm_err)
+            self.send_to_memory(cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
@@ -166,31 +166,31 @@ class Data_Handler(object):
                     # (resolving DNS like dosenet.dhcp.lbl.gov)
                     self.vprint(
                         1, 'Failed to send packet! Address resolution error')
-                    self.no_network_send(cpm, cpm_error)
+                    self.send_to_memory(cpm, cpm_error)
                 else:
                     self.vprint(1, 'Failed to send packet! Address error: ' +
                                 '{}: {}'.format(*e))
-                    self.no_network_send(cpm, cpm_error)
+                    self.send_to_memory(cpm, cpm_error)
             except socket.error as e:
                 if e[0] == errno.ECONNREFUSED:
                     # TCP
                     # server is not accepting connections
                     self.vprint(1, 'Failed to send packet! Connection refused')
-                    self.no_network_send(cpm, cpm_error)
+                    self.send_to_memory(cpm, cpm_error)
                 elif e[0] == errno.ENETUNREACH:
                     # TCP and UDP
                     # network is down, but NetworkStatus didn't notice yet
                     # (IP like 131.243.51.241)
                     self.vprint(
                         1, 'Failed to send packet! Network is unreachable')
-                    self.no_network_send(cpm, cpm_error)
+                    self.send_to_memory(cpm, cpm_error)
                 else:
                     # consider handling errno.ECONNABORTED, errno.ECONNRESET
                     self.vprint(1, 'Failed to send packet! Socket error: ' +
                                 '{}: {}'.format(*e))
-                    self.no_network_send(cpm, cpm_error)
+                    self.send_to_memory(cpm, cpm_error)
             except socket.timeout:
                 # TCP
                 self.vprint(1, 'Failed to send packet! Socket timeout')
-                self.no_network_send(cpm, cpm_error)
+                self.send_to_memory(cpm, cpm_error)
 
