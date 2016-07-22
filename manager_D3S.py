@@ -42,7 +42,7 @@ def main():
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
             total += reading[4]
-            lst.append(reading[4])
+            np.append(lst, reading[4])
             serial = reading[0]
             dev_count = reading[1]
             if serial not in done_devices:
