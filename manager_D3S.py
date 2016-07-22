@@ -14,6 +14,9 @@ def main():
     parser.add_argument('--device', '-d', dest='device', default='all')
     parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
     args = parser.parse_args()
+    
+    total = np.zeros(4000, 1)
+    lst = np.array([])
 
     interval = int(args.interval)
     count = int(args.count)
@@ -38,10 +41,14 @@ def main():
     done_devices = set()
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
+            total += reading[4]
+            lst.append(reading[4])
             serial = reading[0]
             dev_count = reading[1]
             if serial not in done_devices:
                 print reading[4]
+                print total
+                print lst
             if dev_count >= count > 0:
                 done_devices.add(serial)
                 controller.stop_collector(serial)
