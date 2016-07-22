@@ -144,6 +144,7 @@ class Data_Handler(object):
         self.manager.data_log(datalog, cpm, cpm_err)
 
         if self.manager.test:
+            # for testing the memory queue
             self.send_to_memory(cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
