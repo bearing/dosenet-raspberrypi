@@ -43,8 +43,10 @@ def main():
         for reading in controller.read():
             if total == 0:
                 total = reading[4]
+                print(len(total))
             else:
                 total += reading[4]
+                print(len(total))
             lst.append(reading[4])
             serial = reading[0]
             dev_count = reading[1]
