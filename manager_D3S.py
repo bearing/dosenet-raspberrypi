@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
     args = parser.parse_args()
     
-    total = 0
+    total = None
     lst = []
 
     interval = int(args.interval)
@@ -41,7 +41,7 @@ def main():
     done_devices = set()
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
-            if total == 0:
+            if not total:
                 total = np.array(reading[4])
                 print(len(total))
             else:
