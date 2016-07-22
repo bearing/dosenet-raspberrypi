@@ -44,7 +44,6 @@ def main():
         for reading in controller.read():
             if flag:
                 total = np.array(reading[4])
-                print(len(total))
                 flag = False
             else:
                 total += np.array(reading[4])
@@ -52,9 +51,9 @@ def main():
             lst.append(reading[4])
             serial = reading[0]
             dev_count = reading[1]
-           # if serial not in done_devices:
+            if serial not in done_devices:
                 #print reading[4]
-               # print total
+                print total
                # print lst
             if dev_count >= count > 0:
                 done_devices.add(serial)
