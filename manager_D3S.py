@@ -16,7 +16,7 @@ def main():
     args = parser.parse_args()
     
     total = None
-    lst = []
+    lst = None
     flag = True
 
     interval = int(args.interval)
@@ -44,17 +44,18 @@ def main():
         for reading in controller.read():
             if flag:
                 total = np.array(reading[4])
+                lst = np.array([reading[4]])
                 flag = False
             else:
                 total += np.array(reading[4])
-                print(len(total))
-            lst.append(reading[4])
+                np.append(lst, [reading[4]])
+                print(len(lst))
             serial = reading[0]
             dev_count = reading[1]
             if serial not in done_devices:
                 #print reading[4]
-                print total
-               # print lst
+                #print total
+                print lst
             if dev_count >= count > 0:
                 done_devices.add(serial)
                 controller.stop_collector(serial)
