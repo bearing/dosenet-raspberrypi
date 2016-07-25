@@ -26,6 +26,24 @@ class Manager_D3S(object):
         self.device = device
         self.log_bytes = log_bytes
     def run():
+        if self.transport == 'any':
+            devs = kromek.discover()
+        else:
+            devs = kromek.discover(self.transport)
+        print 'Discovered %s' % devs
+        if len(devs) <= 0:
+            return
+        
+        filtered = []
+        
+        for dev in devs:
+            if self.device == 'all' or dev[0] in self.device:
+                filtered.append(dev)
+    
+        devs = filtered
+        if len(devs) <= 0:
+            return
+
         done_devices = set()
         with kromek.Controller(devs, self.interval) as controller:
             for reading in controller.read():
@@ -56,23 +74,6 @@ class Manager_D3S(object):
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
         args = parser.parse_args()
         
-        if args.transport == 'any':
-            devs = kromek.discover()
-        else:
-            devs = kromek.discover(args.transport)
-        print 'Discovered %s' % devs
-        if len(devs) <= 0:
-            return
-        
-        filtered = []
-        
-        for dev in devs:
-            if args.device == 'all' or dev[0] in args.device:
-                filtered.append(dev)
-    
-        devs = filtered
-        if len(devs) <= 0:
-            return
 
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
