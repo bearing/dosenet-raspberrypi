@@ -53,7 +53,7 @@ class Manager_D3S(object):
                     self.create_structures = False
                 else:
                     self.total += np.array(reading[4])
-                    self.lst = np.concatenate((lst, [np.array(reading[4])]))
+                    self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
                 serial = reading[0]
                 dev_count = reading[1]
                 if serial not in done_devices:
