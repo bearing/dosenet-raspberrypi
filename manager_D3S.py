@@ -47,13 +47,13 @@ class Manager_D3S(object):
         done_devices = set()
         with kromek.Controller(devs, self.interval) as controller:
             for reading in controller.read():
-                if create_structures:
-                    total = np.array(reading[4])
-                    lst = np.array([reading[4]])
-                    flag = False
+                if self.create_structures:
+                    self.total = np.array(reading[4])
+                    self.lst = np.array([reading[4]])
+                    self.create_structures = False
                 else:
-                    total += np.array(reading[4])
-                    lst = np.concatenate((lst, [np.array(reading[4])]))
+                    self.total += np.array(reading[4])
+                    self.lst = np.concatenate((lst, [np.array(reading[4])]))
                 serial = reading[0]
                 dev_count = reading[1]
                 if serial not in done_devices:
@@ -63,7 +63,7 @@ class Manager_D3S(object):
                     controller.stop_collector(serial)
                 if len(done_devices) >= len(devs):
                     break
-    '''
+    
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
@@ -79,7 +79,7 @@ class Manager_D3S(object):
         mgr = Manager_D3S(**arg_dict)
 
         return mgr
-    '''
+    
 if __name__ == '__main__':
     mgr = Manager_D3S()
     mgr.run()
