@@ -44,11 +44,11 @@ def main():
         for reading in controller.read():
             if flag:
                 total = np.array(reading[4])
-                lst = np.array(reading[4])
+                lst = np.array([reading[4]])
                 flag = False
             else:
                 total += np.array(reading[4])
-                np.concatenate((lst, reading[4]))
+                np.concatenate((lst, [reading[4])])
                 print(len(lst))
             serial = reading[0]
             dev_count = reading[1]
