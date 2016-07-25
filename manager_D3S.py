@@ -8,8 +8,8 @@ import numpy as np
 class Manager_D3S(object):
     
     def __init__(self,
-                 interval=int(args.interval)
-                 count=int(args.count)
+                 interval=int(args.interval),
+                 count=int(args.count),
                 ):
     
         self.total = None
