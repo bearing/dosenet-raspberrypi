@@ -63,7 +63,7 @@ class Manager_D3S(object):
                     controller.stop_collector(serial)
                 if len(done_devices) >= len(devs):
                     break
-
+    '''
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
@@ -79,7 +79,7 @@ class Manager_D3S(object):
         mgr = Manager_D3S(**arg_dict)
 
         return mgr
-
+    '''
 if __name__ == '__main__':
-    mgr = Manager_D3S.from_argparse()
+    mgr = Manager_D3S()
     mgr.run()
