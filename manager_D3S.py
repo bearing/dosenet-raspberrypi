@@ -24,7 +24,7 @@ class Manager_D3S(object):
         
         self.transport = transport
         self.device = device
-        self.log-bytes = log-bytes
+        self.log_bytes = log_bytes
     def run():
         done_devices = set()
         with kromek.Controller(devs, self.interval) as controller:
