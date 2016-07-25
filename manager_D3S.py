@@ -26,7 +26,7 @@ class Manager_D3S(object):
         self.device = device
         self.log_bytes = log_bytes
         
-        if self.interval = None:
+        if self.interval == None:
             self.interval = 30
             
     def run(self):
