@@ -25,7 +25,7 @@ class Manager_D3S(object):
         self.transport = transport
         self.device = device
         self.log_bytes = log_bytes
-    def run():
+    def run(self):
         if self.transport == 'any':
             devs = kromek.discover()
         else:
