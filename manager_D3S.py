@@ -48,7 +48,7 @@ def main():
                 flag = False
             else:
                 total += np.array(reading[4])
-                np.append(lst, reading[4])
+                np.append(lst, np.array(reading[4]))
                 print(len(lst))
             serial = reading[0]
             dev_count = reading[1]
