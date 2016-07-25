@@ -69,7 +69,7 @@ class Manager_D3S(object):
             return
 
         arg_dict = vars(args)
-        mgr = Manager(**arg_dict)
+        mgr = Manager_D3S(**arg_dict)
 
         return mgr
 
