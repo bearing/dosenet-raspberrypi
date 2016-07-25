@@ -12,7 +12,7 @@ class Manager_D3S(object):
                  count=0,
                  transport='any', 
                  device='all',
-                 log-bytes=False,
+                 log_bytes=False,
                 ):
     
         self.total = None
