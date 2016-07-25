@@ -17,7 +17,7 @@ def main():
     
     total = None
     lst = None
-    flag = True
+    create_structures = True
 
     interval = int(args.interval)
     count = int(args.count)
@@ -42,20 +42,17 @@ def main():
     done_devices = set()
     with kromek.Controller(devs, interval) as controller:
         for reading in controller.read():
-            if flag:
+            if create_structures:
                 total = np.array(reading[4])
                 lst = np.array([reading[4]])
                 flag = False
             else:
                 total += np.array(reading[4])
                 lst = np.concatenate((lst, [np.array(reading[4])]))
-                print(len(lst))
             serial = reading[0]
             dev_count = reading[1]
             if serial not in done_devices:
-                #print reading[4]
-                #print total
-                print lst
+                print reading[4]
             if dev_count >= count > 0:
                 done_devices.add(serial)
                 controller.stop_collector(serial)
