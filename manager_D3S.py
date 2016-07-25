@@ -10,6 +10,9 @@ class Manager_D3S(object):
     def __init__(self,
                  interval=30,
                  count=0,
+                 transport='any', 
+                 device='all',
+                 log-bytes=False,
                 ):
     
         self.total = None
@@ -19,9 +22,12 @@ class Manager_D3S(object):
         self.interval = interval
         self.count = count
         
+        self.transport = transport
+        self.device = device
+        self.log-bytes = log-bytes
     def run():
         done_devices = set()
-        with kromek.Controller(devs, interval) as controller:
+        with kromek.Controller(devs, self.interval) as controller:
             for reading in controller.read():
                 if create_structures:
                     total = np.array(reading[4])
@@ -34,7 +40,7 @@ class Manager_D3S(object):
                 dev_count = reading[1]
                 if serial not in done_devices:
                     print reading[4]
-                if dev_count >= count > 0:
+                if dev_count >= self.count > 0:
                     done_devices.add(serial)
                     controller.stop_collector(serial)
                 if len(done_devices) >= len(devs):
