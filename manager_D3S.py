@@ -8,7 +8,7 @@ import numpy as np
 class Manager_D3S(object):
     
     def __init__(self,
-                 interval=30,
+                 interval=None,
                  count=0,
                  transport='any', 
                  device='all',
@@ -25,6 +25,10 @@ class Manager_D3S(object):
         self.transport = transport
         self.device = device
         self.log_bytes = log_bytes
+        
+        if self.interval = None:
+            self.interval = 30
+            
     def run(self):
         if self.transport == 'any':
             devs = kromek.discover()
