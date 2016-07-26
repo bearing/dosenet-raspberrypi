@@ -35,6 +35,8 @@ class Manager_D3S(object):
         set_verbosity(self)
         
         if interval is None:
+            self.vprint(
+                2, "No interval given, using interval at 30 seconds")
             interval = 30
         self.interval = interval
             
