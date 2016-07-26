@@ -80,5 +80,5 @@ class Manager_D3S(object):
         return mgr
     
 if __name__ == '__main__':
-    mgr = Manager_D3S()
+    mgr = Manager_D3S.from_argparse()
     mgr.run()
