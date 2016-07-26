@@ -2,6 +2,8 @@ import argparse
 import kromek
 import numpy as np
 
+from auxiliaries import set_verbosity
+
 class Manager_D3S(object):
     
     def __init__(self,
@@ -10,6 +12,7 @@ class Manager_D3S(object):
                  transport='any', 
                  device='all',
                  log_bytes=False,
+                 verbosity=None, 
                  ):
     
         self.total = None
@@ -23,8 +26,17 @@ class Manager_D3S(object):
         self.device = device
         self.log_bytes = log_bytes
         
-        if self.interval == None:
-            self.interval = 30
+        self.handle_input(verbosity, interval)
+            
+    def handle_input(self, verbosity, interval):
+        if verbosity is None:
+            verbosity = 1
+        self.v = verbosity
+        set_verbosity(self)
+        
+        if interval is None:
+            interval = 30
+        self.interval = interval
             
     def run(self):
         if self.transport == 'any':
