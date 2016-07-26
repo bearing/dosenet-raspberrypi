@@ -93,7 +93,7 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
-        
+
         self.test = test
 
         # LEDs
@@ -307,8 +307,8 @@ class Manager(object):
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0:
-            # this shouldn't happen now that SleepError is raised and handled
-            raise RuntimeError
+            # can happen if flushing queue to server takes longer than interval
+            sleeptime = 0
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
