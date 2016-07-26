@@ -1,8 +1,5 @@
-#!/usr/bin/env python
 import argparse
-
 import kromek
-
 import numpy as np
 
 class Manager_D3S(object):
@@ -13,7 +10,7 @@ class Manager_D3S(object):
                  transport='any', 
                  device='all',
                  log_bytes=False,
-                ):
+                 ):
     
         self.total = None
         self.lst = None
@@ -78,10 +75,8 @@ class Manager_D3S(object):
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
         args = parser.parse_args()
         
-
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
-
         return mgr
     
 if __name__ == '__main__':
