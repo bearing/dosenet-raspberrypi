@@ -5,7 +5,7 @@ import numpy as np
 class Manager_D3S(object):
     
     def __init__(self,
-                 interval=None,
+                 interval=30,
                  count=0,
                  transport='any', 
                  device='all',
@@ -69,7 +69,7 @@ class Manager_D3S(object):
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
         parser.add_argument('--transport', '-t', dest='transport', default='any')
-        parser.add_argument('--interval', '-i', dest='interval', default=None)
+        parser.add_argument('--interval', '-i', dest='interval', default=30)
         parser.add_argument('--count', '-c', dest='count', default=0)
         parser.add_argument('--device', '-d', dest='device', default='all')
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
