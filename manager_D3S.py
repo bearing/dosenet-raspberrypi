@@ -5,6 +5,13 @@ import numpy as np
 from auxiliaries import set_verbosity
 
 class Manager_D3S(object):
+    """
+    Master object for D3S device operation. 
+    
+    Prints out spectra for every interval, stores each spectra, and sums the spectra together. 
+    
+    Interval is in seconds with the default being 30 seconds.
+    """
     
     def __init__(self,
                  interval=None,
@@ -29,6 +36,7 @@ class Manager_D3S(object):
         self.handle_input(verbosity, interval)
             
     def handle_input(self, verbosity, interval):
+        
         if verbosity is None:
             verbosity = 1
         self.v = verbosity
@@ -41,6 +49,12 @@ class Manager_D3S(object):
         self.interval = interval
             
     def run(self):
+        """
+        Main method. Currently also stores and sum the spectra as well. 
+        
+        Current way to stop is only using a keyboard interrupt.
+        """
+        
         if self.transport == 'any':
             devs = kromek.discover()
         else:
