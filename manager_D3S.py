@@ -4,6 +4,8 @@ import numpy as np
 
 import time
 
+from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
+
 from auxiliaries import set_verbosity
 
 class Manager_D3S(object):
@@ -47,7 +49,7 @@ class Manager_D3S(object):
         if interval is None:
             self.vprint(
                 2, "No interval given, using interval at 30 seconds")
-            interval = 30
+            interval = DEFAULT_INTERVAL_NORMAL_D3S
         self.interval = interval
             
     def run(self):
