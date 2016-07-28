@@ -2,6 +2,8 @@ import argparse
 import kromek
 import numpy as np
 
+import time
+
 from auxiliaries import set_verbosity
 
 class Manager_D3S(object):
@@ -80,9 +82,11 @@ class Manager_D3S(object):
                     self.total = np.array(reading[4])
                     self.lst = np.array([reading[4]])
                     self.create_structures = False
+                    print time.time()
                 else:
                     self.total += np.array(reading[4])
                     self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
+                    print time.time()
                 serial = reading[0]
                 dev_count = reading[1]
                 if serial not in done_devices:
