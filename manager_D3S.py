@@ -120,7 +120,7 @@ class Manager_D3S(object):
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
-        parser.add_argument('--transport', '-t', dest='transport', default='usb')
+        parser.add_argument('--transport', '-t', default='usb')
         parser.add_argument('--interval', '-i', type=int, default=None)
         parser.add_argument('--count', '-c', dest='count', default=0)
         parser.add_argument('--device', '-d', dest='device', default='all')
