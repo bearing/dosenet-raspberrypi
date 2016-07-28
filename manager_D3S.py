@@ -8,6 +8,16 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
 
 from auxiliaries import set_verbosity
 
+import signal
+import sys
+
+def signal_term_handler(signal, frame):
+    # If SIGTERM signal is intercepted, the SystemExit exception routines
+    #   get run
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_term_handler)
+
 class Manager_D3S(object):
     """
     Master object for D3S device operation. 
@@ -78,27 +88,34 @@ class Manager_D3S(object):
             return
 
         done_devices = set()
-        with kromek.Controller(devs, self.interval) as controller:
-            for reading in controller.read():
-                if self.create_structures:
-                    self.total = np.array(reading[4])
-                    self.lst = np.array([reading[4]])
-                    self.create_structures = False
-                    x = time.time()              
-                else:
-                    self.total += np.array(reading[4])
-                    self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
-                    print time.time() - x
-                    x = time.time()
-                serial = reading[0]
-                dev_count = reading[1]
-                if serial not in done_devices:
-                    print reading[4]
-                if dev_count >= self.count > 0:
-                    done_devices.add(serial)
-                    controller.stop_collector(serial)
-                if len(done_devices) >= len(devs):
-                    break
+        try:    
+            with kromek.Controller(devs, self.interval) as controller:
+                for reading in controller.read():
+                    if self.create_structures:
+                        self.total = np.array(reading[4])
+                        self.lst = np.array([reading[4]])
+                        self.create_structures = False
+                        x = time.time()              
+                    else:
+                        self.total += np.array(reading[4])
+                        self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
+                        print time.time() - x
+                        x = time.time()
+                    serial = reading[0]
+                    dev_count = reading[1]
+                    if serial not in done_devices:
+                        print reading[4]
+                    if dev_count >= self.count > 0:
+                        done_devices.add(serial)
+                        controller.stop_collector(serial)
+                    if len(done_devices) >= len(devs):
+                        break
+        except KeyboardInterrupt:
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            del(self)
+        except SystemExit:
+            self.vprint(1, '\nSystemExit: taking down Manager')
+            del(self)
     
     @classmethod
     def from_argparse(cls):
