@@ -79,14 +79,16 @@ class Manager_D3S(object):
         with kromek.Controller(devs, self.interval) as controller:
             for reading in controller.read():
                 if self.create_structures:
+                    x = 0
                     self.total = np.array(reading[4])
                     self.lst = np.array([reading[4]])
                     self.create_structures = False
-                    print time.time()
+                    x = time.time() - x
                 else:
                     self.total += np.array(reading[4])
                     self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
-                    print time.time()
+                    x = time.time() - x
+                    print x
                 serial = reading[0]
                 dev_count = reading[1]
                 if serial not in done_devices:
