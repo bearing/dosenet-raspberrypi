@@ -1,3 +1,18 @@
+import time
+import traceback
+
+from auxiliaries import Config, PublicKey
+from auxiliaries import datetime_from_epoch, set_verbosity
+from sender import ServerSender
+from data_handler_D3S import Data_Handler_D3S
+
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
+from globalvalues import DEFAULT_SENDER_MODE
+from globalvalues import DEFAULT_DATALOG_D3S
+from globalvalues import DEFAULT_PROTOCOL
+
+
 import argparse
 import kromek
 import numpy as np
@@ -34,6 +49,15 @@ class Manager_D3S(object):
                  device='all',
                  log_bytes=False,
                  verbosity=None, 
+                 datalog=None,
+                 datalogflag=False,
+                 protocol=DEFAULT_PROTOCOL,
+                 test=None,
+                 config=None,
+                 publickey=None,
+                 hostname=DEFAULT_HOSTNAME,
+                 port=None,
+                 sender_mode=DEFAULT_SENDER_MODE,
                  ):
     
         self.total = None
