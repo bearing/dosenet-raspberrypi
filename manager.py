@@ -10,7 +10,7 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, Config, PublicKey, NetworkStatus
+from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
@@ -65,7 +65,6 @@ class Manager(object):
                  counts_LED_pin=COUNTS_LED_PIN,
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
-                 test=False,
                  sender_mode=DEFAULT_SENDER_MODE,
                  interval=None,
                  config=None,
@@ -78,6 +77,7 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
+                 test=None,
                  ):
 
         self.quit_after_interval = False
@@ -93,6 +93,8 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
+        
+        self.test = test
 
         # LEDs
         if RPI:
@@ -111,10 +113,11 @@ class Manager(object):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.network_up = NetworkStatus(
-            network_led=self.network_LED,
+        self.data_handler = Data_Handler(
+            manager=self,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            network_led=self.network_LED)
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
@@ -122,10 +125,6 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        self.data_handler = Data_Handler(
-            manager=self,
-            verbosity=self.v,
-            logfile=self.logfile)
 
         self.data_handler.backlog_to_queue()
 
@@ -359,10 +358,6 @@ class Manager(object):
         # sensor
         self.sensor.cleanup()
         del(self.sensor)
-
-        # network
-        self.network_up.cleanup()
-        del(self.network_up)
 
         # power LED
         self.power_LED.off()
