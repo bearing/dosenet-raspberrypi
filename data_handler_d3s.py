@@ -57,15 +57,15 @@ class Data_Handler_D3S(object):
         """
         try:
             if self.manager.protocol == 'new':
-                self.manager.sender.send_cpm_new(this_end, spectra)
+                self.manager.sender.send_cpm_new_D3S(this_end, spectra)
                 if self.queue:
                     self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
                     trash = self.queue.popleft()
-                    self.manager.sender.send_cpm_new(
+                    self.manager.sender.send_cpm_new_D3S(
                         trash[0], trash[1])
             else:
-                self.manager.sender.send_cpm(spectra)
+                self.manager.sender.send_cpm_D3S(spectra)
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
         if self.manager.protocol == 'new':
