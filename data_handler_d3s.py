@@ -14,7 +14,7 @@ class Data_Handler_D3S(object):
     self.manager = manager
     self.queue = deque('')
     
-    def test_send(self, cpm, cpm_err):
+    def test_send(self, spectra):
         """
         Test Mode
         """
