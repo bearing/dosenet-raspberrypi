@@ -223,10 +223,20 @@ class Manager_D3S(object):
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
-        parser.add_argument('--transport', '-t', default='usb')
+        parser.add_argument('--hostname', '-s', default=DEFAULT_HOSTNAME)
+        parser.add_argument('--port', '-p', type=int, default=None_
+        parser.add_argument('--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE, choices=['udp', 'tcp', 'UDP', 'TCP'])
+        parser.add_argument('--config', '-c', default=None)
+        parser.add_argument('--datalog', '-d', default=None)
+        parser.add_argument('--datalogflag', '-a', action='store_true', default=False)
+        parser.add_argument('--publickey', '-k', default=None)
+        parser.add_argument('--protocol', '-r', default=DEFAULT_PROTOCOL)
+        parser.add_argument('--verbosity', '-v', type=int, default=None)
+        parser.add_argument('--test', '-t', action='store_true', default=False)        
+        parser.add_argument('--transport', '-n', default='usb')
         parser.add_argument('--interval', '-i', type=int, default=None)
-        parser.add_argument('--count', '-c', dest='count', default=0)
-        parser.add_argument('--device', '-d', dest='device', default='all')
+        parser.add_argument('--count', '-0', dest='count', default=0)
+        parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
         args = parser.parse_args()
         
