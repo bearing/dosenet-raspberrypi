@@ -51,7 +51,7 @@ class Data_Handler_D3S(object):
         else:
             self.vprint(1, "Network down, not sending to server")
 
-    def regular_send(self, this_end, specta):
+    def regular_send(self, this_end, spectra):
         """
         Normal send
         """
