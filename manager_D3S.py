@@ -83,7 +83,7 @@ class Manager_D3S(object):
 
         self.test = test
         
-        self.handle_input(verbosity, interval, congfig, publickey)
+        self.handle_input(verbosity, interval, config, publickey)
         
         self.data_handler = Data_Handler_D3S(
             manager=self,
