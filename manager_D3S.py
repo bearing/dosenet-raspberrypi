@@ -210,6 +210,10 @@ class Manager_D3S(object):
                     dev_count = reading[1]
                     if serial not in done_devices:
                         print reading[4]
+                        this_start, this_end = self.get_interval(
+                            time.time() - self.interval)
+
+                self.handle_cpm(this_start, this_end, reading[4])
                     if dev_count >= self.count > 0:
                         done_devices.add(serial)
                         controller.stop_collector(serial)
@@ -221,6 +225,31 @@ class Manager_D3S(object):
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             del(self)
+    
+    def get_interval(self, start_time):
+        """
+        Return start and end time for interval, based on given start_time.
+        """
+        end_time = start_time + self.interval
+        return start_time, end_time
+
+    def data_log(self, file, spectra):
+        """
+        Writes cpm to data-log.
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        if self.datalogflag:
+            with open(file, 'a') as f:
+                f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
+                f.write('\n')
+                self.vprint(2, 'Writing CPM to data log at {}'.format(file))
+                
+    def handle_cpm(self, this_start, this_end, spectra):
+        """
+        Get CPM from sensor, display text, send to server.
+        """
+        self.data_handler.main(
+            self.datalog, spectra, this_start, this_end)
     
     @classmethod
     def from_argparse(cls):
