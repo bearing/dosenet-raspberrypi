@@ -20,6 +20,7 @@ import numpy as np
 import time
 
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
+from globalvalues import DEFAULT_INTERVAL_TEST_D3S
 
 from auxiliaries import set_verbosity
 
@@ -164,7 +165,6 @@ class Manager_D3S(object):
                 1, 'WARNING: no public key given. Not posting to server')
             self.publickey = None
 
-            
     def run(self):
         """
         Main method. Currently also stores and sum the spectra as well. 
