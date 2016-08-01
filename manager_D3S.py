@@ -59,6 +59,7 @@ class Manager_D3S(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
+                 logfile=None, 
                  ):
     
         self.total = None
@@ -82,6 +83,7 @@ class Manager_D3S(object):
         self.make_data_log(self.datalog)
 
         self.test = test
+        self.logfile = logfile
         
         self.handle_input(verbosity, interval, config, publickey)
         
