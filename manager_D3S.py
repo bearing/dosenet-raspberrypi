@@ -144,7 +144,7 @@ class Manager_D3S(object):
         if config:
             try:
                 self.config = Config(config,
-                                     verbosity=self.v, logfile=self.logfile)
+                                     verbosity=self.v)
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -156,7 +156,7 @@ class Manager_D3S(object):
         if publickey:
             try:
                 self.publickey = PublicKey(
-                    publickey, verbosity=self.v, logfile=self.logfile)
+                    publickey, verbosity=self.v)
             except IOError:
                 raise IOError(
                     'Unable to load publickey file {}!'.format(publickey))
