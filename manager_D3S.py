@@ -70,10 +70,55 @@ class Manager_D3S(object):
         self.transport = transport
         self.device = device
         self.log_bytes = log_bytes
+
+        self.protocol = protocol
+
+        self.datalog = datalog
+        self.datalogflag = datalogflag
+
+        self.a_flag()
+        self.d_flag()
+        self.make_data_log(self.datalog)
+
+        self.test = test
         
-        self.handle_input(verbosity, interval)
+        self.handle_input(verbosity, interval, congfig, publickey)
+        
+        self.data_handler = Data_Handler_D3S(
+            manager=self,
+            verbosity=self.v)
+        self.sender = ServerSender(
+            manager=self,
+            mode=sender_mode,
+            port=port,
+            verbosity=self.v)
+        # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
+        
+        self.data_handler.backlog_to_queue()
             
-    def handle_input(self, verbosity, interval):
+    def a_flag(self):
+        """
+        Checks if the -a from_argparse is called.
+        If it is called, sets the path of the data-log to
+        DEFAULT_DATALOG.
+        """
+        if self.datalogflag:
+            self.datalog = DEFAULT_DATALOG_D3S
+
+    def d_flag(self):
+        """
+        Checks if the -d from_argparse is called.
+        If it is called, sets datalogflag to True.
+        """
+        if self.datalog:
+            self.datalogflag = True
+
+    def make_data_log(self, file):
+        if self.datalogflag:
+            with open(file, 'a') as f:
+                pass
+    
+    def handle_input(self, verbosity, interval, config, publickey):
         
         if verbosity is None:
             verbosity = 1
@@ -84,7 +129,41 @@ class Manager_D3S(object):
             self.vprint(
                 2, "No interval given, using interval at 30 seconds")
             interval = DEFAULT_INTERVAL_NORMAL_D3S
+        if config is None:
+            self.vprint(2, "No config file given, " +
+                        "attempting to use default config path")
+            config = DEFAULT_CONFIG
+        if publickey is None:
+            self.vprint(2, "No publickey file given, " +
+                        "attempting to use default publickey path")
+            publickey = DEFAULT_PUBLICKEY
+
         self.interval = interval
+        
+        if config:
+            try:
+                self.config = Config(config,
+                                     verbosity=self.v, logfile=self.logfile)
+            except IOError:
+                raise IOError(
+                    'Unable to open config file {}!'.format(config))
+        else:
+            self.vprint(
+                1, 'WARNING: no config file given. Not posting to server')
+            self.config = None
+
+        if publickey:
+            try:
+                self.publickey = PublicKey(
+                    publickey, verbosity=self.v, logfile=self.logfile)
+            except IOError:
+                raise IOError(
+                    'Unable to load publickey file {}!'.format(publickey))
+        else:
+            self.vprint(
+                1, 'WARNING: no public key given. Not posting to server')
+            self.publickey = None
+
             
     def run(self):
         """
