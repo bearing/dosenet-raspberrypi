@@ -213,7 +213,7 @@ class Manager_D3S(object):
                         this_start, this_end = self.get_interval(
                             time.time() - self.interval)
 
-                self.handle_cpm(this_start, this_end, reading[4])
+                        self.handle_cpm(this_start, this_end, reading[4])
                     if dev_count >= self.count > 0:
                         done_devices.add(serial)
                         controller.stop_collector(serial)
