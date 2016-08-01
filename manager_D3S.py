@@ -4,7 +4,7 @@ import traceback
 from auxiliaries import Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
-from data_handler_D3S import Data_Handler_D3S
+from data_handler_d3s import Data_Handler_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
