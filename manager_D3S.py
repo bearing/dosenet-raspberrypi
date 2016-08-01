@@ -224,7 +224,7 @@ class Manager_D3S(object):
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
         parser.add_argument('--hostname', '-s', default=DEFAULT_HOSTNAME)
-        parser.add_argument('--port', '-p', type=int, default=None_
+        parser.add_argument('--port', '-p', type=int, default=None)
         parser.add_argument('--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE, choices=['udp', 'tcp', 'UDP', 'TCP'])
         parser.add_argument('--config', '-c', default=None)
         parser.add_argument('--datalog', '-d', default=None)
