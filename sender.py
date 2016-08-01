@@ -130,24 +130,6 @@ class ServerSender(object):
         else:
             self.vprint(3, 'Constructed packet')
             return raw_packet
-            
-    def construct_packet_D3S(self, spectra, error_code=0):
-        """
-        Construct the raw packet string. (basically copied from old code)
-        """
-
-        c = ','
-        try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(spectra) + c +
-                str(error_code))
-        except AttributeError:      # on self.config.hash
-            raise MissingFile('Missing or broken Config object')
-        else:
-            self.vprint(3, 'Constructed packet')
-            return raw_packet
 
     def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
@@ -241,13 +223,6 @@ class ServerSender(object):
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted, cpm, cpm_error)
-        
-    def send_cpm_D3S(self, spectra, error_code=0):
-        """Construct, encrypt, and send the packet"""
-
-        packet = self.construct_packet_D3S(spectra, error_code=error_code)
-        encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted)
 
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
