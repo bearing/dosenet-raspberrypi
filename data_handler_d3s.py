@@ -97,7 +97,7 @@ class Data_Handler_D3S(object):
                 print(self.queue)
                 os.remove(path)
 
-    def main(self, datalog, cpm, cpm_err, this_start, this_end, counts):
+    def main(self, datalog, spectra, this_start, this_end):
         """
         Determines how to handle the cpm data.
         """
