@@ -102,7 +102,7 @@ class Data_Handler_D3S(object):
         Determines how to handle the cpm data.
         """
 
-        self.manager.data_log(datalog, cpm, cpm_err)
+        self.manager.data_log(datalog, spectra)
 
         if self.manager.test:
             # for testing the memory queue
