@@ -45,57 +45,48 @@ class Data_Handler_D3S(object):
         """
         Network is not up
         """
-        if self.manager.protocol == 'new':
-            self.send_to_queue(spectra)
-            self.vprint(1, "Network down, saving to queue in memory")
-        else:
-            self.vprint(1, "Network down, not sending to server")
+        self.send_to_queue(spectra)
+        self.vprint(1, "Network down, saving to queue in memory")
 
     def regular_send(self, this_end, spectra):
         """
         Normal send
         """
-        if self.manager.protocol == 'new':
-            self.manager.sender.send_cpm_new_D3S(this_end, spectra)
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to server")
-            while self.queue:
-                trash = self.queue.popleft()
-                self.manager.sender.send_cpm_new_D3S(
-                    trash[0], trash[1])
-        else:
-            self.manager.sender.send_cpm_D3S(spectra)
+        self.manager.sender.send_cpm_new_D3S(this_end, spectra)
+        if self.queue:
+            self.vprint(1, "Flushing memory queue to server")
+        while self.queue:
+            trash = self.queue.popleft()
+            self.manager.sender.send_cpm_new_D3S(
+                trash[0], trash[1])
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
-        if self.manager.protocol == 'new':
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to backlog file")
-                with open(path, 'a') as f:
-                    while self.queue:
-                        f.write('{0}, '.format(self.queue.popleft()))
+        if self.queue:
+            self.vprint(1, "Flushing memory queue to backlog file")
+            with open(path, 'a') as f:
+                while self.queue:
+                    f.write('{0}, '.format(self.queue.popleft()))
 
     def send_to_queue(self, spectra):
         """
         Adds the time, cpm, and cpm_err to the deque object.
         """
-        if self.manager.protocol == 'new':
-            time_string = time.time()
-            self.queue.append([time_string, spectra])
+        time_string = time.time()
+        self.queue.append([time_string, spectra])
 
     def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
         """
         Sends data in backlog to queue and deletes the backlog
         """
-        if self.manager.protocol == 'new':
-            if os.path.isfile(path):
-                self.vprint(2, "Flushing backlog file to memory queue")
-                with open(path, 'r') as f:
-                    data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1]])
-                print(self.queue)
-                os.remove(path)
+        if os.path.isfile(path):
+            self.vprint(2, "Flushing backlog file to memory queue")
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                self.queue.append([i[0], i[1]])
+            print(self.queue)
+            os.remove(path)
 
     def main(self, datalog, spectra, this_start, this_end):
         """
