@@ -61,7 +61,7 @@ class Manager_D3S(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  logfile=None, 
                  log=False,
-                 self.running
+                 self.running=False
                  ):
     
         self.running = running
