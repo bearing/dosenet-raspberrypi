@@ -23,6 +23,7 @@ COUNTS_LED_PIN = 21
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
 DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
 DEFAULT_LOGFILE = '/home/pi/debug.log'
+DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
 DEFAULT_TCP_PORT = 5100
