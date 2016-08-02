@@ -20,10 +20,15 @@ class Data_Handler_D3S(object):
     def __init__(self,
                  manager=None,
                  verbosity=1,
+                 logfile=None
                  ):
                
         self.v = verbosity
-        set_verbosity(self)
+        if manager and logfile is None:
+            set_verbosity(self, logfile=manager.logfile)
+        else:
+            set_verbosity(self, logfile=logfile)
+
     
         self.manager = manager
         self.queue = deque('')
