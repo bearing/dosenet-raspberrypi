@@ -123,7 +123,7 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 pass
     
-    def handle_input(self, log, logfile verbosity, interval, config, publickey):
+    def handle_input(self, log, logfile, verbosity, interval, config, publickey):
         
         # resolve logging defaults
         if log and logfile is None:
