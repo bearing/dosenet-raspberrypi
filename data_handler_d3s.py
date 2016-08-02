@@ -104,7 +104,7 @@ class Data_Handler_D3S(object):
         self.vprint(
             1, CPM_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
-                spectra,
+                spectra=spectra,
                 start_time=start_text,
                 end_time=end_text))
 
