@@ -8,7 +8,7 @@ import time
 import ast
 import os
 
-CPM_DISPLAY_TEXT = (
+SPECTRA_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{spectra}} {reset}' +
     '{green} spectra from {reset}' +
     ' ({{start_time}} to {{end_time}})').format(
@@ -53,7 +53,7 @@ class Data_Handler_D3S(object):
         """
         self.vprint(1, "Missing public key, not sending to server")
         
-    def no_network_send(self, cpm, cpm_err):
+    def send_to_memory(self, spectra):
         """
         Network is not up
         """
@@ -69,7 +69,7 @@ class Data_Handler_D3S(object):
             self.vprint(1, "Flushing memory queue to server")
         while self.queue:
             trash = self.queue.popleft()
-            self.manager.sender.send_cpm_new_D3S(
+            self.manager.sender.send_specra_new_D3S(
                 trash[0], trash[1])
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
@@ -108,7 +108,7 @@ class Data_Handler_D3S(object):
         end_text = datetime_from_epoch(this_end).strftime(strf)
 
         self.vprint(
-            1, CPM_DISPLAY_TEXT.format(
+            1, SPECTRA_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
                 spectra=spectra,
                 start_time=start_text,
