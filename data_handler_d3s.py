@@ -81,7 +81,7 @@ class Data_Handler_D3S(object):
 
     def send_to_queue(self, spectra):
         """
-        Adds the time, cpm, and cpm_err to the deque object.
+        Adds the time and spectra to the deque object.
         """
         time_string = time.time()
         self.queue.append([time_string, spectra])
@@ -102,7 +102,7 @@ class Data_Handler_D3S(object):
 
     def main(self, datalog, spectra, this_start, this_end):
         """
-        Determines how to handle the cpm data.
+        Determines how to handle the spectra data.
         """
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
