@@ -9,9 +9,10 @@ import ast
 import os
 
 CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{spectra}} spectra{reset}' +
+    '{{time}}: {yellow} {{spectra}} {reset}' +
+    '{green} spectra from {reset}' +
     ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET)
+    yellow=ANSI_YEL, reset=ANSI_RESET, green = ANSI_GR)
 strf = '%H:%M:%S'
 
 class Data_Handler_D3S(object):
