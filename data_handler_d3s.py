@@ -8,6 +8,12 @@ import time
 import ast
 import os
 
+CPM_DISPLAY_TEXT = (
+    '{{time}}: {yellow} spectra{reset}' +
+    ' ({{start_time}} to {{end_time}})').format(
+    yellow=ANSI_YEL, reset=ANSI_RESET)
+strf = '%H:%M:%S'
+
 class Data_Handler_D3S(object):
 
     def __init__(self,
@@ -92,6 +98,14 @@ class Data_Handler_D3S(object):
         """
         Determines how to handle the cpm data.
         """
+        start_text = datetime_from_epoch(this_start).strftime(strf)
+        end_text = datetime_from_epoch(this_end).strftime(strf)
+
+        self.vprint(
+            1, CPM_DISPLAY_TEXT.format(
+                time=datetime_from_epoch(time.time()),
+                start_time=start_text,
+                end_time=end_text))
 
         self.manager.data_log(datalog, spectra)
 
