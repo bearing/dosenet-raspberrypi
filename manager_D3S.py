@@ -61,8 +61,11 @@ class Manager_D3S(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  logfile=None, 
                  log=False,
+                 running=False
                  ):
     
+        self.running = running
+        
         self.total = None
         self.lst = None
         self.create_structures = True
@@ -146,6 +149,7 @@ class Manager_D3S(object):
         if log:
             self.vprint(1, '')
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
+        self.running = True
         
         if interval is None:
             self.vprint(
@@ -215,31 +219,32 @@ class Manager_D3S(object):
         try:    
             with kromek.Controller(devs, self.interval) as controller:
                 for reading in controller.read():
-                    if self.create_structures:
-                        self.total = np.array(reading[4])
-                        self.lst = np.array([reading[4]])
-                        self.create_structures = False
-                    else:
-                        self.total += np.array(reading[4])
-                        self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
-                    serial = reading[0]
-                    dev_count = reading[1]
-                    if serial not in done_devices:
-                        this_start, this_end = self.get_interval(
-                            time.time() - self.interval)
-
-                        self.handle_spectra(this_start, this_end, reading[4])
-                    if dev_count >= self.count > 0:
-                        done_devices.add(serial)
-                        controller.stop_collector(serial)
-                    if len(done_devices) >= len(devs):
-                        break
+                    while self.running:
+                        if self.create_structures:
+                            self.total = np.array(reading[4])
+                            self.lst = np.array([reading[4]])
+                            self.create_structures = False
+                        else:
+                            self.total += np.array(reading[4])
+                            self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
+                        serial = reading[0]
+                        dev_count = reading[1]
+                        if serial not in done_devices:
+                            this_start, this_end = self.get_interval(
+                                time.time() - self.interval)
+    
+                            self.handle_spectra(this_start, this_end, reading[4])
+                        if dev_count >= self.count > 0:
+                            done_devices.add(serial)
+                            controller.stop_collector(serial)
+                        if len(done_devices) >= len(devs):
+                            break
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-            del(self)
+            self.takedown()
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
-            del(self)
+            self.takedown()
     
     def get_interval(self, start_time):
         """
@@ -265,6 +270,13 @@ class Manager_D3S(object):
         """
         self.data_handler.main(
             self.datalog, spectra, this_start, this_end)
+            
+    def takedown(self): 
+        """
+        Sets self.running to False and deletes self
+        """
+        self.running = False
+        del(self)
 
     @classmethod
     def from_argparse(cls):
