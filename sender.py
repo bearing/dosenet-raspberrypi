@@ -233,9 +233,9 @@ class ServerSender(object):
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted, cpm, cpm_error)
 
-    def send_cpm_new_D3S(self, timestamp, spectra, error_code=0):
+    def send_spectra_new_D3S(self, timestamp, spectra, error_code=0):
         """
-        New protocol for send_cpm
+        TCP for sending spectra
         """
         packet = self.construct_packet_new_D3S(
             timestamp, spectra, error_code=error_code)
