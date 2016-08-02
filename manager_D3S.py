@@ -6,7 +6,7 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
@@ -60,6 +60,7 @@ class Manager_D3S(object):
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
                  logfile=None, 
+                 log=False,
                  ):
     
         self.total = None
@@ -83,18 +84,19 @@ class Manager_D3S(object):
         self.make_data_log(self.datalog)
 
         self.test = test
-        self.logfile = logfile
         
-        self.handle_input(verbosity, interval, config, publickey)
+        self.handle_input(log, logfile, verbosity, interval, config, publickey)
         
         self.data_handler = Data_Handler_D3S(
             manager=self,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile,)
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
             port=port,
-            verbosity=self.v)
+            verbosity=self.v,
+            logfile=self.logfile,)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         
         self.data_handler.backlog_to_queue()
@@ -121,12 +123,29 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 pass
     
-    def handle_input(self, verbosity, interval, config, publickey):
+    def handle_input(self, log, logfile verbosity, interval, config, publickey):
+        
+        # resolve logging defaults
+        if log and logfile is None:
+            # use default file if logging is enabled
+            logfile = DEFAULT_LOGFILE_D3S
+        if logfile and not log:
+            # enable logging if logfile is specified
+            #   (this overrides a log=False input which wouldn't make sense)
+            log = True
+        if log:
+            self.logfile = logfile
+        else:
+            self.logfile = None        
         
         if verbosity is None:
             verbosity = 1
         self.v = verbosity
-        set_verbosity(self)
+        set_verbosity(self, logfile=logfile)
+        
+        if log:
+            self.vprint(1, '')
+            self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         
         if interval is None:
             self.vprint(
@@ -146,7 +165,7 @@ class Manager_D3S(object):
         if config:
             try:
                 self.config = Config(config,
-                                     verbosity=self.v)
+                                     verbosity=self.v, logfile=self.logfile)
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -158,7 +177,7 @@ class Manager_D3S(object):
         if publickey:
             try:
                 self.publickey = PublicKey(
-                    publickey, verbosity=self.v)
+                    publickey, verbosity=self.v, logfile=self.logfile)
             except IOError:
                 raise IOError(
                     'Unable to load publickey file {}!'.format(publickey))
@@ -273,4 +292,12 @@ class Manager_D3S(object):
     
 if __name__ == '__main__':
     mgr = Manager_D3S.from_argparse()
-    mgr.run()
+    try:
+        mgr.run()
+    except:
+        if mgr.logfile:
+            # print exception info to logfile
+            with open(mgr.logfile, 'a') as f:
+                traceback.print_exc(15, f)
+        # regardless, re-raise the error which will print to stderr
+        raise
