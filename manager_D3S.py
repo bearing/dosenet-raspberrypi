@@ -228,7 +228,7 @@ class Manager_D3S(object):
                         this_start, this_end = self.get_interval(
                             time.time() - self.interval)
 
-                        self.handle_cpm(this_start, this_end, reading[4])
+                        self.handle_spectra(this_start, this_end, reading[4])
                     if dev_count >= self.count > 0:
                         done_devices.add(serial)
                         controller.stop_collector(serial)
@@ -259,9 +259,9 @@ class Manager_D3S(object):
                 f.write('\n')
                 self.vprint(2, 'Writing CPM to data log at {}'.format(file))
                 
-    def handle_cpm(self, this_start, this_end, spectra):
+    def handle_spectra(self, this_start, this_end, spectra):
         """
-        Get CPM from sensor, display text, send to server.
+        Get spectra from sensor, display text, send to server.
         """
         self.data_handler.main(
             self.datalog, spectra, this_start, this_end)
