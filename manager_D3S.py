@@ -61,7 +61,7 @@ class Manager_D3S(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  logfile=None, 
                  log=False,
-                 running=False
+                 self.running
                  ):
     
         self.running = running
@@ -217,9 +217,9 @@ class Manager_D3S(object):
 
         done_devices = set()
         try:    
-            with kromek.Controller(devs, self.interval) as controller:
-                for reading in controller.read():
-                    while self.running:
+            while self.running:
+                with kromek.Controller(devs, self.interval) as controller:
+                    for reading in controller.read():
                         if self.create_structures:
                             self.total = np.array(reading[4])
                             self.lst = np.array([reading[4]])
@@ -232,7 +232,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-    
+        
                             self.handle_spectra(this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
