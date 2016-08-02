@@ -9,7 +9,7 @@ import ast
 import os
 
 CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} spectra{reset}' +
+    '{{time}}: {yellow} {{counts}} spectra{reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET)
 strf = '%H:%M:%S'
@@ -104,6 +104,7 @@ class Data_Handler_D3S(object):
         self.vprint(
             1, CPM_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
+                spectra,
                 start_time=start_text,
                 end_time=end_text))
 
