@@ -265,7 +265,7 @@ class Manager_D3S(object):
         """
         self.data_handler.main(
             self.datalog, spectra, this_start, this_end)
-    
+
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
@@ -284,10 +284,13 @@ class Manager_D3S(object):
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
-        args = parser.parse_args()
+        parser.add_argument('--log', '-l', action='store_true', default=False)
+        parser.add_argument('--logfile', '-f', type=str, default=None)
         
+        args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
+        
         return mgr
     
 if __name__ == '__main__':
