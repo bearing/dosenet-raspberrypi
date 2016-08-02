@@ -9,7 +9,7 @@ import ast
 import os
 
 CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{counts}} spectra{reset}' +
+    '{{time}}: {yellow} {{spectra}} spectra{reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET)
 strf = '%H:%M:%S'
