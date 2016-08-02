@@ -250,14 +250,14 @@ class Manager_D3S(object):
 
     def data_log(self, file, spectra):
         """
-        Writes cpm to data-log.
+        Writes spectra to data-log.
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         if self.datalogflag:
             with open(file, 'a') as f:
-                f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
+                f.write('{0}, {1}'.format(time_string, spectra))
                 f.write('\n')
-                self.vprint(2, 'Writing CPM to data log at {}'.format(file))
+                self.vprint(2, 'Writing spectra to data log at {}'.format(file))
                 
     def handle_spectra(self, this_start, this_end, spectra):
         """
