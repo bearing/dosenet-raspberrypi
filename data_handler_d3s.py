@@ -64,7 +64,7 @@ class Data_Handler_D3S(object):
         """
         Normal send
         """
-        self.manager.sender.send_cpm_new_D3S(this_end, spectra)
+        self.manager.sender.send_spectra_new_D3S(this_end, spectra)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
         while self.queue:
