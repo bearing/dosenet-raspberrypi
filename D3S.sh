@@ -1,6 +1,11 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 LOGTAG=dosenet
+CONFIGDIR=$HOME/config
+LOGTAG=dosenet
+
+CONFIGFILE=$CONFIGDIR/config.csv
+PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
@@ -13,7 +18,7 @@ case "$1" in
     sudo killall python &
     ;;
  *)
-    echo "Usage: /etc/init.d/dosenet {start|test|stop}"
+    echo "Usage: /etc/init.d/dosenet {start|stop}"
     exit 1
     ;;
 esac
