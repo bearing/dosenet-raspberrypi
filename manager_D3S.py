@@ -127,6 +127,9 @@ class Manager_D3S(object):
                 pass
     
     def handle_input(self, log, logfile, verbosity, interval, config, publickey):
+        """
+        Sets up logging, verbosity, interval, config, and publickey
+        """
         
         # resolve logging defaults
         if log and logfile is None:
