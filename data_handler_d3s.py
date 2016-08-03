@@ -20,7 +20,8 @@ class Data_Handler_D3S(object):
     def __init__(self,
                  manager=None,
                  verbosity=1,
-                 logfile=None
+                 logfile=None,
+                 network_led=None,
                  ):
                
         self.v = verbosity
@@ -32,6 +33,9 @@ class Data_Handler_D3S(object):
     
         self.manager = manager
         self.queue = deque('')
+        
+        self.blink_period_s = 1.5
+        self.led = network_led
     
     def test_send(self, spectra):
         """
@@ -57,6 +61,8 @@ class Data_Handler_D3S(object):
         """
         Network is not up
         """
+        if self.led:
+            self.led.start_blink(interval=self.blink_period_s)
         self.send_to_queue(spectra)
         self.vprint(1, "Network down, saving to queue in memory")
 
@@ -64,6 +70,10 @@ class Data_Handler_D3S(object):
         """
         Normal send
         """
+        if self.led:
+            if self.led.blinker:
+                self.led.stop_blink()
+            self.led.on()
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
