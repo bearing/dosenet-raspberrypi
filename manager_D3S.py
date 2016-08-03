@@ -10,7 +10,6 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
-from globalvalues import DEFAULT_PROTOCOL
 
 
 import argparse
@@ -52,7 +51,6 @@ class Manager_D3S(object):
                  verbosity=None, 
                  datalog=None,
                  datalogflag=False,
-                 protocol=DEFAULT_PROTOCOL,
                  test=None,
                  config=None,
                  publickey=None,
@@ -76,8 +74,6 @@ class Manager_D3S(object):
         self.transport = transport
         self.device = device
         self.log_bytes = log_bytes
-
-        self.protocol = protocol
 
         self.datalog = datalog
         self.datalogflag = datalogflag
@@ -291,7 +287,6 @@ class Manager_D3S(object):
         parser.add_argument('--datalog', '-d', default=None)
         parser.add_argument('--datalogflag', '-a', action='store_true', default=False)
         parser.add_argument('--publickey', '-k', default=None)
-        parser.add_argument('--protocol', '-r', default=DEFAULT_PROTOCOL)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
         parser.add_argument('--test', '-t', action='store_true', default=False)        
         parser.add_argument('--transport', '-n', default='any')
