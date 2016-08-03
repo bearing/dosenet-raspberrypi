@@ -153,7 +153,7 @@ class ServerSender(object):
             
     def construct_packet_new_D3S(self, timestamp, spectra, error_code=0):
         """
-        New protocol version of construct packet.
+        TCP version of construct packet.
         """
 
         c = ','
