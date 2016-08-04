@@ -296,6 +296,8 @@ class Manager_D3S(object):
         GPIO.cleanup()
         
         self.running = False
+        self.data_handler.send_all_to_backlog()
+        
         del(self)
 
     @classmethod
