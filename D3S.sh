@@ -15,7 +15,7 @@ case "$1" in
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping D3S script"
-    sudo killall python &
+    sudo pkill -f manager_D3S.py
     ;;
  *)
     echo "Usage: /etc/init.d/dosenet {start|stop}"
