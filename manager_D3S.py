@@ -34,6 +34,7 @@ import sys
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
+    print 'Got Sigterm!'
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
