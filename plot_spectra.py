@@ -29,4 +29,4 @@ def sum_data(data):
    
 grab_data()
 total = sum_data(queue)
-print total
+print len(total)
