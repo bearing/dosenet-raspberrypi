@@ -13,7 +13,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         #data = ast.literal_eval(data)
         print data
         for i in data:
-           queue.append(i[1])
+           queue.append(i[0])
            
 def sum_data(data):
    for i in data:
