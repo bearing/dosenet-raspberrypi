@@ -10,7 +10,9 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         with open(path, 'r') as f:
             data = f.read()
+        print data    
         data = ast.literal_eval(data)
+        print data
         for i in data:
            queue.append(i[0])
            
