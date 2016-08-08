@@ -21,7 +21,7 @@ def sum_data(data):
    print total
    i = 1
    while i < len(data):
-       total += data[i]
+       total += data
        print total 
        i+=1
    return total
