@@ -2,6 +2,7 @@ from collections import deque
 import ast
 from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
+import os
 
 queue = deque('')
 
