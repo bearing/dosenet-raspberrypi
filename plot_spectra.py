@@ -16,6 +16,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         for i in data:
            queue.append(i[0])
         print queue
+        print len(queue)
            
 def sum_data(data):
    #for i in data:
