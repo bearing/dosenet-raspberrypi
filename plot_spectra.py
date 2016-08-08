@@ -15,16 +15,17 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
        # print data
         for i in data:
            queue.append(i[0])
+        print queue
            
 def sum_data(data):
-   for i in data:
-       i = np.array(i)
+   #for i in data:
+       #i = np.array(i)
    total = data.popleft()
-   print total
+   #print total
    i = 1
    while i < len(data):
        total += data.popleft()
-       print total 
+       #print total 
        i+=1
    return total
    
