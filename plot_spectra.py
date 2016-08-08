@@ -17,7 +17,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
 def sum_data(data):
    #for i in data:
        #i = np.array(i)
-   total = data
+   total = data[0]
    print total
    i = 1
    while i < len(data):
