@@ -3,6 +3,7 @@ import ast
 from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 queue = deque('')
 
@@ -25,4 +26,9 @@ def sum_data(data):
    
 grab_data()
 total = sum_data(queue)
+
+
+x = np.linspace(0, 4096, 4096)
+plt.plot(x, total)
+plt.show()
 
