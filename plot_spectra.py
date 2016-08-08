@@ -11,7 +11,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         with open(path, 'r') as f:
             data = f.read()
        # print data    
-        #data = ast.literal_eval(data)
+        data = ast.literal_eval(data)
        # print data
         for i in data:
            queue.append(i[0])
@@ -19,7 +19,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
 def sum_data(data):
    #for i in data:
        #i = np.array(i)
-   total = data[0]
+   total = data
    print total
    i = 1
    while i < len(data):
