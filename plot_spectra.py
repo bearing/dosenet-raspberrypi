@@ -15,8 +15,8 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
            queue.append(i[0])
            
 def sum_data(data):
-   for i in data:
-       i = np.array(i)
+   #for i in data:
+       #i = np.array(i)
    total = data[0]
    i = 1
    while i < len(data):
