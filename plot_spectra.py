@@ -28,6 +28,9 @@ grab_data()
 total = sum_data(queue)
 
 
+
+plt.xlabel('Channel')
+plt.ylabel('Counts')
 x = np.linspace(0, 4096, 4096)
 plt.plot(x, total)
 plt.show()
