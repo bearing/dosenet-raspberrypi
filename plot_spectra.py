@@ -9,7 +9,7 @@ queue = deque('')
 
 def grab_data(path=DEFAULT_DATALOG_D3S):
     """
-    Takes data from datalog and places it in a queue
+    Takes data from datalog and places it in a queue. Rebin data here.
     """
     if os.path.isfile(path):
         with open(path, 'r') as f:
@@ -17,6 +17,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         data = ast.literal_eval(data)
         for i in data:
             queue.append(rebin(np.array(i)))
+
 def sum_data(data):
    """
    Sums up the data in the queue
@@ -38,9 +39,9 @@ def plot_data(data):
     plt.plot(x, data)
     plt.show()
 
-def rebin(data, n=8):
+def rebin(data, n=4):
     """
-    Rebins the array. n is the divisor,
+    Rebins the array. n is the divisor. Rebin the data in the grab_data method. 
     """
     a = len(data)/n
     new_data = np.zeros((a, 1))
