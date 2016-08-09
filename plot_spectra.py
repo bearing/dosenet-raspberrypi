@@ -38,12 +38,16 @@ def plot_data(data):
     plt.plot(x, total)
     plt.show()
    
-if os.path.isfile(DEFAULT_DATALOG_D3S):
-    grab_data()
-    total = sum_data(queue)
-    plot_data(total)
-else:
-    print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
+def main(path=DEFAULT_DATALOG_D3S):
+    if os.path.isfile(path):
+        grab_data()
+        total = sum_data(queue)
+        plot_data(total)
+    else:
+        print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
+
+if __name__ == '__main__':      
+    main()
 
 
 
