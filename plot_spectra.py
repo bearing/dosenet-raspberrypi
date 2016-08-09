@@ -43,7 +43,7 @@ if os.path.isfile(DEFAULT_DATALOG_D3S):
     total = sum_data(queue)
     plot_data(total)
 else:
-    print 'datalog does not exist'
+    print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
 
 
