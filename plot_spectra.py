@@ -11,13 +11,15 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
     """
     Takes data from datalog and places it in a queue
     """
-    if os.path.isfile(path):
-        with open(path, 'r') as f:
-            data = f.read()
-        data = ast.literal_eval(data)
-        for i in data:
-           queue.append(np.array(i))
-           
+    try:
+        if os.path.isfile(path):
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+               queue.append(np.array(i))
+    except:
+        print 'Datalog does not exist'
 def sum_data(data):
    """
    Sums up the data in the queue
