@@ -35,7 +35,7 @@ def plot_data(data):
     plt.xlabel('Channel')
     plt.ylabel('Counts')
     x = np.linspace(0, 4096, 4096)
-    plt.plot(x, total)
+    plt.plot(x, data)
     plt.show()
    
 def main(path=DEFAULT_DATALOG_D3S):
