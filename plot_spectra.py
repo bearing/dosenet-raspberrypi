@@ -43,11 +43,9 @@ def rebin(data, n=8):
     new_data = np.zeros((a, 1))
     i = 0 
     count = 0
-    temp = []
     while i < a:
         temp = data[i:n]
         temp = sum(temp)
-        print temp
         new_data[count] = temp
         temp = []
         count+=1
@@ -59,8 +57,7 @@ def main(path=DEFAULT_DATALOG_D3S):
         grab_data()
         total = sum_data(queue)
         test = rebin(total) 
-        print len(test)
-        plot_data(total)
+        plot_data(test)
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
