@@ -37,11 +37,28 @@ def plot_data(data):
     x = np.linspace(0, 4096, 4096)
     plt.plot(x, data)
     plt.show()
-   
+
+def rebin(data, n=8):
+    a = len(data)/n
+    new_data = np.zeros((a, 1))
+    i = 0 
+    count = 0
+    temp = []
+    while i < a:
+        temp[0] = data[i:n]
+        sum(temp)
+        new_data[count] = temp[0]
+        temp = []
+        count+=1
+        i+=n
+    return new_data
+
 def main(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         grab_data()
         total = sum_data(queue)
+        test = rebin(total) 
+        print len(test)
         plot_data(total)
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
