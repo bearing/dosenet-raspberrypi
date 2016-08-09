@@ -47,7 +47,7 @@ def rebin(data, n=8):
     while i < a:
         temp = data[i:n]
         sum(temp)
-        new_data[count] = temp[0]
+        new_data[count] = temp
         temp = []
         count+=1
         i+=n
