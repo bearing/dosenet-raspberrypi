@@ -50,6 +50,7 @@ def rebin(data, n=8):
         temp = []
         count+=1
         i+=n
+        print new_data
     return new_data
 
 def main(path=DEFAULT_DATALOG_D3S):
