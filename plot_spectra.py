@@ -23,9 +23,11 @@ def sum_data(data):
    Sums up the data in the queue
    """
    total = data.popleft()
+   print total
    i = 1
    while i < len(data):
        total += data.popleft()
+       print total
        i+=1
    return total
 
@@ -50,7 +52,6 @@ def rebin(data, n=8):
     while i < a:
         temp = sum(data[i:n*(count+1)])
         new_data[count] = temp
-        print new_data[count] 
         count+=1
         i+=n
     return new_data
