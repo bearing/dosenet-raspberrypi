@@ -36,7 +36,6 @@ def plot_data(data):
     plt.xlabel('Channel')
     plt.ylabel('Counts')
     x = np.linspace(0, len(data), len(data))
-    print data
     plt.plot(data)
     plt.show()
 
@@ -50,8 +49,8 @@ def rebin(data, n=8):
     count = 0
     while i < a:
         temp = sum(data[i:n*(count+1)])
-        print temp
         new_data[count] = temp
+        print new_data[count] 
         count+=1
         i+=n
     return new_data
