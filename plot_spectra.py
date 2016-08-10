@@ -37,7 +37,7 @@ def plot_data(data):
     plt.xlabel('Channel')
     plt.ylabel('Counts')
     x = np.linspace(0, 4096, 256)
-    plt.plot(x, data)
+    plt.plot(x, data, drawstyle='steps-mid')
     plt.show()
 
 def rebin(data, n=4):
