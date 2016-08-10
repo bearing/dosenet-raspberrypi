@@ -11,16 +11,12 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
     """
     Takes data from datalog and places it in a queue. Rebin data here.
     """
-    j = 1
     if os.path.isfile(path):
         with open(path, 'r') as f:
             data = f.read()
         data = ast.literal_eval(data)
         for i in data:
             new_data = rebin(np.array(i))
-            if j ==1:
-                print new_data
-                j+=1
             queue.append(new_data)
 
 def sum_data(data):
