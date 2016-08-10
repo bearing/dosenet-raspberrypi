@@ -51,13 +51,12 @@ def rebin(data, n=8):
     i = 0 
     count = 0
     while i < a:
-        print data[i:n*(count+1)]
         temp = sum(data[i:n*(count+1)])
         new_data[count] = temp
-        print temp
         print new_data[count]
         count+=1
         i+=n
+        print new_data
     return new_data
 
 def main(path=DEFAULT_DATALOG_D3S):
