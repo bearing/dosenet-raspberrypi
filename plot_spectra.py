@@ -36,16 +36,16 @@ def plot_data(data):
     """
     plt.xlabel('Channel')
     plt.ylabel('Counts')
-    x = np.linspace(0, 64, 64)
+    x = np.linspace(0, 512, 512)
     plt.plot(x, data)
     plt.show()
 
-def rebin(data, n=8):
+def rebin(data, n=4):
     """
     Rebins the array. n is the divisor. Rebin the data in the grab_data method. 
     """
     a = len(data)/n
-    new_data = np.zeros((64, 1))
+    new_data = np.zeros((512, 1))
     i = 0 
     count = 0
     while i < a:
