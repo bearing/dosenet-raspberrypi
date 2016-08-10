@@ -36,6 +36,7 @@ def plot_data(data):
     plt.xlabel('Channel')
     plt.ylabel('Counts')
     x = np.linspace(0, len(data), len(data))
+    print data
     plt.plot(data)
     plt.show()
 
