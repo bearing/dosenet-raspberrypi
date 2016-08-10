@@ -48,6 +48,7 @@ def rebin(data, n=8):
     """
     a = len(data)/n
     new_data = np.zeros((a, 1))
+    print len(new_data)
     i = 0 
     count = 0
     while i < a:
