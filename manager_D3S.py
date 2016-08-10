@@ -254,6 +254,7 @@ class Manager_D3S(object):
         
                             self.handle_spectra(this_start, this_end, reading[4])
                             print time.time() - x
+                            x = time.time()
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
