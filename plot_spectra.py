@@ -17,7 +17,7 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         data = ast.literal_eval(data)
         print data[i]
         #for i in data:
-        new_data = rebin(np.array(data[i]))
+        new_data = rebin(np.array(data[0]))
         queue.append(new_data)
 
 def sum_data(data):
