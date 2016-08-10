@@ -56,7 +56,6 @@ def rebin(data, n=8):
         new_data[count] = temp
         print temp
         print new_data[count]
-        j+=1
         count+=1
         i+=n
     return new_data
