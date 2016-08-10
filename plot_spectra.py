@@ -15,11 +15,9 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         with open(path, 'r') as f:
             data = f.read()
         data = ast.literal_eval(data)
-        print data[0]
-        #for i in data:
-        new_data = rebin(np.array(data[0]))
-        print new_data
-        queue.append(new_data)
+        for i in data:
+            new_data = rebin(np.array(i))
+            queue.append(new_data)
 
 def sum_data(data):
    """
@@ -38,7 +36,7 @@ def plot_data(data):
     """
     plt.xlabel('Channel')
     plt.ylabel('Counts')
-    x = np.linspace(0, len(data), len(data))
+    x = np.linspace(0, 64, 64)
     plt.plot(data)
     plt.show()
 
@@ -61,8 +59,8 @@ def rebin(data, n=8):
 def main(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         grab_data()
-        #total = sum_data(queue)
-        #plot_data(total)
+        total = sum_data(queue)
+        plot_data(total)
         
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
