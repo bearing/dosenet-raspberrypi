@@ -23,6 +23,7 @@ def sum_data(data):
    """
    Sums up the data in the queue
    """
+   print data
    total = data.popleft()
    i = 1
    while i < len(data):
