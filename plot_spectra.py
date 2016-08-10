@@ -15,6 +15,8 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         with open(path, 'r') as f:
             data = f.read()
         data = ast.literal_eval(data)
+        print 'length of data'
+        print len(data)
         for i in data:
             new_data = rebin(np.array(i))
             queue.append(new_data)
