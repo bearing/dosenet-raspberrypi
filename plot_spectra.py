@@ -48,11 +48,14 @@ def rebin(data, n=8):
     new_data = np.zeros((a, 1))
     i = 0 
     count = 0
+    j=1
     while i < a:
         print data[i:n*(count+1)]
         temp = sum(data[i:n*(count+1)])
         new_data[count] = temp
         print temp
+        print j
+        j+=1
         count+=1
         i+=n
     return new_data
