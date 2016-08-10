@@ -40,7 +40,7 @@ def plot_data(data):
     plt.plot(x, data)
     plt.show()
 
-def rebin(data, n=4):
+def rebin(data, n=2):
     """
     Rebins the array. n is the divisor. Rebin the data in the grab_data method. 
     """
