@@ -9,8 +9,8 @@ import ast
 import os
 
 SPECTRA_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{spectra}} {reset}' +
-    '{green} spectra from {reset}' +
+    '{{time}}: {yellow} {{total_counts}} {reset}' +
+    '{green} total counts from {reset}' +
     ' ({{start_time}} to {{end_time}})').format(
     yellow=ANSI_YEL, reset=ANSI_RESET, green = ANSI_GR)
 strf = '%H:%M:%S'
@@ -120,7 +120,7 @@ class Data_Handler_D3S(object):
         self.vprint(
             1, SPECTRA_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
-                spectra=sum(spectra),
+                total_counts=sum(spectra),
                 start_time=start_text,
                 end_time=end_text))
 
