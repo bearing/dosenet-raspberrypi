@@ -120,7 +120,7 @@ class Data_Handler_D3S(object):
         self.vprint(
             1, SPECTRA_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
-                spectra=spectra,
+                spectra=sum(spectra),
                 start_time=start_text,
                 end_time=end_text))
 
