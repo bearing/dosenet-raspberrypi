@@ -45,8 +45,7 @@ def rebin(data, n=8):
     Rebins the array. n is the divisor. Rebin the data in the grab_data method. 
     """
     a = len(data)/n
-    new_data = np.zeros((a, 1))
-    print len(new_data)
+    new_data = np.zeros((64, 1))
     i = 0 
     count = 0
     while i < a:
