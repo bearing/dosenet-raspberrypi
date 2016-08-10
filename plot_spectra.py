@@ -15,11 +15,10 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         with open(path, 'r') as f:
             data = f.read()
         data = ast.literal_eval(data)
-        print 'length of data'
-        print len(data)
-        for i in data:
-            new_data = rebin(np.array(i))
-            queue.append(new_data)
+        print data[i]
+        #for i in data:
+        new_data = rebin(np.array(data[i]))))
+        queue.append(new_data)
 
 def sum_data(data):
    """
@@ -62,8 +61,9 @@ def rebin(data, n=8):
 def main(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         grab_data()
-        total = sum_data(queue)
-        plot_data(total)
+        #total = sum_data(queue)
+        #plot_data(total)
+        
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
