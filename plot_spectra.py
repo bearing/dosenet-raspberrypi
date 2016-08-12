@@ -79,6 +79,6 @@ X = np.linspace(0, 4096, 256)
 Z = 0
 i = 0
 while i < 5:
-    ax.contourf(X, i, queue[i])
+    ax.contourf(X, queue[i], i)
     i+=1
 plt.show()
