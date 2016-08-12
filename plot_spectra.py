@@ -95,7 +95,7 @@ def cc(arg):
 verts = []
 i = 0 
 while i < 5:
-    verts.append(list(zip(x, queue[i])))
+    verts.append(list(zip(y, queue[i])))
     i+=1
     
 
@@ -107,7 +107,7 @@ ax.add_collection3d(poly, zdir='y')
 ax.set_xlabel('X')
 ax.set_xlim3d(0, 4096)
 ax.set_ylabel('Y')
-ax.set_ylim3d(0, 4)
+ax.set_ylim3d(0, 1)
 ax.set_zlabel('Z')
 ax.set_zlim3d(0, 50)
     
