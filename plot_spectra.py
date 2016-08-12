@@ -60,6 +60,23 @@ def rebin(data, n=4):
 
 def cc(arg):
     return colorConverter.to_rgba(arg, alpha=0.6)
+    
+def generate_colors(length):
+    lst = []
+    color = 'r'
+    i = 0 
+    while i < length: 
+        lst.append(cc(color))
+        if color == 'r':
+            color = 'g'
+        elif color == 'g':
+            color = 'b'
+        elif color == 'b':
+            color = 'y'
+        elif color == 'y':
+            color = 'r'
+        i+=1
+        return lst
 
 def sum_graph(path=DEFAULT_DATALOG_D3S):
     """
@@ -80,6 +97,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         grab_data()
         length = len(queue)
+        color = generate_colors(length)
         y = np.linspace(0, 4096, 256)
         x = np.linspace(0, length-1, length)
         fig = plt.figure()
@@ -91,8 +109,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
             i+=1
             
         
-        poly = PolyCollection(verts, facecolors=rgb)
-        #facecolors=[cc('b'), cc('g'), cc('y'), cc('r'), cc('b'), cc('y'), cc('b')]
+        poly = PolyCollection(verts, facecolors=color)
         poly.set_alpha(0.7)
         ax.add_collection3d(poly, zs = x, zdir='y')
         
