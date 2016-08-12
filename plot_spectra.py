@@ -76,7 +76,7 @@ def generate_colors(length):
         else:
             color = 'r'
         i+=1
-        return lst
+    return lst
 
 def sum_graph(path=DEFAULT_DATALOG_D3S):
     """
