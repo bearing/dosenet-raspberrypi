@@ -105,6 +105,9 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         length = len(queue)
         color = generate_colors(length)
         
+        plt.imshow(queue[0])
+        plt.show
+
         y = np.linspace(0, 4096, 256)
         x = np.linspace(0, length-1, length)
         fig = plt.figure()
@@ -134,6 +137,3 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
 if __name__ == '__main__':      
     sum_graph()
     waterfall_graph()
-
-plt.imshow(queue[0])
-plt.show
