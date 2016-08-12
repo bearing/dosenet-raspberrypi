@@ -91,7 +91,8 @@ ax = fig.gca(projection='3d')
 def cc(arg):
     return colorConverter.to_rgba(arg, alpha=0.6)
 verts = []
-for i in y:
+i = 0 
+while i < 5:
     verts.append(list(zip(x, queue[i])))
 
 poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
