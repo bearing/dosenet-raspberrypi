@@ -70,15 +70,25 @@ if __name__ == '__main__':
 
 
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+#fig = plt.figure()
+#ax = fig.add_subplot(111, projection='3d')
 #X, Y, Z = axes3d.get_test_data(0.05)
 #ax.plot_wireframe(X, Y, Z, rstride=10, cstride=10)
+#grab_data()
+#X = np.linspace(0, 4096, 256)
+#Z = 0
+#i = 0
+#while i < 5:
+    #ax.contourf(X, queue[i])
+   # i+=1
+#plt.show()
+
+x = np.linspace(0, 4096, 256)
+y = np.linspace(0, 4, 5)
 grab_data()
-X = np.linspace(0, 4096, 256)
-Z = 0
 i = 0
-while i < 5:
-    ax.contourf(X, queue[i])
+while i < 5: 
+    plt.pcolor(x, y, queue[i])
     i+=1
+    
 plt.show()
