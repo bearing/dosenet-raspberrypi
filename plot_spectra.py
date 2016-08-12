@@ -106,7 +106,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         color = generate_colors(length)
         
         w = 0 
-        lst = np.empty([length, 4096])
+        lst = np.empty([length, 256])
         while w < length: 
             lst[w][:] = queue[w]
             w+=1
