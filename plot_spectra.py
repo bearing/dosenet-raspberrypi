@@ -103,5 +103,12 @@ poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
                                          cc('y')])
 poly.set_alpha(0.7)
 ax.add_collection3d(poly)
+
+ax.set_xlabel('X')
+ax.set_xlim3d(0, 4096)
+ax.set_ylabel('Y')
+ax.set_ylim3d(0, 4)
+ax.set_zlabel('Z')
+ax.set_zlim3d(0, 80)
     
 plt.show()
