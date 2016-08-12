@@ -109,6 +109,6 @@ ax.set_xlim3d(0, 4096)
 ax.set_ylabel('Y')
 ax.set_ylim3d(0, 4)
 ax.set_zlabel('Z')
-ax.set_zlim3d(0, 200)
+ax.set_zlim3d(0, 50)
     
 plt.show()
