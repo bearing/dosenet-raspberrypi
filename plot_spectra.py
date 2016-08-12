@@ -86,7 +86,7 @@ if __name__ == '__main__':
 #plt.show()
 
 y = np.linspace(0, 4096, 256)
-x = np.linspace(0, 4, 1)
+x = np.linspace(0, 4, 4)
 grab_data()
 fig = plt.figure()
 ax = fig.gca(projection='3d')
