@@ -92,7 +92,7 @@ def cc(arg):
     return colorConverter.to_rgba(arg, alpha=0.6)
 verts = []
 for i in y:
-    verts.append(list(zip(x, z[i])))
+    verts.append(list(zip(x, queue[i])))
 
 poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
                                          cc('y')])
