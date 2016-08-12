@@ -70,8 +70,11 @@ if __name__ == '__main__':
 
 
 
-#fig = plt.figure()
-#ax = fig.add_subplot(111, projection='3d')
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 #X, Y, Z = axes3d.get_test_data(0.05)
 #ax.plot_wireframe(X, Y, Z, rstride=10, cstride=10)
-
+grab_data()
+X = np.linspace(0, 4096, 256)
+Z = 0
+ax.plot_wireframe(X, queue[0], Z)
