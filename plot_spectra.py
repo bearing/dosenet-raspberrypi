@@ -73,7 +73,7 @@ def generate_colors(length):
             color = 'b'
         elif color == 'b':
             color = 'y'
-        elif color == 'y':
+        else:
             color = 'r'
         i+=1
         return lst
