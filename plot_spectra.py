@@ -102,12 +102,12 @@ while i < 5:
 poly = PolyCollection(verts, facecolors=[cc('y'), cc('g'), cc('b'),
                                          cc('r'), cc('y')])
 poly.set_alpha(0.7)
-ax.add_collection3d(poly, zdir='y')
+ax.add_collection3d(poly, zs = x zdir='y')
 
 ax.set_xlabel('X')
 ax.set_xlim3d(0, 4096)
 ax.set_ylabel('Y')
-ax.set_ylim3d(0, .0001)
+ax.set_ylim3d(0, 4)
 ax.set_zlabel('Z')
 ax.set_zlim3d(0, 50)
     
