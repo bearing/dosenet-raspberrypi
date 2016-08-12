@@ -78,3 +78,4 @@ grab_data()
 X = np.linspace(0, 4096, 256)
 Z = 0
 ax.plot_wireframe(X, queue[0], Z)
+plt.show()
