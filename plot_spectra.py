@@ -77,5 +77,7 @@ ax = fig.add_subplot(111, projection='3d')
 grab_data()
 X = np.linspace(0, 4096, 256)
 Z = 0
-ax.plot_wireframe(X, Z, queue[0], rstride=10, cstride=10)
+i = 0
+while i < 5:
+    ax.plot_wireframe(X, i, queue[i], rstride=10, cstride=10)
 plt.show()
