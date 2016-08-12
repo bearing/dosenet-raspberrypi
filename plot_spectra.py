@@ -108,7 +108,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         w = 0 
         lst = np.empty([256])
         while w < length: 
-            lst[w][:] = queue[w]
+            lst[w] = queue[w]
             w+=1
         plt.imshow(lst)
         plt.show()
