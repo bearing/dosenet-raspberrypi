@@ -86,7 +86,7 @@ if __name__ == '__main__':
 #plt.show()
 
 y = np.linspace(0, 4096, 256)
-x = np.linspace(0, 4, 4)
+x = np.linspace(0, 4, 5)
 grab_data()
 fig = plt.figure()
 ax = fig.gca(projection='3d')
@@ -99,7 +99,7 @@ while i < 5:
     i+=1
     
 
-poly = PolyCollection(verts, facecolors=[cc('y'), cc('g'), cc('b'),
+poly = PolyCollection(verts, facecolors=[cc('b'), cc('g'), cc('b'),
                                          cc('r'), cc('b')])
 poly.set_alpha(0.7)
 ax.add_collection3d(poly, zs = x, zdir='y')
