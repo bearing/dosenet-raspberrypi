@@ -236,7 +236,6 @@ class Manager_D3S(object):
         done_devices = set()
         try:    
             while self.running:
-                x = time.time()
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
                         if self.create_structures:
@@ -253,8 +252,6 @@ class Manager_D3S(object):
                                 time.time() - self.interval)
         
                             self.handle_spectra(this_start, this_end, reading[4])
-                            print time.time() - x
-                            x = time.time()
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
