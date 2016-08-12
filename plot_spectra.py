@@ -85,8 +85,8 @@ if __name__ == '__main__':
    # i+=1
 #plt.show()
 
-x = np.linspace(0, 4096, 256)
-y = np.linspace(0, 4, 1)
+y = np.linspace(0, 4096, 256)
+x = np.linspace(0, 4, 1)
 grab_data()
 fig = plt.figure()
 ax = fig.gca(projection='3d')
@@ -95,7 +95,7 @@ def cc(arg):
 verts = []
 i = 0 
 while i < 5:
-    verts.append(list(zip(x, queue[i])))
+    verts.append(list(zip(y, queue[i])))
     i+=1
     
 
