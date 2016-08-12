@@ -84,11 +84,11 @@ if __name__ == '__main__':
 #plt.show()
 
 x = np.linspace(0, 4096, 256)
-y = np.linspace(0, 4, 5)
+y = np.linspace(0, 1, 1)
 grab_data()
 i = 0
 while i < 5: 
-    plt.pcolor(x, x, queue[i])
+    plt.pcolor(x, y, queue[i])
     i+=1
     
 plt.show()
