@@ -88,7 +88,7 @@ y = np.linspace(0, 4, 5)
 grab_data()
 i = 0
 while i < 5: 
-    plt.pcolor(x, y, queue[i])
+    plt.pcolor(x, x, queue[i])
     i+=1
     
 plt.show()
