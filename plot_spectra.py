@@ -94,6 +94,8 @@ verts = []
 i = 0 
 while i < 5:
     verts.append(list(zip(x, queue[i])))
+    i+=1
+    
 
 poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
                                          cc('y')])
