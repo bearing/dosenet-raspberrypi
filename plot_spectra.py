@@ -80,4 +80,5 @@ Z = 0
 i = 0
 while i < 5:
     ax.plot_wireframe(X, i, queue[i], rstride=10, cstride=10)
+    i+=1
 plt.show()
