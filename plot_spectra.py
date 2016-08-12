@@ -134,3 +134,6 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
 if __name__ == '__main__':      
     sum_graph()
     waterfall_graph()
+
+plt.imshow(queue[0])
+plt.show
