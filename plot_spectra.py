@@ -109,5 +109,5 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
 if __name__ == '__main__':      
-    main()
-    main_2()
+    sum_graph()
+    waterfall_graph()
