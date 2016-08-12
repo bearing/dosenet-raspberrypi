@@ -59,9 +59,15 @@ def rebin(data, n=4):
     return new_data
 
 def cc(arg):
+    """
+    Converts string to colors
+    """
     return colorConverter.to_rgba(arg, alpha=0.6)
     
 def generate_colors(length):
+    """
+    Generates a list of colors for the waterfall graph
+    """
     lst = []
     color = 'r'
     i = 0 
@@ -92,7 +98,7 @@ def sum_graph(path=DEFAULT_DATALOG_D3S):
         
 def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     """
-    Plots a waterfall graph of all the spectra. Could clean up a bit. Also could fix the color issue
+    Plots a waterfall graph of all the spectra. Could clean up a bit.
     """
     if os.path.isfile(path):
         grab_data()
