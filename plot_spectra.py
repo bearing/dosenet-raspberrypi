@@ -80,7 +80,6 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
         grab_data()
         length = len(queue)
-        print length
         y = np.linspace(0, 4096, 256)
         x = np.linspace(0, length-1, length)
         fig = plt.figure()
