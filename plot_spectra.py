@@ -97,11 +97,11 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         poly.set_alpha(0.7)
         ax.add_collection3d(poly, zs = x, zdir='y')
         
-        ax.set_xlabel('X')
+        ax.set_xlabel('Channel')
         ax.set_xlim3d(0, 4096)
-        ax.set_ylabel('Y')
+        ax.set_ylabel('Time')
         ax.set_ylim3d(0, length - 1)
-        ax.set_zlabel('Z')
+        ax.set_zlabel('Counts')
         ax.set_zlim3d(0, 50)
             
         plt.show()
