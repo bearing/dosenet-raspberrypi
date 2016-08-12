@@ -84,11 +84,19 @@ if __name__ == '__main__':
 #plt.show()
 
 x = np.linspace(0, 4096, 256)
-y = np.linspace(0, 1, 1)
+y = np.linspace(0, 4, 1)
 grab_data()
-i = 0
-while i < 5: 
-    plt.pcolor(x, y, queue[i])
-    i+=1
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+def cc(arg):
+    return colorConverter.to_rgba(arg, alpha=0.6)
+verts = []
+for i in y:
+    verts.append(list(zip(x, z[i])))
+
+poly = PolyCollection(verts, facecolors=[cc('r'), cc('g'), cc('b'),
+                                         cc('y')])
+poly.set_alpha(0.7)
+ax.add_collection3d(poly)
     
 plt.show()
