@@ -58,7 +58,13 @@ def rebin(data, n=4):
         i+=n
     return new_data
 
-def main(path=DEFAULT_DATALOG_D3S):
+def cc(arg):
+    return colorConverter.to_rgba(arg, alpha=0.6)
+
+def sum_graph(path=DEFAULT_DATALOG_D3S):
+    """
+    Plots the sum of all the spectra
+    """
     if os.path.isfile(path):
         grab_data()
         total = sum_data(queue)
@@ -67,7 +73,10 @@ def main(path=DEFAULT_DATALOG_D3S):
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
         
-def main_2(path=DEFAULT_DATALOG_D3S):
+def waterfall_graph(path=DEFAULT_DATALOG_D3S):
+    """
+    Plots a waterfall graph of all the spectra. Could clean up a bit. Also could fix the color issue
+    """
     if os.path.isfile(path):
         grab_data()
         length = len(queue)
@@ -76,8 +85,6 @@ def main_2(path=DEFAULT_DATALOG_D3S):
         x = np.linspace(0, length-1, length)
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        def cc(arg):
-            return colorConverter.to_rgba(arg, alpha=0.6)
         verts = []
         i = 0 
         while i < length:
