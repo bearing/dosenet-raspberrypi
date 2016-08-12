@@ -100,7 +100,7 @@ while i < 5:
     
 
 poly = PolyCollection(verts, facecolors=[cc('y'), cc('g'), cc('b'),
-                                         cc('r'), cc('y')])
+                                         cc('r'), cc('b')])
 poly.set_alpha(0.7)
 ax.add_collection3d(poly, zs = x, zdir='y')
 
