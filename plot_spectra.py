@@ -98,12 +98,13 @@ def sum_graph(path=DEFAULT_DATALOG_D3S):
         
 def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     """
-    Plots a waterfall graph of all the spectra. Could clean up a bit.
+    Plots a waterfall graph of all the spectra. Could clean up a bit. Could also use a more general way to determine the count axis
     """
     if os.path.isfile(path):
         grab_data()
         length = len(queue)
         color = generate_colors(length)
+        
         y = np.linspace(0, 4096, 256)
         x = np.linspace(0, length-1, length)
         fig = plt.figure()
