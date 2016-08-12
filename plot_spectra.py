@@ -95,7 +95,7 @@ def cc(arg):
 verts = []
 i = 0 
 while i < 5:
-    verts.append(list(zip(x, queue[i])))
+    verts.append(list(zip(y, queue[i])))
     i+=1
     
 
