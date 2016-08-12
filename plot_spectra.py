@@ -66,49 +66,39 @@ def main(path=DEFAULT_DATALOG_D3S):
         
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
+        
+def main_2(path=DEFAULT_DATALOG_D3S):
+    if os.path.isfile(path):
+        y = np.linspace(0, 4096, 256)
+        x = np.linspace(0, 4, 5)
+        grab_data()
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        def cc(arg):
+            return colorConverter.to_rgba(arg, alpha=0.6)
+        verts = []
+        i = 0 
+        while i < 5:
+            verts.append(list(zip(y, queue[i])))
+            i+=1
+            
+        
+        poly = PolyCollection(verts, facecolors=[cc('b'), cc('g'), cc('b'),
+                                                 cc('r'), cc('b')])
+        poly.set_alpha(0.7)
+        ax.add_collection3d(poly, zs = x, zdir='y')
+        
+        ax.set_xlabel('X')
+        ax.set_xlim3d(0, 4096)
+        ax.set_ylabel('Y')
+        ax.set_ylim3d(0, 4)
+        ax.set_zlabel('Z')
+        ax.set_zlim3d(0, 50)
+            
+        plt.show()
+    else:
+        print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
 if __name__ == '__main__':      
     main()
-
-
-
-#fig = plt.figure()
-#ax = fig.add_subplot(111, projection='3d')
-#X, Y, Z = axes3d.get_test_data(0.05)
-#ax.plot_wireframe(X, Y, Z, rstride=10, cstride=10)
-#grab_data()
-#X = np.linspace(0, 4096, 256)
-#Z = 0
-#i = 0
-#while i < 5:
-    #ax.contourf(X, queue[i])
-   # i+=1
-#plt.show()
-
-y = np.linspace(0, 4096, 256)
-x = np.linspace(0, 4, 5)
-grab_data()
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-def cc(arg):
-    return colorConverter.to_rgba(arg, alpha=0.6)
-verts = []
-i = 0 
-while i < 5:
-    verts.append(list(zip(y, queue[i])))
-    i+=1
-    
-
-poly = PolyCollection(verts, facecolors=[cc('b'), cc('g'), cc('b'),
-                                         cc('r'), cc('b')])
-poly.set_alpha(0.7)
-ax.add_collection3d(poly, zs = x, zdir='y')
-
-ax.set_xlabel('X')
-ax.set_xlim3d(0, 4096)
-ax.set_ylabel('Y')
-ax.set_ylim3d(0, 4)
-ax.set_zlabel('Z')
-ax.set_zlim3d(0, 50)
-    
-plt.show()
+    main_2()
