@@ -69,16 +69,17 @@ def main(path=DEFAULT_DATALOG_D3S):
         
 def main_2(path=DEFAULT_DATALOG_D3S):
     if os.path.isfile(path):
-        y = np.linspace(0, 4096, 256)
-        x = np.linspace(0, 4, 5)
         grab_data()
+        length = len(queue)
+        y = np.linspace(0, 4096, 256)
+        x = np.linspace(0, length-1, length)
         fig = plt.figure()
         ax = fig.gca(projection='3d')
         def cc(arg):
             return colorConverter.to_rgba(arg, alpha=0.6)
         verts = []
         i = 0 
-        while i < 5:
+        while i < length:
             verts.append(list(zip(y, queue[i])))
             i+=1
             
@@ -91,7 +92,7 @@ def main_2(path=DEFAULT_DATALOG_D3S):
         ax.set_xlabel('X')
         ax.set_xlim3d(0, 4096)
         ax.set_ylabel('Y')
-        ax.set_ylim3d(0, 4)
+        ax.set_ylim3d(0, length - 1)
         ax.set_zlabel('Z')
         ax.set_zlim3d(0, 50)
             
