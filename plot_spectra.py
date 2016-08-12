@@ -86,7 +86,7 @@ def main_2(path=DEFAULT_DATALOG_D3S):
             
         
         poly = PolyCollection(verts, facecolors=[cc('b'), cc('g'), cc('y'),
-                                                 cc('r'), cc('b')], cc('y'), cc('b')]
+                                                 cc('r'), cc('b'), cc('y'), cc('b')]
         poly.set_alpha(0.7)
         ax.add_collection3d(poly, zs = x, zdir='y')
         
