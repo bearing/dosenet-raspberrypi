@@ -105,8 +105,11 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         length = len(queue)
         color = generate_colors(length)
         
-        plt.imshow(queue[0])
-        plt.show
+        j = 0
+        while j < length:
+            plt.imshow(queue[j])
+            plt.show
+            j+=1
 
         y = np.linspace(0, 4096, 256)
         x = np.linspace(0, length-1, length)
