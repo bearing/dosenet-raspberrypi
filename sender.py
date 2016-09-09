@@ -115,6 +115,8 @@ class ServerSender(object):
     def construct_packet(self, cpm, cpm_error, error_code=0):
         """
         Construct the raw packet string. (basically copied from old code)
+
+        hash,ID,cpm,cpm_error,error_code
         """
 
         c = ','
@@ -134,6 +136,8 @@ class ServerSender(object):
     def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol version of construct packet.
+
+        hash,ID,timestamp,cpm,cpm_error,error_code
         """
 
         c = ','
@@ -149,6 +153,29 @@ class ServerSender(object):
             raise MissingFile('Missing or broken Config object')
         else:
             self.vprint(3, 'Constructed packet')
+            return raw_packet
+
+    def construct_log_packet(self, msg_code, msg_text):
+        """
+        Send a message to be recorded in the server log database.
+
+        hash,ID,"LOG",msg_code,msg_text
+        """
+
+        c = ','
+        if not isinstance(msg_code, int):
+            raise TypeError('msg_code should be an int')
+        try:
+            raw_packet = (
+                str(self.config.hash) + c +
+                str(self.config.ID) + c +
+                'LOG' + c +
+                str(msg_code) + c +
+                str(msg_text))
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed log packet')
             return raw_packet
 
     def encrypt_packet(self, raw_packet):
