@@ -59,6 +59,9 @@ def rebin(data, n=4):
     return new_data
 
 def make_image():
+    """
+    Prepares an array for the waterfall plot
+    """
     length = len(queue)
     image = np.zeros((length, length))
     i = 0 
