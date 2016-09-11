@@ -58,31 +58,14 @@ def rebin(data, n=4):
         i+=n
     return new_data
 
-def cc(arg):
-    """
-    Converts string to colors
-    """
-    return colorConverter.to_rgba(arg, alpha=0.6)
-    
-def generate_colors(length):
-    """
-    Generates a list of colors for the waterfall graph
-    """
-    lst = []
-    color = 'r'
+def make_image():
+    length = len(queue)
+    image = np.zeros((length, length))
     i = 0 
-    while i < length: 
-        lst.append(cc(color))
-        if color == 'r':
-            color = 'g'
-        elif color == 'g':
-            color = 'b'
-        elif color == 'b':
-            color = 'y'
-        else:
-            color = 'r'
+    while i < length:
+        image[i]=queue.popleft()
         i+=1
-    return lst
+    return image
 
 def sum_graph(path=DEFAULT_DATALOG_D3S):
     """
@@ -98,45 +81,17 @@ def sum_graph(path=DEFAULT_DATALOG_D3S):
         
 def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     """
-    Plots a waterfall graph of all the spectra. Could clean up a bit. Could also use a more general way to determine the count axis
+    Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
     if os.path.isfile(path):
         grab_data()
-        length = len(queue)
-        color = generate_colors(length)
-        lst = np.array(queue)
-        lst = np.array(lst[:])
-        #w = 0 
-        #lst = np.empty([256])
-        #while w < length: 
-            #lst[w] = queue[w]
-            #w+=1
-        plt.imshow(lst)
-        plt.show()
+        image = make_image()
+        
+        plt.imshow(image)
+        plt.xlabel('Bin')
 
-        y = np.linspace(0, 4096, 256)
-        x = np.linspace(0, length-1, length)
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
-        verts = []
-        i = 0 
-        while i < length:
-            verts.append(list(zip(y, queue[i])))
-            i+=1
-            
-        
-        poly = PolyCollection(verts, facecolors=color)
-        poly.set_alpha(0.7)
-        ax.add_collection3d(poly, zs = x, zdir='y')
-        
-        ax.set_xlabel('Channel')
-        ax.set_xlim3d(0, 4096)
-        ax.set_ylabel('Time')
-        ax.set_ylim3d(0, length - 1)
-        ax.set_zlabel('Counts')
-        ax.set_zlim3d(0, 50)
-            
-        plt.show()
+        plt.ylabel('Spectra')
+        plt.colorbar()
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
