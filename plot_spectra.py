@@ -68,7 +68,7 @@ def make_image():
     image = np.zeros((length, 256))
     i = 0 
     while i < length:
-        image[i]=queue.popleft()
+        image[i]=fix_array(queue.popleft())
         i+=1
     return image
     
