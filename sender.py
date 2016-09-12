@@ -230,7 +230,7 @@ class ServerSender(object):
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted, cpm, cpm_error)
+        self.send_data(encrypted)
 
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
         """

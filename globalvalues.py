@@ -26,6 +26,7 @@ DEFAULT_LOGFILE = '/home/pi/debug.log'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
 DEFAULT_TCP_PORT = 5100
+TESTING_TCP_PORT = 5101
 DEFAULT_SENDER_MODE = 'tcp'
 DEFAULT_DATALOG = '/home/pi/data-log.txt'
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
