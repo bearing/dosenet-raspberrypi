@@ -90,6 +90,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     """
     if os.path.isfile(path):
         grab_data()
+        print(len(queue))
         image = make_image()
         
         plt.imshow(image, interpolation='nearest', aspect='auto', cmap='Greys', extent=[1,4096,queue_length,1])
