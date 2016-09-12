@@ -63,7 +63,7 @@ def make_image():
     Prepares an array for the waterfall plot
     """
     length = len(queue)
-    image = np.zeros((length, length))
+    image = np.zeros((length, 256))
     i = 0 
     while i < length:
         image[i]=queue.popleft()
@@ -90,7 +90,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         grab_data()
         image = make_image()
         
-        plt.imshow(image)
+        plt.imshow(image, interpolation='nearest', aspect='auto', cmap='Greys')
         plt.xlabel('Bin')
 
         plt.ylabel('Spectra')
