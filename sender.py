@@ -119,14 +119,14 @@ class ServerSender(object):
         hash,ID,cpm,cpm_error,error_code
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(cpm) + c +
-                str(cpm_error) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(cpm),
+                 str(cpm_error),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
@@ -140,15 +140,15 @@ class ServerSender(object):
         hash,ID,timestamp,cpm,cpm_error,error_code
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(timestamp) + c +
-                str(cpm) + c +
-                str(cpm_error) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(cpm),
+                 str(cpm_error),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
@@ -162,16 +162,16 @@ class ServerSender(object):
         hash,ID,"LOG",msg_code,msg_text
         """
 
-        c = ','
         if not isinstance(msg_code, int):
             raise TypeError('msg_code should be an int')
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                'LOG' + c +
-                str(msg_code) + c +
-                str(msg_text))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 'LOG',
+                 str(msg_code),
+                 str(msg_text)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
