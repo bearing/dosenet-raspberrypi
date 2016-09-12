@@ -71,6 +71,14 @@ def make_image():
         image[i]=queue.popleft()
         i+=1
     return image
+    
+def fix_array(array):
+    x = np.zeros((256, 0))
+    while i < 256:
+        x[i] = array[i]
+        i+=1
+    return x
+        
 
 def sum_graph(path=DEFAULT_DATALOG_D3S):
     """
