@@ -149,9 +149,9 @@ def test_packet_length(sender):
     sender.send_data(encrypted)
 
     # too many fields (add some numbers)
-    too_many = ','.join(
+    too_many = ','.join([
         sender.config.hash, str(sender.config.ID), str(1.1), str(0.1),
-        str(0), str(3.1416), str(2.71828))
+        str(0), str(3.1416), str(2.71828)])
     encrypted = sender.encrypt_packet(too_many)
     sender.send_data(encrypted)
 
