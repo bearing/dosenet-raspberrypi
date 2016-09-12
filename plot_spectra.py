@@ -9,7 +9,6 @@ from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
 
 queue = deque('')
-queue_length = 0
 
 def grab_data(path=DEFAULT_DATALOG_D3S):
     """
@@ -64,7 +63,7 @@ def make_image():
     Prepares an array for the waterfall plot
     """
     length = len(queue)
-    queue_length = length
+    
     image = np.zeros((length, 256))
     i = 0 
     while i < length:
@@ -73,12 +72,15 @@ def make_image():
     return image
     
 def fix_array(array):
-    x = np.zeros((256))
+    """
+    Used to format arrays for the waterfall plot. 
+    """
+    new_array = np.zeros((256))
     i = 0
     while i < 256:
-        x[i] = array[i]
+        new_array[i] = array[i]
         i+=1
-    return x
+    return new_array
         
 
 def sum_graph(path=DEFAULT_DATALOG_D3S):
@@ -99,7 +101,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     """
     if os.path.isfile(path):
         grab_data()
-        print(len(queue))
+        queue_length = len(queue)
         image = make_image()
         
         plt.imshow(image, interpolation='nearest', aspect='auto', extent=[1,4096,queue_length,1])
