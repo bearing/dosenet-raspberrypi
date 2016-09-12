@@ -189,9 +189,9 @@ class ServerSender(object):
         else:
             return encrypted
 
-    def send_data(self, encrypted, cpm=None, cpm_err=None):
+    def send_data(self, encrypted):
         """
-        Send data according to self.mode, and handle common errors
+        Send data according to self.mode
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
@@ -239,8 +239,15 @@ class ServerSender(object):
         packet = self.construct_packet_new(
             timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted, cpm, cpm_error)
+        self.send_data(encrypted)
 
+    def send_log(self, msg_code, msg_text):
+        """
+        Send a log message
+        """
+        packet = self.construct_log_packet(msg_code, msg_text)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
 
 
 class PacketError(Exception):
