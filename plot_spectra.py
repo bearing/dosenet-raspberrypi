@@ -107,6 +107,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
 
         plt.ylabel('Spectra')
         plt.colorbar()
+        plt.show()
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
