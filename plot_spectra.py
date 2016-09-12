@@ -102,7 +102,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         print(len(queue))
         image = make_image()
         
-        plt.imshow(image, interpolation='nearest', aspect='auto', cmap='Greys', extent=[1,4096,queue_length,1])
+        plt.imshow(image, interpolation='nearest', aspect='auto', extent=[1,4096,queue_length,1])
         plt.xlabel('Bin')
 
         plt.ylabel('Spectra')
