@@ -73,7 +73,7 @@ def make_image():
     return image
     
 def fix_array(array):
-    x = np.zeros((256, 0))
+    x = np.zeros((256))
     i = 0
     while i < 256:
         x[i] = array[i]
