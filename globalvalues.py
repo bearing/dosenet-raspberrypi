@@ -25,6 +25,7 @@ DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
 DEFAULT_LOGFILE = '/home/pi/debug.log'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
+TESTING_UDP_PORT = 5006
 DEFAULT_TCP_PORT = 5100
 TESTING_TCP_PORT = 5101
 DEFAULT_SENDER_MODE = 'tcp'

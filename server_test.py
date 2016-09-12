@@ -143,8 +143,8 @@ def test_packet_length(sender):
     """
 
     # too few fields (no error_code)
-    too_few = ','.join(
-        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1))
+    too_few = ','.join([
+        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1)])
     encrypted = sender.encrypt_packet(too_few)
     sender.send_data(encrypted)
 
