@@ -33,28 +33,28 @@ def main():
     sender = ServerSender(
         port=TESTING_TCP_PORT, config=config, publickey=publickey, mode='tcp')
 
-    # test basic new data protocol
+    # test basic new data protocol (1 TCP request)
     test_new_data(sender)
 
-    # test basic old data protocol
+    # test basic old data protocol (1)
     test_old_data(sender)
 
-    # test basic log
+    # test basic log (1)
     test_log(sender)
 
-    # test UnencryptedPacket
+    # test UnencryptedPacket (1)
     test_unencrypted(sender)
 
-    # test BadPacket
+    # test BadPacket (1)
     test_bad_packet(sender)
 
-    # test PacketLengthError
+    # test PacketLengthError (2)
     test_packet_length(sender)
 
-    # test HashLengthError
+    # test HashLengthError (3)
     test_hash_length(sender)
 
-    # test ExcessiveCountrate
+    # test ExcessiveCountrate (2)
     test_countrate(sender)
 
 
@@ -102,6 +102,25 @@ def test_bad_packet(sender):
     sender.send_data(message)
 
 
+def test_packet_length(sender):
+    """
+    Test server's handling of a packet with wrong number of fields.
+    """
+
+    # too few fields (no error_code)
+    too_few = ','.join([
+        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1)])
+    encrypted = sender.encrypt_packet(too_few)
+    sender.send_data(encrypted)
+
+    # too many fields (add some numbers)
+    too_many = ','.join([
+        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1),
+        str(0), str(3.1416), str(2.71828)])
+    encrypted = sender.encrypt_packet(too_many)
+    sender.send_data(encrypted)
+
+
 def test_hash_length(sender):
     """
     Test server's handling of a bad hash (not len 32).
@@ -136,24 +155,6 @@ def test_countrate(sender):
     # new data protocol
     sender.send_cpm_new(time.time(), 250, 0.1)
 
-
-def test_packet_length(sender):
-    """
-    Test server's handling of a packet with wrong number of fields.
-    """
-
-    # too few fields (no error_code)
-    too_few = ','.join([
-        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1)])
-    encrypted = sender.encrypt_packet(too_few)
-    sender.send_data(encrypted)
-
-    # too many fields (add some numbers)
-    too_many = ','.join([
-        sender.config.hash, str(sender.config.ID), str(1.1), str(0.1),
-        str(0), str(3.1416), str(2.71828)])
-    encrypted = sender.encrypt_packet(too_many)
-    sender.send_data(encrypted)
 
 if __name__ == '__main__':
     main()
