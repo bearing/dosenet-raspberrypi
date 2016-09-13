@@ -358,7 +358,7 @@ if __name__ == '__main__':
         'Normally called from manager.py. ' +
         'Called directly, it will send a log message to the server.')
     parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP'],
-                        default=None,
+                        default=DEFAULT_SENDER_MODE,
                         help='Network protocol to use')
     parser.add_argument('--config', '-g', type=str, default=DEFAULT_CONFIG,
                         help='config file location')
@@ -377,6 +377,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     send_log_message(
-        mode=args.mode.lower(), address=args.hostname, port=args.port,
+        mode=args.mode, address=args.hostname, port=args.port,
         config=args.config, publickey=args.publickey,
         msgcode=args.msgcode, message=args.message)
