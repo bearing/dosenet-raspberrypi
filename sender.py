@@ -357,7 +357,7 @@ if __name__ == '__main__':
         description='Sender for UDP/TCP data packets. ' +
         'Normally called from manager.py. ' +
         'Called directly, it will send a log message to the server.')
-    parser.add_argument('--mode', 'n', choices=['udp', 'tcp', 'UDP', 'TCP'],
+    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP'],
                         default=None,
                         help='Network protocol to use')
     parser.add_argument('--config', '-g', type=str, default=DEFAULT_CONFIG,
