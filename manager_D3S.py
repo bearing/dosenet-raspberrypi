@@ -57,6 +57,8 @@ class Manager_D3S(object):
                  verbosity=None, 
                  datalog=None,
                  datalogflag=False,
+                 calibrationlog=None,
+                 calibrationlogflag=False,
                  test=None,
                  config=None,
                  publickey=None,
@@ -83,12 +85,19 @@ class Manager_D3S(object):
         self.device = device
         self.log_bytes = log_bytes
 
+        self.calibrationlog = calibrationlog
+        self.calibrationlogflag = calibrationlogflag      
+        
+        self.z_flag()
+        self.y_flag()
+        self.make_calibration_log(self.calibrationlog)
+        
         self.datalog = datalog
         self.datalogflag = datalogflag
-
+        
         self.a_flag()
         self.d_flag()
-        self.make_data_log(self.datalog)
+        self.make_data_log(self.datalog)  
 
         self.test = test
         
@@ -119,11 +128,33 @@ class Manager_D3S(object):
         
         self.data_handler.backlog_to_queue()
             
+    def z_flag(self):
+        """
+        Checks if the -z from_argparse is called.
+        If it is called, sets the path of the calibration-log to
+        DEFAULT_CALIBRATIONLOG_D3S.
+        """
+        if self.calibrationlogflag:
+            self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
+
+    def y_flag(self):
+        """
+        Checks if the -y from_argparse is called.
+        If it is called, sets calibrationlogflag to True.
+        """
+        if self.calibrationlog:
+            self.calibrationlogflag = True
+
+    def make_calibration_log(self, file):
+        if self.calibrationlogflag:
+            with open(file, 'a') as f:
+                pass
+
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
         If it is called, sets the path of the data-log to
-        DEFAULT_DATALOG.
+        DEFAULT_DATALOG_D3S.
         """
         if self.datalogflag:
             self.datalog = DEFAULT_DATALOG_D3S
@@ -318,6 +349,8 @@ class Manager_D3S(object):
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
         parser.add_argument('--log', '-l', action='store_true', default=False)
         parser.add_argument('--logfile', '-f', type=str, default=None)
+        parser.add_argument('--calibrationlog', '-y', default=None)
+        parser.add_argument('--calibrationlogflag', '-z', action='store_true', default=False)
         
         args = parser.parse_args()
         arg_dict = vars(args)
