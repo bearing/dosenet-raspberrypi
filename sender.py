@@ -30,7 +30,6 @@ class ServerSender(object):
 
     def __init__(self,
                  manager=None,
-                 network_status=None,
                  address=DEFAULT_HOSTNAME,
                  port=None,
                  config=None,
@@ -53,10 +52,10 @@ class ServerSender(object):
 
         self.address = address
         self.handle_input(
-            manager, mode, port, network_status, config, publickey)
+            manager, mode, port, config, publickey)
 
     def handle_input(
-            self, manager, mode, port, network_status, config, publickey):
+            self, manager, mode, port, config, publickey):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
@@ -91,16 +90,6 @@ class ServerSender(object):
                 self.port = port
             self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
                 self.address, self.port))
-
-        if network_status is None:
-            if manager is None:
-                self.vprint(
-                    1, 'ServerSender starting without network status object')
-                self.network_up = None
-            else:
-                self.network_up = manager.network_up
-        else:
-            self.network_up = network_status
 
         if config is None:
             if manager is None:
@@ -161,6 +150,25 @@ class ServerSender(object):
         else:
             self.vprint(3, 'Constructed packet')
             return raw_packet
+            
+    def construct_packet_new_D3S(self, timestamp, spectra, error_code=0):
+        """
+        TCP version of construct packet.
+        """
+
+        c = ','
+        try:
+            raw_packet = (
+                str(self.config.hash) + c +
+                str(self.config.ID) + c +
+                str(timestamp) + c +
+                str(spectra) + c +
+                str(error_code))
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
 
     def encrypt_packet(self, raw_packet):
         """Encrypt the raw packet"""
@@ -173,48 +181,16 @@ class ServerSender(object):
         else:
             return encrypted
 
-    def send_data(self, encrypted):
+    def send_data(self, encrypted, cpm=None, cpm_err=None):
         """
         Send data according to self.mode, and handle common errors
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
-        try:
-            if self.mode == 'udp':
-                self.send_udp(encrypted)
-            elif self.mode == 'tcp':
-                self.send_tcp(encrypted)
-        except socket.gaierror as e:
-            if e[0] == socket.EAI_AGAIN:
-                # TCP and UDP
-                # network is down, but NetworkStatus didn't notice yet
-                # (resolving DNS like dosenet.dhcp.lbl.gov)
-                self.vprint(
-                    1, 'Failed to send packet! Address resolution error')
-                self.network_up.update()
-            else:
-                self.vprint(1, 'Failed to send packet! Address error: ' +
-                            '{}: {}'.format(*e))
-        except socket.error as e:
-            if e[0] == errno.ECONNREFUSED:
-                # TCP
-                # server is not accepting connections
-                self.vprint(1, 'Failed to send packet! Connection refused')
-            elif e[0] == errno.ENETUNREACH:
-                # TCP and UDP
-                # network is down, but NetworkStatus didn't notice yet
-                # (IP like 131.243.51.241)
-                self.vprint(
-                    1, 'Failed to send packet! Network is unreachable')
-                self.network_up.update()
-            else:
-                # consider handling errno.ECONNABORTED, errno.ECONNRESET
-                self.vprint(1, 'Failed to send packet! Socket error: ' +
-                            '{}: {}'.format(*e))
-        except socket.timeout:
-            # TCP
-            self.vprint(1, 'Failed to send packet! Socket timeout')
-            self.network_up.update()
+        if self.mode == 'udp':
+            self.send_udp(encrypted)
+        elif self.mode == 'tcp':
+            self.send_tcp(encrypted)
 
     def send_udp(self, encrypted):
         """
@@ -246,11 +222,7 @@ class ServerSender(object):
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.network_up or self.network_up is None:
-            self.send_data(encrypted)
-        else:
-            # TODO: feature add here
-            self.vprint(2, 'Network DOWN, not sending packet')
+        self.send_data(encrypted, cpm, cpm_error)
 
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
@@ -259,11 +231,17 @@ class ServerSender(object):
         packet = self.construct_packet_new(
             timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        if self.network_up or self.network_up is None:
-            self.send_data(encrypted)
-        else:
-            # TODO: feature add here
-            self.vprint(2, 'Network DOWN, not sending packet')
+        self.send_data(encrypted, cpm, cpm_error)
+
+    def send_spectra_new_D3S(self, timestamp, spectra, error_code=0):
+        """
+        TCP for sending spectra
+        """
+        packet = self.construct_packet_new_D3S(
+            timestamp, spectra, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
+
 
 
 class PacketError(Exception):
