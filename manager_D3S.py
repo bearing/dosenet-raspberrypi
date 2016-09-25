@@ -310,6 +310,15 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
                 self.vprint(2, 'Writing spectra to data log at {}'.format(file))
+    
+    def calibration_log(self, file, spectra):
+        """
+        Writes spectra to data-log.
+        """
+        if self.calibrationlogflag:
+            with open(file, 'a') as f:
+                f.write('{0}, '.format(spectra))
+                self.vprint(2, 'Writing spectra to data log at {}'.format(file))
                 
     def handle_spectra(self, this_start, this_end, spectra):
         """
