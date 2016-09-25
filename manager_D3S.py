@@ -313,19 +313,19 @@ class Manager_D3S(object):
     
     def calibration_log(self, file, spectra):
         """
-        Writes spectra to data-log.
+        Writes spectra to calubration-log.
         """
         if self.calibrationlogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
-                self.vprint(2, 'Writing spectra to data log at {}'.format(file))
+                self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
                 
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
         self.data_handler.main(
-            self.datalog, spectra, this_start, this_end)
+            self.datalog, self.calibrationlog, spectra, this_start, this_end)
             
     def takedown(self): 
         """
