@@ -110,7 +110,7 @@ class Data_Handler_D3S(object):
             print(self.queue)
             os.remove(path)
 
-    def main(self, datalog, spectra, this_start, this_end):
+    def main(self, datalog, calibrationlog, spectra, this_start, this_end):
         """
         Determines how to handle the spectra data.
         """
@@ -125,6 +125,7 @@ class Data_Handler_D3S(object):
                 end_time=end_text))
 
         self.manager.data_log(datalog, spectra)
+        self.manager.calibration_log(calibrationlog, spectra)
 
         if self.manager.test:
             # for testing the memory queue
