@@ -12,6 +12,7 @@ from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
+from globalvalues import DEFAULT_CALIBRATIONLOG_D3S
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
