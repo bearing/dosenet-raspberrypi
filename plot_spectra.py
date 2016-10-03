@@ -8,8 +8,6 @@ from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
 
-queue = deque('')
-
 def grab_data(path=DEFAULT_DATALOG_D3S):
     """
     Takes data from datalog and places it in a queue. Rebin data here.
@@ -18,9 +16,11 @@ def grab_data(path=DEFAULT_DATALOG_D3S):
         with open(path, 'r') as f:
             data = f.read()
         data = ast.literal_eval(data)
+        queue = deque('')
         for i in data:
             new_data = rebin(np.array(i))
             queue.append(new_data)
+        return queue
 
 def sum_data(data):
    """
@@ -58,7 +58,7 @@ def rebin(data, n=4):
         i+=n
     return new_data
 
-def make_image():
+def make_image(queue):
     """
     Prepares an array for the waterfall plot
     """
@@ -88,7 +88,7 @@ def sum_graph(path=DEFAULT_DATALOG_D3S):
     Plots the sum of all the spectra
     """
     if os.path.isfile(path):
-        grab_data()
+        queue = grab_data()
         total = sum_data(queue)
         plot_data(total)
         
@@ -100,9 +100,9 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
     Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
     if os.path.isfile(path):
-        grab_data()
+        queue = grab_data()
         queue_length = len(queue)
-        image = make_image()
+        image = make_image(queue)
         
         plt.imshow(image, interpolation='nearest', aspect='auto', extent=[1,4096,queue_length,1])
         plt.xlabel('Bin')
