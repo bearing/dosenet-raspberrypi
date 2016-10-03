@@ -43,12 +43,12 @@ signal.signal(signal.SIGTERM, signal_term_handler)
 class Manager_D3S(object):
     """
     Master object for D3S device operation. 
-    
+
     Prints out spectra for every interval, stores each spectra, and sums the spectra together. 
-    
+
     Interval is in seconds with the default being 30 seconds.
     """
-    
+
     def __init__(self,
                  interval=None,
                  count=0,
@@ -72,48 +72,48 @@ class Manager_D3S(object):
                  network_LED_pin=NETWORK_LED_PIN,
                  power_LED_pin=POWER_LED_PIN,
                  ):
-    
+
         self.running = running
-        
+
         self.total = None
         self.lst = None
         self.create_structures = True
-        
+
         self.interval = interval
         self.count = count
-        
+
         self.transport = transport
         self.device = device
         self.log_bytes = log_bytes
 
         self.calibrationlog = calibrationlog
         self.calibrationlogflag = calibrationlogflag      
-        
+
         self.z_flag()
         self.y_flag()
         self.make_calibration_log(self.calibrationlog)
-        
+
         self.datalog = datalog
         self.datalogflag = datalogflag
-        
+
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)  
 
         self.test = test
-        
+
         self.handle_input(log, logfile, verbosity, interval, config, publickey)
-        
+
         if RPI:
             self.power_LED = LED(power_LED_pin)
             self.network_LED = LED(network_LED_pin)
-            
+
             self.power_LED.on()
-            
+
         else:
             self.power_LED = None
             self.network_LED = None
-        
+
         self.data_handler = Data_Handler_D3S(
             manager=self,
             verbosity=self.v,
@@ -126,9 +126,9 @@ class Manager_D3S(object):
             verbosity=self.v,
             logfile=self.logfile,)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        
+
         self.data_handler.backlog_to_queue()
-            
+
     def z_flag(self):
         """
         Checks if the -z from_argparse is called.
@@ -172,12 +172,12 @@ class Manager_D3S(object):
         if self.datalogflag:
             with open(file, 'a') as f:
                 pass
-    
+
     def handle_input(self, log, logfile, verbosity, interval, config, publickey):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
-        
+
         # resolve logging defaults
         if log and logfile is None:
             # use default file if logging is enabled
@@ -190,17 +190,17 @@ class Manager_D3S(object):
             self.logfile = logfile
         else:
             self.logfile = None        
-        
+
         if verbosity is None:
             verbosity = 1
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
-        
+
         if log:
             self.vprint(1, '')
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = True
-        
+
         if interval is None:
             self.vprint(
                 2, "No interval given, using interval at 30 seconds")
@@ -215,7 +215,7 @@ class Manager_D3S(object):
             publickey = DEFAULT_PUBLICKEY
 
         self.interval = interval
-        
+
         if config:
             try:
                 self.config = Config(config,
@@ -243,10 +243,10 @@ class Manager_D3S(object):
     def run(self):
         """
         Main method. Currently also stores and sum the spectra as well. 
-        
+
         Current way to stop is only using a keyboard interrupt.
         """
-        
+
         if self.transport == 'any':
             devs = kromek.discover()
         else:
@@ -254,13 +254,13 @@ class Manager_D3S(object):
         print 'Discovered %s' % devs
         if len(devs) <= 0:
             return
-        
+
         filtered = []
-        
+
         for dev in devs:
             if self.device == 'all' or dev[0] in self.device:
                 filtered.append(dev)
-    
+
         devs = filtered
         if len(devs) <= 0:
             return
@@ -282,7 +282,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-        
+
                             self.handle_spectra(this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
@@ -295,7 +295,7 @@ class Manager_D3S(object):
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.takedown()
-    
+
     def get_interval(self, start_time):
         """
         Return start and end time for interval, based on given start_time.
@@ -311,33 +311,33 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
                 self.vprint(2, 'Writing spectra to data log at {}'.format(file))
-    
+
     def calibration_log(self, file, spectra):
         """
-        Writes spectra to calubration-log.
+        Writes spectra to calibration-log.
         """
         if self.calibrationlogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
                 self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
-                
+
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
-            
+          
     def takedown(self): 
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
         self.power_LED.off()
         GPIO.cleanup()
-        
+
         self.running = False
         self.data_handler.send_all_to_backlog()
-        
+
         del(self)
 
     @classmethod
@@ -361,13 +361,13 @@ class Manager_D3S(object):
         parser.add_argument('--logfile', '-f', type=str, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument('--calibrationlogflag', '-z', action='store_true', default=False)
-        
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
-        
+
         return mgr
-    
+
 if __name__ == '__main__':
     mgr = Manager_D3S.from_argparse()
     try:
