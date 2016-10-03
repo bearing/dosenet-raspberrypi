@@ -323,7 +323,6 @@ class Manager_D3S(object):
                 self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
             self.c_timer += self.interval
             if self.c_timer >= 600:
-                print(self.c_timer)
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
