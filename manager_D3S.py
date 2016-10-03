@@ -323,7 +323,7 @@ class Manager_D3S(object):
         if self.calibrationlogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
-                self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
+                self.vprint(2, 'Writing spectra to calibration log at {}'.format(file))
             self.c_timer += self.interval
             if self.c_timer >= self.calibrationlogtime:
                 self.vprint(1, 'Calibration Complete')
