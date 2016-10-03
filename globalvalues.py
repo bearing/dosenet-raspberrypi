@@ -33,7 +33,7 @@ DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
 DEFAULT_DATA_BACKLOG_FILE_D3S = '/home/pi/data_backlog_file_D3S.txt'
 DEFAULT_CALIBRATIONLOG_D3S = '/home/pi/calibration-log_D3S.txt'
-DEFAULT_CALIBTATION_TIME = 120
+DEFAULT_CALIBRATION_TIME = 120
 DEFAULT_PROTOCOL = 'old'
 
 DEFAULT_INTERVAL_NORMAL = 300
