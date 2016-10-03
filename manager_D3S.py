@@ -143,7 +143,6 @@ class Manager_D3S(object):
         """
         Checks if the -y from_argparse is called.
         If it is called, sets calibrationlogflag to True.
-        Also sets calibrationlogtime to DEFAULT_CALIBRATION_TIME
         """
         if self.calibrationlog:
             self.calibrationlogflag = True
