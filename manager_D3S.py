@@ -12,7 +12,7 @@ from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
-from globalvalues import DEFAULT_CALIBRATIONLOG_D3S
+from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATION_TIME
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
@@ -87,7 +87,9 @@ class Manager_D3S(object):
         self.log_bytes = log_bytes
 
         self.calibrationlog = calibrationlog
-        self.calibrationlogflag = calibrationlogflag      
+        self.calibrationlogflag = calibrationlogflag
+        self.calibrationtime = None
+        self.c_timer = 0
 
         self.z_flag()
         self.y_flag()
@@ -142,9 +144,11 @@ class Manager_D3S(object):
         """
         Checks if the -y from_argparse is called.
         If it is called, sets calibrationlogflag to True.
+        Also sets calibrationlogtime to DEFAULT_CALIBRATION_TIME
         """
         if self.calibrationlog:
             self.calibrationlogflag = True
+            self.calibrationlogtime = DEFAULT_CALIBRATION_TIME
 
     def make_calibration_log(self, file):
         if self.calibrationlogflag:
@@ -320,6 +324,10 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
                 self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
+            self.c_timer += self.interval
+            if self.c_timer >= self.calibrationtime:
+                self.vprint(1, 'Calibration Complete')
+                self.takedown()
 
     def handle_spectra(self, this_start, this_end, spectra):
         """
