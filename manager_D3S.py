@@ -325,7 +325,7 @@ class Manager_D3S(object):
                 f.write('{0}, '.format(spectra))
                 self.vprint(2, 'Writing spectra to calubration log at {}'.format(file))
             self.c_timer += self.interval
-            if self.c_timer > self.calibrationtime:
+            if self.c_timer > 120:
                 print(self.c_timer)
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
