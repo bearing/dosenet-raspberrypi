@@ -60,6 +60,7 @@ class Manager_D3S(object):
                  datalogflag=False,
                  calibrationlog=None,
                  calibrationlogflag=False,
+                 calibrationlogtime=None,
                  test=None,
                  config=None,
                  publickey=None,
@@ -89,10 +90,11 @@ class Manager_D3S(object):
         self.calibrationlog = calibrationlog
         self.calibrationlogflag = calibrationlogflag
         self.c_timer = 0
-        self.calibrationlogtime = None
+        self.calibrationlogtime = calibrationlogtime
 
         self.z_flag()
         self.y_flag()
+        self.x_flag()
         self.make_calibration_log(self.calibrationlog)
 
         self.datalog = datalog
@@ -149,6 +151,16 @@ class Manager_D3S(object):
         if self.calibrationlog:
             self.calibrationlogflag = True
             self.calibrationlogtime = DEFAULT_CALIBRATIONLOG_TIME
+            
+    def x_flag(self):
+        """
+        Checks if -x is called.
+        If it is called, sets calibrationlogflag to True. 
+        Also sets calibrationlog to DEFAULT_CALIBRATIONLOG_D3S.
+        """
+        if self.calibrationlog and self.calibrationlog != DEFAULT_CALIBRATIONLOG_TIME:
+            self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
+            self.calibrationlogflag = True
 
     def make_calibration_log(self, file):
         if self.calibrationlogflag:
@@ -367,6 +379,7 @@ class Manager_D3S(object):
         parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
         parser.add_argument('--log', '-l', action='store_true', default=False)
         parser.add_argument('--logfile', '-f', type=str, default=None)
+        parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument('--calibrationlogflag', '-z', action='store_true', default=False)
 
