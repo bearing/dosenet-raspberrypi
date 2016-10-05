@@ -158,9 +158,10 @@ class Manager_D3S(object):
         If it is called, sets calibrationlogflag to True. 
         Also sets calibrationlog to DEFAULT_CALIBRATIONLOG_D3S.
         """
-        if self.calibrationlog and self.calibrationlog != DEFAULT_CALIBRATIONLOG_TIME:
-            self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
-            self.calibrationlogflag = True
+        if self.calibrationlogtime:
+            if self.calibrationlogtime != DEFAULT_CALIBRATIONLOG_TIME:
+                self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
+                self.calibrationlogflag = True
 
     def make_calibration_log(self, file):
         if self.calibrationlogflag:
