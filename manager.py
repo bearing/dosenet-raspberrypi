@@ -27,6 +27,7 @@ from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
+import os
 
 
 def signal_term_handler(signal, frame):
@@ -283,6 +284,7 @@ class Manager(object):
                 if self.quit_after_interval:
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
+                os.kill(os.getpid(), signal.SIGQUIT)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
