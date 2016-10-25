@@ -128,8 +128,6 @@ class Manager(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
-        
-        os.kill(os.getpid(), signal.SIGQUIT)
 
     def a_flag(self):
         """
@@ -286,6 +284,7 @@ class Manager(object):
                 if self.quit_after_interval:
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
+                os.kill(os.getpid(), signal.SIGQUIT)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
