@@ -27,6 +27,7 @@ from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
+import os
 
 
 def signal_term_handler(signal, frame):
@@ -127,6 +128,8 @@ class Manager(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
+        
+        os.kill(os.getpid(), signal.SIGQUIT)
 
     def a_flag(self):
         """
