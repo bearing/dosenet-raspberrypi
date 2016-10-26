@@ -27,7 +27,6 @@ from globalvalues import DEFAULT_PROTOCOL
 
 import signal
 import sys
-import os
 
 
 
@@ -295,6 +294,7 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
+    
     def stop(self):
         """Stop counting time."""
         self.running = False
