@@ -29,7 +29,6 @@ import signal
 import sys
 
 
-
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
@@ -294,7 +293,7 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
-    
+
     def stop(self):
         """Stop counting time."""
         self.running = False
