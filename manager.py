@@ -28,6 +28,7 @@ from globalvalues import DEFAULT_PROTOCOL
 import signal
 import sys
 import os
+from datetime import datetime
 
 
 def signal_term_handler(signal, frame):
@@ -284,7 +285,7 @@ class Manager(object):
                 if self.quit_after_interval:
                     sys.exit(0)
                 this_start, this_end = self.get_interval(this_end)
-                os.kill(os.getpid(), signal.SIGQUIT)
+                #os.kill(os.getpid(), signal.SIGQUIT)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
@@ -293,7 +294,7 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
-
+            print(datetime.utcnow())
     def stop(self):
         """Stop counting time."""
         self.running = False
