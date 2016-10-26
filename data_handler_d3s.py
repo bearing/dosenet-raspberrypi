@@ -80,7 +80,7 @@ class Data_Handler_D3S(object):
         while self.queue:
             trash = self.queue.popleft()
             self.manager.sender.send_specra_new_D3S(
-                 trash[0], trash[1])
+                trash[0], trash[1])
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
         if self.queue:
