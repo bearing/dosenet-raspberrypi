@@ -20,7 +20,7 @@ args = 'scp dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME + ' /home/pi/co
 print args
 
 # Execute the linux command line and wait until it executes for the script to continue.
-p = Popen("scp", "dosenet@dosenet.dhcp.lbl.gov:~/config-files/", str(NAME), "/home/pi/config/config.csv").wait()
+p = Popen(args).wait()
 
 print ("linux command: ", p)
 
