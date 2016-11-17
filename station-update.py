@@ -16,11 +16,12 @@ NAME = input("What is the csv file name?:")
 
 print 'csv file name: ', NAME
 
-args = 'scp dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME + ' /home/pi/config/config.csv'
-print args
+args1 = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME
+args2 = '/home/pi/config/config.csv'
+print 'scp' args1 + args2
 
 # Execute the linux command line and wait until it executes for the script to continue.
-p = Popen(args).wait()
+p = Popen("scp", args1, args2).wait()
 
 print ("linux command: ", p)
 
