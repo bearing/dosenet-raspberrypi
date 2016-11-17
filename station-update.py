@@ -14,11 +14,8 @@ from subprocess import Popen
 # Ask the user for the csv file name.
 NAME = input("What is the csv file name?:")
 
-# Define the linux command line to pass into the top-level shell to preform the secure copy functionality.
-args = ("scp", ("dosenet@dosenet.dhcp.lbl.gov:~/config-files/" + NAME), "/home/pi/config/config.csv")
-
 # Execute the linux command line and wait until it executes for the script to continue.
-p = Popen(args).wait()
+p = Popen("scp", ("dosenet@dosenet.dhcp.lbl.gov:~/config-files/" + NAME), "/home/pi/config/config.csv").wait()
 
 # Ask for the station ID.
 ID = input("What is the station ID?:")
