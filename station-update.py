@@ -65,6 +65,6 @@ with open('interfaces', '+', opener=opendir) as netConfig:
       line = 'wireless-essid RPiAdHocNetwork' + ID + '\n'
       netConfig.write(line)
 
-# Close the file directory
+# Close the file directory.
 os.close(dirConfig)
 '''
