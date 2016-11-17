@@ -1,6 +1,6 @@
 # Author: Yaro Kaminskiy
 
-# Use the built-in subprocess module and open function to securely copy the Pi-hat network configuration file from the Dosenet servers
+# Use the built-in subprocess module and Popen function to securely copy the Pi-hat network configuration file from the Dosenet servers
 # to a Pi-hat at a school of interest and to update the network ID on the network configuration file for a Pi-hat using a search algorithm.
 
 '''
@@ -12,25 +12,27 @@ import os
 from subprocess import Popen
 
 # Ask the user for the csv file name.
-NAME = input("What is the csv file name?:")
+NAME = input("What is the csv file name?: ")
 
-print 'csv file name: ', NAME
+# Print the csv file name inputed by the user for debugging purposes.
+print 'FOR DEGUBBING, csv file name: ', NAME
 
-args1 = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME
-args2 = '/home/pi/config/config.csv'
-print 'scp', args1, args2
+# Define the arguments to the scp linux command to be executed through the Popen function
+arg1 = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + str(NAME)
+arg2 = '/home/pi/config/config.csv'
 
-# Execute the linux command line and wait until it executes for the script to continue.
-p = Popen("scp", [args1 + ' ' + args2], bufsize=-1).wait()
+# Execute the linux command line. Wait until it executes for this Python script to continue.
+p = Popen(['scp', arg1, arg2]).wait()
 
-print ("linux command: ", p)
-
-# Ask for the station ID.
-ID = input("What is the station ID?:")
+# Print the scp linux command that was executed for debugging purposes.
+print 'FOR DEBUGGING, linux command: ', p
 
 '''
 Part 2: Updating the dosimeter ID on the network configuration file on the Pi-hat once it has been copied securely over the Internet.
 '''
+
+# Ask for the station ID.
+ID = input("What is the station ID?: ")
 
 # Open the relevant directory to read/write the network ID on the Pi-hat.
 dirConfig = os.open('/etc/network/interfaces')
