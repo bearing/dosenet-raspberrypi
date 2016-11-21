@@ -92,7 +92,7 @@ def sum_graph(path):
     Plots the sum of all the spectra
     """
     if os.path.isfile(path):
-        queue = grab_data()
+        queue = grab_data(path)
         total = sum_data(queue)
         plot_data(total)
         
@@ -104,7 +104,7 @@ def waterfall_graph(path):
     Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
     if os.path.isfile(path):
-        queue = grab_data()
+        queue = grab_data(path)
         queue_length = len(queue)
         image = make_image(queue)
         
