@@ -12,7 +12,7 @@ def decide_path():
     path = raw_input('What is the path? Type None for DEFAULT_DATALOG_D3S. Do not use quotes.\n')
     return path
 
-def grab_data(path=DEFAULT_DATALOG_D3S):
+def grab_data(path):
     """
     Takes data from datalog and places it in a queue. Rebin data here.
     """
@@ -87,7 +87,7 @@ def fix_array(array):
     return new_array
         
 
-def sum_graph(path=DEFAULT_DATALOG_D3S):
+def sum_graph(path):
     """
     Plots the sum of all the spectra
     """
@@ -99,7 +99,7 @@ def sum_graph(path=DEFAULT_DATALOG_D3S):
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
         
-def waterfall_graph(path=DEFAULT_DATALOG_D3S):
+def waterfall_graph(path):
     """
     Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
@@ -120,8 +120,9 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
 if __name__ == '__main__':      
     path = decide_path()
     if path == 'None':
-        sum_graph()
-        waterfall_graph()
+        path=DEFAULT_DATALOG_D3S
+        sum_graph(path)
+        waterfall_graph(path)
     else:
         sum_graph(path)
         waterfall_graph(path)
