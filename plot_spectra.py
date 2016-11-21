@@ -9,7 +9,7 @@ from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
 
 def decide_path():
-    path = raw_input('What is the path? Type None for Default.\n')
+    path = raw_input('What is the path? Type None for Default. Do not use quotes.\n')
     return path
 
 def grab_data(path=DEFAULT_DATALOG_D3S):
