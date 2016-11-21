@@ -8,6 +8,10 @@ from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
 
+def decide_path():
+    path = raw_input('What is the path? Type None for Default.')
+    return path
+
 def grab_data(path=DEFAULT_DATALOG_D3S):
     """
     Takes data from datalog and places it in a queue. Rebin data here.
@@ -114,5 +118,6 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
 if __name__ == '__main__':      
+    decide_path()
     sum_graph()
     waterfall_graph()
