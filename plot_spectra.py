@@ -119,7 +119,7 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
 
 if __name__ == '__main__':      
     path = decide_path()
-    if path is 'None':
+    if path is None:
         sum_graph()
         waterfall_graph()
     else:
