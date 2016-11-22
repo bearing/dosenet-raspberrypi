@@ -21,7 +21,7 @@ sourcePath = ' dosenet@dosenet.dhcp.lbl.gov:~/config-files/ ' + NAME
 targetPath = ' /home/pi/config/config.csv'
 
 # Execute the linux command line to securely copy the file over the Internet. Wait until it executes for this Python script to continue.
-p = os.system('scp' + sourcePath + targetPath).wait()
+p = os.system('scp' + sourcePath + targetPath)
 
 # Print the scp linux command that was executed for debugging purposes.
 print 'FOR DEBUGGING, linux command: ', p
