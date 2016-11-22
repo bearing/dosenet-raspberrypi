@@ -9,7 +9,6 @@ Part 1: Securely copying the network configuration file from the Dosenet servers
 
 # Import the relevant modules and functions from the appropriate libraries for convenience. 
 import os
-from subprocess import Popen
 
 # Ask the user for the csv file name.
 NAME = raw_input('What is the csv file name?: ')
@@ -22,7 +21,7 @@ sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME
 targetPath = '/home/pi/config/config.csv'
 
 # Execute the linux command line to securely copy the file over the Internet. Wait until it executes for this Python script to continue.
-p = Popen(['scp', sourcePath, targetPath]).wait()
+p = os.system(['scp' + sourcePath + targetPath]).wait()
 
 # Print the scp linux command that was executed for debugging purposes.
 print 'FOR DEBUGGING, linux command: ', p
