@@ -12,13 +12,13 @@ import os
 from subprocess import Popen
 
 # Ask the user for the csv file name.
-NAME = input('What is the csv file name?: ')
+NAME = raw_input('What is the csv file name?: ')
 
 # Print the csv file name inputed by the user for debugging purposes.
 print 'FOR DEGUBBING, csv file name: %s' % NAME
 
 # Define the paths to the source and target .csv files as arguments for the scp linux command to be executed through the Popen function.
-sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + str(NAME)
+sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME
 targetPath = '/home/pi/config/config.csv'
 
 # Execute the linux command line to securely copy the file over the Internet. Wait until it executes for this Python script to continue.
