@@ -17,14 +17,14 @@ NAME = raw_input('What is the csv file name?: ')
 print 'FOR DEGUBBING, csv file name: %s' % NAME
 
 # Define the paths to the source and target .csv files as arguments for the scp linux command to be executed through the Popen function.
-sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/'
+sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + NAME
 targetPath = '/home/pi/config/config.csv'
 
 # Execute the linux command line to securely copy the file over the Internet. Wait until it executes for this Python script to continue.
-p = os.system('scp "%s" "%s:%s"' % (NAME, sourcePath, targetPath))
+p = os.system('scp "%s" "%s"' % (sourcePath, targetPath))
 
 # Print the scp linux command that was executed for debugging purposes.
-print 'FOR DEBUGGING, linux command: ', p
+print 'FOR DEBUGGING, linux command: %s' % p
 
 '''
 Part 2: Updating the dosimeter ID on the network configuration file on the Pi-hat once it has been copied securely over the Internet.
