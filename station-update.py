@@ -31,7 +31,7 @@ Part 2: Updating the dosimeter ID on the network configuration file on the Pi-ha
 '''
 
 # Ask for the station ID.
-ID = input('What is the station ID?: ')
+ID = raw_input('What is the station ID?: ')
 
 # Open the interfaces file (and call a file handle for it within the program) and update the network ID.
 with open('/etc/network/interfaces/interfaces', '+') as netConfig:
@@ -40,7 +40,7 @@ with open('/etc/network/interfaces/interfaces', '+') as netConfig:
     # Search for 'wireless-essid' to indicate the place in the code to replace the default Pi-hat ID with the actual station's ID.
     if 'wireless-essid' in line:
       # Create a handle for a new line with the updated station ID to input into the interfaces file.      
-      line = 'wireless-essid RPiAdHocNetwork' + ID + '\n'
+      line = 'wireless-essid RPiAdHocNetwork' + int(ID) + '\n'
       netConfig.write(line)
 
 
