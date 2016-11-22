@@ -15,7 +15,7 @@ from subprocess import Popen
 NAME = input('What is the csv file name?: ')
 
 # Print the csv file name inputed by the user for debugging purposes.
-print 'FOR DEGUBBING, csv file name: ', NAME
+print 'FOR DEGUBBING, csv file name: %s' % NAME
 
 # Define the paths to the source and target .csv files as arguments for the scp linux command to be executed through the Popen function.
 sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + str(NAME)
