@@ -63,14 +63,14 @@ class Data_Handler(object):
         """
         self.vprint(1, "Missing public key, not sending to server")
 
-    def send_to_memory(self, cpm, cpm_err):
+    def send_to_memory(self, timestamp, cpm, cpm_err):
         """
         Network is not up
         """
         if self.led:
             self.led.start_blink(interval=self.blink_period_s)
         if self.manager.protocol == 'new':
-            self.send_to_queue(cpm, cpm_err)
+            self.send_to_queue(timestamp, cpm, cpm_err)
             self.vprint(1, "Network down, saving to queue in memory")
         else:
             self.vprint(1, "Network down, not sending to server")
@@ -89,8 +89,40 @@ class Data_Handler(object):
                 self.vprint(1, "Flushing memory queue to server")
             while self.queue:
                 trash = self.queue.popleft()
-                self.manager.sender.send_cpm_new(
-                    trash[0], trash[1], trash[2])
+                try:
+                    self.manager.sender.send_cpm_new(
+                        trash[0], trash[1], trash[2])
+                except (socket.gaierror, socket.error, socket.timeout) as e:
+                    if e == socket.gaierror:
+                        if e[0] == socket.EAI_AGAIN:
+                            # TCP and UDP
+                            # network is down, but NetworkStatus didn't notice yet
+                            # (resolving DNS like dosenet.dhcp.lbl.gov)
+                            self.vprint(
+                                1, 'Failed to send packet! Address resolution error')
+                        else:
+                            self.vprint(1, 'Failed to send packet! Address error: ' +
+                                        '{}: {}'.format(*e))
+                    elif e == socket.error:
+                        if e[0] == errno.ECONNREFUSED:
+                            # TCP
+                            # server is not accepting connections
+                            self.vprint(1, 'Failed to send packet! Connection refused')
+                        elif e[0] == errno.ENETUNREACH:
+                            # TCP and UDP
+                            # network is down, but NetworkStatus didn't notice yet
+                            # (IP like 131.243.51.241)
+                            self.vprint(
+                                1, 'Failed to send packet! Network is unreachable')
+                        else:
+                            # consider handling errno.ECONNABORTED, errno.ECONNRESET
+                            self.vprint(1, 'Failed to send packet! Socket error: ' +
+                                        '{}: {}'.format(*e))
+                    elif e == socket.timeout:
+                        # TCP
+                        self.vprint(1, 'Failed to send packet! Socket timeout')
+                    self.send_to_memory(trash[0], trash[1], trash[2])
+
         else:
             self.manager.sender.send_cpm(cpm, cpm_err)
 
@@ -102,12 +134,15 @@ class Data_Handler(object):
                     while self.queue:
                         f.write('{0}, '.format(self.queue.popleft()))
 
-    def send_to_queue(self, cpm, cpm_err):
+    def send_to_queue(self, timestamp, cpm, cpm_err):
         """
         Adds the time, cpm, and cpm_err to the deque object.
         """
         if self.manager.protocol == 'new':
-            time_string = time.time()
+            if timestamp:
+                time_string = timestamp
+            else:
+                time_string = time.time()
             self.queue.append([time_string, cpm, cpm_err])
 
     def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE):
@@ -145,7 +180,7 @@ class Data_Handler(object):
 
         if self.manager.test:
             # for testing the memory queue
-            self.send_to_memory(cpm, cpm_err)
+            self.send_to_memory(None, cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
@@ -182,5 +217,5 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
-                self.send_to_memory(cpm, cpm_err)
+                self.send_to_memory(None, cpm, cpm_err)
 
