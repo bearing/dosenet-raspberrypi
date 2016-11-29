@@ -63,7 +63,7 @@ class Data_Handler(object):
         """
         self.vprint(1, "Missing public key, not sending to server")
 
-    def send_to_memory(self, timestamp=None, cpm, cpm_err):
+    def send_to_memory(self, timestamp, cpm, cpm_err):
         """
         Network is not up
         """
@@ -134,7 +134,7 @@ class Data_Handler(object):
                     while self.queue:
                         f.write('{0}, '.format(self.queue.popleft()))
 
-    def send_to_queue(self, timestamp=None, cpm, cpm_err):
+    def send_to_queue(self, timestamp, cpm, cpm_err):
         """
         Adds the time, cpm, and cpm_err to the deque object.
         """
@@ -180,7 +180,7 @@ class Data_Handler(object):
 
         if self.manager.test:
             # for testing the memory queue
-            self.send_to_memory(cpm, cpm_err)
+            self.send_to_memory(None, cpm, cpm_err)
         elif not self.manager.config:
             self.no_config_send(cpm, cpm_err)
         elif not self.manager.publickey:
@@ -217,5 +217,5 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
-                self.send_to_memory(cpm, cpm_err)
+                self.send_to_memory(None, cpm, cpm_err)
 
