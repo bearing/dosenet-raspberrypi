@@ -57,5 +57,7 @@ for line in fileinput.input('/etc/network/interfaces'):
 
 l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
+sys.stdout.close()
+
 # Print the scp linux command that was executed for debugging purposes.
 print 'FOR DEBUGGING, linux command: %s' % l
