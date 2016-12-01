@@ -303,7 +303,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time, retry=True):
+    def sleep_until(self, end_time, retry=False):
         """
         Sleep until the given timestamp.
 
