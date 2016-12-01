@@ -41,6 +41,10 @@ ID = raw_input('What is the station ID?: ')
 Loop through each line of the interfaces file to find the default station ID placeholder and replace it with the station ID provided
 by the user.
 '''
+
+# Open the interfaces file for writing using the print statement.
+sys.stdout = open('/etc/network/interfaces', 'w')
+
 for line in fileinput.input('/etc/network/interfaces'):
     # Search and find 'wireless-essid' to indicate the place in the code to replace the default Pi-hat ID with the actual station's ID.
     if 'wireless-essid' in line:
@@ -48,4 +52,4 @@ for line in fileinput.input('/etc/network/interfaces'):
         line = '  wireless-essid RPiAdHocNetwork' + ID + '\n'
     
     # Write the new line with the updated station ID in the interfaces file.
-    sys.stdout.write(line)
+    print line
