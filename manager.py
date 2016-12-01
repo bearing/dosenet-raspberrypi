@@ -286,7 +286,7 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('sudo shutdown now -r')
+                    #os.system('sudo shutdown now -r')
                     #print('shutdown')
                 this_start, this_end = self.get_interval(this_end)
                 if time.altzone < self.interval/60:
