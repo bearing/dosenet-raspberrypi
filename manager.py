@@ -82,7 +82,7 @@ class Manager(object):
                  test=None,
                  ):
 
-        self.quit_after_interval = False
+        self.quit_after_interval = True
 
         self.protocol = protocol
 
