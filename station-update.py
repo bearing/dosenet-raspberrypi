@@ -42,6 +42,8 @@ Loop through each line of the interfaces file to find the default station ID pla
 by the user.
 '''
 
+temp = sys.stdout
+
 # Open the interfaces file for writing using the print statement and write to a temporary file.
 sys.stdin = open('/etc/network/interfaces', 'r')
 sys.stdout = open('~interfaces_temp', 'w')
@@ -58,6 +60,8 @@ for line in fileinput.input('/etc/network/interfaces'):
 l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
 sys.stdout.close()
+
+sys.stdout = temp
 
 # Print the scp linux command that was executed for debugging purposes.
 print 'FOR DEBUGGING, linux command: %s' % l
