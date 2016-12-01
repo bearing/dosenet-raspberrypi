@@ -44,7 +44,7 @@ by the user.
 
 # Open the interfaces file for writing using the print statement and write to a temporary file.
 sys.stdin = open('/etc/network/interfaces', 'r')
-sys.stdout = open('~/interfaces_temp', 'w')
+sys.stdout = open('~interfaces_temp', 'w')
 
 for line in fileinput.input('/etc/network/interfaces'):
     # Search and find 'wireless-essid' to indicate the place in the code to replace the default Pi-hat ID with the actual station's ID.
@@ -55,7 +55,7 @@ for line in fileinput.input('/etc/network/interfaces'):
     # Write the new line with the updated station ID in the interfaces file.
     sys.stdout.write(line)
 
-l = os.system('sudo mv ~/interfaces_temp /etc/network/interfaces')
+l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
 # Print the scp linux command that was executed for debugging purposes.
 print 'FOR DEBUGGING, linux command: %s' % l
