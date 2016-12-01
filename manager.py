@@ -82,7 +82,7 @@ class Manager(object):
                  test=None,
                  ):
 
-        self.quit_after_interval = True
+        self.quit_after_interval = False
 
         self.protocol = protocol
 
@@ -286,8 +286,7 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    #os.system('sudo shutdown now -r')
-                    #print('shutdown')
+                    os.system('sudo shutdown now -r')
                 this_start, this_end = self.get_interval(this_end)
                 if time.altzone < self.interval/60:
                     self.quit_after_interval
@@ -303,7 +302,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time, retry=False):
+    def sleep_until(self, end_time, retry=True):
         """
         Sleep until the given timestamp.
 
