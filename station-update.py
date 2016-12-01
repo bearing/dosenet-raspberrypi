@@ -53,7 +53,7 @@ for line in fileinput.input('/etc/network/interfaces'):
         line = '  wireless-essid RPiAdHocNetwork' + ID + '\n'
     
     # Write the new line with the updated station ID in the interfaces file.
-    sys.stdout.write(line)
+    print(line)
 
 l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
