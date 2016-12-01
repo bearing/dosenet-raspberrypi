@@ -52,7 +52,7 @@ for line in fileinput.input('/etc/network/interfaces'):
     # Search and find 'wireless-essid' to indicate the place in the code to replace the default Pi-hat ID with the actual station's ID.
     if 'wireless-essid' in line:
         # Create a handle for a new line with the updated station ID to input into the interfaces file.      
-        line = '  wireless-essid RPiAdHocNetwork' + ID + '\n'
+        line = '  wireless-essid RPiAdHocNetwork' + ID
     
     # Write the new line with the updated station ID in the interfaces file.
     print(line)
