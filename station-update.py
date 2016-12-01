@@ -57,7 +57,7 @@ for line in fileinput.input('/etc/network/interfaces'):
     # Write the new line with the updated station ID in the interfaces file.
     print(line)
 
-l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
+l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces_test')
 
 sys.stdout.close()
 
