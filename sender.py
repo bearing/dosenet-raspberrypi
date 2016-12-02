@@ -160,14 +160,14 @@ class ServerSender(object):
         TCP version of construct packet.
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(timestamp) + c +
-                str(spectra) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(spectra),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
