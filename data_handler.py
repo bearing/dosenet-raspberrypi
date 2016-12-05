@@ -219,5 +219,5 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
-                self.send_to_memory(None, cpm, cpm_err)
+                self.send_to_memory(this_end, cpm, cpm_err)
 
