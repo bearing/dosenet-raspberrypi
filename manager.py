@@ -82,7 +82,7 @@ class Manager(object):
                  test=None,
                  ):
 
-        self.quit_after_interval = False
+        self.quit_after_interval = True
 
         self.protocol = protocol
 
@@ -302,7 +302,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time, retry=True):
+    def sleep_until(self, end_time, retry=False):
         """
         Sleep until the given timestamp.
 
