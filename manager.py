@@ -286,7 +286,7 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('sudo shutdown now -r')
+                    os.system('./git-pull-reboot.sh')
                 this_start, this_end = self.get_interval(this_end)
                 if time.altzone < self.interval/60:
                     self.quit_after_interval
