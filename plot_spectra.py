@@ -8,7 +8,11 @@ from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
 
-def grab_data(path=DEFAULT_DATALOG_D3S):
+def decide_path():
+    path = raw_input('What is the path? Type None for DEFAULT_DATALOG_D3S. Do not use quotes.\n')
+    return path
+
+def grab_data(path):
     """
     Takes data from datalog and places it in a queue. Rebin data here.
     """
@@ -83,24 +87,24 @@ def fix_array(array):
     return new_array
         
 
-def sum_graph(path=DEFAULT_DATALOG_D3S):
+def sum_graph(path):
     """
     Plots the sum of all the spectra
     """
     if os.path.isfile(path):
-        queue = grab_data()
+        queue = grab_data(path)
         total = sum_data(queue)
         plot_data(total)
         
     else:
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
         
-def waterfall_graph(path=DEFAULT_DATALOG_D3S):
+def waterfall_graph(path):
     """
     Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
     if os.path.isfile(path):
-        queue = grab_data()
+        queue = grab_data(path)
         queue_length = len(queue)
         image = make_image(queue)
         
@@ -114,5 +118,11 @@ def waterfall_graph(path=DEFAULT_DATALOG_D3S):
         print 'Datalog does not exist. Please run manager-D3S.py with datalog enabled.'
 
 if __name__ == '__main__':      
-    sum_graph()
-    waterfall_graph()
+    path = decide_path()
+    if path == 'None':
+        path=DEFAULT_DATALOG_D3S
+        sum_graph(path)
+        waterfall_graph(path)
+    else:
+        sum_graph(path)
+        waterfall_graph(path)
