@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-#test
+
 import time
 import argparse
 import traceback
@@ -82,7 +82,7 @@ class Manager(object):
                  test=None,
                  ):
 
-        self.quit_after_interval = True
+        self.quit_after_interval = False
 
         self.protocol = protocol
 
@@ -302,7 +302,7 @@ class Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def sleep_until(self, end_time, retry=False):
+    def sleep_until(self, end_time, retry=True):
         """
         Sleep until the given timestamp.
 
