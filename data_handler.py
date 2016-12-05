@@ -87,44 +87,43 @@ class Data_Handler(object):
             self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
-                error_check = True
-            while self.queue:
-                if error_check:
-                    trash = self.queue.popleft()
-                    try:
-                        self.manager.sender.send_cpm_new(
-                            trash[0], trash[1], trash[2])
-                    except (socket.gaierror, socket.error, socket.timeout) as e:
-                        if e == socket.gaierror:
-                            if e[0] == socket.EAI_AGAIN:
-                                # TCP and UDP
-                                # network is down, but NetworkStatus didn't notice yet
-                                # (resolving DNS like dosenet.dhcp.lbl.gov)
-                                self.vprint(
-                                    1, 'Failed to send packet! Address resolution error')
-                            else:
-                                self.vprint(1, 'Failed to send packet! Address error: ' +
-                                            '{}: {}'.format(*e))
-                        elif e == socket.error:
-                            if e[0] == errno.ECONNREFUSED:
-                                # TCP
-                                # server is not accepting connections
-                                self.vprint(1, 'Failed to send packet! Connection refused')
-                            elif e[0] == errno.ENETUNREACH:
-                                # TCP and UDP
-                                # network is down, but NetworkStatus didn't notice yet
-                                # (IP like 131.243.51.241)
-                                self.vprint(
-                                    1, 'Failed to send packet! Network is unreachable')
-                            else:
-                                # consider handling errno.ECONNABORTED, errno.ECONNRESET
-                                self.vprint(1, 'Failed to send packet! Socket error: ' +
-                                            '{}: {}'.format(*e))
-                        elif e == socket.timeout:
+                no_error_yet = True
+            while self.queue and no_error_yet:
+                trash = self.queue.popleft()
+                try:
+                    self.manager.sender.send_cpm_new(
+                        trash[0], trash[1], trash[2])
+                except (socket.gaierror, socket.error, socket.timeout) as e:
+                    if e == socket.gaierror:
+                        if e[0] == socket.EAI_AGAIN:
+                            # TCP and UDP
+                            # network is down, but NetworkStatus didn't notice yet
+                            # (resolving DNS like dosenet.dhcp.lbl.gov)
+                            self.vprint(
+                                1, 'Failed to send packet! Address resolution error')
+                        else:
+                            self.vprint(1, 'Failed to send packet! Address error: ' +
+                                        '{}: {}'.format(*e))
+                    elif e == socket.error:
+                        if e[0] == errno.ECONNREFUSED:
                             # TCP
-                            self.vprint(1, 'Failed to send packet! Socket timeout')
-                        self.send_to_memory(trash[0], trash[1], trash[2])
-                        error_check = False
+                            # server is not accepting connections
+                            self.vprint(1, 'Failed to send packet! Connection refused')
+                        elif e[0] == errno.ENETUNREACH:
+                            # TCP and UDP
+                            # network is down, but NetworkStatus didn't notice yet
+                            # (IP like 131.243.51.241)
+                            self.vprint(
+                                1, 'Failed to send packet! Network is unreachable')
+                        else:
+                            # consider handling errno.ECONNABORTED, errno.ECONNRESET
+                            self.vprint(1, 'Failed to send packet! Socket error: ' +
+                                        '{}: {}'.format(*e))
+                    elif e == socket.timeout:
+                        # TCP
+                        self.vprint(1, 'Failed to send packet! Socket timeout')
+                    self.send_to_memory(trash[0], trash[1], trash[2])
+                    no_error_yet = False
 
         else:
             self.manager.sender.send_cpm(cpm, cpm_err)
