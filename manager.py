@@ -286,8 +286,6 @@ class Manager(object):
                     self.takedown()
                     os.system('./git-pull-reboot.sh')
                 this_start, this_end = self.get_interval(this_end)
-                if time.altzone < self.interval/60:
-                    self.quit_after_interval
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.stop()
