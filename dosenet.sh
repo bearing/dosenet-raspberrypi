@@ -25,7 +25,7 @@ case "$1" in
     logger --stderr --id --tag $LOGTAG "Waiting for NTP to be synced..."
     sudo service ntp stop
     sudo ntpd -gq
-    sudo service ntp start
+    sudo timeout 60 service ntp start
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py
