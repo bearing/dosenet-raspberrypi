@@ -365,9 +365,10 @@ class Manager(object):
         Extracts the git tag from sender and puts it into a list.
         """
         received = self.sender.received
-        received = [x.strip() for x in received.split(',')]
-        self.branch = received[0]
-        self.tag = int(received[1])
+        if received:
+            received = [x.strip() for x in received.split(',')]
+            self.branch = received[0]
+            self.tag = int(received[1])
 
     def handle_git_tag(self):
         """
