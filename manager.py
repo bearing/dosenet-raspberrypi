@@ -363,6 +363,8 @@ class Manager(object):
         received = self.sender.received
         received = [x.strip() for x in received.split(',')]
         print(received)
+        print(received[0])
+        print(received[1])
     
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
