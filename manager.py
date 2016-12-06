@@ -362,9 +362,9 @@ class Manager(object):
     def handle_git_tag(self):
         received = self.sender.received
         received = [x.strip() for x in received.split(',')]
-        print(received)
-        print(received[0])
-        print(type(int(received[1])))
+        self.branch = received[0]
+        self.tag = int(received[1])
+        print(self.branch, self.tag)
     
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
