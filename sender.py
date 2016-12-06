@@ -216,7 +216,8 @@ class ServerSender(object):
             s.settimeout(TCP_TIMEOUT)   # generous timeout
             s.connect((self.address, self.port))
             s.sendall(encrypted)
-            received = s.recv(1024)
+            self.received = s.recv(1024)
+            print(self.received)
             self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
