@@ -44,7 +44,7 @@ class ServerSender(object):
           publickey, address and port will not be used.
         """
         
-        self.received = received
+        self.received = None
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
