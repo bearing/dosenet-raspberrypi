@@ -217,7 +217,6 @@ class ServerSender(object):
             s.connect((self.address, self.port))
             s.sendall(encrypted)
             self.received = s.recv(1024)
-            print(self.received)
             self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
