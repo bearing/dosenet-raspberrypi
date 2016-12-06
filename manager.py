@@ -361,7 +361,7 @@ class Manager(object):
 
     def handle_git_tag(self):
         received = self.sender.received
-        [x.strip() for x in received.split(',')]
+        received = [x.strip() for x in received.split(',')]
         print(received)
     
     def takedown(self):
