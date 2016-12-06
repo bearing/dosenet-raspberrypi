@@ -127,7 +127,9 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-
+        self.branch = 'master'
+        self.tag = 0
+        
         self.data_handler.backlog_to_queue()
 
     def a_flag(self):
@@ -356,6 +358,10 @@ class Manager(object):
         self.data_handler.main(
             self.datalog, cpm, cpm_err, this_start, this_end, counts)
 
+    def handle_git_tag(self):
+        received = self.sender.recieved
+        [x.strip() for x in recieved.split(',')]
+    
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
