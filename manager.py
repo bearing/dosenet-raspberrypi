@@ -360,7 +360,7 @@ class Manager(object):
             self.datalog, cpm, cpm_err, this_start, this_end, counts)
 
     def handle_git_tag(self):
-        received = self.sender.recieved
+        received = self.sender.received
         [x.strip() for x in recieved.split(',')]
     
     def takedown(self):
