@@ -284,6 +284,7 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
+                self.handle_git_tag()
                 if self.quit_after_interval:
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
