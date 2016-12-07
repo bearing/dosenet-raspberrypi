@@ -355,7 +355,7 @@ class Manager(object):
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(
             self.datalog, cpm, cpm_err, this_start, this_end, counts)
-    
+
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
 
