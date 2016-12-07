@@ -81,6 +81,11 @@ if [ $ANY_UNSTAGED = 1 -o $ANY_STAGED = 1 ]; then
   fi
 fi
 
+# 4. do a pull on the current branch to ensure we have a copy of the new branch
+sudo -u pi git fetch
+# it may generate an error if the current branch was deleted on the server.
+#   but the new branch still gets fetched.
+
 # now, finally, there should be no reason for checkout and pull to fail.
 
 sudo -u pi git checkout $BRANCH
