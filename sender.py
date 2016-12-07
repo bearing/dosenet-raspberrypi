@@ -43,8 +43,6 @@ class ServerSender(object):
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
-        
-        self.received = None
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -216,7 +214,10 @@ class ServerSender(object):
             s.settimeout(TCP_TIMEOUT)   # generous timeout
             s.connect((self.address, self.port))
             s.sendall(encrypted)
-            self.received = s.recv(1024)
+            received = s.recv(1024)
+            branch, flag = self.handle_return_packet(received)
+            self.manager.branch = branch
+            self.manager.quit_after_interval = flag
             self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
