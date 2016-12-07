@@ -125,7 +125,8 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-
+        self.branch = ''
+        
         self.data_handler.backlog_to_queue()
 
     def a_flag(self):
@@ -284,7 +285,7 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('./git-pull-reboot.sh')
+                    os.system('./git-pull-reboot.sh {0}'.format(self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
