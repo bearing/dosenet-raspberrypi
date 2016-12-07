@@ -125,8 +125,7 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        self.branch = 'master'
-        self.tag = 0
+        self.branch = ''
         
         self.data_handler.backlog_to_queue()
 
@@ -282,13 +281,11 @@ class Manager(object):
                         time.time() - self.interval)
 
                 self.handle_cpm(this_start, this_end)
-                self.extract_git_tag()
                 if self.quit_after_interval:
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('./git-pull-reboot.sh')
-                self.handle_git_tag()
+                    os.system('./git-pull-reboot.sh {0}'.format(self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -358,23 +355,6 @@ class Manager(object):
         counts = int(round(cpm * self.interval / 60))
         self.data_handler.main(
             self.datalog, cpm, cpm_err, this_start, this_end, counts)
-
-    def extract_git_tag(self):
-        """
-        Extracts the git tag from sender and puts it into a list.
-        """
-        received = self.sender.received
-        if received:
-            received = [x.strip() for x in received.split(',')]
-            self.branch = received[0]
-            self.tag = int(received[1])
-
-    def handle_git_tag(self):
-        """
-        Decides if manager needs to reboot the raspberrypi
-        """
-        if self.tag != 0:
-            self.quit_after_interval = True
     
     def takedown(self):
         """Delete self and child objects and clean up GPIO nicely."""
