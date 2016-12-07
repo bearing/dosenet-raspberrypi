@@ -245,7 +245,18 @@ class ServerSender(object):
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
-
+    def handle_return_packet(self, received):
+        """
+        Extracts the git tag from sender and puts it into a list.
+        """
+        if received:
+            received = [x.strip() for x in received.split(',')]
+            branch = received[0]
+            if int(received[1])==0:
+                flag = False
+            else:
+                flag = True
+            return branch, flag
 
 class PacketError(Exception):
     pass
