@@ -35,6 +35,9 @@ os.system('sudo cp /etc/network/interfaces /etc/network/interfaces_backup')
 # Alert the user that a backup file has been made.
 print 'A backup of the network interfaces file has been made. If you make an error during the rest of the setup, a prompt at the end will ask if you would like to restore the backup.'
 
+# Ask for the station ID and output the raw input string as a variable.
+ID = raw_input('What is the station ID?: ')
+
 '''
 Define a function to update the interfaces file by replacing the line containing an indicated phrase with a new line.
 '''
@@ -70,9 +73,6 @@ def interfacesUpdate(repPhrase, newLine):
 
 	# Return the original standard output.
 	sys.stdout = temp
-
-# Ask for the station ID and output the raw input string as a variable.
-ID = raw_input('What is the station ID?: ')
 
 # Update the station using the update function.
 interfacesUpdate('wireless-essid RPiAdHocNetwork', '  wireless-essid RPiAdHocNetwork%s' % ID + '\n')
