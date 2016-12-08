@@ -26,6 +26,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
+from globalvalues import REBOOT_SCRIPT
 
 
 def signal_term_handler(signal, frame):
@@ -284,8 +285,8 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('sudo ./git-pull-reboot.sh {0}'.format(
-                        self.branch))
+                    os.system('sudo {0} {1}'.format(
+                        REBOOT_SCRIPT, self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
