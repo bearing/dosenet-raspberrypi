@@ -86,7 +86,7 @@ setupStaticIP = raw_input('Do you want to set a static IP (Y/N)?: ')
 '''
 If the response is a yes, update the interfaces file to include the static IP and the relevant functionality.
 '''
-if setupStaticIP is 'Y' or 'y':
+if setupStaticIP == 'y':
 
 	# Ask for the static IP.
 	IP_static = raw_input('What is your static IP?: ')
@@ -115,13 +115,13 @@ if setupStaticIP is 'Y' or 'y':
 		interfacesUpdate('#   netmask', '  netmask %s' % netmask_ID)
 
 	# Ask the user if they have a gateway.
-	setupGateway = raw_input('Do you have a gateway (Y/N)?: ')
+	setupGateway = raw_input('Do you have a gateway (y/n)?: ')
 
 	'''
 	If the response is a yes, update the interfaces file to include the gateway identifier and the
 	relevant functionality.
 	'''
-	if setupGateway is 'Y' or 'y':
+	if setupGateway is 'y':
 
 		# Ask for the gateway identifier.
 		gateway_ID = raw_input('What is your gateway identifier?: ')
