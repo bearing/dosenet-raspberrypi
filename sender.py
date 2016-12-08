@@ -12,7 +12,6 @@ import socket
 import argparse
 import time
 from contextlib import closing
-import errno
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
@@ -149,7 +148,7 @@ class ServerSender(object):
         else:
             self.vprint(3, 'Constructed packet')
             return raw_packet
-            
+
     def construct_packet_new_D3S(self, timestamp, spectra, error_code=0):
         """
         TCP version of construct packet.
@@ -215,7 +214,10 @@ class ServerSender(object):
             s.connect((self.address, self.port))
             s.sendall(encrypted)
             received = s.recv(1024)
+            self.vprint(3, 'TCP received {}'.format(received))
             branch, flag = self.handle_return_packet(received)
+            self.vprint(3, 'Branch: {}'.format(branch))
+            self.vprint(3, 'Update flag: {}'.format(flag))
             self.manager.branch = branch
             self.manager.quit_after_interval = flag
             self.vprint(3, 'TCP packet sent successfully')
@@ -252,11 +254,12 @@ class ServerSender(object):
         if received:
             received = [x.strip() for x in received.split(',')]
             branch = received[0]
-            if int(received[1])==0:
+            if int(received[1]) == 0:
                 flag = False
             else:
                 flag = True
             return branch, flag
+
 
 class PacketError(Exception):
     pass

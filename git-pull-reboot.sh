@@ -2,32 +2,16 @@
 #
 # git-pull-reboot.sh
 #
-# Pull the latest master branch of dosenet-raspberrypi
+# May include the branch as an input argument: git-pull-reboot.sh master
+#
+# Pull the latest from dosenet-raspberrypi
 # Then reboot the computer
 
+BRANCH=$1
 LOGTAG=dosenet
-CONFIGFILE=/home/pi/config/config.csv
-
-# what is my station ID?
-if [ -f $CONFIGFILE ]; then
-  ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
-else
-  ID=unknown
-fi
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
-
-# Station-specific stuff
-case $ID in
-  "9999")
-    # template
-    BRANCH=master
-    ;;
-  *)
-    BRANCH=master
-    ;;
-esac
 
 # git operations:
 # `sudo -u pi` is required, because operations must be performed by
@@ -81,13 +65,25 @@ if [ $ANY_UNSTAGED = 1 -o $ANY_STAGED = 1 ]; then
   fi
 fi
 
+# 4. do a fetch on the current branch to ensure we have a copy of
+#    the new branch
+sudo -u pi git fetch
+# it may generate an error if the current branch was deleted on the server.
+#   but the new branch still gets fetched.
+
 # now, finally, there should be no reason for checkout and pull to fail.
 
-sudo -u pi git checkout $BRANCH
-if [ $? -eq 0 ]; then
-  logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
+if [ "$BRANCH" != "" ]
+then
+  echo "Checkout branch $BRANCH"
+  sudo -u pi git checkout $BRANCH
+  if [ $? -eq 0 ]; then
+    logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
+  else
+    logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
+  fi
 else
-  logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
+  echo "No branch argument, not changing branches"
 fi
 
 sudo -u pi git pull --ff-only
@@ -97,7 +93,7 @@ else
   logger --stderr --id --tag $LOGTAG "git pull failed !"
 fi
 
-sudo $DOSENETPATH/system-update.sh $ID
+sudo $DOSENETPATH/system-update.sh
 
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "successfully ran system-update.sh"
