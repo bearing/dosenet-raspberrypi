@@ -71,9 +71,6 @@ def interfacesUpdate(repPhrase, newLine):
 	# Return the original standard output.
 	sys.stdout = temp
 
-	# Exit the function.
-	return
-
 # Ask for the station ID and output the raw input string as a variable.
 ID = raw_input('What is the station ID?: ')
 
