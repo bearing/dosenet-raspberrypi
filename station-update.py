@@ -11,6 +11,10 @@ import fileinput
 import sys
 import os
 
+from tempfile import mkstemp
+from shutil import move
+from os import remove, close
+
 '''
 Part 1: Securely copying the network configuration file from the Dosenet servers to the Pi-hat.
 '''
@@ -41,7 +45,21 @@ ID = raw_input('What is the station ID?: ')
 '''
 Define a function to update the interfaces file by replacing the line containing an indicated phrase with a new line.
 '''
+
 def interfacesUpdate(repPhrase, newLine):
+	tempFile, tempPath = mkstemp()
+	
+	with open(tempPath, 'w') as tempInterfaces:
+		with open('/etc/network/interfaces', 'w') as oldInterfaces:
+			for line in oldInterfaces:
+				tempInterfaces.write(line.replace(repPhrase, newLine))
+				
+	close(tempFile)
+	
+    	# Move the updated interfaces file to replace the old interfaces file using root access.
+	os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
+				
+	'''
 
 	# Store the original standard output.
 	temp = sys.stdout
@@ -51,7 +69,9 @@ def interfacesUpdate(repPhrase, newLine):
 	sys.stdout = open('~interfaces_temp', 'w')
 
 	'''
+	'''
 	Loop through each line of the interfaces file to find the phrase of interest and replace it with the new line.
+	'''
 	'''
 	for line in fileinput.input('/etc/network/interfaces'):
 
@@ -73,6 +93,8 @@ def interfacesUpdate(repPhrase, newLine):
 
 	# Return the original standard output.
 	sys.stdout = temp
+	
+	'''
 
 # Update the station using the update function.
 interfacesUpdate('wireless-essid RPiAdHocNetwork', '  wireless-essid RPiAdHocNetwork%s' % ID + '\n')
