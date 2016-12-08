@@ -88,7 +88,7 @@ print setupStaticIP
 '''
 If the response is a yes, update the interfaces file to include the static IP and the relevant functionality.
 '''
-if setupStaticIP == 'y':
+if setupStaticIP:
 	
 	print setupStaticIP
 
