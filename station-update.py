@@ -86,7 +86,7 @@ setupStaticIP = raw_input('Do you want to set a static IP (Y/N)?: ')
 '''
 If the response is a yes, update the interfaces file to include the static IP and the relevant functionality.
 '''
-if setupStaticIP == 'Y' or setupStaticIP == 'y':
+if setupStaticIP is 'Y' or 'y':
 
 	# Ask for the static IP.
 	IP_static = raw_input('What is your static IP?: ')
@@ -105,7 +105,7 @@ if setupStaticIP == 'Y' or setupStaticIP == 'y':
 	If the response is a yes, update the interfaces file to include the netmask identifier and the
 	relevant functionality.
 	'''
-	if setupNetmask == 'Y' or setupNetmask == 'y':
+	if setupNetmask is 'Y' or 'y':
 
 		# Ask for the netmask identifier.
 		netmask_ID = raw_input('What is your netmask identifier?: ')
@@ -121,7 +121,7 @@ if setupStaticIP == 'Y' or setupStaticIP == 'y':
 	If the response is a yes, update the interfaces file to include the gateway identifier and the
 	relevant functionality.
 	'''
-	if setupGateway == 'Y' or setupGateway == 'y':
+	if setupGateway is 'Y' or 'y':
 
 		# Ask for the gateway identifier.
 		gateway_ID = raw_input('What is your gateway identifier?: ')
@@ -137,7 +137,7 @@ if setupStaticIP == 'Y' or setupStaticIP == 'y':
 	If the response is a yes, update the interfaces file to include the DNS server names and the
 	relevant functionality.
 	'''
-	if setupDNSserver == 'Y' or setupDNSserver == 'y':
+	if setupDNSserver is 'Y' or 'y':
 
 		# Ask for the DNS server names.
 		name1 = raw_input('What is the IP of the first DNS server?: ')
@@ -151,7 +151,7 @@ if setupStaticIP == 'Y' or setupStaticIP == 'y':
 restoreBackup = raw_input('Would you like to restore the backup of the network interfaces update (Y/N)?: ')
 
 # If the response is a yes, copy the backup over the original file that has been modified.
-if restoreBackup == 'Y' or restoreBackup == 'y':
+if restoreBackup is 'Y' or 'y':
 
 	# Restore the backup interfaces file using the cp linux command with root access.
 	os.system('sudo cp /etc/network/interfaces_backup /etc/network/interfaces')
