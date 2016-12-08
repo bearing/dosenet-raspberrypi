@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-
 import time
 import argparse
 import traceback
+import signal
+import sys
+import os
 
 from globalvalues import RPI
 if RPI:
@@ -24,11 +26,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-
-import signal
-import sys
-import os
-
+from globalvalues import REBOOT_SCRIPT
 
 
 def signal_term_handler(signal, frame):
@@ -95,7 +93,7 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
-        
+
         self.test = test
 
         # LEDs
@@ -128,7 +126,7 @@ class Manager(object):
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
-        
+
         self.data_handler.backlog_to_queue()
 
     def a_flag(self):
@@ -287,7 +285,8 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('./git-pull-reboot.sh {0}'.format(self.branch))
+                    os.system('sudo {0} {1}'.format(
+                        REBOOT_SCRIPT, self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -297,6 +296,7 @@ class Manager(object):
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.stop()
             self.takedown()
+
     def stop(self):
         """Stop counting time."""
         self.running = False
