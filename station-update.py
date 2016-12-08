@@ -63,16 +63,13 @@ def interfacesUpdate(repPhrase, newLine):
     		sys.stdout.write(line)
 
     	# Move the updated interfaces file to replace the old interfaces file using root access.
-	l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
+	os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
 	# Close the interfaces files for reading and writing
 	sys.stdout.close()
 
 	# Return the original standard output.
 	sys.stdout = temp
-
-	# Print the scp linux command that was executed for debugging purposes.
-	print 'FOR DEBUGGING, linux command: %s' % l
 
 	# Exit the function.
 	return
