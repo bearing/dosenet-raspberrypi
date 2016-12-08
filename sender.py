@@ -214,7 +214,10 @@ class ServerSender(object):
             s.connect((self.address, self.port))
             s.sendall(encrypted)
             received = s.recv(1024)
+            self.vprint(3, 'TCP received {}'.format(received))
             branch, flag = self.handle_return_packet(received)
+            self.vprint(3, 'Branch: {}'.format(branch))
+            self.vprint(3, 'Update flag: {}'.format(flag))
             self.manager.branch = branch
             self.manager.quit_after_interval = flag
             self.vprint(3, 'TCP packet sent successfully')
