@@ -33,7 +33,7 @@ Part 2: Updating the dosimeter ID on the network configuration file on the Pi-ha
 os.system('sudo cp /etc/network/interfaces /etc/network/interfaces_backup')
 
 # Alert the user that a backup file has been made.
-print "A backup of the network interfaces file has been made. If you make an error during the rest of the setup, a prompt at the end will ask if you'd like to restore the backup."
+print 'A backup of the network interfaces file has been made. If you make an error during the rest of the setup, a prompt at the end will ask if you would like to restore the backup.'
 
 '''
 Define a function to update the interfaces file by replacing the line containing an indicated phrase with a new line.
