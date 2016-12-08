@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-
 import time
 import argparse
 import traceback
+import signal
+import sys
+import os
 
 from globalvalues import RPI
 if RPI:
@@ -24,9 +26,6 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-
-import signal
-import sys
 
 
 def signal_term_handler(signal, frame):
@@ -93,7 +92,7 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
-        
+
         self.test = test
 
         # LEDs
@@ -126,7 +125,7 @@ class Manager(object):
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
-        
+
         self.data_handler.backlog_to_queue()
 
     def a_flag(self):
