@@ -65,7 +65,8 @@ if [ $ANY_UNSTAGED = 1 -o $ANY_STAGED = 1 ]; then
   fi
 fi
 
-# 4. do a pull on the current branch to ensure we have a copy of the new branch
+# 4. do a fetch on the current branch to ensure we have a copy of
+#    the new branch
 sudo -u pi git fetch
 # it may generate an error if the current branch was deleted on the server.
 #   but the new branch still gets fetched.
@@ -74,16 +75,15 @@ sudo -u pi git fetch
 
 if [ "$BRANCH" != "" ]
 then
-  echo "Checkout out branch $BRANCH"
+  echo "Checkout branch $BRANCH"
   sudo -u pi git checkout $BRANCH
+  if [ $? -eq 0 ]; then
+    logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
+  else
+    logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
+  fi
 else
   echo "No branch argument, not changing branches"
-fi
-
-if [ $? -eq 0 ]; then
-  logger --stderr --id --tag $LOGTAG "successfully checked out branch $BRANCH"
-else
-  logger --stderr --id --tag $LOGTAG "failed to check out branch $BRANCH !"
 fi
 
 sudo -u pi git pull --ff-only
