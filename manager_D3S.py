@@ -1,36 +1,30 @@
-import time
-import traceback
-
 from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import Config, PublicKey, LED
+import time
+import traceback
+import argparse
+import kromek
+import numpy as np
+import signal
+import sys
+
+from auxiliaries import Config, PublicKey, LED, set_verbosity
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
-from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME
+from globalvalues import DEFAULT_CALIBRATIONLOG_D3S
+from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
-
-
-import argparse
-import kromek
-import numpy as np
-
-import time
-
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
 from globalvalues import DEFAULT_INTERVAL_TEST_D3S
 
-from auxiliaries import set_verbosity
-
-import signal
-import sys
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -40,11 +34,13 @@ def signal_term_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
+
 class Manager_D3S(object):
     """
-    Master object for D3S device operation. 
+    Master object for D3S device operation.
 
-    Prints out spectra for every interval, stores each spectra, and sums the spectra together. 
+    Prints out spectra for every interval, stores each spectra, and
+    sums the spectra together.
 
     Interval is in seconds with the default being 30 seconds.
     """
@@ -52,10 +48,10 @@ class Manager_D3S(object):
     def __init__(self,
                  interval=None,
                  count=0,
-                 transport='any', 
+                 transport='any',
                  device='all',
                  log_bytes=False,
-                 verbosity=None, 
+                 verbosity=None,
                  datalog=None,
                  datalogflag=False,
                  calibrationlog=None,
@@ -67,7 +63,7 @@ class Manager_D3S(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
-                 logfile=None, 
+                 logfile=None,
                  log=False,
                  running=False,
                  network_LED_pin=NETWORK_LED_PIN,
@@ -102,7 +98,7 @@ class Manager_D3S(object):
 
         self.a_flag()
         self.d_flag()
-        self.make_data_log(self.datalog)  
+        self.make_data_log(self.datalog)
 
         self.test = test
 
@@ -151,14 +147,15 @@ class Manager_D3S(object):
         if self.calibrationlog:
             self.calibrationlogflag = True
             self.calibrationlogtime = DEFAULT_CALIBRATIONLOG_TIME
-            
+
     def x_flag(self):
         """
         Checks if -x is called.
-        If it is called, sets calibrationlogflag to True. 
+        If it is called, sets calibrationlogflag to True.
         Also sets calibrationlog to DEFAULT_CALIBRATIONLOG_D3S.
         """
-        if self.calibrationlogtime and self.calibrationlogtime != DEFAULT_CALIBRATIONLOG_TIME:
+        if self.calibrationlogtime and (
+                self.calibrationlogtime != DEFAULT_CALIBRATIONLOG_TIME):
             self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
             self.calibrationlogflag = True
 
@@ -189,7 +186,8 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 pass
 
-    def handle_input(self, log, logfile, verbosity, interval, config, publickey):
+    def handle_input(self, log, logfile, verbosity, interval,
+                     config, publickey):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
@@ -205,7 +203,7 @@ class Manager_D3S(object):
         if log:
             self.logfile = logfile
         else:
-            self.logfile = None        
+            self.logfile = None
 
         if verbosity is None:
             verbosity = 1
@@ -258,7 +256,7 @@ class Manager_D3S(object):
 
     def run(self):
         """
-        Main method. Currently also stores and sum the spectra as well. 
+        Main method. Currently also stores and sum the spectra as well.
 
         Current way to stop is only using a keyboard interrupt.
         """
@@ -282,7 +280,7 @@ class Manager_D3S(object):
             return
 
         done_devices = set()
-        try:    
+        try:
             while self.running:
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
@@ -292,14 +290,16 @@ class Manager_D3S(object):
                             self.create_structures = False
                         else:
                             self.total += np.array(reading[4])
-                            self.lst = np.concatenate((self.lst, [np.array(reading[4])]))
+                            self.lst = np.concatenate(
+                                (self.lst, [np.array(reading[4])]))
                         serial = reading[0]
                         dev_count = reading[1]
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
-                            self.handle_spectra(this_start, this_end, reading[4])
+                            self.handle_spectra(
+                                this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -326,7 +326,8 @@ class Manager_D3S(object):
         if self.datalogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
-                self.vprint(2, 'Writing spectra to data log at {}'.format(file))
+                self.vprint(
+                    2, 'Writing spectra to data log at {}'.format(file))
 
     def calibration_log(self, file, spectra):
         """
@@ -335,7 +336,8 @@ class Manager_D3S(object):
         if self.calibrationlogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))
-                self.vprint(2, 'Writing spectra to calibration log at {}'.format(file))
+                self.vprint(
+                    2, 'Writing spectra to calibration log at {}'.format(file))
             self.c_timer += self.interval
             if self.c_timer >= self.calibrationlogtime:
                 self.vprint(1, 'Calibration Complete')
@@ -347,8 +349,8 @@ class Manager_D3S(object):
         """
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
-          
-    def takedown(self): 
+
+    def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
@@ -365,23 +367,29 @@ class Manager_D3S(object):
         parser = argparse.ArgumentParser()
         parser.add_argument('--hostname', '-s', default=DEFAULT_HOSTNAME)
         parser.add_argument('--port', '-p', type=int, default=None)
-        parser.add_argument('--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE, choices=['udp', 'tcp', 'UDP', 'TCP'])
+        parser.add_argument(
+            '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
+            choices=['udp', 'tcp', 'UDP', 'TCP'])
         parser.add_argument('--config', '-c', default=None)
         parser.add_argument('--datalog', '-d', default=None)
-        parser.add_argument('--datalogflag', '-a', action='store_true', default=False)
+        parser.add_argument(
+            '--datalogflag', '-a', action='store_true', default=False)
         parser.add_argument('--publickey', '-k', default=None)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
-        parser.add_argument('--test', '-t', action='store_true', default=False)        
+        parser.add_argument('--test', '-t', action='store_true', default=False)
         parser.add_argument('--transport', '-n', default='any')
         parser.add_argument('--interval', '-i', type=int, default=None)
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument('--device', '-e', dest='device', default='all')
-        parser.add_argument('--log-bytes', '-b', dest='log_bytes', default=False, action='store_true')
+        parser.add_argument(
+            '--log-bytes', '-b', dest='log_bytes', default=False,
+            action='store_true')
         parser.add_argument('--log', '-l', action='store_true', default=False)
         parser.add_argument('--logfile', '-f', type=str, default=None)
         parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
-        parser.add_argument('--calibrationlogflag', '-z', action='store_true', default=False)
+        parser.add_argument(
+            '--calibrationlogflag', '-z', action='store_true', default=False)
 
         args = parser.parse_args()
         arg_dict = vars(args)
