@@ -7,7 +7,7 @@
 # Pull the latest from dosenet-raspberrypi
 # Then reboot the computer
 
-BRANCH = $1
+BRANCH=$1
 LOGTAG=dosenet
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
