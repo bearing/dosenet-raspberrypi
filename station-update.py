@@ -53,16 +53,16 @@ def interfacesUpdate(repPhrase, newLine):
 	for line in fileinput.input('/etc/network/interfaces'):
 
 		# Search and find the phrase of interest to indicate the place in the code to replace the original line with
-    	# the new line.
-    	if repPhrase in line:
+    		# the new line.
+    		if repPhrase in line:
 
-    	    # Create a handle for a new line with the updated phrase to input into the interfaces file.      
-    	    line = newLine
+    	    		# Create a handle for a new line with the updated phrase to input into the interfaces file.      
+    	    		line = newLine
     
-    	# Write the new line with the updated station ID in the temporary interfaces file.
-    	sys.stdout.write(line)
+    		# Write the new line with the updated station ID in the temporary interfaces file. Also copy all other lines.
+    		sys.stdout.write(line)
 
-    # Move the updated interfaces file to replace the old interfaces file using root access.
+    	# Move the updated interfaces file to replace the old interfaces file using root access.
 	l = os.system('sudo mv ~interfaces_temp /etc/network/interfaces')
 
 	# Close the interfaces files for reading and writing
