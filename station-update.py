@@ -44,6 +44,8 @@ Define a function to update the interfaces file by replacing the line containing
 '''
 
 def interfacesUpdate(repPhrase, newLine):
+	'''
+	# METHOD 1
 	tempFile, tempPath = mkstemp()
 	
 	with open(tempPath, 'w') as tempInterfaces:
@@ -55,8 +57,10 @@ def interfacesUpdate(repPhrase, newLine):
 	
     	# Move the updated interfaces file to replace the old interfaces file using root access.
 	os.system('sudo mv %s /etc/network/interfaces' % tempPath)
+	'''
 	
 	'''
+	# METHOD 2
 	# Store the original standard input and output.
 	tempIn = sys.stdin
 	tempOut = sys.stdout
