@@ -82,11 +82,15 @@ interfacesUpdate('wireless-essid RPiAdHocNetwork', '  wireless-essid RPiAdHocNet
 
 # Ask the user if they would like to use a static IP.
 setupStaticIP = raw_input('Do you want to set a static IP (Y/N)?: ')
+	
+print setupStaticIP
 
 '''
 If the response is a yes, update the interfaces file to include the static IP and the relevant functionality.
 '''
 if setupStaticIP == 'y':
+	
+	print setupStaticIP
 
 	# Ask for the static IP.
 	IP_static = raw_input('What is your static IP?: ')
