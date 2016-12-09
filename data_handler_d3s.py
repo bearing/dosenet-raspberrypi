@@ -7,13 +7,15 @@ import socket
 import time
 import ast
 import os
+import errno
 
 SPECTRA_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{total_counts}} {reset}' +
     '{green} total counts from {reset}' +
     ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green = ANSI_GR)
+    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
 strf = '%H:%M:%S'
+
 
 class Data_Handler_D3S(object):
 
@@ -23,20 +25,19 @@ class Data_Handler_D3S(object):
                  logfile=None,
                  network_led=None,
                  ):
-               
+
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
         else:
             set_verbosity(self, logfile=logfile)
 
-    
         self.manager = manager
         self.queue = deque('')
-        
+
         self.blink_period_s = 1.5
         self.led = network_led
-    
+
     def test_send(self, spectra):
         """
         Test Mode
@@ -44,7 +45,7 @@ class Data_Handler_D3S(object):
         self.vprint(
             1, ANSI_RED + " * Test mode, not sending to server * " +
             ANSI_RESET)
-            
+
     def no_config_send(self, spectra):
         """
         Configuration file not present
@@ -56,7 +57,7 @@ class Data_Handler_D3S(object):
         Publickey not present
         """
         self.vprint(1, "Missing public key, not sending to server")
-        
+
     def send_to_memory(self, spectra):
         """
         Network is not up
@@ -79,7 +80,7 @@ class Data_Handler_D3S(object):
             self.vprint(1, "Flushing memory queue to server")
         while self.queue:
             trash = self.queue.popleft()
-            self.manager.sender.send_specra_new_D3S(
+            self.manager.sender.send_spectra_new_D3S(
                 trash[0], trash[1])
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
@@ -144,15 +145,18 @@ class Data_Handler_D3S(object):
                         # network is down, but NetworkStatus didn't notice yet
                         # (resolving DNS like dosenet.dhcp.lbl.gov)
                         self.vprint(
-                            1, 'Failed to send packet! Address resolution error')
+                            1,
+                            'Failed to send packet! Address resolution error')
                     else:
-                        self.vprint(1, 'Failed to send packet! Address error: ' +
-                                    '{}: {}'.format(*e))
+                        self.vprint(
+                            1, 'Failed to send packet! Address error: ' +
+                            '{}: {}'.format(*e))
                 elif e == socket.error:
                     if e[0] == errno.ECONNREFUSED:
                         # TCP
                         # server is not accepting connections
-                        self.vprint(1, 'Failed to send packet! Connection refused')
+                        self.vprint(
+                            1, 'Failed to send packet! Connection refused')
                     elif e[0] == errno.ENETUNREACH:
                         # TCP and UDP
                         # network is down, but NetworkStatus didn't notice yet
@@ -160,9 +164,10 @@ class Data_Handler_D3S(object):
                         self.vprint(
                             1, 'Failed to send packet! Network is unreachable')
                     else:
-                        # consider handling errno.ECONNABORTED, errno.ECONNRESET
-                        self.vprint(1, 'Failed to send packet! Socket error: ' +
-                                    '{}: {}'.format(*e))
+                        # consider handling errno.ECONNABORTED errno.ECONNRESET
+                        self.vprint(
+                            1, 'Failed to send packet! Socket error: ' +
+                            '{}: {}'.format(*e))
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')

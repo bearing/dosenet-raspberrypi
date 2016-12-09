@@ -12,7 +12,6 @@ import socket
 import argparse
 import time
 from contextlib import closing
-import errno
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
@@ -43,7 +42,6 @@ class ServerSender(object):
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
-
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
@@ -242,6 +240,13 @@ class ServerSender(object):
             s.settimeout(TCP_TIMEOUT)   # generous timeout
             s.connect((self.address, self.port))
             s.sendall(encrypted)
+            received = s.recv(1024)
+            self.vprint(3, 'TCP received {}'.format(received))
+            branch, flag = self.handle_return_packet(received)
+            self.vprint(3, 'Branch: {}'.format(branch))
+            self.vprint(3, 'Update flag: {}'.format(flag))
+            self.manager.branch = branch
+            self.manager.quit_after_interval = flag
             self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
@@ -277,6 +282,18 @@ class ServerSender(object):
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
+    def handle_return_packet(self, received):
+        """
+        Extracts the git tag from sender and puts it into a list.
+        """
+        if received:
+            received = [x.strip() for x in received.split(',')]
+            branch = received[0]
+            if int(received[1]) == 0:
+                flag = False
+            else:
+                flag = True
+            return branch, flag
 
 class PacketError(Exception):
     pass
