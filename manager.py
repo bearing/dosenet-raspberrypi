@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-
 import time
 import argparse
 import traceback
+import signal
+import sys
+import os
 
 from globalvalues import RPI
 if RPI:
@@ -24,9 +26,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-
-import signal
-import sys
+from globalvalues import REBOOT_SCRIPT
 
 
 def signal_term_handler(signal, frame):
@@ -125,6 +125,7 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
+        self.branch = ''
 
         self.data_handler.backlog_to_queue()
 
@@ -281,7 +282,11 @@ class Manager(object):
 
                 self.handle_cpm(this_start, this_end)
                 if self.quit_after_interval:
-                    sys.exit(0)
+                    self.vprint(1, 'Reboot: taking down Manager')
+                    self.stop()
+                    self.takedown()
+                    os.system('sudo {0} {1}'.format(
+                        REBOOT_SCRIPT, self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
