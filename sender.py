@@ -113,16 +113,18 @@ class ServerSender(object):
     def construct_packet(self, cpm, cpm_error, error_code=0):
         """
         Construct the raw packet string. (basically copied from old code)
+
+        hash,ID,cpm,cpm_error,error_code
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(cpm) + c +
-                str(cpm_error) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(cpm),
+                 str(cpm_error),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
@@ -132,17 +134,19 @@ class ServerSender(object):
     def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol version of construct packet.
+
+        hash,ID,timestamp,cpm,cpm_error,error_code
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(timestamp) + c +
-                str(cpm) + c +
-                str(cpm_error) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(cpm),
+                 str(cpm_error),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
@@ -154,18 +158,41 @@ class ServerSender(object):
         TCP version of construct packet.
         """
 
-        c = ','
         try:
-            raw_packet = (
-                str(self.config.hash) + c +
-                str(self.config.ID) + c +
-                str(timestamp) + c +
-                str(spectra) + c +
-                str(error_code))
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(spectra),
+                 str(error_code)]
+            )
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
         else:
             self.vprint(3, 'Constructed packet')
+            return raw_packet
+
+    def construct_log_packet(self, msg_code, msg_text):
+        """
+        Send a message to be recorded in the server log database.
+
+        hash,ID,"LOG",msg_code,msg_text
+        """
+
+        if not isinstance(msg_code, int):
+            raise TypeError('msg_code should be an int')
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 'LOG',
+                 str(msg_code),
+                 str(msg_text)]
+            )
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed log packet')
             return raw_packet
 
     def encrypt_packet(self, raw_packet):
@@ -179,9 +206,9 @@ class ServerSender(object):
         else:
             return encrypted
 
-    def send_data(self, encrypted, cpm=None, cpm_err=None):
+    def send_data(self, encrypted):
         """
-        Send data according to self.mode, and handle common errors
+        Send data according to self.mode
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
@@ -230,7 +257,7 @@ class ServerSender(object):
 
         packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted, cpm, cpm_error)
+        self.send_data(encrypted)
 
     def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
         """
@@ -239,7 +266,15 @@ class ServerSender(object):
         packet = self.construct_packet_new(
             timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted, cpm, cpm_error)
+        self.send_data(encrypted)
+
+    def send_log(self, msg_code, msg_text):
+        """
+        Send a log message
+        """
+        packet = self.construct_log_packet(msg_code, msg_text)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
 
     def send_spectra_new_D3S(self, timestamp, spectra, error_code=0):
         """
@@ -266,7 +301,6 @@ class ServerSender(object):
             return None, None
         else:
             return branch, flag
-
 
 class PacketError(Exception):
     pass
@@ -318,18 +352,67 @@ def send_test_packets(
         time.sleep(sleep_time)
 
 
+def send_log_message(
+        mode=DEFAULT_SENDER_MODE,
+        config=DEFAULT_CONFIG,
+        publickey=DEFAULT_PUBLICKEY,
+        address=DEFAULT_HOSTNAME,
+        port=None,
+        msgcode=0,
+        message='ServerSender test'):
+    """
+    Send a log message to the server.
+    """
+
+    try:
+        config_obj = Config(config)
+    except IOError:
+        # file doesn't exist
+        config_obj = None
+
+    try:
+        key_obj = PublicKey(publickey)
+    except IOError:
+        # file doesn't exist
+        key_obj = None
+
+    sender = ServerSender(
+        mode=mode, address=address, port=port,
+        config=config_obj, publickey=key_obj, verbosity=3)
+
+    if key_obj is None:
+        # no encryption
+        if config is None:
+            # no ID
+            packet = ','.join(msgcode, message)
+            sender.send_data(packet)
+        else:
+            # has ID
+            packet = ','.join(
+                sender.config.hash, sender.config.ID, msgcode, message)
+            sender.send_data(packet)
+    else:
+        # encryption
+        if config is None:
+            # no ID
+            packet = ','.join(msgcode, message)
+            encrypted = sender.encrypt_packet(packet)
+            sender.send_data(encrypted)
+        else:
+            # standard, full functionality
+            sender.send_log(msgcode, message)
+
+
 if __name__ == '__main__':
-    # send test packets
+    # send a test log entry
     parser = argparse.ArgumentParser(
         description='Sender for UDP/TCP data packets. ' +
         'Normally called from manager.py. ' +
-        'Called directly, it will send 3 test packets to server. ' +
-        'Specify udp or tcp on command line.')
-    parser.add_argument(
-        'mode', choices=['udp', 'tcp', 'UDP', 'TCP'], nargs='?', default='udp',
-        help='The network protocol to use in sending test packets')
-    parser.add_argument('-n', type=int, default=3, help='# packets')
-    parser.add_argument('--config', '-c', type=str, default=DEFAULT_CONFIG,
+        'Called directly, it will send a log message to the server.')
+    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP'],
+                        default=DEFAULT_SENDER_MODE,
+                        help='Network protocol to use')
+    parser.add_argument('--config', '-g', type=str, default=DEFAULT_CONFIG,
                         help='config file location')
     parser.add_argument('--publickey', '-k', type=str,
                         default=DEFAULT_PUBLICKEY,
@@ -338,12 +421,14 @@ if __name__ == '__main__':
                         help='hostname (web address or IP)')
     parser.add_argument('--port', '-p', type=int, default=None,
                         help='port')
-    parser.add_argument('--no-encrypt', '-e', dest='encrypt',
-                        action='store_false',
-                        help='encrypt packet or don''t encrypt')
+    parser.add_argument('--msgcode', '-c', type=int, default=0,
+                        help='message code for log')
+    parser.add_argument('--message', '-m', type=str,
+                        default='ServerSender test',
+                        help='message text for log')
     args = parser.parse_args()
 
-    send_test_packets(
-        mode=args.mode.lower(), address=args.hostname, port=args.port,
-        config=args.config, publickey=args.publickey, n=args.n,
-        encrypt=args.encrypt)
+    send_log_message(
+        mode=args.mode, address=args.hostname, port=args.port,
+        config=args.config, publickey=args.publickey,
+        msgcode=args.msgcode, message=args.message)
