@@ -309,11 +309,13 @@ class Manager(object):
           end_time: number of seconds since epoch, e.g. time.time()
         """
 
+        catching_up_flag = False
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0:
-            # this shouldn't happen now that SleepError is raised and handled
-            raise RuntimeError
+            # can happen if flushing queue to server takes longer than interval
+            sleeptime = 0
+            catching_up_flag = True
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
@@ -325,7 +327,7 @@ class Manager(object):
         # normally this offset is < 0.1 s
         # although a reboot normally produces an offset of 9.5 s
         #   on the first cycle
-        if now - end_time > 10 or now < end_time:
+        if not catching_up_flag and (now - end_time > 10 or now < end_time):
             # raspberry pi clock reset during this interval
             # normally the first half of the condition triggers it.
             raise SleepError
