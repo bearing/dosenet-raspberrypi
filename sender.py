@@ -262,7 +262,7 @@ class ServerSender(object):
             else:
                 flag = True
             assert len(received) == 2
-        except AttributeError, IndexError, ValueError, AssertionError:
+        except (AttributeError, IndexError, ValueError, AssertionError):
             return None, None
         else:
             return branch, flag
