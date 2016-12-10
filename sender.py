@@ -251,13 +251,17 @@ class ServerSender(object):
         """
         Extracts the git tag from sender and puts it into a list.
         """
-        if received:
+        try:
             received = [x.strip() for x in received.split(',')]
             branch = received[0]
             if int(received[1]) == 0:
                 flag = False
             else:
                 flag = True
+            assert len(received) == 2
+        except AttributeError, IndexError, ValueError, AssertionError:
+            return None, None
+        else:
             return branch, flag
 
 
