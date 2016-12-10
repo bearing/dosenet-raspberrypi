@@ -216,10 +216,13 @@ class ServerSender(object):
             received = s.recv(1024)
             self.vprint(3, 'TCP received {}'.format(received))
             branch, flag = self.handle_return_packet(received)
-            self.vprint(3, 'Branch: {}'.format(branch))
-            self.vprint(3, 'Update flag: {}'.format(flag))
-            self.manager.branch = branch
-            self.manager.quit_after_interval = flag
+            if branch is not None:
+                self.vprint(3, 'Branch: {}'.format(branch))
+                self.vprint(3, 'Update flag: {}'.format(flag))
+                self.manager.branch = branch
+                self.manager.quit_after_interval = flag
+            else:
+                self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
 
     def send_cpm(self, cpm, cpm_error, error_code=0):
