@@ -59,8 +59,8 @@ def interfacesUpdate(repPhrase, newLine):
 	os.system('sudo mv %s /etc/network/interfaces' % tempPath)
 	'''
 	
-	'''
 	# METHOD 2
+	
 	# Store the original standard input and output.
 	tempIn = sys.stdin
 	tempOut = sys.stdout
@@ -68,12 +68,11 @@ def interfacesUpdate(repPhrase, newLine):
 	# Open the interfaces file for reading and open up a temporary file for writing using the standard input and output functions.
 	sys.stdin = open('/etc/network/interfaces', 'r')
 	sys.stdout = open('~interfaces_temp', 'w')
-
-	'''
+	
 	'''
 	Loop through each line of the interfaces file to find the phrase of interest and replace it with the new line.
 	'''
-	'''
+	
 	for line in fileinput.input('/etc/network/interfaces'):
 
 		# Search and find the phrase of interest to indicate the place in the code to replace the original line with
@@ -95,7 +94,6 @@ def interfacesUpdate(repPhrase, newLine):
 	# Return the original standard input and output.
 	sys.stdin = tempIn
 	sys.stdout = tempOut
-	'''
 
 # Update the station using the update function.
 interfacesUpdate('wireless-essid RPiAdHocNetwork', '  wireless-essid RPiAdHocNetwork%s' % ID + '\n')
