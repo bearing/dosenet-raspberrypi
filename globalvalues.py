@@ -23,17 +23,25 @@ COUNTS_LED_PIN = 21
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
 DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
 DEFAULT_LOGFILE = '/home/pi/debug.log'
+DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
 DEFAULT_TCP_PORT = 5100
 DEFAULT_SENDER_MODE = 'tcp'
 DEFAULT_DATALOG = '/home/pi/data-log.txt'
+DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
+DEFAULT_DATA_BACKLOG_FILE_D3S = '/home/pi/data_backlog_file_D3S.txt'
+DEFAULT_CALIBRATIONLOG_D3S = '/home/pi/calibration-log_D3S.txt'
+DEFAULT_CALIBRATIONLOG_TIME = 600
 DEFAULT_PROTOCOL = 'new'
 
 DEFAULT_INTERVAL_NORMAL = 300
 DEFAULT_INTERVAL_TEST = 30
 DEFAULT_MAX_ACCUM_TIME = 3600
+
+DEFAULT_INTERVAL_NORMAL_D3S = 60
+DEFAULT_INTERVAL_TEST_D3S = 10
 
 # ANSI color codes
 ANSI_RESET = '\033[37m' + '\033[22m'    # white and not bold
@@ -42,6 +50,7 @@ ANSI_RED = '\033[31m' + ANSI_BOLD
 ANSI_GR = '\033[32m' + ANSI_BOLD
 ANSI_YEL = '\033[33m' + ANSI_BOLD
 
+REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
 
 # --- some old notes:
 # Note: GPIO.LOW  - 0V

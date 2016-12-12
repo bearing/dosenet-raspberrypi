@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-
 import time
 import argparse
 import traceback
+import signal
+import sys
+import os
 
 from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import LED, Config, PublicKey, NetworkStatus
+from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
@@ -24,9 +26,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-
-import signal
-import sys
+from globalvalues import REBOOT_SCRIPT
 
 
 def signal_term_handler(signal, frame):
@@ -65,7 +65,6 @@ class Manager(object):
                  counts_LED_pin=COUNTS_LED_PIN,
                  signal_pin=SIGNAL_PIN,
                  noise_pin=NOISE_PIN,
-                 test=False,
                  sender_mode=DEFAULT_SENDER_MODE,
                  interval=None,
                  config=None,
@@ -78,6 +77,7 @@ class Manager(object):
                  datalog=None,
                  datalogflag=False,
                  protocol=DEFAULT_PROTOCOL,
+                 test=None,
                  ):
 
         self.quit_after_interval = False
@@ -93,6 +93,8 @@ class Manager(object):
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey)
+
+        self.test = test
 
         # LEDs
         if RPI:
@@ -111,10 +113,11 @@ class Manager(object):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.network_up = NetworkStatus(
-            network_led=self.network_LED,
+        self.data_handler = Data_Handler(
+            manager=self,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            network_led=self.network_LED)
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
@@ -122,10 +125,7 @@ class Manager(object):
             verbosity=self.v,
             logfile=self.logfile)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
-        self.data_handler = Data_Handler(
-            manager=self,
-            verbosity=self.v,
-            logfile=self.logfile)
+        self.branch = ''
 
         self.data_handler.backlog_to_queue()
 
@@ -282,7 +282,11 @@ class Manager(object):
 
                 self.handle_cpm(this_start, this_end)
                 if self.quit_after_interval:
-                    sys.exit(0)
+                    self.vprint(1, 'Reboot: taking down Manager')
+                    self.stop()
+                    self.takedown()
+                    os.system('sudo {0} {1}'.format(
+                        REBOOT_SCRIPT, self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -305,11 +309,13 @@ class Manager(object):
           end_time: number of seconds since epoch, e.g. time.time()
         """
 
+        catching_up_flag = False
         sleeptime = end_time - time.time()
         self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
         if sleeptime < 0:
-            # this shouldn't happen now that SleepError is raised and handled
-            raise RuntimeError
+            # can happen if flushing queue to server takes longer than interval
+            sleeptime = 0
+            catching_up_flag = True
         time.sleep(sleeptime)
         if self.quit_after_interval and retry:
             # SIGQUIT signal somehow interrupts time.sleep
@@ -321,7 +327,7 @@ class Manager(object):
         # normally this offset is < 0.1 s
         # although a reboot normally produces an offset of 9.5 s
         #   on the first cycle
-        if now - end_time > 10 or now < end_time:
+        if not catching_up_flag and (now - end_time > 10 or now < end_time):
             # raspberry pi clock reset during this interval
             # normally the first half of the condition triggers it.
             raise SleepError
@@ -359,10 +365,6 @@ class Manager(object):
         # sensor
         self.sensor.cleanup()
         del(self.sensor)
-
-        # network
-        self.network_up.cleanup()
-        del(self.network_up)
 
         # power LED
         self.power_LED.off()
