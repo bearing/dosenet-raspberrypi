@@ -154,13 +154,16 @@ class ServerSender(object):
         TCP version of construct packet.
         """
 
+        # convert spectra to a string representation that won't interfere with
+        #   injector's parsing (no commas)
+        spectra_str = str(spectra).replace(',', ';')
         c = ','
         try:
             raw_packet = (
                 str(self.config.hash) + c +
                 str(self.config.ID) + c +
                 str(timestamp) + c +
-                str(spectra) + c +
+                spectra_str + c +
                 str(error_code))
         except AttributeError:      # on self.config.hash
             raise MissingFile('Missing or broken Config object')
