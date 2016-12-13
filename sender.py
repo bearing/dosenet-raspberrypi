@@ -11,6 +11,7 @@ from __future__ import print_function
 import socket
 import argparse
 import time
+import numpy as np
 from contextlib import closing
 
 from auxiliaries import set_verbosity, Config, PublicKey
@@ -319,6 +320,43 @@ def send_test_packets(
     for _ in xrange(n):
         sender.send_data(packet_to_send)
         time.sleep(sleep_time)
+
+
+def send_test_d3s_packet(
+        config=DEFAULT_CONFIG,
+        publickey=DEFAULT_PUBLICKEY,
+        port=None,
+        encrypt=True,
+        ):
+    """
+    Send a test packet in the format of the D3S data.
+    """
+
+    try:
+        config_obj = Config(config)
+    except IOError:
+        config_obj = None
+    try:
+        key_obj = PublicKey(publickey)
+    except IOError:
+        key_obj = None
+        if encrypt:
+            print("no publickey, can't encrypt")
+        encrypt = False
+
+    sender = ServerSender(
+        port=port, config=config_obj, publickey=key_obj, verbosity=3)
+
+    spectrum = [int(np.random.random() * 3) for _ in xrange(4096)]
+    raw_packet = sender.construct_packet_new_d3s(time.time(), spectrum)
+
+    if encrypt:
+        packet_to_send = sender.encrypt_packet(raw_packet)
+    else:
+        packet_to_send = raw_packet
+
+    sender.send_data(packet_to_send)
+
 
 
 if __name__ == '__main__':
