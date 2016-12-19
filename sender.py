@@ -287,7 +287,8 @@ def send_test_packets(
         address=DEFAULT_HOSTNAME,
         port=None,
         n=3,
-        encrypt=True):
+        encrypt=True,
+        raw_packet=None):
     """
     Send n (default 3) test packets to the DoseNet server.
     """
@@ -309,8 +310,9 @@ def send_test_packets(
         station_id = config_obj.ID
     except AttributeError:
         station_id = '?'
-    raw_packet = 'Test packet from station {} by mode {}'.format(
-        station_id, mode)
+    if raw_packet is None:
+        raw_packet = 'Test packet from station {} by mode {}'.format(
+            station_id, mode)
 
     if encrypt:
         packet_to_send = sender.encrypt_packet(raw_packet)
@@ -326,8 +328,7 @@ def send_test_d3s_packet(
         config=DEFAULT_CONFIG,
         publickey=DEFAULT_PUBLICKEY,
         port=None,
-        encrypt=True,
-        ):
+        encrypt=True):
     """
     Send a test packet in the format of the D3S data.
     """
@@ -348,15 +349,19 @@ def send_test_d3s_packet(
         port=port, config=config_obj, publickey=key_obj, verbosity=3)
 
     spectrum = [int(np.random.random() * 3) for _ in xrange(4096)]
-    raw_packet = sender.construct_packet_new_d3s(time.time(), spectrum)
+    raw_packet = sender.construct_packet_new_D3S(time.time(), spectrum)
 
     if encrypt:
         packet_to_send = sender.encrypt_packet(raw_packet)
     else:
         packet_to_send = raw_packet
 
-    sender.send_data(packet_to_send)
+    try:
+        sender.send_data(packet_to_send)
+    except socket.timeout:
+        print('timeout!')
 
+    return packet_to_send
 
 
 if __name__ == '__main__':
