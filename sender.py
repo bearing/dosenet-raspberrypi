@@ -13,11 +13,12 @@ import argparse
 import time
 import numpy as np
 from contextlib import closing
+from Crypto.Cipher import AES
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 
 TCP_TIMEOUT = 5
 
@@ -352,6 +353,7 @@ def send_test_packets(
 def send_test_d3s_packet(
         config=DEFAULT_CONFIG,
         publickey=DEFAULT_PUBLICKEY,
+        aeskey=DEFAULT_AESKEY,
         port=None,
         encrypt=True):
     """
@@ -369,15 +371,24 @@ def send_test_d3s_packet(
         if encrypt:
             print("no publickey, can't encrypt")
         encrypt = False
+    try:
+        with open(aeskey, 'r') as aesfile:
+            aeskey = aesfile.read()
+            aes = AES.new(aeskey, mode=AES.MODE_ECB)
+    except IOError:
+        aes = None
+        if encrypt:
+            print("no AES key, can't encrypt")
+        encrypt = False
 
     sender = ServerSender(
-        port=port, config=config_obj, publickey=key_obj, verbosity=3)
+        port=port, config=config_obj, publickey=key_obj, aes=aes, verbosity=3)
 
     spectrum = [int(np.random.random() * 3) for _ in xrange(4096)]
     raw_packet = sender.construct_packet_new_D3S(time.time(), spectrum)
 
     if encrypt:
-        packet_to_send = sender.encrypt_packet(raw_packet)
+        packet_to_send = sender.encrypt_packet_aes(raw_packet)
     else:
         packet_to_send = raw_packet
 
