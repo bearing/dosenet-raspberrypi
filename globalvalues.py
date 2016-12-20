@@ -22,6 +22,7 @@ COUNTS_LED_PIN = 21
 # Defaults
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
 DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
+DEFAULT_AESKEY = '/home/pi/config/secret.aes'
 DEFAULT_LOGFILE = '/home/pi/debug.log'
 DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'

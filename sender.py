@@ -34,12 +34,14 @@ class ServerSender(object):
                  port=None,
                  config=None,
                  publickey=None,
+                 aes=None,
                  verbosity=1,
                  logfile=None,
                  mode=None,
                  ):
         """
-        network_status, config, publickey loaded from manager if not provided.
+        network_status, config, publickey, aes loaded from manager
+          if not provided.
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
@@ -51,10 +53,10 @@ class ServerSender(object):
 
         self.address = address
         self.handle_input(
-            manager, mode, port, config, publickey)
+            manager, mode, port, config, publickey, aes)
 
     def handle_input(
-            self, manager, mode, port, config, publickey):
+            self, manager, mode, port, config, publickey, aes):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
@@ -110,6 +112,18 @@ class ServerSender(object):
                 self.encrypter = manager.publickey.encrypter
         else:
             self.encrypter = publickey.encrypter
+
+        if aes is None:
+            if manager is None:
+                self.vprint(2, 'ServerSender starting without AES key')
+                self.aes = None
+            elif manager.aes is None:
+                self.vprint(2, 'ServerSender starting without AES key')
+                self.aes = None
+            else:
+                self.aes = manager.aes
+        else:
+            self.aes = aes
 
     def construct_packet(self, cpm, cpm_error, error_code=0):
         """
@@ -183,6 +197,17 @@ class ServerSender(object):
         else:
             return encrypted
 
+    def encrypt_packet_aes(self, raw_packet):
+        """Encrypt with AES (for D3S)"""
+
+        self.vprint(3, 'AES encrypting packet: {}'.format(raw_packet))
+        try:
+            encrypted = self.aes.encrypt(raw_packet)
+        except AttributeError:
+            raise MissingFile('Missing or broken AES object')
+        else:
+            return encrypted
+
     def send_data(self, encrypted, cpm=None, cpm_err=None):
         """
         Send data according to self.mode, and handle common errors
@@ -251,7 +276,7 @@ class ServerSender(object):
         """
         packet = self.construct_packet_new_D3S(
             timestamp, spectra, error_code=error_code)
-        encrypted = self.encrypt_packet(packet)
+        encrypted = self.encrypt_packet_AES(packet)
         self.send_data(encrypted)
 
     def handle_return_packet(self, received):
