@@ -203,7 +203,13 @@ class ServerSender(object):
 
         self.vprint(3, 'AES encrypting packet: {}'.format(raw_packet))
         try:
-            encrypted = self.aes.encrypt(raw_packet)
+            block_size = 16
+            pad_length = block_size - (len(raw_packet) % block_size)
+            if pad_length == block_size:
+                encrypted = self.aes.encrypt(raw_packet)
+            else:
+                pad = ' ' * pad_length
+                encrypted = self.aes.encrypt(raw_packet + pad)
         except AttributeError:
             raise MissingFile('Missing or broken AES object')
         else:
