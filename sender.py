@@ -276,7 +276,7 @@ class ServerSender(object):
         """
         packet = self.construct_packet_new_D3S(
             timestamp, spectra, error_code=error_code)
-        encrypted = self.encrypt_packet_AES(packet)
+        encrypted = self.encrypt_packet_aes(packet)
         self.send_data(encrypted)
 
     def handle_return_packet(self, received):
