@@ -259,8 +259,12 @@ class ServerSender(object):
             if branch is not None:
                 self.vprint(3, 'Branch: {}'.format(branch))
                 self.vprint(3, 'Update flag: {}'.format(flag))
-                self.manager.branch = branch
-                self.manager.quit_after_interval = flag
+                if self.manager:
+                    self.manager.branch = branch
+                    self.manager.quit_after_interval = flag
+                else:
+                    self.vprint(
+                        1, 'No manager, not saving branch and updateflag')
             else:
                 self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
