@@ -11,14 +11,17 @@ from __future__ import print_function
 import socket
 import argparse
 import time
+import numpy as np
 from contextlib import closing
+from Crypto.Cipher import AES
 
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 
 TCP_TIMEOUT = 5
+D3S_PREPEND_STR = '{:05d}'
 
 
 class ServerSender(object):
@@ -33,12 +36,14 @@ class ServerSender(object):
                  port=None,
                  config=None,
                  publickey=None,
+                 aes=None,
                  verbosity=1,
                  logfile=None,
                  mode=None,
                  ):
         """
-        network_status, config, publickey loaded from manager if not provided.
+        network_status, config, publickey, aes loaded from manager
+          if not provided.
         address and port take system defaults, although without config and
           publickey, address and port will not be used.
         """
@@ -50,10 +55,10 @@ class ServerSender(object):
 
         self.address = address
         self.handle_input(
-            manager, mode, port, config, publickey)
+            manager, mode, port, config, publickey, aes)
 
     def handle_input(
-            self, manager, mode, port, config, publickey):
+            self, manager, mode, port, config, publickey, aes):
 
         # TODO: this stuff is messy. Is there a cleaner way using exceptions?
         if manager is None:
@@ -110,6 +115,18 @@ class ServerSender(object):
         else:
             self.encrypter = publickey.encrypter
 
+        if aes is None:
+            if manager is None:
+                self.vprint(2, 'ServerSender starting without AES key')
+                self.aes = None
+            elif manager.aes is None:
+                self.vprint(2, 'ServerSender starting without AES key')
+                self.aes = None
+            else:
+                self.aes = manager.aes
+        else:
+            self.aes = aes
+
     def construct_packet(self, cpm, cpm_error, error_code=0):
         """
         Construct the raw packet string. (basically copied from old code)
@@ -158,12 +175,15 @@ class ServerSender(object):
         TCP version of construct packet.
         """
 
+        # convert spectra to a string representation that won't interfere with
+        #   injector's parsing (no commas)
+        spectra_str = str(spectra).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 str(spectra),
+                 spectra_str,
                  str(error_code)]
             )
         except AttributeError:      # on self.config.hash
@@ -206,6 +226,26 @@ class ServerSender(object):
         else:
             return encrypted
 
+    def encrypt_packet_aes(self, raw_packet):
+        """Encrypt with AES (for D3S). Prepend message length."""
+
+        self.vprint(3, 'AES encrypting packet: {}'.format(raw_packet))
+        try:
+            block_size = 16
+            pad_length = block_size - (len(raw_packet) % block_size)
+            if pad_length == block_size:
+                encrypted = self.aes.encrypt(raw_packet)
+            else:
+                pad = ' ' * pad_length
+                encrypted = self.aes.encrypt(raw_packet + pad)
+        except AttributeError:
+            raise MissingFile('Missing or broken AES object')
+        else:
+            prepend = D3S_PREPEND_STR.format(len(encrypted))
+            # prepend does NOT include its own string in the message length
+            full_packet = prepend + encrypted
+            return full_packet
+
     def send_data(self, encrypted):
         """
         Send data according to self.mode
@@ -246,8 +286,12 @@ class ServerSender(object):
             if branch is not None:
                 self.vprint(3, 'Branch: {}'.format(branch))
                 self.vprint(3, 'Update flag: {}'.format(flag))
-                self.manager.branch = branch
-                self.manager.quit_after_interval = flag
+                if self.manager:
+                    self.manager.branch = branch
+                    self.manager.quit_after_interval = flag
+                else:
+                    self.vprint(
+                        1, 'No manager, not saving branch and updateflag')
             else:
                 self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
@@ -282,7 +326,7 @@ class ServerSender(object):
         """
         packet = self.construct_packet_new_D3S(
             timestamp, spectra, error_code=error_code)
-        encrypted = self.encrypt_packet(packet)
+        encrypted = self.encrypt_packet_aes(packet)
         self.send_data(encrypted)
 
     def handle_return_packet(self, received):
@@ -317,7 +361,8 @@ def send_test_packets(
         address=DEFAULT_HOSTNAME,
         port=None,
         n=3,
-        encrypt=True):
+        encrypt=True,
+        raw_packet=None):
     """
     Send n (default 3) test packets to the DoseNet server.
     """
@@ -339,8 +384,9 @@ def send_test_packets(
         station_id = config_obj.ID
     except AttributeError:
         station_id = '?'
-    raw_packet = 'Test packet from station {} by mode {}'.format(
-        station_id, mode)
+    if raw_packet is None:
+        raw_packet = 'Test packet from station {} by mode {}'.format(
+            station_id, mode)
 
     if encrypt:
         packet_to_send = sender.encrypt_packet(raw_packet)
@@ -401,6 +447,56 @@ def send_log_message(
         else:
             # standard, full functionality
             sender.send_log(msgcode, message)
+
+
+def send_test_d3s_packet(
+        config=DEFAULT_CONFIG,
+        publickey=DEFAULT_PUBLICKEY,
+        aeskey=DEFAULT_AESKEY,
+        port=None,
+        encrypt=True):
+    """
+    Send a test packet in the format of the D3S data.
+    """
+
+    try:
+        config_obj = Config(config)
+    except IOError:
+        config_obj = None
+    try:
+        key_obj = PublicKey(publickey)
+    except IOError:
+        key_obj = None
+        if encrypt:
+            print("no publickey, can't encrypt")
+        encrypt = False
+    try:
+        with open(aeskey, 'r') as aesfile:
+            aeskey = aesfile.read()
+            aes = AES.new(aeskey, mode=AES.MODE_ECB)
+    except IOError:
+        aes = None
+        if encrypt:
+            print("no AES key, can't encrypt")
+        encrypt = False
+
+    sender = ServerSender(
+        port=port, config=config_obj, publickey=key_obj, aes=aes, verbosity=3)
+
+    spectrum = [int(np.random.random() * 3) for _ in xrange(4096)]
+    raw_packet = sender.construct_packet_new_D3S(time.time(), spectrum)
+
+    if encrypt:
+        packet_to_send = sender.encrypt_packet_aes(raw_packet)
+    else:
+        packet_to_send = raw_packet
+
+    try:
+        sender.send_data(packet_to_send)
+    except socket.timeout:
+        print('timeout!')
+
+    return packet_to_send
 
 
 if __name__ == '__main__':

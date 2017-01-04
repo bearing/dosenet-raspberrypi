@@ -9,6 +9,7 @@ import kromek
 import numpy as np
 import signal
 import sys
+from Crypto.Cipher import AES
 
 from auxiliaries import Config, PublicKey, LED, set_verbosity
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
@@ -16,8 +17,8 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE_D3S
-from globalvalues import DEFAULT_CALIBRATIONLOG_D3S
+from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
+from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
@@ -60,6 +61,7 @@ class Manager_D3S(object):
                  test=None,
                  config=None,
                  publickey=None,
+                 aeskey=None,
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
@@ -102,7 +104,8 @@ class Manager_D3S(object):
 
         self.test = test
 
-        self.handle_input(log, logfile, verbosity, interval, config, publickey)
+        self.handle_input(
+            log, logfile, verbosity, interval, config, publickey, aeskey)
 
         if RPI:
             self.power_LED = LED(power_LED_pin)
@@ -187,7 +190,7 @@ class Manager_D3S(object):
                 pass
 
     def handle_input(self, log, logfile, verbosity, interval,
-                     config, publickey):
+                     config, publickey, aeskey):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
@@ -227,6 +230,10 @@ class Manager_D3S(object):
             self.vprint(2, "No publickey file given, " +
                         "attempting to use default publickey path")
             publickey = DEFAULT_PUBLICKEY
+        if aeskey is None:
+            self.vprint(2, "No AES key file given, " +
+                        "attempting to use default AES key path")
+            aeskey = DEFAULT_AESKEY
 
         self.interval = interval
 
@@ -253,6 +260,19 @@ class Manager_D3S(object):
             self.vprint(
                 1, 'WARNING: no public key given. Not posting to server')
             self.publickey = None
+
+        if aeskey:
+            try:
+                with open(aeskey, 'r') as aesfile:
+                    key = aesfile.read()
+                    self.aes = AES.new(key, mode=AES.MODE_ECB)
+            except IOError:
+                raise IOError('Unable to load AES key file {}!'.format(
+                    aeskey))
+        else:
+            self.vprint(
+                1, 'WARNING: no AES key given. Not posting to server')
+            self.aes = None
 
     def run(self):
         """
