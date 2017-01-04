@@ -21,6 +21,7 @@ from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 
 TCP_TIMEOUT = 5
+D3S_PREPEND_STR = '{:05d}'
 
 
 class ServerSender(object):
@@ -199,7 +200,7 @@ class ServerSender(object):
             return encrypted
 
     def encrypt_packet_aes(self, raw_packet):
-        """Encrypt with AES (for D3S)"""
+        """Encrypt with AES (for D3S). Prepend message length."""
 
         self.vprint(3, 'AES encrypting packet: {}'.format(raw_packet))
         try:
@@ -213,7 +214,10 @@ class ServerSender(object):
         except AttributeError:
             raise MissingFile('Missing or broken AES object')
         else:
-            return encrypted
+            prepend = D3S_PREPEND_STR.format(len(encrypted))
+            # prepend does NOT include its own string in the message length
+            full_packet = prepend + encrypted
+            return full_packet
 
     def send_data(self, encrypted, cpm=None, cpm_err=None):
         """
