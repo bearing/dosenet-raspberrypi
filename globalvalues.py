@@ -26,7 +26,9 @@ DEFAULT_LOGFILE = '/home/pi/debug.log'
 DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
+TESTING_UDP_PORT = 5006
 DEFAULT_TCP_PORT = 5100
+TESTING_TCP_PORT = 5101
 DEFAULT_SENDER_MODE = 'tcp'
 DEFAULT_DATALOG = '/home/pi/data-log.txt'
 DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
@@ -44,7 +46,7 @@ DEFAULT_INTERVAL_NORMAL_D3S = 60
 DEFAULT_INTERVAL_TEST_D3S = 10
 
 # ANSI color codes
-ANSI_RESET = '\033[37m' + '\033[22m'    # white and not bold
+ANSI_RESET = '\033[0m'
 ANSI_BOLD = '\033[1m'
 ANSI_RED = '\033[31m' + ANSI_BOLD
 ANSI_GR = '\033[32m' + ANSI_BOLD
