@@ -236,6 +236,8 @@ class Manager(object):
                 1, 'WARNING: no public key given. Not posting to server')
             self.publickey = None
 
+        self.aes = None     # gets checked in sender. feature in manager_d3s
+
     def run(self):
         """
         Start counting time.
