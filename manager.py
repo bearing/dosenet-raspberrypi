@@ -29,6 +29,8 @@ from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
 from globalvalues import REBOOT_SCRIPT
 
+BOOT_LOG_CODE = 11
+
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -139,9 +141,16 @@ class Manager(object):
 
         branch = subprocess.check_output(
             ['git', 'rev-parse', '--abbrev-ref', 'HEAD']).rstrip()
+        self.vprint(3, 'Found git branch: {}'.format(branch))
         commit = subprocess.check_output(
             ['git', 'rev-parse', '--short', 'HEAD']).rstrip()
-        self.sender.send_log(11, 'Booting on {} at {}'.format(branch, commit))
+        self.vprint(3, 'Found commit: {}'.format(commit))
+
+        msg_code = BOOT_LOG_CODE
+        msg_text = 'Booting on {} at {}'.format(branch, commit)
+        self.vprint(1, 'Sending log message: [{}] {}'.format(
+            msg_code, msg_text))
+        self.sender.send_log(msg_code, msg_text)
 
     def a_flag(self):
         """
