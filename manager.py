@@ -20,7 +20,7 @@ from sensor import Sensor
 from sender import ServerSender
 from data_handler import Data_Handler
 
-from globalvalues import SIGNAL_PIN, NOISE_PIN
+from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -153,10 +153,17 @@ class Manager(object):
             msg_code, msg_text))
         try:
             self.sender.send_log(msg_code, msg_text)
-        except (socket.gaierror, socket.error, socket.timeout) as e:
+        except (socket.gaierror, socket.error, socket.timeout):
             self.vprint(1, 'Failed to send log message, network error')
+            if self.network_LED:
+                self.network_LED.start_blink(
+                    interval=NETWORK_LED_BLINK_PERIOD_S)
         else:
             self.vprint(2, 'Success sending log message')
+            if self.network_LED:
+                if self.network_LED.blinker:
+                    self.network_LED.stop_blink()
+                self.network_LED.on()
 
     def a_flag(self):
         """
