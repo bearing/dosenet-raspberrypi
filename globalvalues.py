@@ -19,6 +19,8 @@ POWER_LED_PIN = 19
 NETWORK_LED_PIN = 20
 COUNTS_LED_PIN = 21
 
+NETWORK_LED_BLINK_PERIOD_S = 1.5
+
 # Defaults
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
 DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
