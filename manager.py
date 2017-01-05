@@ -7,6 +7,7 @@ import traceback
 import signal
 import sys
 import os
+import subprocess
 
 from globalvalues import RPI
 if RPI:
@@ -124,10 +125,23 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
+
+        self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
+
+    def init_log(self):
+        """
+        Post log message to server regarding Manager startup.
+        """
+
+        branch = subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD']).rstrip()
+        commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD']).rstrip()
+        self.sender.send_log(11, 'Booting on {} at {}'.format(branch, commit))
 
     def a_flag(self):
         """
