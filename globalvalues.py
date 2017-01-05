@@ -56,7 +56,7 @@ ANSI_GR = '\033[32m' + ANSI_BOLD
 ANSI_YEL = '\033[33m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
-GIT_DIR = '/home/pi/dosenet-raspberrypi/'
+GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
 
 # --- some old notes:
 # Note: GPIO.LOW  - 0V
