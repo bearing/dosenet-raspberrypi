@@ -367,8 +367,16 @@ class Manager(object):
         del(self.sensor)
 
         # power LED
-        self.power_LED.off()
-        GPIO.cleanup()
+        try:
+            self.power_LED.off()
+        except AttributeError:
+            # no LED
+            pass
+        try:
+            GPIO.cleanup()
+        except NameError:
+            # not on a Raspberry Pi so no GPIO
+            pass
 
         # send the rest of the queue object to DEFAULT_DATA_BACKLOG_FILE upon
         #   shutdown
