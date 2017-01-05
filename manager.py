@@ -8,6 +8,7 @@ import signal
 import sys
 import os
 import subprocess
+import socket
 
 from globalvalues import RPI
 if RPI:
@@ -150,7 +151,12 @@ class Manager(object):
         msg_text = 'Booting on {} at {}'.format(branch, commit)
         self.vprint(1, 'Sending log message: [{}] {}'.format(
             msg_code, msg_text))
-        self.sender.send_log(msg_code, msg_text)
+        try:
+            self.sender.send_log(msg_code, msg_text)
+        except (socket.gaierror, socket.error, socket.timeout) as e:
+            self.vprint(1, 'Failed to send log message, network error')
+        else:
+            self.vprint(2, 'Success sending log message')
 
     def a_flag(self):
         """
