@@ -28,7 +28,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-from globalvalues import REBOOT_SCRIPT
+from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY
 
 BOOT_LOG_CODE = 11
 
@@ -140,12 +140,18 @@ class Manager(object):
         Post log message to server regarding Manager startup.
         """
 
+        # set working directory
+        cwd = os.getcwd()
+        os.chdir(GIT_DIRECTORY)
+
         branch = subprocess.check_output(
             ['git', 'rev-parse', '--abbrev-ref', 'HEAD']).rstrip()
         self.vprint(3, 'Found git branch: {}'.format(branch))
         commit = subprocess.check_output(
             ['git', 'rev-parse', '--short', 'HEAD']).rstrip()
         self.vprint(3, 'Found commit: {}'.format(commit))
+
+        os.chdir(cwd)
 
         msg_code = BOOT_LOG_CODE
         msg_text = 'Booting on {} at {}'.format(branch, commit)
