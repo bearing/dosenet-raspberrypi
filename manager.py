@@ -7,6 +7,8 @@ import traceback
 import signal
 import sys
 import os
+import subprocess
+import socket
 
 from globalvalues import RPI
 if RPI:
@@ -18,7 +20,7 @@ from sensor import Sensor
 from sender import ServerSender
 from data_handler import Data_Handler
 
-from globalvalues import SIGNAL_PIN, NOISE_PIN
+from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -26,7 +28,9 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_DATALOG
 from globalvalues import DEFAULT_PROTOCOL
-from globalvalues import REBOOT_SCRIPT
+from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY
+
+BOOT_LOG_CODE = 11
 
 
 def signal_term_handler(signal, frame):
@@ -124,10 +128,48 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
+
+        self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
+
+    def init_log(self):
+        """
+        Post log message to server regarding Manager startup.
+        """
+
+        # set working directory
+        cwd = os.getcwd()
+        os.chdir(GIT_DIRECTORY)
+
+        branch = subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD']).rstrip()
+        self.vprint(3, 'Found git branch: {}'.format(branch))
+        commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD']).rstrip()
+        self.vprint(3, 'Found commit: {}'.format(commit))
+
+        os.chdir(cwd)
+
+        msg_code = BOOT_LOG_CODE
+        msg_text = 'Booting on {} at {}'.format(branch, commit)
+        self.vprint(1, 'Sending log message: [{}] {}'.format(
+            msg_code, msg_text))
+        try:
+            self.sender.send_log(msg_code, msg_text)
+        except (socket.gaierror, socket.error, socket.timeout):
+            self.vprint(1, 'Failed to send log message, network error')
+            if self.network_LED:
+                self.network_LED.start_blink(
+                    interval=NETWORK_LED_BLINK_PERIOD_S)
+        else:
+            self.vprint(2, 'Success sending log message')
+            if self.network_LED:
+                if self.network_LED.blinker:
+                    self.network_LED.stop_blink()
+                self.network_LED.on()
 
     def a_flag(self):
         """

@@ -19,6 +19,8 @@ POWER_LED_PIN = 19
 NETWORK_LED_PIN = 20
 COUNTS_LED_PIN = 21
 
+NETWORK_LED_BLINK_PERIOD_S = 1.5
+
 # Defaults
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
 DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
@@ -54,6 +56,7 @@ ANSI_GR = '\033[32m' + ANSI_BOLD
 ANSI_YEL = '\033[33m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
+GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
 
 # --- some old notes:
 # Note: GPIO.LOW  - 0V
