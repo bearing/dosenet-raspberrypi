@@ -127,7 +127,7 @@ class Data_Handler_D3S(object):
 
         self.manager.data_log(datalog, spectra)
         self.manager.calibration_log(calibrationlog, spectra)
-
+        '''
         if self.manager.test:
             # for testing the memory queue
             self.send_to_memory(spectra)
@@ -172,3 +172,4 @@ class Data_Handler_D3S(object):
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
                 self.send_to_memory(spectra)
+            '''
