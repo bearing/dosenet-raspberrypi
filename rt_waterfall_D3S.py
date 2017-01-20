@@ -70,6 +70,7 @@ class Rt_Waterfall_D3S(object):
         plt.imshow(image, interpolation='nearest', aspect='auto',
                       extent=[1, 4096, 0, queue_length])
         plt.show()
+        print(image)
         return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
