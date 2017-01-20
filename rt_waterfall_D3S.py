@@ -1,4 +1,4 @@
-class rt_waterfall_D3S.py(object):
+class Rt_Waterfall_D3S.py(object):
     """
     Class for running the D3S in real-time waterfall mode
     """
