@@ -310,10 +310,6 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-                            if self.waterfall:
-                                plt.ion()
-                                plt.xlabel('Bin')
-                                plt.ylabel('Spectra')
                                 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
