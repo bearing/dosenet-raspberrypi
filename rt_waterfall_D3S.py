@@ -6,6 +6,7 @@ class Rt_Waterfall_D3S(object):
     def __init__(self, 
                  manager=None, 
                  verbosity=1
+                 logfile=None
                 ):
         
         self.v = verbosity
