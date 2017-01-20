@@ -24,6 +24,4 @@ class Plotter_D3S(object):
                       extent=[1, 4096, 0, self.rt_waterfall.queue_length])
             plt.show()
             plt.pause(self.interval+10)
-            
-    self.main()
  
