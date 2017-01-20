@@ -24,7 +24,13 @@ class Rt_Waterfall_D3S(object):
         
         self.interval = manager.interval
         
+        self.queuelength = None
+        self.image = None
         
+        self.plotter = Plotter_D3S(
+                interval=self.interval, 
+                rt_waterfall=self)
+    
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
         queue2.append(spectra)
@@ -53,26 +59,22 @@ class Rt_Waterfall_D3S(object):
         """
         length = len(queue1)
 
-        image = np.zeros((length, 256))
+        self.image = np.zeros((length, 256))
         i = 0
         while i < length:
-            image[i] = self.fix_array(queue1.popleft())
+            self.image[i] = self.fix_array(queue1.popleft())
             i += 1
         queue1, queue2 = self.reset_queue(queue1, queue2)
-        return image, queue1, queue2
+        return queue1, queue2
       
     def waterfall_graph(self, spectra, queue1, queue2):
         """
         Plots a waterfall graph of all the spectra.
         """
         queue1, queue2 = self.get_data(spectra, queue1, queue2)
-        queue_length = len(queue2)
-        image, queue1, queue2 = self.make_image(queue1, queue2)
+        self.queue_length = len(queue2)
+        queue1, queue2 = self.make_image(queue1, queue2)
 
-        plt.imshow(image, interpolation='nearest', aspect='auto',
-                      extent=[1, 4096, 0, queue_length])
-        plt.show()
-        print(image)
         return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
