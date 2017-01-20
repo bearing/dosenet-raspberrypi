@@ -10,6 +10,7 @@ import numpy as np
 import signal
 import sys
 from collections import deque
+import matplotlib.pyplot as pl
 
 from auxiliaries import Config, PublicKey, LED, set_verbosity
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
