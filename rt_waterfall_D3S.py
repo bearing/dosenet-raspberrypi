@@ -22,6 +22,8 @@ class Rt_Waterfall_D3S(object):
             
         self.manager = manager
         
+        self.interval = manager.interval
+        
         
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
