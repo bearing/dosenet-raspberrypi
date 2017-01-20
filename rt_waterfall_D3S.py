@@ -32,6 +32,8 @@ class Rt_Waterfall_D3S(object):
                 interval=self.interval, 
                 rt_waterfall=self)
     
+        self.plotter.main()
+    
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
         queue2.append(spectra)
