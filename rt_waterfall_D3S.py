@@ -24,9 +24,9 @@ class Rt_Waterfall_D3S(object):
         
         plt.ion()
         
-    def get_data(self, queue1, queue2):
-        queue1.append(queue1)
-        queue2.append(queue2)
+    def get_data(self, spectra, queue1, queue2):
+        queue1.append(spectra)
+        queue2.append(spectra)
         return queue1, queue2
    
 
@@ -60,11 +60,11 @@ class Rt_Waterfall_D3S(object):
         queue1, queue2 = self.reset_queue(queue1, queue2)
         return image, queue1, queue2
       
-    def waterfall_graph(self, queue1, queue2):
+    def waterfall_graph(self, spectra, queue1, queue2):
         """
         Plots a waterfall graph of all the spectra.
         """
-        queue1, queue2 = self.get_data(queue1, queue2)
+        queue1, queue2 = self.get_data(spectra, queue1, queue2)
         queue_length = len(queue2)
         image, queue1, queue2 = self.make_image(queue1, queue2)
 
@@ -76,6 +76,6 @@ class Rt_Waterfall_D3S(object):
         plt.show()
         return queue1, queue2
       
-    def update(self, queue1, queue2):
+    def update(self, spectra, queue1, queue2):
         queue1, queue2 = self.waterfall_graph(queue1, queue2)
         return queue1, queue2
