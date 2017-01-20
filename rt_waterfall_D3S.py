@@ -22,7 +22,6 @@ class Rt_Waterfall_D3S(object):
             
         self.manager = manager
         
-        plt.ion()
         
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
@@ -70,14 +69,9 @@ class Rt_Waterfall_D3S(object):
 
         plt.imshow(image, interpolation='nearest', aspect='auto',
                       extent=[1, 4096, 0, queue_length])
-        plt.xlabel('Bin')
-
-        plt.ylabel('Spectra')
         return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
         queue1, queue2 = self.waterfall_graph(spectra, queue1, queue2)
         plt.show()
-        print(queue1)
-        print(queue2)
         return queue1, queue2
