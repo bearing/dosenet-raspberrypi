@@ -1,5 +1,8 @@
 from auxiliaries import set_verbosity
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 class Rt_Waterfall_D3S(object):
     """
     Class for running the D3S in real-time waterfall mode
