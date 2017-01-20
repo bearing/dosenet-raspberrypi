@@ -21,8 +21,8 @@ class Plotter_D3S(object):
             plt.ion()
             plt.xlabel('Bin')
             plt.ylabel('Spectra')
-            plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
-                      extent=[1, 4096, 0, i])
+            plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto')
+                      
             plt.show()
             i+=1
             plt.pause(self.interval+10)
