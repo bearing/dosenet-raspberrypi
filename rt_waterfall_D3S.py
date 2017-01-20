@@ -73,9 +73,9 @@ class Rt_Waterfall_D3S(object):
         plt.xlabel('Bin')
 
         plt.ylabel('Spectra')
-        plt.show()
         return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
         queue1, queue2 = self.waterfall_graph(spectra, queue1, queue2)
+        plt.show()
         return queue1, queue2
