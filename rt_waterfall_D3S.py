@@ -1,4 +1,5 @@
 from auxiliaries import set_verbosity
+from plotter_D3S import Plotter_D3S
 
 import numpy as np
 import matplotlib.pyplot as plt
