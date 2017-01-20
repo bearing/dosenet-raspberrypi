@@ -62,7 +62,7 @@ class Rt_Waterfall_D3S(object):
         """
         length = len(queue1)
 
-        self.image = np.zeros((length, 256))
+        self.image = np.zeros((length, 256),dtype=float)
         i = 0
         while i < length:
             self.image[i] = self.fix_array(queue1.popleft())
