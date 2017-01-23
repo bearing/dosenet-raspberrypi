@@ -168,9 +168,12 @@ if setup_static_ip is 'y':
         dns_server_2 = raw_input('What is the IP of the second DNS server?: ')
 
         # Update the interfaces file with the DNS server names by uncommenting
-        # out the DNS server names call.
+        # out the DNS server names call. Do it sequentially.
         interfaces_update('#   dns-nameservers ',
-                          '  dns-nameservers {} {}'.format(dns_server_1, dns_server_2) + '\n')
+                          '  dns-nameservers {}'.format(dns_server_1) + '\n')
+            
+        interfaces_update('#   dns-nameservers ',
+                          '  dns-nameservers {}'.format(dns_server_2) + '\n')
 
 # Ask the user if they would like to restore the backup to the network
 # interfaces file.
