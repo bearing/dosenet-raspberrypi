@@ -170,7 +170,7 @@ if setup_static_ip is 'y':
         # Update the interfaces file with the DNS server names by uncommenting
         # out the DNS server names call.
         interfaces_update('#   dns-nameservers ', '  dns-nameservers ' +
-                          '{} {}'.format(dns_server_1, dns_server_2) + '\n')
+                          '{0} {1}'.format(dns_server_1, dns_server_2) + '\n')
 
 # Ask the user if they would like to restore the backup to the network
 # interfaces file.
