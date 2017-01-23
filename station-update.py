@@ -169,7 +169,7 @@ if setup_static_ip is 'y':
 
         # Update the interfaces file with the DNS server names by uncommenting
         # out the DNS server names call. Do it sequentially.
-        interfaces_update('#   dns-nameservers ',
+        interfaces_update('#   dns-nameservers',
                           '  dns-nameservers {}'.format(dns_server_2) + '\n')
             
         interfaces_update('  dns-nameservers ',
