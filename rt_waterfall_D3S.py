@@ -33,7 +33,7 @@ class Rt_Waterfall_D3S(object):
     
     def get_data(self, spectra, queue1, queue2):
         new_spectra = self.rebin(spectra)
-        queue2.append(spectra)
+        queue2.append(new_spectra)
         queue1 = queue2
    
     def rebin(self, data, n=4):
