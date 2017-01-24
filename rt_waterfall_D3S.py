@@ -83,20 +83,21 @@ class Rt_Waterfall_D3S(object):
         return queue1, queue2
     
     def start_up(self):
-        plt.ion()
-        plt.xlabel('Bin')
-        plt.ylabel('Spectra')
+        #plt.ion()
+        #plt.xlabel('Bin')
+        #plt.ylabel('Spectra')
         while self.on:
             if self.first_try:
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                                    extent=[1, 4096, 0, self.queuelength])
-                plt.show()
+                #plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                                    #extent=[1, 4096, 0, self.queuelength])
+                #plt.show()
+                print(self.image)
                 self.first_try = False
             else:
-                plt.pause(self.interval+10)
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                                    extent=[1, 4096, 0, self.queuelength])
-                plt.show()
-                
+                #plt.pause(self.interval+10)
+                #plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                                    #extent=[1, 4096, 0, self.queuelength])
+                #plt.show()
+                print(self.image)
                 
             
