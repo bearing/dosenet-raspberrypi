@@ -28,9 +28,8 @@ class Rt_Waterfall_D3S(object):
         self.queuelength = None
         self.image = None
         
-        self.plotter = Plotter_D3S(
-                interval=self.interval, 
-                rt_waterfall=self)
+        self.on = True
+        self.first_try = True
     
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
@@ -83,5 +82,24 @@ class Rt_Waterfall_D3S(object):
       
     def update(self, spectra, queue1, queue2):
         queue1, queue2 = self.waterfall_graph(spectra, queue1, queue2)
-        self.plotter.main()
+        self.start_up()
         return queue1, queue2
+    
+    def start_up(self):
+        plt.ion()
+        plt.xlabel('Bin')
+        plt.ylabel('Spectra')
+        while self.on:
+            if self.first_try:
+                plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
+                                    extent=[1, 4096, 0, self.rt_waterfall.queuelength])
+                plt.show()
+                self.first_try = False
+            else:
+                plt.pause(self.interval+10)
+                plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
+                                    extent=[1, 4096, 0, self.rt_waterfall.queuelength])
+                plt.show()
+                
+                
+            
