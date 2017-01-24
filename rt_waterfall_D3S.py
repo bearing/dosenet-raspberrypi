@@ -70,7 +70,7 @@ class Rt_Waterfall_D3S(object):
         """
         self.get_data(spectra, queue1, queue2)
         self.queue_length = len(queue2)
-        queue1, queue2 = self.make_image(queue1, queue2)
+        self.make_image(queue1, queue2)
       
     def update(self, spectra, queue1, queue2):
         print(spectra)
