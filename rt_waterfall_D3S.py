@@ -91,14 +91,14 @@ class Rt_Waterfall_D3S(object):
         plt.ylabel('Spectra')
         while self.on:
             if self.first_try:
-                plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
-                                    extent=[1, 4096, 0, self.rt_waterfall.queuelength])
+                plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                                    extent=[1, 4096, 0, self.queuelength])
                 plt.show()
                 self.first_try = False
             else:
                 plt.pause(self.interval+10)
-                plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
-                                    extent=[1, 4096, 0, self.rt_waterfall.queuelength])
+                plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                                    extent=[1, 4096, 0, self.queuelength])
                 plt.show()
                 
                 
