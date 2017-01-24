@@ -78,6 +78,7 @@ class Rt_Waterfall_D3S(object):
         return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
+        print(spectra)
         queue1, queue2 = self.waterfall_graph(spectra, queue1, queue2)
         self.start_up()
         return queue1, queue2
