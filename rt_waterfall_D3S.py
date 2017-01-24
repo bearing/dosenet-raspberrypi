@@ -1,5 +1,5 @@
 from auxiliaries import set_verbosity
-from plotter_D3S import Plotter_D3S
+import time
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -94,7 +94,7 @@ class Rt_Waterfall_D3S(object):
                 print(self.image)
                 self.first_try = False
             else:
-                plt.pause(self.interval+10)
+                time.sleep(self.interval + 10)
                 #plt.imshow(self.image, interpolation='nearest', aspect='auto',
                                     #extent=[1, 4096, 0, self.queuelength])
                 #plt.show()
