@@ -34,7 +34,6 @@ class Rt_Waterfall_D3S(object):
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
         queue2.append(spectra)
-        return queue1, queue2
    
 
     def fix_array(self, array):
@@ -51,7 +50,6 @@ class Rt_Waterfall_D3S(object):
     def reset_queue(self, queue1, queue2): 
         for i in queue2: 
             queue1.append(i)
-        return queue1, queue2
       
     def make_image(self, queue1, queue2):
         """
@@ -64,22 +62,19 @@ class Rt_Waterfall_D3S(object):
         while i < length:
             self.image[i] = self.fix_array(queue1.popleft())
             i += 1
-        queue1, queue2 = self.reset_queue(queue1, queue2)
-        return queue1, queue2
+        self.reset_queue(queue1, queue2)
       
     def waterfall_graph(self, spectra, queue1, queue2):
         """
         Plots a waterfall graph of all the spectra.
         """
-        queue1, queue2 = self.get_data(spectra, queue1, queue2)
+        self.get_data(spectra, queue1, queue2)
         self.queue_length = len(queue2)
         queue1, queue2 = self.make_image(queue1, queue2)
-
-        return queue1, queue2
       
     def update(self, spectra, queue1, queue2):
         print(spectra)
-        queue1, queue2 = self.waterfall_graph(spectra, queue1, queue2)
+        self.waterfall_graph(spectra, queue1, queue2)
         self.start_up()
         return queue1, queue2
     
