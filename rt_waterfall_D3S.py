@@ -91,13 +91,13 @@ class Rt_Waterfall_D3S(object):
                 plt.imshow(self.image, interpolation='nearest', aspect='auto',
                                     extent=[1, 4096, 0, self.queuelength])
                 plt.show()
-                
+                print('hi')
                 self.first_try = False
             else:
                 time.sleep(self.interval + 10)
                 plt.imshow(self.image, interpolation='nearest', aspect='auto',
                                     extent=[1, 4096, 0, self.queuelength])
                 plt.show()
-                
+                print('hi')
                 
             
