@@ -32,9 +32,24 @@ class Rt_Waterfall_D3S(object):
         self.first_try = True
     
     def get_data(self, spectra, queue1, queue2):
-        queue1.append(spectra)
+        new_spectra = self.rebin(spectra)
         queue2.append(spectra)
+        queue1 = queue2
    
+    def rebin(self, data, n=4):
+        """
+        Rebins the array. n is the divisor. Rebin the data in the grab_data method.
+        """
+        a = len(data)/n
+        new_data = np.zeros((256, 1))
+        i = 0
+        count = 0
+        while i < a:
+            temp = sum(data[i:n*(count+1)])
+            new_data[count] = temp
+            count += 1
+            i += n
+        return new_data
 
     def fix_array(self, array):
         """
@@ -62,7 +77,6 @@ class Rt_Waterfall_D3S(object):
         while i < length:
             self.image[i] = self.fix_array(queue1.popleft())
             i += 1
-        self.reset_queue(queue1, queue2)
       
     def waterfall_graph(self, spectra, queue1, queue2):
         """
