@@ -34,6 +34,7 @@ class Rt_Waterfall_D3S(object):
     def get_data(self, spectra, queue1, queue2):
         new_spectra = self.rebin(spectra)
         queue2.append(new_spectra)
+        self.queuelength = len(queue2)
         queue1 = queue2
    
     def rebin(self, data, n=4):
@@ -75,7 +76,7 @@ class Rt_Waterfall_D3S(object):
 
         self.image = np.zeros((length, 256),dtype=float)
         i = 0
-        while i < length:
+        while i < 256:
             self.image[i] = self.fix_array(queue1.popleft())
             i += 1
       
@@ -99,13 +100,15 @@ class Rt_Waterfall_D3S(object):
         plt.ylabel('Spectra')
         while self.on:
             if self.first_try:
-                plt.imshow(self.image, interpolation='nearest', aspect='auto')
+                plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                            extent=[1, 4096, self.queuelength, 1])
                 plt.show()
                 
                 self.first_try = False
             else:
                 plt.pause(self.interval + 10)
-                plt.imshow(self.image, interpolation='nearest', aspect='auto')
+                plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                            extent=[1, 4096, self.queue_length, 1])
                 
                 plt.show()
                 
