@@ -90,13 +90,10 @@ class Rt_Waterfall_D3S(object):
             if self.first_try:
                 plt.imshow(self.image, interpolation='nearest', aspect='auto')
                 plt.show()
-                print('hi')
-                plt.colorbar()
                 self.first_try = False
             else:
                 plt.pause(self.interval + 10)
                 plt.imshow(self.image, interpolation='nearest', aspect='auto')
                 plt.show()
-                print('hi')
                 
 #extent=[1, 4096, 0, self.queuelength]            
