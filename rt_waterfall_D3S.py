@@ -89,7 +89,6 @@ class Rt_Waterfall_D3S(object):
         while self.on:
             if self.first_try:
                 plt.imshow(self.image, interpolation='nearest', aspect='auto')
-                plt.colorbar()
                 plt.show()
                 print('hi')
                 self.first_try = False
