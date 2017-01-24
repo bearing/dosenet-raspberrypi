@@ -108,7 +108,7 @@ class Rt_Waterfall_D3S(object):
             else:
                 plt.pause(self.interval + 10)
                 plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                            extent=[1, 4096, self.queue_length, 1])
+                            extent=[1, 4096, self.queuelength, 1])
                 
                 plt.show()
                 
