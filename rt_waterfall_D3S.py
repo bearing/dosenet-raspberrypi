@@ -34,9 +34,6 @@ class Rt_Waterfall_D3S(object):
     def get_data(self, spectra, queue1, queue2):
         queue1.append(spectra)
         queue2.append(spectra)
-        print(queue1)
-        print('hi')
-        print(queue2)
         return queue1, queue2
    
 
