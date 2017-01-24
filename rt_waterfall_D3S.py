@@ -49,6 +49,7 @@ class Rt_Waterfall_D3S(object):
             new_data[count] = temp
             count += 1
             i += n
+        print(new_data)
         return new_data
 
     def fix_array(self, array):
@@ -87,7 +88,7 @@ class Rt_Waterfall_D3S(object):
         self.make_image(queue1, queue2)
       
     def update(self, spectra, queue1, queue2):
-        print(spectra)
+        
         self.waterfall_graph(spectra, queue1, queue2)
         self.start_up()
         return queue1, queue2
@@ -100,12 +101,12 @@ class Rt_Waterfall_D3S(object):
             if self.first_try:
                 plt.imshow(self.image, interpolation='nearest', aspect='auto')
                 plt.show()
-                print(self.image)
+                
                 self.first_try = False
             else:
                 plt.pause(self.interval + 10)
                 plt.imshow(self.image, interpolation='nearest', aspect='auto')
-                print(self.image)
+                
                 plt.show()
                 
 #extent=[1, 4096, 0, self.queuelength]            
