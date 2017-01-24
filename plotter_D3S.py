@@ -21,7 +21,6 @@ class Plotter_D3S(object):
             plt.ion()
             plt.xlabel('Bin')
             plt.ylabel('Spectra')
-            print(self.rt_waterfall.image)
             plt.imshow(self.rt_waterfall.image, interpolation='nearest', aspect='auto',
                                     extent=[1, 4096, 0, self.rt_waterfall.queuelength])
                       
