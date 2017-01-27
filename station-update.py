@@ -136,7 +136,7 @@ if setup_static_ip.lower() == 'n':
     If the response is a no (or anything else), restore the backup to the
     network interfaces file.
     '''
-    if keep_changes.lower() is 'y':
+    if keep_changes.lower() == 'y':
 
         print('\nA dynamic IP has been set. Your Pi-hat sensor module now ' +
               'has updated network functionality and the appropriate ' +
@@ -158,7 +158,7 @@ if setup_static_ip.lower() == 'n':
 
     sys.exit()
 
-elif setup_static_ip.lower() is 'y':
+elif setup_static_ip.lower() == 'y':
 
     # Ask for the static IP.
     ip_static = raw_input('\nWhat is your static IP?: ')
@@ -183,7 +183,7 @@ elif setup_static_ip.lower() is 'y':
     If the response is a yes, update the interfaces file to include the netmask
     identifier and the relevant functionality.
     '''
-    if setup_netmask.lower() is 'n':
+    if setup_netmask.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
         # interfaces file.
@@ -197,7 +197,7 @@ elif setup_static_ip.lower() is 'y':
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
-        if keep_changes.lower() is 'y':
+        if keep_changes.lower() == 'y':
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -221,7 +221,7 @@ elif setup_static_ip.lower() is 'y':
 
         sys.exit()
 
-    elif setup_netmask.lower() is 'y':
+    elif setup_netmask.lower() == 'y':
 
         # Ask for the netmask identifier.
         netmask_id = raw_input('\nWhat is your netmask identifier?: ')
@@ -241,7 +241,7 @@ elif setup_static_ip.lower() is 'y':
     If the response is a yes, update the interfaces file to include the gateway
     identifier and the relevant functionality.
     '''
-    if setup_gateway.lower() is 'n':
+    if setup_gateway.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
         # interfaces file.
@@ -255,7 +255,7 @@ elif setup_static_ip.lower() is 'y':
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
-        if keep_changes.lower() is 'y':
+        if keep_changes.lower() == 'y':
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -279,7 +279,7 @@ elif setup_static_ip.lower() is 'y':
 
         sys.exit()
 
-    elif setup_gateway.lower() is 'y':
+    elif setup_gateway.lower() == 'y':
 
         # Ask for the gateway identifier.
         gateway_id = raw_input('\nWhat is your gateway identifier?: ')
@@ -300,7 +300,7 @@ elif setup_static_ip.lower() is 'y':
     If the response is a yes, update the interfaces file to include the DNS
     server names and the relevant functionality.
     '''
-    if setup_dns_server.lower() is 'n':
+    if setup_dns_server.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
         # interfaces file.
@@ -314,7 +314,7 @@ elif setup_static_ip.lower() is 'y':
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
-        if keep_changes.lower() is 'y':
+        if keep_changes.lower() == 'y':
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -338,7 +338,7 @@ elif setup_static_ip.lower() is 'y':
 
         sys.exit()
 
-    elif setup_dns_server.lower() is 'y':
+    elif setup_dns_server.lower() == 'y':
 
         # Ask for the DNS server names.
         dns_server_1 = raw_input('\nWhat is the IP of the first DNS ' +
@@ -372,7 +372,7 @@ interfaces file has been updated.
 If the response is a no (or anything else), restore the backup to the
 network interfaces file.
 '''
-if keep_changes.lower() is 'y':
+if keep_changes.lower() == 'y':
 
     print('\nA static IP has been set with your indicated netmask, gateway, ' +
           'and DNS server name identifiers. Your Pi-hat sensor module now ' +
