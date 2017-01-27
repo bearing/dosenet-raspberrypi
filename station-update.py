@@ -118,7 +118,11 @@ the changes done to the network interfaces file.
 If the response is a yes, update the interfaces file to include the static IP
 and the relevant functionality.
 '''
+print('\nFor debugging: ' + setup_static_ip)
+
 if setup_static_ip.lower() is 'n':
+
+    print('\nFor debugging: ' + setup_static_ip)
 
     # Ask the user if they would like to keep the changes to the network
     # interfaces file.
