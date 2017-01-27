@@ -120,7 +120,7 @@ and the relevant functionality.
 '''
 print('\nFor debugging: ' + setup_static_ip)
 
-if setup_static_ip.lower() is 'n':
+if setup_static_ip.lower() == 'n':
 
     print('\nFor debugging: ' + setup_static_ip)
 
