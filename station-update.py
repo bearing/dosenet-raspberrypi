@@ -118,11 +118,8 @@ the changes done to the network interfaces file.
 If the response is a yes, update the interfaces file to include the static IP
 and the relevant functionality.
 '''
-print('\nFor debugging: ' + setup_static_ip)
 
 if setup_static_ip.lower() == 'n':
-
-    print('\nFor debugging: ' + setup_static_ip)
 
     # Ask the user if they would like to keep the changes to the network
     # interfaces file.
@@ -136,7 +133,7 @@ if setup_static_ip.lower() == 'n':
     If the response is a no (or anything else), restore the backup to the
     network interfaces file.
     '''
-    if keep_changes.lower() == 'y':
+    if keep_changes.lower() is 'y':
 
         print('\nA dynamic IP has been set. Your Pi-hat sensor module now ' +
               'has updated network functionality and the appropriate ' +
