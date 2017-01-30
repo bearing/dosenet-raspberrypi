@@ -10,12 +10,15 @@ import numpy as np
 import signal
 import sys
 from Crypto.Cipher import AES
+from collections import deque
+import matplotlib.pyplot as plt
 
 from auxiliaries import Config, PublicKey, LED, set_verbosity
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
+from rt_waterfall_D3S import Rt_Waterfall_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -70,6 +73,7 @@ class Manager_D3S(object):
                  running=False,
                  network_LED_pin=NETWORK_LED_PIN,
                  power_LED_pin=POWER_LED_PIN,
+                 waterfall=False,
                  ):
 
         self.running = running
@@ -106,6 +110,9 @@ class Manager_D3S(object):
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
+        self.waterfall = waterfall
+        
+        self.handle_input(log, logfile, verbosity, interval, config, publickey)
 
         if RPI:
             self.power_LED = LED(power_LED_pin)
@@ -131,6 +138,13 @@ class Manager_D3S(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
+        
+        if self.waterfall:
+            self.rt_waterfall = Rt_Waterfall_D3S(
+                manager=self, 
+                verbosity=self.v)
+            self.wqueue1 = deque('')
+            self.wqueue2 = deque('')
 
     def z_flag(self):
         """
@@ -317,7 +331,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-
+                                
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
@@ -367,9 +381,11 @@ class Manager_D3S(object):
         """
         Get spectra from sensor, display text, send to server.
         """
+        if self.waterfall:
+            self.wqueue1, self.wqueue2 = self.rt_waterfall.update(spectra, self.wqueue1, self.wqueue2)
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
-
+    
     def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
@@ -410,7 +426,8 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-
+        parser.add_argument('--waterfall', '-w', action = 'store_true', default=False)
+        
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
