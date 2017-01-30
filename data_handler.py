@@ -1,6 +1,7 @@
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from collections import deque
 import socket
@@ -41,7 +42,7 @@ class Data_Handler(object):
         self.manager = manager
         self.queue = deque('')
 
-        self.blink_period_s = 1.5
+        self.blink_period_s = NETWORK_LED_BLINK_PERIOD_S
         self.led = network_led
 
     def test_send(self, cpm, cpm_err):
