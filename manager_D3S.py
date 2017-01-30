@@ -111,8 +111,6 @@ class Manager_D3S(object):
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
         self.waterfall = waterfall
-        
-        self.handle_input(log, logfile, verbosity, interval, config, publickey)
 
         if RPI:
             self.power_LED = LED(power_LED_pin)
