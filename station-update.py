@@ -2,7 +2,7 @@
 Network config updater for a DoseNet silicon radiation detector station.
 
 This script securely copies the Pi-hat network configuration file from the
-Dosenet servers to a Pi-hat at a school of interest and updates the network ID
+DoseNet servers to a Pi-hat at a school of interest and updates the network ID
 on the network configuration file for the Pi-hat, as well as handles netmasks,
 gateways, and DNS server names to setup a static IP if necessary. (A dynamic
 IP is set by default.)
@@ -112,12 +112,23 @@ interfaces_update('wireless-essid RPiAdHocNetwork', '  wireless-essid ' +
 setup_static_ip = raw_input('\nDo you want to set a static IP (y/n)?: ')
 
 '''
+If there is no valid response, let the user know and repeat the prompt until a
+valid response is provided.
+
 If the response is a no, ask additionally if the the user would like to keep
 the changes done to the network interfaces file.
 
 If the response is a yes, update the interfaces file to include the static IP
 and the relevant functionality.
 '''
+
+while setup_static_ip.lower() != 'y' or 'n':
+
+    # Let the user know a valid response is required for the question.
+    print('Please provide a valid "y" or "n" response.')
+
+    # Re-ask the user if they would like to use a static IP.
+    setup_static_ip = raw_input('\nDo you want to set a static IP (y/n)?: ')
 
 if setup_static_ip.lower() == 'n':
 
@@ -127,19 +138,34 @@ if setup_static_ip.lower() == 'n':
                              '(y/n)?: ')
 
     '''
+    If there is no valid response, let the user know and repeat the prompt
+    until a valid response is provided.
+
     If the response is a yes, exit the script and tell the user the network
     interfaces file has been updated.
 
     If the response is a no (or anything else), restore the backup to the
     network interfaces file.
     '''
+
+    while keep_changes.lower() != 'y' or 'n':
+
+        # Let the user know a valid response is required for the question.
+        print('Please provide a valid "y" or "n" response.')
+
+        # Ask the user if they would like to keep the changes to the network
+        # interfaces file.
+        keep_changes = raw_input('\nWould you like to keep these changes ' +
+                                 '(y/n)?: ')
+
     if keep_changes.lower() == 'y':
 
         print('\nA dynamic IP has been set. Your Pi-hat sensor module now ' +
               'has updated network functionality and the appropriate ' +
-              'network interfaces file has been copied over the server.')
+              'network interfaces file has been copied over from the ' +
+              'DoseNet servers.')
 
-    else:
+    elif keep_changes.lower() == 'n':
 
         # Restore the backup interfaces file using the cp linux command
         # with root access.
@@ -174,12 +200,24 @@ elif setup_static_ip.lower() == 'y':
     setup_netmask = raw_input('\nDo you have a netmask (y/n)?: ')
 
     '''
+    If there is no valid response, let the user know and repeat the prompt
+    until a valid response is provided.
+
     If the response is a no, ask additionally if the the user would like to
     keep the changes done to the network interfaces file.
 
     If the response is a yes, update the interfaces file to include the netmask
     identifier and the relevant functionality.
     '''
+
+    while setup_netmask.lower() != 'y' or 'n':
+
+        # Let the user know a valid response is required for the question.
+        print('Please provide a valid "y" or "n" response.')
+
+        # Ask the user if they have a netmask.
+        setup_netmask = raw_input('\nDo you have a netmask (y/n)?: ')
+
     if setup_netmask.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
@@ -188,21 +226,36 @@ elif setup_static_ip.lower() == 'y':
                                  '(y/n)?: ')
 
         '''
+        If there is no valid response, let the user know and repeat the prompt
+        until a valid response is provided.
+
         If the response is a yes, exit the script and tell the user the network
         interfaces file has been updated.
 
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
+
+        while keep_changes.lower() != 'y' or 'n':
+
+            # Let the user know a valid response is required for the question.
+            print('Please provide a valid "y" or "n" response.')
+
+            # Ask the user if they would like to keep the changes to the
+            # network interfaces file.
+            keep_changes = raw_input('\nWould you like to keep these ' +
+                                     'changes (y/n)?: ')
+
         if keep_changes.lower() == 'y':
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
                   'remain. Your Pi-hat sensor module now has updated ' +
                   'network functionality and the appropriate network ' +
-                  'interfaces file has been copied over the server.')
+                  'interfaces file has been copied over from the DoseNet ' +
+                  'servers.')
 
-        else:
+        elif setup_netmask.lower() == 'n':
 
             # Restore the backup interfaces file using the cp linux command
             # with root access.
@@ -232,12 +285,24 @@ elif setup_static_ip.lower() == 'y':
     setup_gateway = raw_input('\nDo you have a gateway (y/n)?: ')
 
     '''
+    If there is no valid response, let the user know and repeat the prompt
+    until a valid response is provided.
+
     If the response is a no, ask additionally if the the user would like to
     keep the changes done to the network interfaces file.
 
     If the response is a yes, update the interfaces file to include the gateway
     identifier and the relevant functionality.
     '''
+
+    while setup_gateway.lower() != 'y' or 'n':
+
+        # Let the user know a valid response is required for the question.
+        print('Please provide a valid "y" or "n" response.')
+
+        # Ask the user if they have a gateway.
+        setup_gateway = raw_input('\nDo you have a gateway (y/n)?: ')
+
     if setup_gateway.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
@@ -246,21 +311,41 @@ elif setup_static_ip.lower() == 'y':
                                  '(y/n)?: ')
 
         '''
+        If there is no valid response, let the user know and repeat the prompt
+        until a valid response is provided.
+
         If the response is a yes, exit the script and tell the user the network
         interfaces file has been updated.
 
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
+
+        while keep_changes.lower() != 'y' or 'n':
+
+            # Let the user know a valid response is required for the question.
+            print('Please provide a valid "y" or "n" response.')
+
+            # Ask the user if they would like to keep the changes to the
+            # network interfaces file.
+            keep_changes = raw_input('\nWould you like to keep these ' +
+                                     'changes (y/n)?: ')
+
         if keep_changes.lower() == 'y':
+
+            # Update the interfaces file with the netmask identifier by
+            # commenting out the netmask call.
+            interfaces_update('  netmask {}'.format(netmask_id), '#   ' +
+                              'netmask\n')
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
                   'remain. Your Pi-hat sensor module now has updated ' +
                   'network functionality and the appropriate network ' +
-                  'interfaces file has been copied over the server.')
+                  'interfaces file has been copied over from the DoseNet ' +
+                  'servers.')
 
-        else:
+        elif keep_changes.lower() == 'n':
 
             # Restore the backup interfaces file using the cp linux command
             # with root access.
@@ -291,12 +376,24 @@ elif setup_static_ip.lower() == 'y':
                                  '(y/n)?: ')
 
     '''
+    If there is no valid response, let the user know and repeat the prompt
+    until a valid response is provided.
+
     If the response is a no, ask additionally if the the user would like to
     keep the changes done to the network interfaces file.
 
     If the response is a yes, update the interfaces file to include the DNS
     server names and the relevant functionality.
     '''
+    while setup_dns_server.lower() != 'y' or 'n':
+
+        # Let the user know a valid response is required for the question.
+        print('Please provide a valid "y" or "n" response.')
+
+        # Ask the user if they have DNS servers connected.
+        setup_dns_server = raw_input('\nDo you have DNS servers connected ' +
+                                     '(y/n)?: ')
+
     if setup_dns_server.lower() == 'n':
 
         # Ask the user if they would like to keep the changes to the network
@@ -305,21 +402,44 @@ elif setup_static_ip.lower() == 'y':
                                  '(y/n)?: ')
 
         '''
+        If there is no valid response, let the user know and repeat the prompt
+        until a valid response is provided.
+
         If the response is a yes, exit the script and tell the user the network
         interfaces file has been updated.
 
         If the response is a no (or anything else), restore the backup to the
         network interfaces file.
         '''
+
+        while keep_changes.lower() != 'y' or 'n':
+
+            # Let the user know a valid response is required for the question.
+            print('Please provide a valid "y" or "n" response.')
+
+            # Ask the user if they would like to keep the changes to the
+            # network interfaces file.
+            keep_changes = raw_input('\nWould you like to keep these ' +
+                                     'changes (y/n)?: ')
+
         if keep_changes.lower() == 'y':
+
+            # Remove the netmask and gateway identifiers from the interfaces
+            # file by commenting them out.
+            interfaces_update('  netmask {}'.format(netmask_id), '#   ' +
+                              'netmask\n')
+
+            interfaces_update('  gateway {}'.format(gateway_id), '#   ' +
+                              'gateway\n')
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
                   'remain. Your Pi-hat sensor module now has updated ' +
                   'network functionality and the appropriate network ' +
-                  'interfaces file has been copied over the server.')
+                  'interfaces file has been copied over from the DoseNet ' +
+                  'servers.')
 
-        else:
+        elif keep_changes.lower() == 'n':
 
             # Restore the backup interfaces file using the cp linux command
             # with root access.
@@ -348,10 +468,6 @@ elif setup_static_ip.lower() == 'y':
         interfaces_update("#   dns-nameservers", "  dns-nameservers " +
                           "{} {}".format(dns_server_1, dns_server_2) + '\n')
 
-else:
-
-    sys.exit()
-
 '''
 Part 4: Perform a final check on whether the user wants to keep the changes
         to the interfaces file and output the results of the configuration of
@@ -363,20 +479,33 @@ Part 4: Perform a final check on whether the user wants to keep the changes
 keep_changes = raw_input('\nWould you like to keep these changes (y/n)?: ')
 
 '''
+If there is no valid response, let the user know and repeat the prompt
+until a valid response is provided.
+
 If the response is a yes, exit the script and tell the user the network
 interfaces file has been updated.
 
 If the response is a no (or anything else), restore the backup to the
 network interfaces file.
 '''
+
+while keep_changes.lower() != 'y' or 'n':
+
+    # Let the user know a valid response is required for the question.
+    print('Please provide a valid "y" or "n" response.')
+
+    # Re-ask the user if they would like to keep the changes to the network
+    # interfaces file.
+    keep_changes = raw_input('\nWould you like to keep these changes (y/n)?: ')
+
 if keep_changes.lower() == 'y':
 
     print('\nA static IP has been set with your indicated netmask, gateway, ' +
           'and DNS server name identifiers. Your Pi-hat sensor module now ' +
           'has updated network functionality and the appropriate network ' +
-          'interfaces file has been copied over the server.')
+          'interfaces file has been copied over from the DoseNet servers.')
 
-else:
+elif keep_changes.lower() == 'n':
 
     # Restore the backup interfaces file using the cp linux command
     # with root access.
