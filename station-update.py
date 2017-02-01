@@ -66,7 +66,28 @@ def interfaces_update(rep_phrase, new_line):
     sys.stdout = temp_out
 
 '''
-Part 2: Securely copy the network configuration file from the Dosenet
+Part 2: Define a function to restore the backup of the interfaces file.
+'''
+
+
+def backup_restore():
+    """Function to restore the interfaces file with the backup."""
+    '''
+    Restore the backup interfaces file using the cp linux command
+    with root access.
+    '''
+    os.system('sudo cp /etc/network/interfaces_backup ' +
+              '/etc/network/interfaces')
+
+    # Alert the user that the backup interfaces file has been restored
+    # and to re-run the script if they want to re-setup the network
+    # configuration.
+    print('\nThe network interfaces file has been restored from the ' +
+          'backup and changes have been reverted. Run this Python ' +
+          'script again to setup the network configuration again.')
+
+'''
+Part 3: Securely copy the network configuration file from the Dosenet
         servers to the Pi-hat.
 '''
 
@@ -86,7 +107,7 @@ targetPath = '/home/pi/config/config.csv'
 os.system('scp {} {}'.format(sourcePath, targetPath))
 
 '''
-Part 3: Update the dosimeter ID on the network configuration file on the
+Part 4: Update the dosimeter ID on the network configuration file on the
         Pi-hat once it has been copied securely over the Internet.
 '''
 
@@ -167,17 +188,8 @@ if setup_static_ip.lower() == 'n':
 
     elif keep_changes.lower() == 'n':
 
-        # Restore the backup interfaces file using the cp linux command
-        # with root access.
-        os.system('sudo cp /etc/network/interfaces_backup ' +
-                  '/etc/network/interfaces')
-
-        # Alert the user that the backup interfaces file has been restored
-        # and to re-run the script if they want to re-setup the network
-        # configuration.
-        print('\nThe network interfaces file has been restored from the ' +
-              'backup and changes have been reverted. Run this Python ' +
-              'script again to setup the network configuration again.')
+        # Restore the backup for the interfaces file.
+        backup_restore()
 
     sys.exit()
 
@@ -257,17 +269,8 @@ elif setup_static_ip.lower() == 'y':
 
         elif setup_netmask.lower() == 'n':
 
-            # Restore the backup interfaces file using the cp linux command
-            # with root access.
-            os.system('sudo cp /etc/network/interfaces_backup ' +
-                      '/etc/network/interfaces')
-
-            # Alert the user that the backup interfaces file has been restored
-            # and to re-run the script if they want to re-setup the network
-            # configuration.
-            print('\nThe network interfaces file has been restored from the ' +
-                  'backup and changes have been reverted. Run this Python ' +
-                  'script again to setup the network configuration again.')
+            # Restore the backup for the interfaces file.
+            backup_restore()
 
         sys.exit()
 
@@ -347,17 +350,8 @@ elif setup_static_ip.lower() == 'y':
 
         elif keep_changes.lower() == 'n':
 
-            # Restore the backup interfaces file using the cp linux command
-            # with root access.
-            os.system('sudo cp /etc/network/interfaces_backup ' +
-                      '/etc/network/interfaces')
-
-            # Alert the user that the backup interfaces file has been restored
-            # and to re-run the script if they want to re-setup the network
-            # configuration.
-            print('\nThe network interfaces file has been restored from the ' +
-                  'backup and changes have been reverted. Run this Python ' +
-                  'script again to setup the network configuration again.')
+            # Restore the backup for the interfaces file.
+            backup_restore()
 
         sys.exit()
 
@@ -441,17 +435,8 @@ elif setup_static_ip.lower() == 'y':
 
         elif keep_changes.lower() == 'n':
 
-            # Restore the backup interfaces file using the cp linux command
-            # with root access.
-            os.system('sudo cp /etc/network/interfaces_backup ' +
-                      '/etc/network/interfaces')
-
-            # Alert the user that the backup interfaces file has been restored
-            # and to re-run the script if they want to re-setup the network
-            # configuration.
-            print('\nThe network interfaces file has been restored from the ' +
-                  'backup and changes have been reverted. Run this Python ' +
-                  'script again to setup the network configuration again.')
+            # Restore the backup for the interfaces file.
+            backup_restore()
 
         sys.exit()
 
@@ -469,7 +454,7 @@ elif setup_static_ip.lower() == 'y':
                           "{} {}".format(dns_server_1, dns_server_2) + '\n')
 
 '''
-Part 4: Perform a final check on whether the user wants to keep the changes
+Part 5: Perform a final check on whether the user wants to keep the changes
         to the interfaces file and output the results of the configuration of
         a static IP if the script has not been exited at this point.
 '''
@@ -507,14 +492,5 @@ if keep_changes.lower() == 'y':
 
 elif keep_changes.lower() == 'n':
 
-    # Restore the backup interfaces file using the cp linux command
-    # with root access.
-    os.system('sudo cp /etc/network/interfaces_backup ' +
-              '/etc/network/interfaces')
-
-    # Alert the user that the backup interfaces file has been restored
-    # and to re-run the script if they want to re-setup the network
-    # configuration.
-    print('\nThe network interfaces file has been restored from the ' +
-          'backup and changes have been reverted. Run this Python ' +
-          'script again to setup the network configuration again.')
+    # Restore the backup for the interfaces file.
+    backup_restore()
