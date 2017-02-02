@@ -301,7 +301,7 @@ elif setup_static_ip.lower() == 'y':
 
             # Update the interfaces file with the static IP by commenting out
             # the static IP call.
-            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+            interfaces_update('  address {}'.format(ip_static), '#   ' +
                               'address\n')
 
             print('\nA static IP has not been set (requires a netmask, ' +
@@ -382,7 +382,7 @@ elif setup_static_ip.lower() == 'y':
 
             # Update the interfaces file with the static IP by commenting out
             # the static IP call.
-            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+            interfaces_update('  address {}'.format(ip_static), '#   ' +
                               'address\n')
 
             # Update the interfaces file with the netmask identifier by
@@ -469,7 +469,7 @@ elif setup_static_ip.lower() == 'y':
 
             # Update the interfaces file with the static IP by commenting out
             # the static IP call.
-            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+            interfaces_update('  address {}'.format(ip_static), '#   ' +
                               'address\n')
 
             # Remove the netmask and gateway identifiers from the interfaces
