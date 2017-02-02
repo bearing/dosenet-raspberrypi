@@ -107,7 +107,7 @@ If the response is a no, simply let the user know the script will henceforth
 assume that there is a csv file, and continue with the script.
 '''
 
-while (csv_copy.lower() != 'y') or (csv_copy.lower() != 'n'):
+while csv_copy.lower() not in ('y', 'n'):
 
     # Let the user know a valid response is required for the question.
     print('Please provide a valid "y" or "n" response.')
