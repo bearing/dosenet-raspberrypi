@@ -137,7 +137,7 @@ if csv_copy.lower() == 'y':
     # Internet.
     os.system('scp {} {}'.format(sourcePath, targetPath))
 
-if csv_copy.lower() == 'n':
+elif csv_copy.lower() == 'n':
 
     raw_input('\nNote: There must be a network configuration file to ' +
               'properly configure the network options. Please double-check ' +
@@ -182,7 +182,7 @@ If the response is a yes, update the interfaces file to include the static IP
 and the relevant functionality.
 '''
 
-while setup_static_ip.lower() != 'y' or 'n':
+while setup_static_ip.lower() not in ('y', 'n'):
 
     # Let the user know a valid response is required for the question.
     print('Please provide a valid "y" or "n" response.')
@@ -208,7 +208,7 @@ if setup_static_ip.lower() == 'n':
     network interfaces file.
     '''
 
-    while keep_changes.lower() != 'y' or 'n':
+    while keep_changes.lower() not in ('y', 'n'):
 
         # Let the user know a valid response is required for the question.
         print('Please provide a valid "y" or "n" response.')
@@ -261,7 +261,7 @@ elif setup_static_ip.lower() == 'y':
     identifier and the relevant functionality.
     '''
 
-    while setup_netmask.lower() != 'y' or 'n':
+    while setup_netmask.lower() not in ('y', 'n'):
 
         # Let the user know a valid response is required for the question.
         print('Please provide a valid "y" or "n" response.')
@@ -287,7 +287,7 @@ elif setup_static_ip.lower() == 'y':
         network interfaces file.
         '''
 
-        while keep_changes.lower() != 'y' or 'n':
+        while keep_changes.lower() not in ('y', 'n'):
 
             # Let the user know a valid response is required for the question.
             print('Please provide a valid "y" or "n" response.')
@@ -337,7 +337,7 @@ elif setup_static_ip.lower() == 'y':
     identifier and the relevant functionality.
     '''
 
-    while setup_gateway.lower() != 'y' or 'n':
+    while setup_gateway.lower() not in ('y', 'n'):
 
         # Let the user know a valid response is required for the question.
         print('Please provide a valid "y" or "n" response.')
@@ -363,7 +363,7 @@ elif setup_static_ip.lower() == 'y':
         network interfaces file.
         '''
 
-        while keep_changes.lower() != 'y' or 'n':
+        while keep_changes.lower() not in ('y', 'n'):
 
             # Let the user know a valid response is required for the question.
             print('Please provide a valid "y" or "n" response.')
@@ -418,7 +418,7 @@ elif setup_static_ip.lower() == 'y':
     If the response is a yes, update the interfaces file to include the DNS
     server names and the relevant functionality.
     '''
-    while setup_dns_server.lower() != 'y' or 'n':
+    while setup_dns_server.lower() not in ('y', 'n'):
 
         # Let the user know a valid response is required for the question.
         print('Please provide a valid "y" or "n" response.')
@@ -445,7 +445,7 @@ elif setup_static_ip.lower() == 'y':
         network interfaces file.
         '''
 
-        while keep_changes.lower() != 'y' or 'n':
+        while keep_changes.lower() not in ('y', 'n'):
 
             # Let the user know a valid response is required for the question.
             print('Please provide a valid "y" or "n" response.')
@@ -513,7 +513,7 @@ If the response is a no (or anything else), restore the backup to the
 network interfaces file.
 '''
 
-while keep_changes.lower() != 'y' or 'n':
+while keep_changes.lower() not in ('y', 'n'):
 
     # Let the user know a valid response is required for the question.
     print('Please provide a valid "y" or "n" response.')
