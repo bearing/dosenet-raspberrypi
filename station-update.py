@@ -299,6 +299,11 @@ elif setup_static_ip.lower() == 'y':
 
         if keep_changes.lower() == 'y':
 
+            # Update the interfaces file with the static IP by commenting out
+            # the static IP call.
+            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+                              'address\n')
+
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
                   'remain. Your Pi-hat sensor module now has updated ' +
@@ -374,6 +379,11 @@ elif setup_static_ip.lower() == 'y':
                                      'changes (y/n)?: ')
 
         if keep_changes.lower() == 'y':
+
+            # Update the interfaces file with the static IP by commenting out
+            # the static IP call.
+            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+                              'address\n')
 
             # Update the interfaces file with the netmask identifier by
             # commenting out the netmask call.
@@ -456,6 +466,11 @@ elif setup_static_ip.lower() == 'y':
                                      'changes (y/n)?: ')
 
         if keep_changes.lower() == 'y':
+
+            # Update the interfaces file with the static IP by commenting out
+            # the static IP call.
+            interfaces_update('  address {}'.format(netmask_id), '#   ' +
+                              'address\n')
 
             # Remove the netmask and gateway identifiers from the interfaces
             # file by commenting them out.
