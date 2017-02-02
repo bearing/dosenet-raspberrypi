@@ -1,11 +1,11 @@
 """
 Network config updater for a DoseNet silicon radiation detector station.
 
-This script securely copies the Pi-hat network configuration file from the
-DoseNet servers to a Pi-hat at a school of interest and updates the network ID
-on the network configuration file for the Pi-hat, as well as handles netmasks,
-gateways, and DNS server names to setup a static IP if necessary. (A dynamic
-IP is set by default.)
+This script securely copies the Raspberry Pi network configuration file from
+the DoseNet servers to a detector at a school of interest and updates the
+network ID on the network configuration file for the Rasberry Pi, as well as
+handles netmasks, gateways, and DNS server names to setup a static IP if
+necessary. (A dynamic IP is set by default.)
 """
 
 # Import the relevant modules and functions from the appropriate libraries.
@@ -87,28 +87,65 @@ def backup_restore():
           'script again to setup the network configuration again.')
 
 '''
-Part 3: Securely copy the network configuration file from the Dosenet
-        servers to the Pi-hat.
+Part 3: Securely copy the network configuration (csv) file from the Dosenet
+        servers to the Raspberry Pi if the user so wishes.
 '''
 
-# Ask the user for the csv file name and output the raw input string as a
-# variable.
-name = raw_input('\nWhat is the csv file name?: ')
+# Ask the user if they would like to copy a new network configuration file
+# from the LBNL servers.
+csv_copy = raw_input('\nWould you like to copy a new network configuration ' +
+                     '(csv) file from the LBNL servers (y/n)?: ')
 
-# Define the paths to the source and target csv files as arguments for the scp
-# linux command to be executed through the os.system function. Note: A
-# password to the DoseNet servers in LBNL will be requested at this point in
-# the script.
-sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + name
-targetPath = '/home/pi/config/config.csv'
+'''
+If there is no valid response, let the user know and repeat the prompt until a
+valid response is provided.
 
-# Execute the scp linux command line to securely copy the file over the
-# Internet.
-os.system('scp {} {}'.format(sourcePath, targetPath))
+If the response is a yes, ask for the network configuration (csv) file name
+and securely copy it from the LBNL servers.
+
+If the response is a no, simply let the user know the script will henceforth
+assume that there is a csv file, and continue with the script.
+'''
+
+while csv_copy.lower() != 'y' or 'n':
+
+    # Let the user know a valid response is required for the question.
+    print('Please provide a valid "y" or "n" response.')
+
+    # Ask the user if they would like to copy a new network configuration file
+    # from the LBNL servers.
+    csv_copy = raw_input('\nWould you like to copy a new network ' +
+                         'configuration (csv) file from the LBNL servers ' +
+                         '(y/n)?: ')
+
+if csv_copy.lower() == 'y':
+
+    # Ask the user for the csv file name and output the raw input string as a
+    # variable.
+    name = raw_input('\nWhat is the network configuration (csv) file name?: ')
+
+    # Define the paths to the source and target csv files as arguments for the
+    # scp linux command to be executed through the os.system function. Note: A
+    # password to the DoseNet servers in LBNL will be requested at this point
+    # in the script.
+    sourcePath = 'dosenet@dosenet.dhcp.lbl.gov:~/config-files/' + name
+    targetPath = '/home/pi/config/config.csv'
+
+    # Execute the scp linux command line to securely copy the file over the
+    # Internet.
+    os.system('scp {} {}'.format(sourcePath, targetPath))
+
+if csv_copy.lower() == 'n':
+
+    raw_input('\nNote: There must be a network configuration file to ' +
+              'properly configure the network options. Please double-check ' +
+              'before continuing. Exit and rerun the script to get a ' +
+              'prompt to copy the network configuration file. Press any ' +
+              'key to continue. ')
 
 '''
 Part 4: Update the dosimeter ID on the network configuration file on the
-        Pi-hat once it has been copied securely over the Internet.
+        Raspberry Pi once it has been copied securely over the Internet.
 '''
 
 # Backup the interfaces file through the cp linux command to make a backup copy
