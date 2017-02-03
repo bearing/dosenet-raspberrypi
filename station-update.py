@@ -147,8 +147,6 @@ while csv_copy.lower() not in ('y', 'n'):
     # Let the user know a valid response is required for the question.
     print('Please provide a valid "y" or "n" response.')
 
-    print(csv_copy)
-
     # Ask the user if they would like to copy a new network configuration file
     # from the LBNL servers.
     csv_copy = raw_input('\nWould you like to copy a new network ' +
