@@ -105,7 +105,7 @@ def dynamic_restore(static, netmask, gateway):
     '''
     interfaces_update('# replace for dynamic IP configuration', '')
     interfaces_update('# iface eth0 inet dhcp', 'iface eth0 inet dhcp\n')
-    interfaces_update('# auto eth0', 'auto eth0' + '\n')
+    interfaces_update('auto eth0', '# auto eth0' + '\n')
     interfaces_update('iface eth0 inet static', '# iface eth0 inet static' +
                       '\n')
 
