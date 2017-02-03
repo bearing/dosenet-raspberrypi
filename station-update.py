@@ -87,7 +87,42 @@ def backup_restore():
           'script again to setup the network configuration again.')
 
 '''
-Part 3: Securely copy the network configuration (csv) file from the Dosenet
+Part 3: Define a function to restore the dynamic IP configuration if a faulty
+        static IP configuration has been set (i.e., one without one of the
+        following: netmask, gateway, DNS server names).
+
+        Namely, the static IP, netmask, and gateway calls are commented out
+        and the dynamic IP calls are uncommented out. The DNS server names are
+        unaffected as they
+'''
+
+
+def dynamic_restore(static, netmask, gateway):
+    """Function to restore the dynamic IP configuration."""
+    '''
+    Update the interfaces file with the dynamic IP by uncommenting out the
+    dynamic IP call and commenting out the static IP calls.
+    '''
+    interfaces_update('# replace for dynamic IP configuration' + '\n' +
+                      '# iface eth0 inet dhcp\n', 'iface eth0 inet dhcp')
+    interfaces_update('# auto eth0', 'auto eth0' + '\n')
+    interfaces_update('# iface eth0 inet static', 'iface eth0 inet static' +
+                      '\n')
+
+    # Update the interfaces file with the static IP by uncommenting out
+    # the static IP call.
+    interfaces_update('  address {}'.format(static), '#   address\n')
+
+    # Remove the netmask and gateway identifiers from the interfaces
+    # file by commenting them out.
+    interfaces_update('  netmask {}'.format(netmask), '#   ' +
+                      'netmask\n')
+
+    interfaces_update('  gateway {}'.format(gateway), '#   ' +
+                      'gateway\n')
+
+'''
+Part 4: Securely copy the network configuration (csv) file from the Dosenet
         servers to the Raspberry Pi if the user so wishes.
 '''
 
@@ -146,7 +181,7 @@ elif csv_copy.lower() == 'n':
               'key to continue. ')
 
 '''
-Part 4: Update the dosimeter ID on the network configuration file on the
+Part 5: Update the dosimeter ID on the network configuration file on the
         Raspberry Pi once it has been copied securely over the Internet.
 '''
 
@@ -299,10 +334,8 @@ elif setup_static_ip.lower() == 'y':
 
         if keep_changes.lower() == 'y':
 
-            # Update the interfaces file with the static IP by commenting out
-            # the static IP call.
-            interfaces_update('  address {}'.format(ip_static), '#   ' +
-                              'address\n')
+            # Restore the dynamic IP configuration.
+            dynamic_restore(ip_static, 'dummy', 'dummy')
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -380,15 +413,8 @@ elif setup_static_ip.lower() == 'y':
 
         if keep_changes.lower() == 'y':
 
-            # Update the interfaces file with the static IP by commenting out
-            # the static IP call.
-            interfaces_update('  address {}'.format(ip_static), '#   ' +
-                              'address\n')
-
-            # Update the interfaces file with the netmask identifier by
-            # commenting out the netmask call.
-            interfaces_update('  netmask {}'.format(netmask_id), '#   ' +
-                              'netmask\n')
+            # Restore the dynamic IP configuration.
+            dynamic_restore(ip_static, netmask_id, 'dummy')
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -467,18 +493,8 @@ elif setup_static_ip.lower() == 'y':
 
         if keep_changes.lower() == 'y':
 
-            # Update the interfaces file with the static IP by commenting out
-            # the static IP call.
-            interfaces_update('  address {}'.format(ip_static), '#   ' +
-                              'address\n')
-
-            # Remove the netmask and gateway identifiers from the interfaces
-            # file by commenting them out.
-            interfaces_update('  netmask {}'.format(netmask_id), '#   ' +
-                              'netmask\n')
-
-            interfaces_update('  gateway {}'.format(gateway_id), '#   ' +
-                              'gateway\n')
+            # Restore the dynamic IP configuration.
+            dynamic_restore(ip_static, netmask_id, gateway_id)
 
             print('\nA static IP has not been set (requires a netmask, ' +
                   'a gateway, and DNS server names) and a dynamic IP will ' +
@@ -508,7 +524,7 @@ elif setup_static_ip.lower() == 'y':
                           "{} {}".format(dns_server_1, dns_server_2) + '\n')
 
 '''
-Part 5: Perform a final check on whether the user wants to keep the changes
+Part 6: Perform a final check on whether the user wants to keep the changes
         to the interfaces file and output the results of the configuration of
         a static IP if the script has not been exited at this point.
 '''
