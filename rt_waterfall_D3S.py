@@ -83,7 +83,7 @@ class Rt_Waterfall_D3S(object):
                 self.image[j][i] = temp[i]
                 i += 1
             j+=1
-        print(image)
+        print(self.image)
       
     def waterfall_graph(self, spectra):
         """
