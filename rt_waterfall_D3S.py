@@ -31,12 +31,11 @@ class Rt_Waterfall_D3S(object):
         self.on = True
         self.first_try = True
     
-    def get_data(self, spectra, queue1, queue2):
+    def get_data(self, spectra):
         new_spectra = self.rebin(spectra)
         queue2.append(new_spectra)
-        self.queuelength = len(queue2)
-        queue1 = queue2
-        print(queue1[0])
+        self.queuelength = len(self.manage.wqueue2)
+        self.manager.wqueue1 = self.manager.wqueue2
    
     def rebin(self, data, n=4):
         """
@@ -68,48 +67,48 @@ class Rt_Waterfall_D3S(object):
         for i in queue2: 
             queue1.append(i)
       
-    def make_image(self, queue1, queue2):
+    def make_image(self):
         """
         Prepares an array for the waterfall plot
         """
 
         self.image = np.zeros((self.queue_length, 256),dtype=float)
         print(self.queue_length)
-        print(len(queue1))
+        print(len(self.manager.wqueue1))
         j = 0
         while j < self.queue_length:
             i = 0
-            temp = self.fix_array(queue1.popleft())
+            temp = self.fix_array(self.manager.wqueue1.popleft())
             while i < 256:
                 self.image[j][i] = temp[i]
                 i += 1
             j+=1
       
-    def waterfall_graph(self, spectra, queue1, queue2):
+    def waterfall_graph(self, spectra):
         """
         Plots a waterfall graph of all the spectra.
         """
-        self.get_data(spectra, queue1, queue2)
-        self.queue_length = len(queue2)
-        self.make_image(queue1, queue2)
+        self.get_data(spectra, self.manager.wqueue1, self.manager.wqueue2)
+        self.queue_length = len(self.manager.wqueue2)
+        self.make_image(self.manager.wqueue1, self.manager.wqueue2)
       
     def start_up(self):
         plt.ion()
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
-    def plot(self, spectra, queue1, queue2):
+    def plot(self, spectra):
         if self.first_try:
             self.start_up()
-            self.waterfall_graph(spectra, queue1, queue2)
+            self.waterfall_graph(spectra, self.manager.wqueue1, self.manager.wqueue2)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, self.queuelength, 1])
+                        extent=[1, 4096, self.queue_length, 1])
             plt.show()
 
             self.first_try = False
         else:
-            self.waterfall_graph(spectra, queue1, queue2)
+            self.waterfall_graph(spectra, self.manager.wqueue1, self.manager.wqueue2)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, self.queuelength, 1])
+                        extent=[1, 4096, self.queue_length, 1])
 
             plt.show()
