@@ -100,15 +100,15 @@ class Rt_Waterfall_D3S(object):
     def plot(self, spectra):
         if self.first_try:
             self.start_up()
-            self.waterfall_graph(spectra, self.manager.wqueue1, self.manager.wqueue2)
+            self.waterfall_graph(spectra)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, self.queue_length, 1])
+                        extent=[1, 4096, self.queuelength, 1])
             plt.show()
 
             self.first_try = False
         else:
-            self.waterfall_graph(spectra, self.manager.wqueue1, self.manager.wqueue2)
+            self.waterfall_graph(spectra)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, self.queue_length, 1])
+                        extent=[1, 4096, self.queuelength, 1])
 
             plt.show()
