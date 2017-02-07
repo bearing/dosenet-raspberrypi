@@ -108,8 +108,6 @@ class Rt_Waterfall_D3S(object):
                     extent=[1, 4096, self.queuelength, 1])
         plt.draw()
         self.counter += 1
-        else: 
-            self.counter += 1
 
             #self.first_try = False
         '''
