@@ -74,6 +74,8 @@ class Rt_Waterfall_D3S(object):
         """
 
         self.image = np.zeros((self.queue_length, 256),dtype=float)
+        print(self.queue_length)
+        print(len(queue1))
         j = 0
         while j < self.queue_length:
             i = 0
