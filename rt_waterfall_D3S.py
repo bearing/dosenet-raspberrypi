@@ -88,32 +88,23 @@ class Rt_Waterfall_D3S(object):
         self.queue_length = len(queue2)
         self.make_image(queue1, queue2)
       
-    def update(self, spectra, queue1, queue2):
-        
-        self.waterfall_graph(spectra, queue1, queue2)
-        self.start_up()
-        return queue1, queue2
-    
     def start_up(self):
         plt.ion()
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
-    def plot(self):
-        plt.ion()
-        plt.xlabel('Bin')
-        plt.ylabel('Spectra')
-        while self.on:
-            if self.first_try:
-                self.start_up()
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                            extent=[1, 4096, self.queuelength, 1])
-                plt.show()
-                
-                self.first_try = False
-            else:
-                plt.pause(self.interval + 10)
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                            extent=[1, 4096, self.queuelength, 1])
-                
-                plt.show()
+    def plot(self, spectra, queue1, queue2):
+        if self.first_try:
+            self.start_up()
+            self.waterfall_graph(spectra, queue1, queue2)
+            plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                        extent=[1, 4096, self.queuelength, 1])
+            plt.show()
+
+            self.first_try = False
+        else:
+            self.waterfall_graph(spectra, queue1, queue2)
+            plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                        extent=[1, 4096, self.queuelength, 1])
+
+            plt.show()
