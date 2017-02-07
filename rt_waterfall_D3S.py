@@ -74,22 +74,22 @@ class Rt_Waterfall_D3S(object):
         Prepares an array for the waterfall plot
         """
 
-        self.image = np.zeros((self.queue_length, 256),dtype=float)
+        self.image = np.zeros((self.queuelength, 256),dtype=float)
         j = 0
-        while j < self.queue_length:
+        while j < self.queuelength:
             i = 0
             temp = self.fix_array(self.manager.wqueue1.popleft())
             while i < 256:
                 self.image[j][i] = temp[i]
                 i += 1
             j+=1
+        print(image)
       
     def waterfall_graph(self, spectra):
         """
         Plots a waterfall graph of all the spectra.
         """
         self.get_data(spectra)
-        self.queue_length = len(self.manager.wqueue2)
         self.make_image()
       
     def start_up(self):
