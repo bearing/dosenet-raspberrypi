@@ -77,7 +77,7 @@ class Rt_Waterfall_D3S(object):
         j = 0
         while j < self.queue_length:
             i = 0
-            temp = self.fix_array(queue.popleft())
+            temp = self.fix_array(queue1.popleft())
             while i < 256:
                 self.image[j][i] = temp[i]
                 i += 1
