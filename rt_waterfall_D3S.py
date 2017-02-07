@@ -35,7 +35,9 @@ class Rt_Waterfall_D3S(object):
         new_spectra = self.rebin(spectra)
         self.manager.wqueue2.append(new_spectra)
         self.queuelength = len(self.manager.wqueue2)
+        print(self.queuelength)
         self.manager.wqueue1 = self.manager.wqueue2
+        print(self.manager.wqueue1)
    
     def rebin(self, data, n=4):
         """
@@ -73,8 +75,6 @@ class Rt_Waterfall_D3S(object):
         """
 
         self.image = np.zeros((self.queue_length, 256),dtype=float)
-        print(self.queue_length)
-        print(len(self.manager.wqueue1))
         j = 0
         while j < self.queue_length:
             i = 0
