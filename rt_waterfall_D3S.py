@@ -38,7 +38,6 @@ class Rt_Waterfall_D3S(object):
         print(self.queuelength)
         for i in self.manager.wqueue2:
             self.manager.wqueue1.append(i)
-        print(self.manager.wqueue1)
    
     def rebin(self, data, n=4):
         """
