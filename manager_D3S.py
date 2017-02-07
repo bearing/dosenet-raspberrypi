@@ -380,7 +380,7 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         if self.waterfall:
-            self.rt_waterfall.plot(spectra, self.wqueue1, self.wqueue2)
+            self.rt_waterfall.plot(spectra)
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
     
