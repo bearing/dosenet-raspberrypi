@@ -94,7 +94,6 @@ class Rt_Waterfall_D3S(object):
         self.make_image()
       
     def start_up(self):
-        plt.ion()
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
