@@ -98,15 +98,17 @@ class Rt_Waterfall_D3S(object):
         plt.ylabel('Spectra')
     
     def plot(self, spectra):
-        #if self.first_try:
-        print('self.counter')
-        print(self.counter)
-        self.start_up()
-        self.waterfall_graph(spectra)
-        plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                    extent=[1, 4096, 0, self.queuelength])
-        plt.show()
-        self.counter += 1
+        if self.first_try:
+            print('self.counter')
+            print(self.counter)
+            self.start_up()
+            self.waterfall_graph(spectra)
+            plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                        extent=[1, 4096, 0, self.queuelength])
+            plt.show()
+            self.counter += 1
+        else:
+            plt.close()
 
             #self.first_try = False
         '''
