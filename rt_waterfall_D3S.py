@@ -106,7 +106,7 @@ class Rt_Waterfall_D3S(object):
         self.waterfall_graph(spectra)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
                     extent=[1, 4096, 0, self.queuelength])
-        plt.draw()
+        plt.show()
         self.counter += 1
 
             #self.first_try = False
