@@ -98,8 +98,14 @@ class Rt_Waterfall_D3S(object):
         plt.ion()
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
+    
+    def plot(self):
+        plt.ion()
+        plt.xlabel('Bin')
+        plt.ylabel('Spectra')
         while self.on:
             if self.first_try:
+                self.start_up()
                 plt.imshow(self.image, interpolation='nearest', aspect='auto',
                             extent=[1, 4096, self.queuelength, 1])
                 plt.show()
@@ -111,5 +117,3 @@ class Rt_Waterfall_D3S(object):
                             extent=[1, 4096, self.queuelength, 1])
                 
                 plt.show()
-                
-#extent=[1, 4096, 0, self.queuelength]            
