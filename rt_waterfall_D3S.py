@@ -100,12 +100,17 @@ class Rt_Waterfall_D3S(object):
     
     def plot(self, spectra):
         #if self.first_try:
+        print('self.counter')
+        print(self.counter)
         if type(self.counter/5) == int:
             self.start_up()
             self.waterfall_graph(spectra)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
                         extent=[1, 4096, self.queuelength, 1])
             plt.show()
+            self.counter += 1
+        else: 
+            self.counter += 1
 
             #self.first_try = False
         '''
