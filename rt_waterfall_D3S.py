@@ -50,7 +50,6 @@ class Rt_Waterfall_D3S(object):
             new_data[count] = temp
             count += 1
             i += n
-        print(new_data)
         return new_data
 
     def fix_array(self, array):
@@ -76,6 +75,7 @@ class Rt_Waterfall_D3S(object):
 
         self.image = np.zeros((length, 256),dtype=float)
         i = 0
+        print(queue1)
         while i < 256:
             self.image[i] = self.fix_array(queue1.popleft())
             i += 1
