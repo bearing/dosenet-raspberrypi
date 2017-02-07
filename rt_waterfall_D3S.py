@@ -33,7 +33,7 @@ class Rt_Waterfall_D3S(object):
     
     def get_data(self, spectra):
         new_spectra = self.rebin(spectra)
-        queue2.append(new_spectra)
+        self.manager.wqueue2.append(new_spectra)
         self.queuelength = len(self.manage.wqueue2)
         self.manager.wqueue1 = self.manager.wqueue2
    
