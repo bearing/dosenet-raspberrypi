@@ -88,9 +88,9 @@ class Rt_Waterfall_D3S(object):
         """
         Plots a waterfall graph of all the spectra.
         """
-        self.get_data(spectra, self.manager.wqueue1, self.manager.wqueue2)
+        self.get_data(spectra)
         self.queue_length = len(self.manager.wqueue2)
-        self.make_image(self.manager.wqueue1, self.manager.wqueue2)
+        self.make_image()
       
     def start_up(self):
         plt.ion()
