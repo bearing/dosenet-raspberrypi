@@ -30,6 +30,7 @@ class Rt_Waterfall_D3S(object):
         
         self.on = True
         self.first_try = True
+        self.counter = 0
     
     def get_data(self, spectra):
         new_spectra = self.rebin(spectra)
@@ -98,17 +99,20 @@ class Rt_Waterfall_D3S(object):
         plt.ylabel('Spectra')
     
     def plot(self, spectra):
-        if self.first_try:
+        #if self.first_try:
+        if type(self.counter/5) == int:
             self.start_up()
             self.waterfall_graph(spectra)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
                         extent=[1, 4096, self.queuelength, 1])
             plt.show()
 
-            self.first_try = False
+            #self.first_try = False
+        '''
         else:
             self.waterfall_graph(spectra)
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
                         extent=[1, 4096, self.queuelength, 1])
 
             plt.show()
+        '''
