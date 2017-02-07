@@ -36,7 +36,7 @@ class Rt_Waterfall_D3S(object):
         queue2.append(new_spectra)
         self.queuelength = len(queue2)
         queue1 = queue2
-        print(queue1)
+        print(queue1[0])
    
     def rebin(self, data, n=4):
         """
