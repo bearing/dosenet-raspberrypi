@@ -329,7 +329,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-                                
+
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
