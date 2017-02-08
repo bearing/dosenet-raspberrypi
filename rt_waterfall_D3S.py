@@ -76,7 +76,6 @@ class Rt_Waterfall_D3S(object):
                 self.image[j][i] = temp[i]
                 i += 1
             j+=1
-        print(self.image)
       
     def waterfall_graph(self, spectra):
         """
@@ -90,13 +89,10 @@ class Rt_Waterfall_D3S(object):
         plt.ylabel('Spectra')
     
     def plot(self, spectra):
-        if self.first_try:
-            print('self.counter')
-            print(self.counter)
-            self.start_up()
-            self.waterfall_graph(spectra)
-            plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, 0, self.queuelength])
-            plt.draw()
-            plt.pause(self.interval)
-            plt.close()
+        self.start_up()
+        self.waterfall_graph(spectra)
+        plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                    extent=[1, 4096, 0, self.queuelength])
+        plt.draw()
+        plt.pause(self.interval)
+        plt.close()
