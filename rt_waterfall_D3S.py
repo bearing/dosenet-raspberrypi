@@ -96,7 +96,6 @@ class Rt_Waterfall_D3S(object):
     def start_up(self):
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
-        plt.colorbar()
     
     def plot(self, spectra):
         if self.first_try:
