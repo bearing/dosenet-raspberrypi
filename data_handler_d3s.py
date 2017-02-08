@@ -172,4 +172,3 @@ class Data_Handler_D3S(object):
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
                 self.send_to_memory(spectra)
-
