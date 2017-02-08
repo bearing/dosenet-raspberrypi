@@ -106,6 +106,8 @@ class Rt_Waterfall_D3S(object):
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
                         extent=[1, 4096, 0, self.queuelength])
             plt.draw()
+            plt.pause(10)
+            plt.close('all')
             self.counter += 1
 
             #self.first_try = False
