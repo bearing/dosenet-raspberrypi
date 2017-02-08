@@ -105,8 +105,8 @@ class Rt_Waterfall_D3S(object):
         '''
         Actually plots the spectra
         '''
-        if self.first:
-            self.start_up()
+        #if self.first:
+        self.start_up()
         self.waterfall_graph(spectra)
         plt.pause(0.0001)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
@@ -114,5 +114,5 @@ class Rt_Waterfall_D3S(object):
         plt.colorbar()
         #plt.draw()
         plt.show(block=False)
-        #plt.pause(self.interval)
+        plt.pause(self.interval)
         #plt.close()
