@@ -93,7 +93,7 @@ class Rt_Waterfall_D3S(object):
         '''
         Sets up the parameters for the plotting window
         '''
-        plt.figure(figsize=(22,10))
+        plt.figure(figsize=(25,15))
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
