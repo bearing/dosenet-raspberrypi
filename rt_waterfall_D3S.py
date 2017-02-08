@@ -96,7 +96,7 @@ class Rt_Waterfall_D3S(object):
         plt.figure(figsize=(25,15))
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
-        plt.title('Waterfall Plot: Displaying Nuclear Radiation Spectra Transient Changes with a Time Resolution of {}'.format(self.interval))
+        plt.title('Waterfall Plot: Displaying Nuclear Radiation Spectra Transient Changes with a Time Resolution of {} Seconds'.format(self.interval))
     
     def plot(self, spectra):
         '''
