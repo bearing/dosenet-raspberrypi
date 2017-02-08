@@ -27,10 +27,6 @@ class Rt_Waterfall_D3S(object):
         
         self.queuelength = None
         self.image = None
-        
-        self.on = True
-        self.first_try = True
-        self.counter = 0
     
     def get_data(self, spectra):
         new_spectra = self.rebin(spectra)
@@ -106,16 +102,5 @@ class Rt_Waterfall_D3S(object):
             plt.imshow(self.image, interpolation='nearest', aspect='auto',
                         extent=[1, 4096, 0, self.queuelength])
             plt.draw()
-            plt.pause(10)
+            plt.pause(self.interval)
             plt.close()
-            self.counter += 1
-
-            #self.first_try = False
-        '''
-        else:
-            self.waterfall_graph(spectra)
-            plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                        extent=[1, 4096, self.queuelength, 1])
-
-            plt.show()
-        '''
