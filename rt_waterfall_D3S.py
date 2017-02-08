@@ -61,10 +61,6 @@ class Rt_Waterfall_D3S(object):
             new_array[i] = array[i]
             i += 1
         return new_array
-     
-    def reset_queue(self, queue1, queue2): 
-        for i in queue2: 
-            queue1.append(i)
       
     def make_image(self):
         """
