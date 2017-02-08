@@ -27,15 +27,18 @@ class Rt_Waterfall_D3S(object):
         
         self.queuelength = None
         self.image = None
-        
-        self.on = True
-        self.first_try = True
     
-    def get_data(self, spectra, queue1, queue2):
+    def get_data(self, spectra):
+        '''
+        Transfers spectra data to 2 queues that were designed for 
+        real time waterfall mode.
+        Call rebin spectra in this method.
+        '''
         new_spectra = self.rebin(spectra)
-        queue2.append(new_spectra)
-        self.queuelength = len(queue2)
-        queue1 = queue2
+        self.manager.wqueue2.append(new_spectra)
+        self.queuelength = len(self.manager.wqueue2)
+        for i in self.manager.wqueue2:
+            self.manager.wqueue1.append(i)
    
     def rebin(self, data, n=4):
         """
@@ -50,12 +53,12 @@ class Rt_Waterfall_D3S(object):
             new_data[count] = temp
             count += 1
             i += n
-        print(new_data)
         return new_data
 
     def fix_array(self, array):
         """
-        Used to format arrays for the waterfall plot.Called inside make_image.
+        Used to format arrays for the waterfall plot.
+        Called inside make_image.
         """
         new_array = np.zeros((256))
         i = 0
@@ -63,53 +66,47 @@ class Rt_Waterfall_D3S(object):
             new_array[i] = array[i]
             i += 1
         return new_array
-     
-    def reset_queue(self, queue1, queue2): 
-        for i in queue2: 
-            queue1.append(i)
       
-    def make_image(self, queue1, queue2):
+    def make_image(self):
         """
         Prepares an array for the waterfall plot
+        Call fix_array in this method
         """
-        length = len(queue1)
-
-        self.image = np.zeros((length, 256),dtype=float)
-        i = 0
-        while i < 256:
-            self.image[i] = self.fix_array(queue1.popleft())
-            i += 1
+        self.image = np.zeros((self.queuelength, 256),dtype=float)
+        j = 0
+        while j < self.queuelength:
+            i = 0
+            temp = self.fix_array(self.manager.wqueue1.pop())
+            while i < 256:
+                self.image[j][i] = temp[i]
+                i += 1
+            j+=1
       
-    def waterfall_graph(self, spectra, queue1, queue2):
+    def waterfall_graph(self, spectra):
         """
-        Plots a waterfall graph of all the spectra.
+        Grabs the data and prepares the waterfall.
         """
-        self.get_data(spectra, queue1, queue2)
-        self.queue_length = len(queue2)
-        self.make_image(queue1, queue2)
+        self.get_data(spectra)
+        self.make_image()
       
-    def update(self, spectra, queue1, queue2):
-        
-        self.waterfall_graph(spectra, queue1, queue2)
-        self.start_up()
-        return queue1, queue2
-    
     def start_up(self):
-        plt.ion()
+        '''
+        Sets up the parameters for the plotting window
+        '''
+        plt.figure(figsize=(25,15))
         plt.xlabel('Bin')
-        plt.ylabel('Spectra')
-        while self.on:
-            if self.first_try:
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                            extent=[1, 4096, self.queuelength, 1])
-                plt.show()
-                
-                self.first_try = False
-            else:
-                plt.pause(self.interval + 10)
-                plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                            extent=[1, 4096, self.queuelength, 1])
-                
-                plt.show()
-                
-#extent=[1, 4096, 0, self.queuelength]            
+        plt.ylabel('Time (s)')
+        plt.title('Waterfall Plot: Displaying Nuclear Radiation Spectra Transient Changes with a Time Resolution of {} Seconds'.format(self.interval))
+    
+    def plot(self, spectra):
+        '''
+        Actually plots the spectra
+        '''
+        self.start_up()
+        self.waterfall_graph(spectra)
+        plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                    extent=[1, 4096, 0, self.queuelength*self.interval])
+        plt.colorbar()
+        plt.draw()
+        plt.pause(self.interval)
+        plt.close()
