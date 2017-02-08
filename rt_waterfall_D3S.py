@@ -27,9 +27,6 @@ class Rt_Waterfall_D3S(object):
         
         self.queuelength = None
         self.image = None
-        
-        plt.ion()
-        self.first = True
     
     def get_data(self, spectra):
         '''
@@ -105,14 +102,11 @@ class Rt_Waterfall_D3S(object):
         '''
         Actually plots the spectra
         '''
-        #if self.first:
         self.start_up()
         self.waterfall_graph(spectra)
-        plt.pause(0.0001)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
                     extent=[1, 4096, 0, self.queuelength*self.interval])
         plt.colorbar()
         plt.draw()
-        #plt.show(block=False)
         plt.pause(self.interval)
         plt.close()
