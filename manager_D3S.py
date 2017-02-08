@@ -383,7 +383,7 @@ class Manager_D3S(object):
             self.rt_waterfall.plot(spectra)
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
-    
+
     def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
