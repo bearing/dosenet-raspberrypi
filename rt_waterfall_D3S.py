@@ -108,7 +108,7 @@ class Rt_Waterfall_D3S(object):
             plt.show()
             self.counter += 1
             plt.pause(10)
-            plt.close()
+            plt.close('all')
 
             #self.first_try = False
         '''
