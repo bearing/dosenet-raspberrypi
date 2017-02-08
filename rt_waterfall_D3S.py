@@ -112,6 +112,7 @@ class Rt_Waterfall_D3S(object):
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
                     extent=[1, 4096, 0, self.queuelength*self.interval])
         plt.colorbar()
-        plt.draw()
+        #plt.draw()
+        plt.show(block=False)
         #plt.pause(self.interval)
         #plt.close()
