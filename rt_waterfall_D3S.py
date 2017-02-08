@@ -3,7 +3,6 @@ import time
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.figure as fig
 
 class Rt_Waterfall_D3S(object):
     """
@@ -94,7 +93,7 @@ class Rt_Waterfall_D3S(object):
         '''
         Sets up the parameters for the plotting window
         '''
-        fig.figure(figsize=(18.5,10))
+        plt.figure(figsize=(18.5,10))
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
