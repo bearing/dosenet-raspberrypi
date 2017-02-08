@@ -29,6 +29,11 @@ class Rt_Waterfall_D3S(object):
         self.image = None
     
     def get_data(self, spectra):
+        '''
+        Transfers spectra data to 2 queues that were designed for 
+        real time waterfall mode.
+        Call rebin spectra in this method.
+        '''
         new_spectra = self.rebin(spectra)
         self.manager.wqueue2.append(new_spectra)
         self.queuelength = len(self.manager.wqueue2)
@@ -52,7 +57,8 @@ class Rt_Waterfall_D3S(object):
 
     def fix_array(self, array):
         """
-        Used to format arrays for the waterfall plot.Called inside make_image.
+        Used to format arrays for the waterfall plot.
+        Called inside make_image.
         """
         new_array = np.zeros((256))
         i = 0
@@ -64,8 +70,8 @@ class Rt_Waterfall_D3S(object):
     def make_image(self):
         """
         Prepares an array for the waterfall plot
+        Call fix_array in this method
         """
-
         self.image = np.zeros((self.queuelength, 256),dtype=float)
         j = 0
         while j < self.queuelength:
@@ -78,16 +84,22 @@ class Rt_Waterfall_D3S(object):
       
     def waterfall_graph(self, spectra):
         """
-        Plots a waterfall graph of all the spectra.
+        Grabs the data and prepares the waterfall.
         """
         self.get_data(spectra)
         self.make_image()
       
     def start_up(self):
+        '''
+        Sets up the parameters for the plotting window
+        '''
         plt.xlabel('Bin')
         plt.ylabel('Spectra')
     
     def plot(self, spectra):
+        '''
+        Actually plots the spectra
+        '''
         self.start_up()
         self.waterfall_graph(spectra)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
