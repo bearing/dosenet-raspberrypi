@@ -62,11 +62,12 @@ class Rt_Waterfall_D3S(object):
         Used to format arrays for the waterfall plot.
         Called inside make_image.
         """
-        new_array = np.zeros((self.resolution))
-        i = 0
-        while i < self.resolution:
-            new_array[i] = array[i]
-            i += 1
+        #new_array = np.zeros((self.resolution))
+        #i = 0
+        #while i < self.resolution:
+            #new_array[i] = array[i]
+            #i += 1
+        new_array = array.copy()[:256]
         return new_array
       
     def make_image(self):
