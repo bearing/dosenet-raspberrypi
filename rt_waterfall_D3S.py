@@ -74,9 +74,7 @@ class Rt_Waterfall_D3S(object):
         for j in xrange(self.queuelength):
             i = 0
             temp = self.fix_array(self.manager.wqueue1.pop())
-            while i < self.resolution:
-                self.image[j][i] = temp[i]
-                i += 1
+            self.image[j, :] = temp
       
     def waterfall_graph(self, spectra):
         """
