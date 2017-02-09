@@ -26,9 +26,10 @@ class Rt_Waterfall_D3S(object):
         
         self.interval = manager.interval
         
-        self.queuelength = None
         self.image = None
         self.resolution = resolution
+        
+        self.first = True
     
     def get_data(self, spectra):
         '''
@@ -37,10 +38,7 @@ class Rt_Waterfall_D3S(object):
         Call rebin spectra in this method.
         '''
         new_spectra = self.rebin(spectra)
-        self.manager.wqueue2.append(new_spectra)
-        self.queuelength = len(self.manager.wqueue2)
-        for i in self.manager.wqueue2:
-            self.manager.wqueue1.append(i)
+        self.manager.wqueue1.append(new_spectra)
    
     def rebin(self, data, n=4):
         """
@@ -62,7 +60,7 @@ class Rt_Waterfall_D3S(object):
         Used to format arrays for the waterfall plot.
         Called inside make_image.
         """
-        new_array = array.copy()[:256]
+        new_array = array.copy()[:self.resolution]
         return new_array
       
     def make_image(self):
@@ -70,11 +68,14 @@ class Rt_Waterfall_D3S(object):
         Prepares an array for the waterfall plot
         Call fix_array in this method
         """
-        self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
-        for j in xrange(self.queuelength):
-            i = 0
+        if self.first:
+            self.image = np.zeros((1, self.resolution),dtype=float)
+            self.first = False
             temp = self.fix_array(self.manager.wqueue1.pop())
-            self.image[j, :] = np.ndarray.flatten(temp)
+            self.image[0, :] = np.ndarray.flatten(temp)
+        else:
+            temp = self.fix_array(self.manager.wqueue1.pop())
+            self.image = np.concatenate((np.transpose(temp), self.image), axis=0)
       
     def waterfall_graph(self, spectra):
         """
@@ -99,7 +100,7 @@ class Rt_Waterfall_D3S(object):
         self.start_up()
         self.waterfall_graph(spectra)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                    extent=[1, 4096, 0, self.queuelength*self.interval])
+                    extent=[1, 4096, 0, np.shape(self.image)[0]*self.interval])
         plt.colorbar()
         plt.draw()
         plt.pause(self.interval)
