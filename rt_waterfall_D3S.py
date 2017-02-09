@@ -80,7 +80,7 @@ class Rt_Waterfall_D3S(object):
             self.image = np.zeros((1, self.resolution),dtype=float)
             self.first = False
             temp = self.fix_array(self.manager.wqueue1.pop())
-            self.image[j, :] = np.ndarray.flatten(temp)
+            self.image[0, :] = np.ndarray.flatten(temp)
         else:
             temp = self.fix_array(self.manager.wqueue1.pop())
             np.concatenate((temp, self.image), axis=0)
