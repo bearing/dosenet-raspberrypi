@@ -71,12 +71,13 @@ class Rt_Waterfall_D3S(object):
         Call fix_array in this method
         """
         self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
-        while self.manager.wqueue1:
-            i = 0
-            temp = self.fix_array(self.manager.wqueue1.pop())
-            while i < self.resolution:
-                self.image[j][i] = temp[i]
-                i += 1
+        for j in xrange(len(self.queuelength)):
+            while self.manager.wqueue1:
+                i = 0
+                temp = self.fix_array(self.manager.wqueue1.pop())
+                while i < self.resolution:
+                    self.image[j][i] = temp[i]
+                    i += 1
       
     def waterfall_graph(self, spectra):
         """
