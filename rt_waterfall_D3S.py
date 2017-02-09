@@ -85,7 +85,7 @@ class Rt_Waterfall_D3S(object):
             temp = self.fix_array(self.manager.wqueue1.pop())
             print(np.shape(temp))
             print(np.shape(self.image))
-            np.concatenate((np.transpose(temp), self.image), axis=0)
+            self.image = np.concatenate((np.transpose(temp), self.image), axis=0)
         #for j in xrange(self.queuelength):
         #i = 0
         #temp = self.fix_array(self.manager.wqueue1.pop())
