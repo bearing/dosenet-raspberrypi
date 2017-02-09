@@ -77,7 +77,7 @@ class Rt_Waterfall_D3S(object):
         Call fix_array in this method
         """
         if self.first:
-            self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
+            self.image = np.zeros((1, self.resolution),dtype=float)
             self.first = False
             temp = self.fix_array(self.manager.wqueue1.pop())
             self.image[j, :] = np.ndarray.flatten(temp)
