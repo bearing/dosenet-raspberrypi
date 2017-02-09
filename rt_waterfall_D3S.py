@@ -72,12 +72,11 @@ class Rt_Waterfall_D3S(object):
         """
         self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
         for j in range(self.queuelength):
-            while self.manager.wqueue1:
-                i = 0
-                temp = self.fix_array(self.manager.wqueue1.pop())
-                while i < self.resolution:
-                    self.image[j][i] = temp[i]
-                    i += 1
+            i = 0
+            temp = self.fix_array(self.manager.wqueue1.pop())
+            while i < self.resolution:
+                self.image[j][i] = temp[i]
+                i += 1
       
     def waterfall_graph(self, spectra):
         """
