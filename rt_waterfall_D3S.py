@@ -71,7 +71,7 @@ class Rt_Waterfall_D3S(object):
         Call fix_array in this method
         """
         self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
-        for j in range(self.queuelength):
+        for j in xrange(self.queuelength):
             i = 0
             temp = self.fix_array(self.manager.wqueue1.pop())
             while i < self.resolution:
