@@ -62,11 +62,6 @@ class Rt_Waterfall_D3S(object):
         Used to format arrays for the waterfall plot.
         Called inside make_image.
         """
-        #new_array = np.zeros((self.resolution))
-        #i = 0
-        #while i < self.resolution:
-            #new_array[i] = array[i]
-            #i += 1
         new_array = array.copy()[:256]
         return new_array
       
@@ -76,14 +71,12 @@ class Rt_Waterfall_D3S(object):
         Call fix_array in this method
         """
         self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
-        j = 0
-        while j < self.queuelength:
+        while self.manager.wqueue1:
             i = 0
             temp = self.fix_array(self.manager.wqueue1.pop())
             while i < self.resolution:
                 self.image[j][i] = temp[i]
                 i += 1
-            j+=1
       
     def waterfall_graph(self, spectra):
         """
