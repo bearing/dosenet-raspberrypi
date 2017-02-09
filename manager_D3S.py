@@ -142,7 +142,6 @@ class Manager_D3S(object):
                 manager=self, 
                 verbosity=self.v)
             self.wqueue1 = deque('')
-            self.wqueue2 = deque('')
 
     def z_flag(self):
         """
