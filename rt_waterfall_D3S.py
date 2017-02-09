@@ -29,6 +29,8 @@ class Rt_Waterfall_D3S(object):
         self.queuelength = None
         self.image = None
         self.resolution = resolution
+        
+        self.first = True
     
     def get_data(self, spectra):
         '''
@@ -37,10 +39,14 @@ class Rt_Waterfall_D3S(object):
         Call rebin spectra in this method.
         '''
         new_spectra = self.rebin(spectra)
-        self.manager.wqueue2.append(new_spectra)
-        self.queuelength = len(self.manager.wqueue2)
-        for i in self.manager.wqueue2:
-            self.manager.wqueue1.append(i)
+        self.manager.wqueue1.append(new_spectra)
+        
+        
+        #new_spectra = self.rebin(spectra)
+        #self.manager.wqueue2.append(new_spectra)
+        #self.queuelength = len(self.manager.wqueue2)
+        #for i in self.manager.wqueue2:
+            #self.manager.wqueue1.append(i)
    
     def rebin(self, data, n=4):
         """
@@ -70,11 +76,18 @@ class Rt_Waterfall_D3S(object):
         Prepares an array for the waterfall plot
         Call fix_array in this method
         """
-        self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
-        for j in xrange(self.queuelength):
-            i = 0
+        if self.first:
+            self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
+            self.first = False
             temp = self.fix_array(self.manager.wqueue1.pop())
             self.image[j, :] = np.ndarray.flatten(temp)
+        else:
+            temp = self.fix_array(self.manager.wqueue1.pop())
+            np.concatenate((temp, self.image), axis=0)
+        #for j in xrange(self.queuelength):
+        #i = 0
+        #temp = self.fix_array(self.manager.wqueue1.pop())
+        #self.image[j, :] = np.ndarray.flatten(temp)
       
     def waterfall_graph(self, spectra):
         """
