@@ -26,7 +26,6 @@ class Rt_Waterfall_D3S(object):
         
         self.interval = manager.interval
         
-        self.queuelength = None
         self.image = None
         self.resolution = resolution
         
@@ -40,13 +39,6 @@ class Rt_Waterfall_D3S(object):
         '''
         new_spectra = self.rebin(spectra)
         self.manager.wqueue1.append(new_spectra)
-        
-        
-        #new_spectra = self.rebin(spectra)
-        #self.manager.wqueue2.append(new_spectra)
-        #self.queuelength = len(self.manager.wqueue2)
-        #for i in self.manager.wqueue2:
-            #self.manager.wqueue1.append(i)
    
     def rebin(self, data, n=4):
         """
@@ -68,7 +60,7 @@ class Rt_Waterfall_D3S(object):
         Used to format arrays for the waterfall plot.
         Called inside make_image.
         """
-        new_array = array.copy()[:256]
+        new_array = array.copy()[:self.resolution]
         return new_array
       
     def make_image(self):
@@ -83,13 +75,7 @@ class Rt_Waterfall_D3S(object):
             self.image[0, :] = np.ndarray.flatten(temp)
         else:
             temp = self.fix_array(self.manager.wqueue1.pop())
-            print(np.shape(temp))
-            print(np.shape(self.image))
             self.image = np.concatenate((np.transpose(temp), self.image), axis=0)
-        #for j in xrange(self.queuelength):
-        #i = 0
-        #temp = self.fix_array(self.manager.wqueue1.pop())
-        #self.image[j, :] = np.ndarray.flatten(temp)
       
     def waterfall_graph(self, spectra):
         """
