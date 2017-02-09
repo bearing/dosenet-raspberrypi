@@ -13,6 +13,7 @@ class Rt_Waterfall_D3S(object):
                  manager=None, 
                  verbosity=1,
                  logfile=None,
+                 resolution=256
                 ):
         
         self.v = verbosity
@@ -27,6 +28,7 @@ class Rt_Waterfall_D3S(object):
         
         self.queuelength = None
         self.image = None
+        self.resolution = resolution
     
     def get_data(self, spectra):
         '''
@@ -45,7 +47,7 @@ class Rt_Waterfall_D3S(object):
         Rebins the array. n is the divisor. Rebin the data in the grab_data method.
         """
         a = len(data)/n
-        new_data = np.zeros((256, 1))
+        new_data = np.zeros((self.resolution, 1))
         i = 0
         count = 0
         while i < a:
@@ -60,9 +62,9 @@ class Rt_Waterfall_D3S(object):
         Used to format arrays for the waterfall plot.
         Called inside make_image.
         """
-        new_array = np.zeros((256))
+        new_array = np.zeros((self.resolution))
         i = 0
-        while i < 256:
+        while i < self.resolution:
             new_array[i] = array[i]
             i += 1
         return new_array
@@ -72,12 +74,12 @@ class Rt_Waterfall_D3S(object):
         Prepares an array for the waterfall plot
         Call fix_array in this method
         """
-        self.image = np.zeros((self.queuelength, 256),dtype=float)
+        self.image = np.zeros((self.queuelength, self.resolution),dtype=float)
         j = 0
         while j < self.queuelength:
             i = 0
             temp = self.fix_array(self.manager.wqueue1.pop())
-            while i < 256:
+            while i < self.resolution:
                 self.image[j][i] = temp[i]
                 i += 1
             j+=1
