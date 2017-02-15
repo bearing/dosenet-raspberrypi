@@ -38,7 +38,7 @@ class Rt_Waterfall_D3S(object):
         Call rebin spectra in this method.
         '''
         new_spectra = self.rebin(spectra)
-        self.manager.wqueue1.append(new_spectra)
+        self.manager.wqueue.append(new_spectra)
    
     def rebin(self, data, n=4):
         """
@@ -71,10 +71,10 @@ class Rt_Waterfall_D3S(object):
         if self.first:
             self.image = np.zeros((1, self.resolution),dtype=float)
             self.first = False
-            temp = self.fix_array(self.manager.wqueue1.pop())
+            temp = self.fix_array(self.manager.wqueue.pop())
             self.image[0, :] = np.ndarray.flatten(temp)
         else:
-            temp = self.fix_array(self.manager.wqueue1.pop())
+            temp = self.fix_array(self.manager.wqueue.pop())
             self.image = np.concatenate((np.transpose(temp), self.image), axis=0)
       
     def waterfall_graph(self, spectra):
