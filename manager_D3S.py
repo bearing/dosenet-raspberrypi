@@ -141,7 +141,7 @@ class Manager_D3S(object):
             self.rt_waterfall = Rt_Waterfall_D3S(
                 manager=self, 
                 verbosity=self.v)
-            self.wqueue1 = deque('')
+            self.wqueue = []
 
     def z_flag(self):
         """
@@ -328,7 +328,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-                                
+
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
@@ -382,7 +382,7 @@ class Manager_D3S(object):
             self.rt_waterfall.plot(spectra)
         self.data_handler.main(
             self.datalog, self.calibrationlog, spectra, this_start, this_end)
-    
+
     def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
