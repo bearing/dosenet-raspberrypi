@@ -141,7 +141,7 @@ class Manager_D3S(object):
             self.rt_waterfall = Rt_Waterfall_D3S(
                 manager=self, 
                 verbosity=self.v)
-            self.wqueue1 = deque('')
+            self.wqueue = []
 
     def z_flag(self):
         """
