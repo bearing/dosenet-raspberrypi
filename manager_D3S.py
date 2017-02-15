@@ -380,8 +380,9 @@ class Manager_D3S(object):
         """
         if self.waterfall:
             self.rt_waterfall.plot(spectra)
-        self.data_handler.main(
-            self.datalog, self.calibrationlog, spectra, this_start, this_end)
+        else:
+            self.data_handler.main(
+                self.datalog, self.calibrationlog, spectra, this_start, this_end)
 
     def takedown(self):
         """
