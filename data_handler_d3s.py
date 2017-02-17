@@ -106,6 +106,7 @@ class Data_Handler_D3S(object):
             with open(path, 'r') as f:
                 data = f.read()
             #data = ast.literal_eval(data)
+            print(len(data))
             for i in data:
                 self.queue.append([i[0], i[1]])
             os.remove(path)
