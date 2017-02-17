@@ -105,8 +105,8 @@ class Data_Handler_D3S(object):
             self.vprint(2, "Flushing backlog file to memory queue")
             with open(path, 'r') as f:
                 data = f.read()
-            import ipdb
-            ipdb.set_trace()
+            import pdb
+            pdb.set_trace()
             data = ast.literal_eval(data)
             for i in data:
                 self.queue.append([i[0], i[1]])
