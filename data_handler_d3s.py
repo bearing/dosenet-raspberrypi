@@ -108,7 +108,6 @@ class Data_Handler_D3S(object):
             data = ast.literal_eval(data)
             for i in data:
                 self.queue.append([i[0], i[1]])
-            print(self.queue)
             os.remove(path)
 
     def main(self, datalog, calibrationlog, spectra, this_start, this_end):
