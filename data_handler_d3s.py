@@ -62,8 +62,8 @@ class Data_Handler_D3S(object):
         """
         Network is not up
         """
-        if self.led:
-            self.led.start_blink(interval=self.blink_period_s)
+      #  if self.led:
+      #      self.led.start_blink(interval=self.blink_period_s)
         self.send_to_queue(spectra)
         self.vprint(1, "Network down, saving to queue in memory")
 
@@ -86,10 +86,13 @@ class Data_Handler_D3S(object):
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
         if self.queue:
             self.vprint(1, "Flushing memory queue to backlog file")
-            with open(path, 'a') as f:
-                while self.queue:
-                    f.write('{0}, '.format(self.queue.popleft()))
-
+            temp = []
+            while self.queue: 
+                temp.append(self.queue.popleft())
+            with open(path, "a", newline='') as f: # might only work for python 3? 
+                writer = csv.writer(f)
+                writer.writerows(temp)
+                
     def send_to_queue(self, spectra):
         """
         Adds the time and spectra to the deque object.
@@ -103,13 +106,17 @@ class Data_Handler_D3S(object):
         """
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
-            with open(path, 'r') as f:
-                data = f.read()
-            data = eval(data)            #ast.literal_eval(data)
-            for i in data:
-                self.queue.append([i[0], i[1]])
-            print(self.queue)
-            os.remove(path)
+            
+        with open("output.csv", 'r') as f:
+            reader = csv.reader(f)
+            lst = list(reader)
+        for i in lst:
+            timestring = i[0]
+            spectra = i[1]
+            timestring = ast.literal_eval(timestring)
+            spectra = ast.literal_eval(spectra)
+            self.queue.append([timestring, spectra])
+        os.remove(path)
 
     def main(self, datalog, calibrationlog, spectra, this_start, this_end):
         """
