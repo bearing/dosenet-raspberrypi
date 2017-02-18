@@ -107,16 +107,16 @@ class Data_Handler_D3S(object):
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
             
-        with open("output.csv", 'r') as f:
-            reader = csv.reader(f)
-            lst = list(reader)
-        for i in lst:
-            timestring = i[0]
-            spectra = i[1]
-            timestring = ast.literal_eval(timestring)
-            spectra = ast.literal_eval(spectra)
-            self.queue.append([timestring, spectra])
-        os.remove(path)
+            with open(path, 'r') as f:
+                reader = csv.reader(f)
+                lst = list(reader)
+            for i in lst:
+                timestring = i[0]
+                spectra = i[1]
+                timestring = ast.literal_eval(timestring)
+                spectra = ast.literal_eval(spectra)
+                self.queue.append([timestring, spectra])
+            os.remove(path)
 
     def main(self, datalog, calibrationlog, spectra, this_start, this_end):
         """
