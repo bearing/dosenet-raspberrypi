@@ -8,6 +8,7 @@ import time
 import ast
 import os
 import errno
+import csv
 
 SPECTRA_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{total_counts}} {reset}' +
