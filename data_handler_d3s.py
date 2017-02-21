@@ -78,7 +78,7 @@ class Data_Handler_D3S(object):
             self.led.on()
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
         if self.queue:
-            print(len(queue))
+            print(len(self.queue))
             self.vprint(1, "Flushing memory queue to server")
             while self.queue:
                 trash = self.queue.popleft()
