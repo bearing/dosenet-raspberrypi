@@ -75,7 +75,7 @@ class Data_Handler_D3S(object):
         #if self.led:
             #if self.led.blinker:
                 #self.led.stop_blink()
-            s#elf.led.on()
+            #self.led.on()
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
         print(self.queue)
         if self.queue:
