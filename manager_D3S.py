@@ -1,6 +1,6 @@
-from globalvalues import RPI
-if RPI:
-    import RPi.GPIO as GPIO
+#from globalvalues import RPI
+#if RPI:
+    #import RPi.GPIO as GPIO
 
 import time
 import traceback
@@ -71,8 +71,8 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 network_LED_pin=NETWORK_LED_PIN,
-                 power_LED_pin=POWER_LED_PIN,
+                 '''network_LED_pin=NETWORK_LED_PIN,'''
+                 '''power_LED_pin=POWER_LED_PIN,'''
                  waterfall=False,
                  ):
 
@@ -111,7 +111,7 @@ class Manager_D3S(object):
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
         self.waterfall = waterfall
-
+'''
         if RPI:
             self.power_LED = LED(power_LED_pin)
             self.network_LED = LED(network_LED_pin)
@@ -121,12 +121,12 @@ class Manager_D3S(object):
         else:
             self.power_LED = None
             self.network_LED = None
-
+'''
         self.data_handler = Data_Handler_D3S(
             manager=self,
             verbosity=self.v,
             logfile=self.logfile,
-            network_led=self.network_LED)
+            '''network_led=self.network_LED''')
         self.sender = ServerSender(
             manager=self,
             mode=sender_mode,
