@@ -89,7 +89,7 @@ class Data_Handler_D3S(object):
             temp = []
             while self.queue: 
                 temp.append(self.queue.popleft())
-            with open(path, "ab", newline='') as f: # might only work for python 3? 
+            with open(path, "ab") as f: # might only work for python 3? 
                 writer = csv.writer(f)
                 writer.writerows(temp)
                 
