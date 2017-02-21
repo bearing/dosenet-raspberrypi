@@ -72,11 +72,12 @@ class Data_Handler_D3S(object):
         """
         Normal send
         """
-        if self.led:
-            if self.led.blinker:
-                self.led.stop_blink()
-            self.led.on()
+        #if self.led:
+            #if self.led.blinker:
+                #self.led.stop_blink()
+            s#elf.led.on()
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
+        print(self.queue)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
             while self.queue:
