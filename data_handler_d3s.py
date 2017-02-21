@@ -110,6 +110,11 @@ class Data_Handler_D3S(object):
                 timestring = ast.literal_eval(timestring)
                 spectra = ast.literal_eval(spectra)
                 self.queue.append([timestring, spectra])
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                self.queue.append([i[0], i[1]])
             os.remove(path)
 
     def main(self, datalog, calibrationlog, spectra, this_start, this_end):

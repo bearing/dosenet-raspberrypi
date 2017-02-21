@@ -10,6 +10,8 @@ import ast
 import os
 import errno
 
+FLUSH_PAUSE_S = 2
+
 CPM_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{counts}} cts{reset}' +
     ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
@@ -91,6 +93,7 @@ class Data_Handler(object):
                 self.vprint(1, "Flushing memory queue to server")
                 no_error_yet = True
             while self.queue and no_error_yet:
+                time.sleep(FLUSH_PAUSE_S)
                 trash = self.queue.popleft()
                 try:
                     self.manager.sender.send_cpm_new(
