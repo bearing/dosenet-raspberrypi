@@ -112,6 +112,7 @@ class Data_Handler_D3S(object):
                 reader = csv.reader(f)
                 lst = list(reader)
             for i in lst:
+                print(i)
                 timestring = i[0]
                 spectra = i[1]
                 timestring = ast.literal_eval(timestring)
