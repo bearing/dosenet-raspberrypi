@@ -9,7 +9,7 @@ from Crypto.Cipher import AES
 from collections import deque
 import matplotlib.pyplot as plt
 
-from auxiliaries import Config, PublicKey, LED, set_verbosity
+from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
@@ -370,9 +370,6 @@ class Manager_D3S(object):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
-        self.power_LED.off()
-        GPIO.cleanup()
-
         self.running = False
         self.data_handler.send_all_to_backlog()
 
