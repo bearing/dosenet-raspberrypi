@@ -67,11 +67,11 @@ class Data_Handler_D3S(object):
         Normal send
         """
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
-        print(self.queue)
+        #print(self.queue)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
             while self.queue:
-                print(len(self.queue))
+                #print(len(self.queue))
                 trash = self.queue.popleft()
                 self.manager.sender.send_spectra_new_D3S(
                     trash[0], trash[1])
@@ -104,7 +104,7 @@ class Data_Handler_D3S(object):
                 reader = csv.reader(f)
                 lst = list(reader)
             for i in lst:
-                print(i)
+                #print(i)
                 timestring = i[0]
                 spectra = i[1]
                 timestring = ast.literal_eval(timestring)
