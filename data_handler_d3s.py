@@ -89,7 +89,7 @@ class Data_Handler_D3S(object):
             temp = []
             while self.queue: 
                 temp.append(self.queue.popleft())
-            with open(path, "a", newline='') as f: # might only work for python 3? 
+            with open(path, "ab", newline='') as f: # might only work for python 3? 
                 writer = csv.writer(f)
                 writer.writerows(temp)
                 
@@ -107,7 +107,7 @@ class Data_Handler_D3S(object):
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
             
-            with open(path, 'r') as f:
+            with open(path, 'rb') as f:
                 reader = csv.reader(f)
                 lst = list(reader)
             for i in lst:
