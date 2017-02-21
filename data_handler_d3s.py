@@ -24,7 +24,7 @@ class Data_Handler_D3S(object):
                  manager=None,
                  verbosity=1,
                  logfile=None,
-                 network_led=None,
+                 '''network_led=None,'''
                  ):
 
         self.v = verbosity
@@ -36,8 +36,8 @@ class Data_Handler_D3S(object):
         self.manager = manager
         self.queue = deque('')
 
-        self.blink_period_s = 1.5
-        self.led = network_led
+           #elf.blink_period_s = 1.5
+           #elf.led = network_led
 
     def test_send(self, spectra):
         """
