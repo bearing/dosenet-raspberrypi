@@ -30,7 +30,7 @@ case "$1" in
     sudo pkill -SIGTERM -f manager_D3S.py
     ;;
  *)
-    echo "Usage: /etc/init.d/dosenet {start|stop}"
+    echo "Usage: /etc/init.d/D3S {start|stop}"
     exit 1
     ;;
 esac
