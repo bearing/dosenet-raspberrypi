@@ -134,6 +134,8 @@ class Manager(object):
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
+        
+        os.system('./D3S.sh start')
 
     def init_log(self):
         """
