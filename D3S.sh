@@ -1,3 +1,15 @@
+#! /bin/sh
+# /etc/init.d/D3S.sh
+### BEGIN INIT INFO
+# Provides: D3S
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# X-Interactive: false
+# Short-Description: DoseNet - sends data for the DoseNet project
+### END INIT INFO
+
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 LOGTAG=dosenet
