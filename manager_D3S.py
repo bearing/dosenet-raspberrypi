@@ -413,7 +413,8 @@ class Manager_D3S(object):
         return mgr
 
 if __name__ == '__main__':
-    time.sleep(60)
+    with open(mgr.logfile, 'a') as f:
+        f.write('hi')
     mgr = Manager_D3S.from_argparse()
     try:
         mgr.run()
