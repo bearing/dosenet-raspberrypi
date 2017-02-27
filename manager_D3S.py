@@ -397,7 +397,7 @@ class Manager_D3S(object):
         parser.add_argument(
             '--log-bytes', '-b', dest='log_bytes', default=False,
             action='store_true')
-        parser.add_argument('--log', '-l', action='store_true', default=False)
+        parser.add_argument('--log', '-l', action='store_true', default=True)
         parser.add_argument('--logfile', '-f', type=str, default=DEFAULT_LOGFILE_D3S)
         parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
