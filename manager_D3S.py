@@ -8,7 +8,6 @@ import sys
 from Crypto.Cipher import AES
 from collections import deque
 import matplotlib.pyplot as plt
-import time
 
 from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
@@ -422,6 +421,6 @@ if __name__ == '__main__':
             # print exception info to logfile
             with open(mgr.logfile, 'a') as f:
                 traceback.print_exc(15, f)
-        time.sleep()
+        time.sleep(300)
         # regardless, re-raise the error which will print to stderr
         raise
