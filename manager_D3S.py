@@ -63,8 +63,8 @@ class Manager_D3S(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
-                 logfile=None,
-                 log=False,
+                 logfile=DEFAULT_LOGFILE_D3S,
+                 log=True,
                  running=False,
                  waterfall=False,
                  ):
