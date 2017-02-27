@@ -188,7 +188,7 @@ class Manager_D3S(object):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
-
+        print('checking log')
         # resolve logging defaults
         if log and logfile is None:
             # use default file if logging is enabled
@@ -199,6 +199,7 @@ class Manager_D3S(object):
             log = True
         if log:
             self.logfile = logfile
+            print('logfie')
         else:
             self.logfile = None
 
