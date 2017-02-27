@@ -413,9 +413,9 @@ class Manager_D3S(object):
         return mgr
 
 if __name__ == '__main__':
+    time.sleep(60)
     mgr = Manager_D3S.from_argparse()
     try:
-        time.sleep(20)
         mgr.run()
     except:
         if mgr.logfile:
