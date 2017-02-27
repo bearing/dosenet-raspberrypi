@@ -415,12 +415,12 @@ class Manager_D3S(object):
 if __name__ == '__main__':
     mgr = Manager_D3S.from_argparse()
     try:
+        time.sleep(300)
         mgr.run()
     except:
         if mgr.logfile:
             # print exception info to logfile
             with open(mgr.logfile, 'a') as f:
                 traceback.print_exc(15, f)
-        time.sleep(300)
         # regardless, re-raise the error which will print to stderr
         raise
