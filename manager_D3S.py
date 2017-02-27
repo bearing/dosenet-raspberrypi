@@ -411,11 +411,10 @@ class Manager_D3S(object):
         mgr = Manager_D3S(**arg_dict)
 
         return mgr
-
+with open( '/home/pi/debug.log_D3S', 'a') as f:
+    f.write('hi')
 if __name__ == '__main__':
     time.sleep(60)
-    with open( '/home/pi/debug.log_D3S', 'a') as f:
-        f.write('hi')
     mgr = Manager_D3S.from_argparse()
     try:
         mgr.run()
