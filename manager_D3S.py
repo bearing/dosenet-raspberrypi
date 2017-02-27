@@ -63,7 +63,7 @@ class Manager_D3S(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  sender_mode=DEFAULT_SENDER_MODE,
-                 logfile=DEFAULT_LOGFILE_D3S,
+                 logfile=None,
                  log=True,
                  running=False,
                  waterfall=False,
@@ -398,7 +398,7 @@ class Manager_D3S(object):
             '--log-bytes', '-b', dest='log_bytes', default=False,
             action='store_true')
         parser.add_argument('--log', '-l', action='store_true', default=True)
-        parser.add_argument('--logfile', '-f', type=str, default=DEFAULT_LOGFILE_D3S)
+        parser.add_argument('--logfile', '-f', type=str, default=None)
         parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
