@@ -19,7 +19,6 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
 from data_handler import Data_Handler
-from manager_D3S import Manager_D3S
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -129,9 +128,7 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
-        self.manager_d3s = Manager_D3S(
-            manager=self,)
-
+        
         self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
