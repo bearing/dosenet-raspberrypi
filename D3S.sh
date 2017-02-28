@@ -25,6 +25,7 @@ case "$1" in
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager_D3S.py
     logger --stderr --id --tag $LOGTAG "Ran D3S script $?"
+    python --version
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping D3S script"
