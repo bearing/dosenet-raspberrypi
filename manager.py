@@ -298,10 +298,6 @@ class Manager(object):
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
-        print('starting d3s')
-        p2 = multiprocessing.Process(target=self.d3s.run, args=())
-        p2.start()
-        print('d3s ran')
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
             1, ('Manager is starting to run at {}' +
