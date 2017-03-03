@@ -534,6 +534,7 @@ if __name__ == '__main__':
     p2 = multiprocessing.Process(target=mgr2.run, args=())
     try:
         p1.start()
+        p2.start()
     except:
         if mgr.logfile:
             # print exception info to logfile
