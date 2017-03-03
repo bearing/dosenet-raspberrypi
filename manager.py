@@ -298,6 +298,7 @@ class Manager(object):
         t1 = threading.Thread(target=self.d3s.run)
         print('starting d3s')
         t1.start()
+        tl.join()
         print('d3s ran')
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
@@ -529,6 +530,7 @@ if __name__ == '__main__':
     t2 = threading.Thread(target=mgr.run)
     try:
         t2.start()
+        t2.join()
     except:
         if mgr.logfile:
             # print exception info to logfile
