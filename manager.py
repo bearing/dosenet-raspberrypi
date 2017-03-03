@@ -137,7 +137,7 @@ class Manager(object):
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
-        self.d3s.run()
+        #self.d3s.run()
 
     def init_log(self):
         """
@@ -294,7 +294,9 @@ class Manager(object):
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
-
+        print('starting d3s')
+        self.d3s.run()
+        print('d3s ran')
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
             1, ('Manager is starting to run at {}' +
