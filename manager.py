@@ -129,6 +129,8 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
+        self.d3s = Manager_D3S(
+            manager=self,)
         
         self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
