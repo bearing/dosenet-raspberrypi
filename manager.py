@@ -294,8 +294,9 @@ class Manager(object):
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
+        t = threading.Thread(target=self.d3s.run)
         print('starting d3s')
-        self.d3s.run()
+        t.start()
         print('d3s ran')
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
