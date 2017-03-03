@@ -9,7 +9,8 @@ import sys
 import os
 import subprocess
 import socket
-import threading as thread
+import threading
+import thread
 
 from globalvalues import RPI
 if RPI:
