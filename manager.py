@@ -530,7 +530,6 @@ if __name__ == '__main__':
     t2 = threading.Thread(target=mgr.run)
     try:
         t2.start()
-        t2.join()
     except:
         if mgr.logfile:
             # print exception info to logfile
