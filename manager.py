@@ -529,7 +529,7 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
-    mgr2 = manager_D3s.Manager_D3S.from_argparse()
+    mgr2 = Manager_D3S.from_argparse()
     p1 = multiprocessing.Process(target=mgr.run, args=())
     p2 = multiprocessing.Process(target=mgr2.run, args=())
     try:
