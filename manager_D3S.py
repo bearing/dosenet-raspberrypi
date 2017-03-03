@@ -187,7 +187,6 @@ class Manager_D3S(object):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
-        print('checking log')
         # resolve logging defaults
         if log and logfile is None:
             # use default file if logging is enabled
@@ -198,7 +197,6 @@ class Manager_D3S(object):
             log = True
         if log:
             self.logfile = logfile
-            print('logfie')
         else:
             self.logfile = None
 
@@ -398,7 +396,7 @@ class Manager_D3S(object):
         parser.add_argument(
             '--log-bytes', '-b', dest='log_bytes', default=False,
             action='store_true')
-        parser.add_argument('--log', '-l', action='store_true', default=True)
+        parser.add_argument('--log', '-l', action='store_true', default=False)
         parser.add_argument('--logfile', '-f', type=str, default=None)
         parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
         parser.add_argument('--calibrationlog', '-y', default=None)
