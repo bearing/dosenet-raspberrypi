@@ -131,8 +131,10 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
+        '''
         self.d3s = Manager_D3S(
             manager=self,)
+        '''
         
         self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
@@ -527,7 +529,9 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
+    mgr2 = manager_D3s.Manager_D3S.from_argparse()
     p1 = multiprocessing.Process(target=mgr.run, args=())
+    p2 = multiprocessing.Process(target=mgr2.run, args=())
     try:
         p1.start()
     except:
