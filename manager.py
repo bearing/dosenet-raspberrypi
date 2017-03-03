@@ -137,6 +137,7 @@ class Manager(object):
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
+        self.d3s.run()
 
     def init_log(self):
         """
