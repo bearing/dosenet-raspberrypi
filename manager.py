@@ -295,10 +295,11 @@ class Manager(object):
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
-        t1 = threading.Thread(target=self.d3s.run)
+        #t1 = threading.Thread(target=self.d3s.run)
         print('starting d3s')
-        t1.start()
-        t1.join()
+        #t1.start()
+        #t1.join()
+        thread.start_new_thread(self.d3s.run, ())
         print('d3s ran')
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
@@ -527,9 +528,9 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
-    t2 = threading.Thread(target=mgr.run)
+    #t2 = threading.Thread(target=mgr.run)
     try:
-        t2.start()
+        thread.start_new_thread(mgr.run, ())
     except:
         if mgr.logfile:
             # print exception info to logfile
