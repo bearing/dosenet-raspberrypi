@@ -143,7 +143,7 @@ class Sensor(object):
         #   just as long as there's no memory issue.
 
         n_counts = np.sum((counts > start_time) & (counts < end_time))
-
+        print('Ncounts =  {0}, start time = {1}, end time = {2}'.format(n_counts, start_time, end_time))
         err_counts = np.sqrt(n_counts)
         dt = end_time - start_time
         cps = float(n_counts) / dt
