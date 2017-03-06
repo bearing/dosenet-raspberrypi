@@ -528,7 +528,7 @@ if __name__ == '__main__':
     #mgr2 = Manager_D3S.from_argparse()
     #p1 = multiprocessing.Process(target=mgr.run, args=())
     #p2 = multiprocessing.Process(target=mgr2.run, args=())
-    p1 = multiprocessing.Process(target=os.system, args = ('{}'.format('./D3S.sh start'))
+    p1 = multiprocessing.Process(target=os.system, args = ('{}'.format('./D3S.sh start')))
     try:
         #p1.start()
         #p2.start()
