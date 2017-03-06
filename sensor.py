@@ -113,7 +113,8 @@ class Sensor(object):
             # add to queue. (usually takes ~10 us)
             now = time.time()
             self.counts.append(now)
-
+            print(counts)
+            
             # display(s)
             self.vprint(1, '\tCount at {}'.format(datetime_from_epoch(now)))
             if self.LED:
