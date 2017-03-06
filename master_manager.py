@@ -11,7 +11,7 @@ def start_D3S():
     
 if __name__ == '__main__':
     p = multiprocessing.Process(target=start_D3S, args=())
-    t = multiprocessing.Process(target=start.dosenet, args=())
+    t = multiprocessing.Process(target=start_dosenet, args=())
     try:
         print('starting')
         p.start()
