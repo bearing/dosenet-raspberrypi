@@ -113,7 +113,7 @@ class Sensor(object):
             # add to queue. (usually takes ~10 us)
             now = time.time()
             self.counts.append(now)
-            print(counts)
+            print(self.counts)
             
             # display(s)
             self.vprint(1, '\tCount at {}'.format(datetime_from_epoch(now)))
@@ -160,7 +160,8 @@ class Sensor(object):
                 self.counts.popleft()
         except IndexError:      # empty queue
             pass
-
+        print(self.counts)
+        
     def reset_GPIO(self):
         """
         Older code does this every loop. I don't know whether it's needed.
