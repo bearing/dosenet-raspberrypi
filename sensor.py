@@ -137,14 +137,12 @@ class Sensor(object):
         """Measure the CPM between start_time and end_time."""
 
         counts = np.array(self.get_all_counts())
-        print(counts)
         # np.array(deque) makes a copy of the data.
         # there could be more optimal ways to pass around the data,
         #   but it only happens every ~5 minutes anyway.
         #   just as long as there's no memory issue.
 
         n_counts = np.sum((counts > start_time) & (counts < end_time))
-        print('Ncounts =  {0}, start time = {1}, end time = {2}'.format(n_counts, start_time, end_time))
         err_counts = np.sqrt(n_counts)
         dt = end_time - start_time
         cps = float(n_counts) / dt
@@ -156,7 +154,7 @@ class Sensor(object):
 
     def check_accumulation(self):
         """Remove counts that are older than accum_time"""
-
+        print(self.counts)
         try:
             while self.counts[0] < time.time() - self.accum_time:
                 self.counts.popleft()
