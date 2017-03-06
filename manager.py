@@ -338,8 +338,8 @@ class Manager(object):
                     self.vprint(1, 'Reboot: taking down Manager')
                     self.stop()
                     self.takedown()
-                    os.system('sudo {0} {1}'.format(
-                        REBOOT_SCRIPT, self.branch))
+                    #os.system('sudo {0} {1}'.format(
+                        #REBOOT_SCRIPT, self.branch))
                 this_start, this_end = self.get_interval(this_end)
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
