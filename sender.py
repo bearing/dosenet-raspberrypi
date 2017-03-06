@@ -289,6 +289,7 @@ class ServerSender(object):
                 if self.manager:
                     self.manager.branch = branch
                     self.manager.quit_after_interval = flag
+                    print('received')
                 else:
                     self.vprint(
                         1, 'No manager, not saving branch and updateflag')
