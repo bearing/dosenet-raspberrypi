@@ -67,10 +67,8 @@ class Manager_D3S(object):
                  log=False,
                  running=False,
                  waterfall=False,
-                 manager = None
                  ):
 
-        self.manager = manager
         self.running = running
 
         self.total = None
