@@ -10,6 +10,10 @@ def start_D3S():
     
     
 if __name__ == '__main__':
+    os.system('sudo service ntp stop')
+    os.system('sudo timeout 60s ntpd -gq')
+    os.system('sudo service ntp start')
+
     p = multiprocessing.Process(target=start_D3S, args=())
     t = multiprocessing.Process(target=start_dosenet, args=())
     try:
