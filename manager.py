@@ -528,12 +528,13 @@ class SleepError(Exception):
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
     #p = multiprocessing.Process(target=start_D3S, args=())
-    t = multiprocessing.Process(target=mgr.run, args=())
+    #t = multiprocessing.Process(target=mgr.run, args=())
     try:
-        print('starting')
+        #print('starting')
         #p.start()
-        t.start()
-        print('started')
+        #t.start()
+        #print('started')
+        mgr.run()
     except:
         if mgr.logfile:
             # print exception info to logfile
