@@ -537,7 +537,7 @@ if __name__ == '__main__':
         print('starting')
         #p1.start()
         #p2.start()
-        mgr.run()
+        #mgr.run()
         p.start()
         t.start()
         print('started')
