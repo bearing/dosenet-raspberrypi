@@ -22,10 +22,6 @@ PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
-    logger --stderr --id --tag $LOGTAG "Waiting for NTP to be synced..."
-    sudo service ntp stop
-    sudo timeout 60s ntpd -gq
-    sudo service ntp start
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo screen -dm python $DOSENET/manager.py
