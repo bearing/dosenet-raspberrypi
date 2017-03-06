@@ -113,7 +113,6 @@ class Sensor(object):
             # add to queue. (usually takes ~10 us)
             now = time.time()
             self.counts.append(now)
-            print(self.counts)
             
             # display(s)
             self.vprint(1, '\tCount at {}'.format(datetime_from_epoch(now)))
@@ -135,7 +134,6 @@ class Sensor(object):
 
     def get_cpm(self, start_time, end_time):
         """Measure the CPM between start_time and end_time."""
-        print('getting cpm', self.counts)
         counts = np.array(self.get_all_counts())
         # np.array(deque) makes a copy of the data.
         # there could be more optimal ways to pass around the data,
@@ -154,13 +152,11 @@ class Sensor(object):
 
     def check_accumulation(self):
         """Remove counts that are older than accum_time"""
-        print(self.counts)
         try:
             while self.counts[0] < time.time() - self.accum_time:
                 self.counts.popleft()
         except IndexError:      # empty queue
             pass
-        print(self.counts)
         
     def reset_GPIO(self):
         """
