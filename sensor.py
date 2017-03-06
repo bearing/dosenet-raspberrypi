@@ -137,6 +137,7 @@ class Sensor(object):
         """Measure the CPM between start_time and end_time."""
 
         counts = np.array(self.get_all_counts())
+        print(counts)
         # np.array(deque) makes a copy of the data.
         # there could be more optimal ways to pass around the data,
         #   but it only happens every ~5 minutes anyway.
