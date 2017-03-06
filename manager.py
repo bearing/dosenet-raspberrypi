@@ -530,6 +530,7 @@ if __name__ == '__main__':
     #mgr2 = Manager_D3S.from_argparse()
     #p1 = multiprocessing.Process(target=mgr.run, args=())
     p = multiprocessing.Process(target=start_D3S, args=())
+    t = multiprocessing.Process(target=mgr.run, args=())
     #p2 = multiprocessing.Process(target=mgr2.run, args=())
     #p1 = multiprocessing.Process(target=os.system, args = ('{}'.format(./D3S.sh start)))
     try:
@@ -538,6 +539,7 @@ if __name__ == '__main__':
         #p2.start()
         mgr.run()
         p.start()
+        t.start()
         print('started')
         #mgr.run()
         #p1.start()
