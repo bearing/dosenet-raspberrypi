@@ -9,8 +9,6 @@ import sys
 import os
 import subprocess
 import socket
-import threading
-import multiprocessing
 
 from globalvalues import RPI
 if RPI:
@@ -21,7 +19,6 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
 from data_handler import Data_Handler
-from manager_D3S import Manager_D3S
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -50,9 +47,6 @@ def signal_quit_handler(signal, frame):
     mgr.quit_after_interval = True
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
-
-def start_D3S():
-    os.system('./D3S.sh start')
     
 class Manager(object):
     """
@@ -133,17 +127,12 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
-        '''
-        self.d3s = Manager_D3S(
-            manager=self,)
-        '''
         
         self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
 
         self.data_handler.backlog_to_queue()
-        #self.d3s.run()
 
     def init_log(self):
         """
@@ -527,13 +516,7 @@ class SleepError(Exception):
 
 if __name__ == '__main__':
     mgr = Manager.from_argparse()
-    #p = multiprocessing.Process(target=start_D3S, args=())
-    #t = multiprocessing.Process(target=mgr.run, args=())
     try:
-        #print('starting')
-        #p.start()
-        #t.start()
-        #print('started')
         mgr.run()
     except:
         if mgr.logfile:
