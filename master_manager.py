@@ -22,5 +22,8 @@ if __name__ == '__main__':
         p.start()
         t.start()
         print('started')
+        p.join()
+        t.join()
+        print('we can reboot here')
     except:
         pass
