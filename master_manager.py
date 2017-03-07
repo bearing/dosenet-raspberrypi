@@ -4,9 +4,10 @@ import os
 import multiprocessing
 
 def start_dosenet():
-    os.system('./dosenet.sh start')
+    os.system('./home/pi/dosenet-raspberrypi/dosenet.sh start')
+
 def start_D3S():
-    os.system('./D3S.sh start')
+    os.system('./home/pi/dosenet-raspberrypi/D3S.sh start')
     
     
 if __name__ == '__main__':
