@@ -187,6 +187,7 @@ class Manager_D3S(object):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
+
         # resolve logging defaults
         if log and logfile is None:
             # use default file if logging is enabled
