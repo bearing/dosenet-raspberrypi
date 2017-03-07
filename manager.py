@@ -47,7 +47,8 @@ def signal_quit_handler(signal, frame):
     mgr.quit_after_interval = True
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
-    
+
+
 class Manager(object):
     """
     Master object for dosimeter operation.
@@ -127,7 +128,7 @@ class Manager(object):
             port=port,
             verbosity=self.v,
             logfile=self.logfile)
-        
+
         self.init_log()
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
         self.branch = ''
@@ -289,6 +290,7 @@ class Manager(object):
         However, setting self.running = False will stop, as will a
           KeyboardInterrupt.
         """
+
         this_start, this_end = self.get_interval(time.time())
         self.vprint(
             1, ('Manager is starting to run at {}' +
