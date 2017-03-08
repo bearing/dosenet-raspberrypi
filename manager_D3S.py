@@ -7,7 +7,6 @@ import signal
 import sys
 from Crypto.Cipher import AES
 from collections import deque
-import matplotlib.pyplot as plt
 
 from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
