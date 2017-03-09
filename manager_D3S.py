@@ -7,13 +7,11 @@ import signal
 import sys
 from Crypto.Cipher import AES
 from collections import deque
-import matplotlib.pyplot as plt
 
 from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
-from rt_waterfall_D3S import Rt_Waterfall_D3S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -66,7 +64,6 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 waterfall=False,
                  ):
 
         self.running = running
@@ -103,7 +100,6 @@ class Manager_D3S(object):
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
-        self.waterfall = waterfall
 
         self.data_handler = Data_Handler_D3S(
             manager=self,
@@ -118,12 +114,6 @@ class Manager_D3S(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
-        
-        if self.waterfall:
-            self.rt_waterfall = Rt_Waterfall_D3S(
-                manager=self, 
-                verbosity=self.v)
-            self.wqueue = []
 
     def z_flag(self):
         """
@@ -360,11 +350,8 @@ class Manager_D3S(object):
         """
         Get spectra from sensor, display text, send to server.
         """
-        if self.waterfall:
-            self.rt_waterfall.plot(spectra)
-        else:
-            self.data_handler.main(
-                self.datalog, self.calibrationlog, spectra, this_start, this_end)
+        self.data_handler.main(
+            self.datalog, self.calibrationlog, spectra, this_start, this_end)
 
     def takedown(self):
         """
@@ -403,7 +390,6 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        parser.add_argument('--waterfall', '-w', action = 'store_true', default=False)
         
         args = parser.parse_args()
         arg_dict = vars(args)
