@@ -7,17 +7,13 @@
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
 # X-Interactive: false
-# Short-Description: DoseNet - sends data for the DoseNet project
+# Short-Description: DoseNet - sends D3S data for the DoseNet project
 ### END INIT INFO
 
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 LOGTAG=dosenet
 CONFIGDIR=$HOME/config
-LOGTAG=dosenet
-
-CONFIGFILE=$CONFIGDIR/config.csv
-PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
 
 case "$1" in
   start)
