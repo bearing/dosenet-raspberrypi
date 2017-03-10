@@ -9,7 +9,7 @@ case "$1" in
   start)
     echo "Starting pocket Geiger script" > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo python $DOSENET/manager.py >> $LOG 2>&1
+    sudo python $DOSENET/manager.py --logfile "${LOG}"
     echo "Finished pocket Geiger script" >> $LOG
     ;;
   stop)
