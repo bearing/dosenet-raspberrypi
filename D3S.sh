@@ -9,7 +9,7 @@ case "$1" in
   start)
     echo "Starting D3S script" > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo python $DOSENET/manager_D3S.py --logfile $LOG
+    sudo python $DOSENET/manager_D3S.py --logfile $LOG >> $LOG 2>&1
     echo "Finished D3S script" >> $LOG
     ;;
   stop)
