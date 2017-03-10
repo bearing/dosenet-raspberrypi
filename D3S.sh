@@ -1,33 +1,23 @@
 #! /bin/sh
-# /etc/init.d/D3S.sh
-### BEGIN INIT INFO
-# Provides: D3S
-# Required-Start: $all
-# Required-Stop: $all
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
-# X-Interactive: false
-# Short-Description: DoseNet - sends D3S data for the DoseNet project
-### END INIT INFO
 
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-LOGTAG=dosenet
-CONFIGDIR=$HOME/config
+
+LOG=/tmp/d3s_manager.log
 
 case "$1" in
   start)
-    logger --stderr --id --tag $LOGTAG "Starting D3S script"
+    echo "Starting D3S script" > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager_D3S.py
-    logger --stderr --id --tag $LOGTAG "Ran D3S script $?"
+    sudo python $DOSENET/manager_D3S.py >> $LOG 2>&1
+    echo "Finished D3S script" >> $LOG
     ;;
   stop)
-    logger --stderr --id --tag $LOGTAG "Stopping D3S script"
+    echo "Stopping D3S script" >> $LOG
     sudo pkill -SIGTERM -f manager_D3S.py
     ;;
  *)
-    echo "Usage: /etc/init.d/D3S {start|stop}"
+    echo "Usage: /home/pi/dosenet-raspberrypi/D3S.sh {start|stop}"
     exit 1
     ;;
 esac

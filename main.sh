@@ -13,50 +13,23 @@
 # setup paths and check config files
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-CONFIGDIR=$HOME/config
 LOGTAG=dosenet
 
-CONFIGFILE=$CONFIGDIR/config.csv
-PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
-# if either file is missing, in normal mode, let manager.py raise the IOError
+LOG=/tmp/manager.log
 
 case "$1" in
   start)
-    logger --stderr --id --tag $LOGTAG "Waiting for NTP to be synced..."
-    sudo service ntp stop
-    sudo timeout 60s ntpd -gq
-    sudo service ntp start
-    logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
-    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager.py
-    logger --stderr --id --tag $LOGTAG "Starting D3S script"
-    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager_D3S.py
+    logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts"
+    echo "Starting all DoseNet scripts" > $LOG
+    python $DOSENET/master_manager.py >> $LOG 2>&1
     ;;
   stop)
-    logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
-    logger --stderr --id --tag $LOGTAG "Stopping D3S script"
-    sudo pkill -SIGTERM -f manager_D3S.py
-    sudo pkill -SIGTERM -f manager.py
-    ;;
-  finish)
-    sudo kill -s SIGQUIT
-    ;;
-  test)
-    logger --stderr --id --tag $LOGTAG "Testing DoseNet script"
-    # allow testing without configfile and/or publickey
-    if [ -f $CONFIGFILE ]; then
-      if [ -f $PUBLICKEY ]; then
-        sudo python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY --test
-      else
-        sudo python $DOSENET/manager.py -c $CONFIGFILE --test
-      fi
-    else
-      sudo python $DOSENET/manager.py --test
-    fi
+    logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
+    echo "Stopping all DoseNet scripts" >> $LOG
+    sudo pkill -SIGTERM -f master_manager.py
     ;;
   *)
-    echo "Usage: /etc/init.d/dosenet {start|test|stop}"
+    echo "Usage: /etc/init.d/dosenet {start|stop}"
     exit 1
     ;;
 esac
