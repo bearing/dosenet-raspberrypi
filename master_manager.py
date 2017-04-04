@@ -16,9 +16,12 @@ if __name__ == '__main__':
     os.system('sudo timeout 60s ntpd -gq')
     os.system('sudo service ntp start')
 
-    ser = serial.Serial('/dev/ttyACM0')
-    ser.flushInput()
-    ser.close()
+    try:
+        ser = serial.Serial('/dev/ttyACM0')
+        ser.flushInput()
+        ser.close()
+    except:
+        pass
     
     p = multiprocessing.Process(target=start_D3S, args=())
     t = multiprocessing.Process(target=start_dosenet, args=())
