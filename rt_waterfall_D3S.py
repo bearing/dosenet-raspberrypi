@@ -112,5 +112,6 @@ class Rt_Waterfall_D3S(object):
             #self.conditional = False
         #plt.draw()
         plt.show()
-        plt.pause(self.interval) #self.interval
+        #plt.pause(self.interval) #self.interval
+        plt.pause(.5)
         #plt.close()
