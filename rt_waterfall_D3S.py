@@ -104,4 +104,4 @@ class Rt_Waterfall_D3S(object):
         plt.colorbar()
         plt.draw()
         plt.pause(self.interval)
-        plt.close()
+        #plt.close()
