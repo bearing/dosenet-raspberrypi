@@ -110,8 +110,8 @@ class Rt_Waterfall_D3S(object):
         #if self.conditional:
             #plt.colorbar()
             #self.conditional = False
-        #plt.draw()
-        plt.show()
+        plt.draw()
+        #plt.show()
         #plt.pause(self.interval) #self.interval
         #plt.pause(.05)
         #plt.close()
