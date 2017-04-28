@@ -106,9 +106,9 @@ class Rt_Waterfall_D3S(object):
         self.waterfall_graph(spectra)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
                     extent=[1, 4096, 0, np.shape(self.image)[0]*self.interval])
-        if self.conditional:
-            plt.colorbar()
-            self.conditional = False
+        #if self.conditional:
+            #plt.colorbar()
+            #self.conditional = False
         #plt.draw()
         plt.show()
         plt.pause(self.interval)
