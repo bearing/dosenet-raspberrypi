@@ -30,6 +30,8 @@ class Rt_Waterfall_D3S(object):
         self.resolution = resolution
         
         self.first = True
+        
+        self.start_up()
     
     def get_data(self, spectra):
         '''
@@ -97,11 +99,11 @@ class Rt_Waterfall_D3S(object):
         '''
         Actually plots the spectra
         '''
-        self.start_up()
+        #self.start_up()
         self.waterfall_graph(spectra)
         plt.imshow(self.image, interpolation='nearest', aspect='auto',
                     extent=[1, 4096, 0, np.shape(self.image)[0]*self.interval])
         plt.colorbar()
         plt.draw()
         plt.pause(self.interval)
-        plt.close()
+        #plt.close()
