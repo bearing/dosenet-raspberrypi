@@ -34,6 +34,8 @@ class Rt_Waterfall_D3S(object):
         self.start_up()
         
         self.conditional = True
+        
+        self.object = None 
     
     def get_data(self, spectra):
         '''
@@ -104,8 +106,12 @@ class Rt_Waterfall_D3S(object):
         '''
         #self.start_up()
         self.waterfall_graph(spectra)
-        plt.imshow(self.image, interpolation='nearest', aspect='auto',
-                    extent=[1, 4096, 0, np.shape(self.image)[0]])
+        if self.conditional:
+            self.object = plt.imshow(self.image, interpolation='nearest', aspect='auto',
+                            extent=[1, 4096, 0, np.shape(self.image)[0]])
+            self.conditional = False
+        if not self.conditional:
+            self.object.set_data(self.image)
         #*self.interval above
         #if self.conditional:
             #plt.colorbar()
