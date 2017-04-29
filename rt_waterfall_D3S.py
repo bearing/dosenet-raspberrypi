@@ -94,7 +94,7 @@ class Rt_Waterfall_D3S(object):
         '''
         Sets up the parameters for the plotting window
         '''
-        #plt.ion()
+        plt.ion()
         plt.figure(figsize=(25,15))
         plt.xlabel('Bin')
         plt.ylabel('Time (s)')
@@ -116,8 +116,8 @@ class Rt_Waterfall_D3S(object):
         #if self.conditional:
             #plt.colorbar()
             #self.conditional = False
-        plt.draw()
-        #plt.show()
+        #plt.draw()
+        plt.show()
         #plt.pause(self.interval) #self.interval
         plt.pause(.0005)
         #plt.close()
