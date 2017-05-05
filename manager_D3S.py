@@ -63,8 +63,6 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 network_LED_pin=NETWORK_LED_PIN,
-                 power_LED_pin=POWER_LED_PIN,
                  plot=False,
                  ):
 
@@ -104,21 +102,10 @@ class Manager_D3S(object):
             log, logfile, verbosity, interval)
         self.plot = plot
 
-        if RPI:
-            self.power_LED = LED(power_LED_pin)
-            self.network_LED = LED(network_LED_pin)
-
-            self.power_LED.on()
-
-        else:
-            self.power_LED = None
-            self.network_LED = None
-
         self.data_handler = Data_Handler_D3S(
             manager=self,
             verbosity=self.v,
-            logfile=self.logfile,
-            network_led=self.network_LED)
+            logfile=self.logfile)
         # self.sender = ServerSender(
         #     manager=self,
         #     mode=sender_mode,
@@ -332,7 +319,6 @@ class Manager_D3S(object):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
-        self.power_LED.off()
         GPIO.cleanup()
 
         self.running = False
