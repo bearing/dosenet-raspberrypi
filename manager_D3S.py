@@ -63,7 +63,7 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 plot=False,
+                 plot=True
                  ):
 
         self.running = running
@@ -74,6 +74,9 @@ class Manager_D3S(object):
 
         self.interval = interval
         self.count = count
+
+        self.config = None
+        self.publickey = None
 
         self.transport = transport
         self.device = device
