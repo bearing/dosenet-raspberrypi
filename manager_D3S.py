@@ -120,6 +120,7 @@ class Manager_D3S(object):
         self.data_handler.backlog_to_queue()
         
         if self.plot:
+            print('creating plotter')
             self.rt_plot = Real_Time_Spectra(
                 manager=self, 
                 verbosity=self.v)
