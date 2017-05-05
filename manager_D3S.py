@@ -415,8 +415,7 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        parser.add_argument('--waterfall', '-w', action = 'store_true', default=False)
-        parser.add_argument('--sum', '-s', action = 'store_true', default=False)
+        parser.add_argument('--plot', '-p', action = 'store_true', default=False)
         
         args = parser.parse_args()
         arg_dict = vars(args)
