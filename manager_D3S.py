@@ -60,12 +60,6 @@ class Manager_D3S(object):
                  calibrationlogflag=False,
                  calibrationlogtime=None,
                  test=None,
-                 config=None,
-                 publickey=None,
-                 aeskey=None,
-                 hostname=DEFAULT_HOSTNAME,
-                 port=None,
-                 sender_mode=DEFAULT_SENDER_MODE,
                  logfile=None,
                  log=False,
                  running=False,
@@ -107,7 +101,7 @@ class Manager_D3S(object):
         self.test = test
 
         self.handle_input(
-            log, logfile, verbosity, interval, config, publickey, aeskey)
+            log, logfile, verbosity, interval)
         self.plot = plot
 
         if RPI:
@@ -198,8 +192,7 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 pass
 
-    def handle_input(self, log, logfile, verbosity, interval,
-                     config, publickey, aeskey):
+    def handle_input(self, log, logfile, verbosity, interval):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
@@ -231,57 +224,10 @@ class Manager_D3S(object):
             self.vprint(
                 2, "No interval given, using interval at 30 seconds")
             interval = DEFAULT_INTERVAL_NORMAL_D3S
-        if config is None:
-            self.vprint(2, "No config file given, " +
-                        "attempting to use default config path")
-            config = DEFAULT_CONFIG
-        if publickey is None:
-            self.vprint(2, "No publickey file given, " +
-                        "attempting to use default publickey path")
-            publickey = DEFAULT_PUBLICKEY
-        if aeskey is None:
-            self.vprint(2, "No AES key file given, " +
-                        "attempting to use default AES key path")
-            aeskey = DEFAULT_AESKEY
 
         self.interval = interval
 
-        if config:
-            try:
-                self.config = Config(config,
-                                     verbosity=self.v, logfile=self.logfile)
-            except IOError:
-                raise IOError(
-                    'Unable to open config file {}!'.format(config))
-        else:
-            self.vprint(
-                1, 'WARNING: no config file given. Not posting to server')
-            self.config = None
-
-        if publickey:
-            try:
-                self.publickey = PublicKey(
-                    publickey, verbosity=self.v, logfile=self.logfile)
-            except IOError:
-                raise IOError(
-                    'Unable to load publickey file {}!'.format(publickey))
-        else:
-            self.vprint(
-                1, 'WARNING: no public key given. Not posting to server')
-            self.publickey = None
-
-        if aeskey:
-            try:
-                with open(aeskey, 'r') as aesfile:
-                    key = aesfile.read()
-                    self.aes = AES.new(key, mode=AES.MODE_ECB)
-            except IOError:
-                raise IOError('Unable to load AES key file {}!'.format(
-                    aeskey))
-        else:
-            self.vprint(
-                1, 'WARNING: no AES key given. Not posting to server')
-            self.aes = None
+       
 
     def run(self):
         """
