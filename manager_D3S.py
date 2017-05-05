@@ -1,3 +1,7 @@
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
+
 import time
 import traceback
 import argparse
@@ -7,11 +11,14 @@ import signal
 import sys
 from Crypto.Cipher import AES
 from collections import deque
+import matplotlib.pyplot as plt
 
-from auxiliaries import Config, PublicKey, set_verbosity
+from auxiliaries import Config, PublicKey, LED, set_verbosity
+from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
 from auxiliaries import datetime_from_epoch, set_verbosity
-from sender import ServerSender
+#from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
+from Real_Time_Spectra import Real_Time_Spectra
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -35,10 +42,8 @@ signal.signal(signal.SIGTERM, signal_term_handler)
 class Manager_D3S(object):
     """
     Master object for D3S device operation.
-
     Prints out spectra for every interval, stores each spectra, and
     sums the spectra together.
-
     Interval is in seconds with the default being 30 seconds.
     """
 
@@ -64,6 +69,9 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
+                 network_LED_pin=NETWORK_LED_PIN,
+                 power_LED_pin=POWER_LED_PIN,
+                 plot=False,
                  ):
 
         self.running = running
@@ -100,20 +108,38 @@ class Manager_D3S(object):
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
+        self.plot = plot
+
+        if RPI:
+            self.power_LED = LED(power_LED_pin)
+            self.network_LED = LED(network_LED_pin)
+
+            self.power_LED.on()
+
+        else:
+            self.power_LED = None
+            self.network_LED = None
 
         self.data_handler = Data_Handler_D3S(
             manager=self,
             verbosity=self.v,
-            logfile=self.logfile,)
-        self.sender = ServerSender(
-            manager=self,
-            mode=sender_mode,
-            port=port,
-            verbosity=self.v,
-            logfile=self.logfile,)
+            logfile=self.logfile,
+            network_led=self.network_LED)
+        # self.sender = ServerSender(
+        #     manager=self,
+        #     mode=sender_mode,
+        #     port=port,
+        #     verbosity=self.v,
+        #     logfile=self.logfile,)
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
+        
+        if self.plot:
+            self.rt_plot = Real_Time_Spectra(
+                manager=self, 
+                verbosity=self.v)
+            self.wqueue = []
 
     def z_flag(self):
         """
@@ -260,7 +286,6 @@ class Manager_D3S(object):
     def run(self):
         """
         Main method. Currently also stores and sum the spectra as well.
-
         Current way to stop is only using a keyboard interrupt.
         """
 
@@ -350,13 +375,20 @@ class Manager_D3S(object):
         """
         Get spectra from sensor, display text, send to server.
         """
-        self.data_handler.main(
-            self.datalog, self.calibrationlog, spectra, this_start, this_end)
+        if self.plot:
+            self.Real_Time_Spectra.plot_waterfall(spectra)
+            self.Real_Time_Spectra.plot_sum(spectra)
+        else:
+            self.data_handler.main(
+                self.datalog, self.calibrationlog, spectra, this_start, this_end)
 
     def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
+        self.power_LED.off()
+        GPIO.cleanup()
+
         self.running = False
         self.data_handler.send_all_to_backlog()
 
@@ -390,6 +422,8 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
+        parser.add_argument('--waterfall', '-w', action = 'store_true', default=False)
+        parser.add_argument('--sum', '-w', action = 'store_true', default=False)
         
         args = parser.parse_args()
         arg_dict = vars(args)
