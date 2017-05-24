@@ -15,6 +15,41 @@
 
 LOGTAG=dosenet
 
+case $1 in
+  "29")
+    #--------------------------------------------------------------------------
+    # BEGIN Etch roof station update: add reboot cron for running d3s monitor
+    #--------------------------------------------------------------------------
+    echo "This is station #5"
+    search_string = "run-d3s-monitor.sh"
+    cron_tab_string="@reboot /home/pi/dosenet-raspberrypi/run-d3s-monitor.sh"
+    if [ sudo crontab -l -u root| grep -q search_string ]; then
+      echo 'entry exists'
+    else
+      echo 'adding entry'
+      (sudo crontab -l -u root 2>/dev/null; echo cron_tab_string) | crontab -
+    fi
+    ;;
+  "5")
+    #--------------------------------------------------------------------------
+    # BEGIN Etch roof station update: add reboot cron for running d3s monitor
+    #--------------------------------------------------------------------------
+    echo "This is station #5"
+    search_string = "run-d3s-monitor.sh"
+    cron_tab_string="@reboot /home/pi/dosenet-raspberrypi/run-d3s-monitor.sh"
+    if [ sudo crontab -l -u root| grep -q search_string ]; then
+      echo 'entry exists'
+    else
+      echo 'adding entry'
+      (sudo crontab -l -u root 2>/dev/null; echo cron_tab_string) | crontab -
+    fi
+    ;;
+  *)
+    echo "This is station #$1"
+    # commands for all stations to run
+    ;;
+esac
+
 #--------------------------------------------------------------------------
 # BEGIN system update: git config user.email, user.name to enable git stash
 #--------------------------------------------------------------------------
