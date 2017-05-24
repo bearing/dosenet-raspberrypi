@@ -16,24 +16,19 @@
 LOGTAG=dosenet
 
 case $1 in
-  "29")
+  "9999")
     #--------------------------------------------------------------------------
-    # BEGIN Etch roof station update: add reboot cron for running d3s monitor
+    # BEGIN station update:
     #--------------------------------------------------------------------------
-    echo "This is station #29"
-    if sudo crontab -l -u root| grep -q "run-d3s-monitor.sh"; then
-      echo 'entry exists'
-    else
-      echo 'adding entry'
-      (sudo crontab -l -u root 2>/dev/null; echo "@reboot /home/pi/dosenet-raspberrypi/run-d3s-monitor.sh") | crontab -
-    fi
+    echo "This is station #9999"
+    # commands for this station go here
     ;;
-  "5")
+  "32")
     #--------------------------------------------------------------------------
     # BEGIN Etch roof station update: add reboot cron for running d3s monitor
     #--------------------------------------------------------------------------
-    echo "This is station #5"
-    if [ sudo crontab -l -u root| grep -q "run-d3s-monitor.sh" ]; then
+    echo "This is station #32"
+    if sudo crontab -l -u root| grep -q "run-d3s-monitor.sh"; then
       echo 'entry exists'
     else
       echo 'adding entry'
