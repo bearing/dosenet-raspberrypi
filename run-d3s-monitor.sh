@@ -7,7 +7,7 @@
 #   runs the d3s monitor script to check that data is getting through
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-SLEEPTIME=420
+SLEEPTIME=360
 
 sleep $SLEEPTIME
 python $DOSENET/d3s_monitor.py
