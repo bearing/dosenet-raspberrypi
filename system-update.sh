@@ -28,6 +28,10 @@ case $1 in
     # BEGIN Etch roof station update: add reboot cron for running d3s monitor
     #--------------------------------------------------------------------------
     echo "This is station #32"
+    # fresh checkout - seems to be on a fork of the main repo
+    cd /home/pi/dosenet-raspberrypi
+    git remote set-url origin https://github.com/bearing/dosenet-raspberrypi.git
+    # add d3s data monitor script to crontab
     if sudo crontab -l -u root| grep -q "run-d3s-monitor.sh"; then
       echo 'entry exists'
     else
