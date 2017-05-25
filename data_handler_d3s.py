@@ -8,6 +8,7 @@ import time
 import ast
 import os
 import errno
+import csv
 
 SPECTRA_DISPLAY_TEXT = (
     '{{time}}: {yellow} {{total_counts}} {reset}' +
@@ -23,7 +24,6 @@ class Data_Handler_D3S(object):
                  manager=None,
                  verbosity=1,
                  logfile=None,
-                 network_led=None,
                  ):
 
         self.v = verbosity
@@ -34,9 +34,6 @@ class Data_Handler_D3S(object):
 
         self.manager = manager
         self.queue = deque('')
-
-        self.blink_period_s = 1.5
-        self.led = network_led
 
     def test_send(self, spectra):
         """
@@ -62,8 +59,6 @@ class Data_Handler_D3S(object):
         """
         Network is not up
         """
-        if self.led:
-            self.led.start_blink(interval=self.blink_period_s)
         self.send_to_queue(spectra)
         self.vprint(1, "Network down, saving to queue in memory")
 
@@ -71,25 +66,26 @@ class Data_Handler_D3S(object):
         """
         Normal send
         """
-        if self.led:
-            if self.led.blinker:
-                self.led.stop_blink()
-            self.led.on()
         self.manager.sender.send_spectra_new_D3S(this_end, spectra)
+        #print(self.queue)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
-        while self.queue:
-            trash = self.queue.popleft()
-            self.manager.sender.send_spectra_new_D3S(
-                trash[0], trash[1])
+            while self.queue:
+                #print(len(self.queue))
+                trash = self.queue.popleft()
+                self.manager.sender.send_spectra_new_D3S(
+                    trash[0], trash[1])
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_D3S):
         if self.queue:
             self.vprint(1, "Flushing memory queue to backlog file")
-            with open(path, 'a') as f:
-                while self.queue:
-                    f.write('{0}, '.format(self.queue.popleft()))
-
+            temp = []
+            while self.queue: 
+                temp.append(self.queue.popleft())
+            with open(path, "ab") as f: # might only work for python 3? 
+                writer = csv.writer(f)
+                writer.writerows(temp)
+                
     def send_to_queue(self, spectra):
         """
         Adds the time and spectra to the deque object.
@@ -103,11 +99,23 @@ class Data_Handler_D3S(object):
         """
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
+
             with open(path, 'r') as f:
                 data = f.read()
             #data = ast.literal_eval(data)
             for i in data:
                 self.queue.append([i[0], i[1]])
+            
+            with open(path, 'rb') as f:
+                reader = csv.reader(f)
+                lst = list(reader)
+            for i in lst:
+                #print(i)
+                timestring = i[0]
+                spectra = i[1]
+                timestring = ast.literal_eval(timestring)
+                spectra = ast.literal_eval(spectra)
+                self.queue.append([timestring, spectra])
             os.remove(path)
 
     def main(self, datalog, calibrationlog, spectra, this_start, this_end):

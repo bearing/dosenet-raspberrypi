@@ -18,7 +18,7 @@ LOG=$HOME/jpyserver.log
 case "$1" in
   start)
 	# make sure webserver environment is configured properly
-	echo "checking that error log can write" >> $LOG
+	echo "checking that error log can write" > $LOG
 	if [ ! -d "/var/log/lighttpd" ]; then
 	    sudo mkdir /var/log/lighttpd
 	    sudo chown -R www-data /var/log/lighttpd

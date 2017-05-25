@@ -15,6 +15,36 @@
 
 LOGTAG=dosenet
 
+case $1 in
+  "9999")
+    #--------------------------------------------------------------------------
+    # BEGIN station update:
+    #--------------------------------------------------------------------------
+    echo "This is station #9999"
+    # commands for this station go here
+    ;;
+  "32")
+    #--------------------------------------------------------------------------
+    # BEGIN Etch roof station update: add reboot cron for running d3s monitor
+    #--------------------------------------------------------------------------
+    echo "This is station #32"
+    # fresh checkout - seems to be on a fork of the main repo
+    cd /home/pi/dosenet-raspberrypi
+    git remote set-url origin https://github.com/bearing/dosenet-raspberrypi.git
+    # add d3s data monitor script to crontab
+    if sudo crontab -l -u root| grep -q "run-d3s-monitor.sh"; then
+      echo 'entry exists'
+    else
+      echo 'adding entry'
+      (sudo crontab -l -u root 2>/dev/null; echo "@reboot /home/pi/dosenet-raspberrypi/run-d3s-monitor.sh") | crontab -
+    fi
+    ;;
+  *)
+    echo "This is station #$1"
+    # commands for all stations to run
+    ;;
+esac
+
 #--------------------------------------------------------------------------
 # BEGIN system update: git config user.email, user.name to enable git stash
 #--------------------------------------------------------------------------

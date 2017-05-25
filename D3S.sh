@@ -1,24 +1,23 @@
+#! /bin/sh
+
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-LOGTAG=dosenet
-CONFIGDIR=$HOME/config
-LOGTAG=dosenet
 
-CONFIGFILE=$CONFIGDIR/config.csv
-PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
+LOG=/tmp/d3s_manager.log
 
 case "$1" in
   start)
-    logger --stderr --id --tag $LOGTAG "Starting D3S script"
+    echo "Starting D3S script" > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager_D3S.py
+    sudo python $DOSENET/manager_D3S.py --logfile $LOG >> $LOG 2>&1
+    echo "Finished D3S script" >> $LOG
     ;;
   stop)
-    logger --stderr --id --tag $LOGTAG "Stopping D3S script"
+    echo "Stopping D3S script" >> $LOG
     sudo pkill -SIGTERM -f manager_D3S.py
     ;;
  *)
-    echo "Usage: /etc/init.d/dosenet {start|stop}"
+    echo "Usage: /home/pi/dosenet-raspberrypi/D3S.sh {start|stop}"
     exit 1
     ;;
 esac
