@@ -15,6 +15,20 @@
 
 LOGTAG=dosenet
 
+case $1 in
+  "9999")
+    #--------------------------------------------------------------------------
+    # BEGIN station update:
+    #--------------------------------------------------------------------------
+    echo "This is station #9999"
+    # commands for this station go here
+    ;;
+  *)
+    echo "This is station #$1"
+    # commands for all stations to run
+    ;;
+esac
+
 #--------------------------------------------------------------------------
 # BEGIN system update: git config user.email, user.name to enable git stash
 #--------------------------------------------------------------------------

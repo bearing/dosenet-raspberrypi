@@ -9,9 +9,17 @@
 
 BRANCH=$1
 LOGTAG=dosenet
+CONFIGFILE=/home/pi/config/config.csv
 
 DOSENETPATH=/home/pi/dosenet-raspberrypi
 cd $DOSENETPATH
+
+# what is my station ID?
+if [ -f $CONFIGFILE ]; then
+  ID=$(cat $CONFIGFILE | tail -n1 | sed 's/,[a-zA-Z0-9.,-]*//' | sed 's_\r__')
+else
+  ID=unknown
+fi
 
 # git operations:
 # `sudo -u pi` is required, because operations must be performed by
@@ -93,7 +101,7 @@ else
   logger --stderr --id --tag $LOGTAG "git pull failed !"
 fi
 
-sudo $DOSENETPATH/system-update.sh
+sudo $DOSENETPATH/system-update.sh $ID
 
 if [ $? -eq 0 ]; then
   logger --stderr --id --tag $LOGTAG "successfully ran system-update.sh"
