@@ -66,7 +66,14 @@ class Real_Time_Spectra(object):
         # Setup the plot for the waterfall graph.
         self.waterfall_figure = plt.figure(1)
 
-        self.waterfall_figure
+        # waterfall_axes = plt.gca()
+        # waterfall_axes = plt.figure(1).get_axes()
+
+        # print waterfall_axes
+
+        # self.waterfall_figure.add_axes(xlabel='Bin', ylabel='Time (s)')
+        # waterfall_axes.set_xlabel('Bin')
+        # waterfall_axes.set_ylabel('Time (s)')
 
         plt.xlabel('Bin')
         plt.ylabel('Time (s)')
@@ -86,7 +93,12 @@ class Real_Time_Spectra(object):
         # Setup the plot for the spectrum (sum graph).
         self.spectrum_figure = plt.figure(2)
 
-        self.spectrum_figure
+        # spectrum_axes = plt.gca()
+        # spectrum_axes = plt.figure(2).get_axes()
+
+        # self.spectrum_figure.add_axes(xlabel='Channel', ylabel='Counts')
+        # spectrum_axes.set_xlabel('Channel')
+        # spectrum_axes.set_ylabel('Counts')
 
         plt.xlabel('Channel')
         plt.ylabel('Counts')
