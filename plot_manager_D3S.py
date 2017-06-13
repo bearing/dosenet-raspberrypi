@@ -48,7 +48,7 @@ class Manager_D3S(object):
     """
 
     def __init__(self,
-                 interval=None,
+                 interval=1,
                  count=0,
                  transport='any',
                  device='all',
@@ -218,7 +218,7 @@ class Manager_D3S(object):
 
         self.interval = interval
 
-       
+
 
     def run(self):
         """
@@ -313,8 +313,8 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         if self.plot:
-            self.Real_Time_Spectra.plot_waterfall(spectra)
-            self.Real_Time_Spectra.plot_sum(spectra)
+            self.rt_plot.plot_waterfall(spectra)
+            self.rt_plot.plot_sum(spectra)
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
