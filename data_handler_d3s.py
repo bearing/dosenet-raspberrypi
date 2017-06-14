@@ -99,7 +99,7 @@ class Data_Handler_D3S(object):
         """
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
-            
+
             with open(path, 'rb') as f:
                 reader = csv.reader(f)
                 lst = list(reader)
