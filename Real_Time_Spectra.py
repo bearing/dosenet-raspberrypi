@@ -163,10 +163,15 @@ class Real_Time_Spectra(object):
             self.first = False
             temp = self.fix_array(self.manager.wqueue.pop())
             self.data[0, :] = np.ndarray.flatten(temp)
+            waterfall_counter = 0
         else:
             temp = self.fix_array(self.manager.wqueue.pop())
-            self.data = np.concatenate((np.transpose(temp), self.data), axis=0)
-
+            self.data = np.concatenate((np.transpose(temp), self.data), axis=0)          # concatenates self.data with temp
+            print(self.data)
+            """
+            if (waterfall_counter > 100):
+                self.data = np.concatenate((np.transpose(temp), self.data), axis=0)      # removes last row of self.data
+            """
     def fix_array(self, array):
         """
         Used to format arrays for the waterfall plot.
@@ -213,11 +218,11 @@ class Real_Time_Spectra(object):
                                              self.interval])
             plt.colorbar()
 
-            self.waterfall_drawn = False
+            self.waterfall_drawn = False     # This initializes the waterfall plot
 
         if not self.waterfall_drawn:
 
-            self.waterfall_plot.set_data(self.data)
+                self.waterfall_plot.set_data(self.data)             # This plots new data
 
         # plt.draw()
         plt.show()
