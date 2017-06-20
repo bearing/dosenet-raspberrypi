@@ -163,14 +163,12 @@ class Real_Time_Spectra(object):
             self.first = False
             temp = self.fix_array(self.manager.wqueue.pop())
             self.data[0, :] = np.ndarray.flatten(temp)
-            waterfall_counter = 0
         else:
             temp = self.fix_array(self.manager.wqueue.pop())
             self.data = np.concatenate((np.transpose(temp), self.data), axis=0)          # concatenates self.data with temp
             print(self.data)
-            """
-            if (waterfall_counter > 100):
-                self.data = np.concatenate((np.transpose(temp), self.data), axis=0)      # removes last row of self.data
+            if len(self.data) > 5:
+                self.data = self.data[1:]      # removes last row of self.data
             """
     def fix_array(self, array):
         """
