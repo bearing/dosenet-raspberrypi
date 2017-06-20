@@ -168,7 +168,7 @@ class Real_Time_Spectra(object):
             self.data = np.concatenate((np.transpose(temp), self.data), axis=0)          # concatenates self.data with temp
             print(self.data)
             if len(self.data) > 5:
-                self.data = self.data[1:]      # removes last row of self.data
+                self.data = self.data[:-1]      # removes last row of self.data
             
     def fix_array(self, array):
         """
