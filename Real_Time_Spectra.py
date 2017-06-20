@@ -169,7 +169,7 @@ class Real_Time_Spectra(object):
             print(self.data)
             if len(self.data) > 5:
                 self.data = self.data[1:]      # removes last row of self.data
-            """
+            
     def fix_array(self, array):
         """
         Used to format arrays for the waterfall plot.
