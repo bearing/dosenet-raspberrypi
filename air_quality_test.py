@@ -61,7 +61,8 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
+            pen_results= csv.writer(open("air_quality_test_results.csv", "ab+", newline=" "), delimiter = ",")
+            line_count = csv.reader
             pen_results.writerow(results[-6:-1])
 
         else:
