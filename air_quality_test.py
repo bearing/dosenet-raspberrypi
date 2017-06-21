@@ -3,6 +3,7 @@ import serial
 import ast
 import binascii
 import csv
+import datetime
 
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
@@ -55,14 +56,25 @@ while True:
 
             # Put results in a CSV file
             results = []
+            pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
+            line_read = csv.reader("air_quality_test_results.csv", delimiter=",")
+            line_count= sum(1 for row in line_read)
+            if sum==1:
+                results.append("Date and Time")
+                results.append("0.3 um")
+                results.append("0.5 um")
+                results.append("1.0 um")
+                results.append("2.5 um")
+                results.append("5.0 um")
+                results.append("10 um")
+                pen_results.writerow(results[])
+            results.append(datetime.datetime)
             results.append(repr(P3))
             results.append(repr(P5))
             results.append(repr(P10))
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
-            line_count = csv.reader
             pen_results.writerow(results[-6:-1])
 
         else:
