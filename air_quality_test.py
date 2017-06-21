@@ -67,7 +67,7 @@ while True:
                 results.append("2.5 um")
                 results.append("5.0 um")
                 results.append("10 um")
-                pen_results.writerow(results[])
+                pen_results.writerow(results[0:6])
             results.append(datetime.datetime)
             results.append(repr(P3))
             results.append(repr(P5))
