@@ -61,7 +61,7 @@ while True:
             line_count= len(open("air_quality_test_results.csv").readlines())
 
             # Add metadata if necessary
-            if line_count==1:
+            if line_count==0:
                 results.append("Date and Time")
                 results.append("0.3 um")
                 results.append("0.5 um")
