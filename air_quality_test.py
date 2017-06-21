@@ -61,7 +61,8 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(open("air_quality_test_results.csv", ab+), delimiter=",")
+            pen_results.writer(open("air_quality_test_results.csv", ab+), delimiter=",")
+            pen_results.writerow(results[-6:-1])
 
         else:
             print('Check Sum Failed')
