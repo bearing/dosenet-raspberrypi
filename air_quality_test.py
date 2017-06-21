@@ -58,8 +58,10 @@ while True:
             results = []
             pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
             line_read = csv.reader("air_quality_test_results.csv", delimiter=",")
-            line_count= sum(1 for row in line_read)
-            if sum==1:
+            line_count= len(open("air_quality_test_results.csv").readlines())
+
+            # Add metadata if necessary
+            if line_count==1:
                 results.append("Date and Time")
                 results.append("0.3 um")
                 results.append("0.5 um")
@@ -75,7 +77,7 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[-6:-1])
+            pen_results.writerow(results[-7:-1])
 
         else:
             print('Check Sum Failed')
