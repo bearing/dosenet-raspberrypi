@@ -70,6 +70,7 @@ while True:
                 results.append("5.0 um")
                 results.append("10 um")
                 pen_results.writerow(results[0:6])
+            results = []
             date_time = datetime.datetime
             results.append(date_time)
             results.append(repr(P3))
@@ -78,7 +79,7 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[-7:-1])
+            pen_results.writerow(results[0:6])
 
         else:
             print('Check Sum Failed')
