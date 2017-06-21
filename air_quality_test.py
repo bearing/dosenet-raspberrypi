@@ -2,10 +2,11 @@
 import serial
 import ast
 import binascii
+import csv
 
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-while True: 
+while True:
     print('next')
     text = port.read(32)
     #print(text)
@@ -13,7 +14,7 @@ while True:
     if buffer[0] == 66:
         print(buffer)
         #print(len(buffer))
-        #Check sum with last byte of list 
+        #Check sum with last byte of list
         sumation = sum(buffer[0:30])
         checkbyte = (buffer[30]<<8)+buffer[31]
         print(sumation)
@@ -51,6 +52,16 @@ while True:
             print('#Particles, diameter over 2.5 um = ' + repr(P25))
             print('#Particles, diameter over 5.0 um = ' + repr(P50))
             print('#Particles, diameter over 10  um = ' + repr(P100))
+
+            # Put results in a CSV file
+            results = []
+            results.append(repr(P3))
+            results.append(repr(P5))
+            results.append(repr(P10))
+            results.append(repr(P25))
+            results.append(repr(P50))
+            results.append(repr(P100))
+            pen_results.writerow(open("air_quality_test_results", ab+), delimiter=",")
 
         else:
             print('Check Sum Failed')
