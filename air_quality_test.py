@@ -7,7 +7,8 @@ import datetime
 
 # Open CSV file to save results
 metadata = []
-filename = "air_quality_test_results"+str(datetime.time())+".csv"
+file_time= datetime.time()
+filename = "air_quality_test_results"+str(file_time)+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
 # Add metadata to CSV file
