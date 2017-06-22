@@ -1,5 +1,5 @@
 # Python file to graph air quality test results
-from matplotlib import pyplot
+import matplotlib.pyplot as pyplot
 import csv
 from dateutil import parser
 
