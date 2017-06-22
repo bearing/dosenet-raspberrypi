@@ -68,7 +68,7 @@ while True:
                 results.append("2.5 um")
                 results.append("5.0 um")
                 results.append("10 um")
-                pen_results.writerow(results[0:6])
+                pen_results.writerow(results[0:7])
             results = []
             date_time = datetime.datetime.now()
             results.append(date_time)
