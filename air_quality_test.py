@@ -3,6 +3,7 @@ import serial
 import ast
 import binascii
 import csv
+import datetime
 from time import gmtime, strftime
 
 # Open CSV file to save results
