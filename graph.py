@@ -4,7 +4,7 @@ import csv
 from dateutil import parser
 
 results = csv.reader('air_quality_test_results.csv', delimiter=',')
-
+print(results)
 times = []
 P3 = []
 P5 = []
