@@ -5,6 +5,21 @@ import binascii
 import csv
 import datetime
 
+# Open CSV file to save results
+metadata = []
+filename = "air_quality_test_results"+str(datetime.time.now())+".csv"
+pen_results= csv.writer(open(filename), "ab+", delimiter = ",")
+
+# Add metadata to CSV file
+metadata.append("Date and Time")
+metadata.append("0.3 um")
+metadata.append("0.5 um")
+metadata.append("1.0 um")
+metadata.append("2.5 um")
+metadata.append("5.0 um")
+metadata.append("10 um")
+pen_results.writerow(metadata[:])
+
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 while True:
@@ -56,20 +71,6 @@ while True:
 
             # Put results in a CSV file
             results = []
-            pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
-            line_count= len(open("air_quality_test_results.csv").readlines())
-
-            # Add metadata if necessary
-            if line_count==0:
-                results.append("Date and Time")
-                results.append("0.3 um")
-                results.append("0.5 um")
-                results.append("1.0 um")
-                results.append("2.5 um")
-                results.append("5.0 um")
-                results.append("10 um")
-                pen_results.writerow(results[0:7])
-            results = []
             date_time = datetime.datetime.now()
             results.append(date_time)
             results.append(repr(P3))
@@ -78,7 +79,13 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[0:7])
+            pen_results.writerow(results[:])
 
         else:
             print('Check Sum Failed')
+            # Put results in a CSV file
+            results = []
+            date_time = datetime.datetime.now()
+            results.append(date_time)
+            results.append('Check Sum Failed')
+            pen_results.writerow(results[:])

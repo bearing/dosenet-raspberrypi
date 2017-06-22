@@ -12,9 +12,9 @@ P10 = []
 P25 = []
 P50 = []
 P100 = []
-
 row_counter= 0
 for r in results:
+    print(r)
     row_counter += 1
     if row_counter>1:
         #Append each column in CSV to a separate list
@@ -27,9 +27,10 @@ for r in results:
         P100.append(r[6])
 
 #Use plot() method to graph
-plt.plot(times, P3, "b")
-plt.plot(times, P5, "g")
-plt.plot(times, P10, "r")
-plt.plot(times, P25, "m")
-plt.plot(times, P50, "orange")
-plt.plot(times, P100, "purple")
+plt.plot(times, P3, "b.")
+plt.plot(times, P5, "g.")
+plt.plot(times, P10, "r.")
+plt.plot(times, P25, "m.")
+plt.plot(times, P50, "y.")
+plt.plot(times, P100, "c.")
+plt.show()
