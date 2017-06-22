@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import csv
 from dateutil import parser
 
-
-results = csv.reader(open("air_quality_test_results.csv"), delimiter=',')
+user_file = input("What air quality test result file do you want to graph? (Put quotes around the file name) Name: ")
+results = csv.reader(open(user_file), delimiter=',')
 times = []
 P3 = []
 P5 = []
