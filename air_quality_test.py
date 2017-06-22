@@ -1,4 +1,3 @@
-
 import serial
 import ast
 import binascii
@@ -81,7 +80,7 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[:])
+            pen_results.writerow(results[])
 
         else:
             print('Check Sum Failed')
