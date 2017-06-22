@@ -1,5 +1,5 @@
 # Python file to graph air quality test results
-import matplotlib
+from matplotlib import pyplot
 import csv
 from dateutil import parser
 
@@ -27,9 +27,9 @@ for r in results:
         P100.append(r[6])
 
 #Use plot() method to graph
-matplotlib.pyplot.plot(times, P3, "b")
-matplotlib.pyplot.plot(times, P5, "g")
-matplotlib.pyplot.plot(times, P10, "r")
-matplotlib.pyplot.plot(times, P25, "m")
-matplotlib.pyplot.plot(times, P50, "orange")
-matplotlib.pyplot.plot(times, P100, "purple")
+pyplot.plot(times, P3, "b")
+pyplot.plot(times, P5, "g")
+pyplot.plot(times, P10, "r")
+pyplot.plot(times, P25, "m")
+pyplot.plot(times, P50, "orange")
+pyplot.plot(times, P100, "purple")
