@@ -3,12 +3,12 @@ import serial
 import ast
 import binascii
 import csv
-import datetime
+from time import gmtime, strftime
 
 # Open CSV file to save results
 metadata = []
-file_time= datetime.time()
-filename = "air_quality_test_results"+str(file_time)+".csv"
+file_time= strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+filename = "air_quality_test_results"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
 # Add metadata to CSV file
