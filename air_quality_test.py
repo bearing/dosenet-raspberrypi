@@ -57,7 +57,6 @@ while True:
             # Put results in a CSV file
             results = []
             pen_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
-            line_read = csv.reader("air_quality_test_results.csv", delimiter=",")
             line_count= len(open("air_quality_test_results.csv").readlines())
 
             # Add metadata if necessary
