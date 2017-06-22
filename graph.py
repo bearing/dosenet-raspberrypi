@@ -15,8 +15,9 @@ p100 = []
 
 row_counter= 0
 for r in results:
+    print(r)
     row_counter += 1
-    if row_counter>0:
+    if row_counter>1:
         #Append each column in CSV to a separate list
         #times.append(parser.parse(r[0])) #converts str date and time to datetime
         P3.append(r[1])
@@ -26,10 +27,10 @@ for r in results:
         P50.append(r[5])
         P100.append(r[6])
 
-        #Use plot() method to graph
-        matplotlib.pyplot.plot(times[r], P3[r], "b")
-        matplotlib.pyplot.plot(times[r], P5[r], "g")
-        matplotlib.pyplot.plot(times[r], P10[r], "r")
-        matplotlib.pyplot.plot(times[r], P25[r], "m")
-        matplotlib.pyplot.plot(times[r], P50[r], "orange")
-        matplotlib.pyplot.plot(times[r], P100[r], "purple")
+#Use plot() method to graph
+matplotlib.pyplot.plot(times, P3, "b")
+matplotlib.pyplot.plot(times, P5, "g")
+matplotlib.pyplot.plot(times, P10, "r")
+matplotlib.pyplot.plot(times, P25, "m")
+matplotlib.pyplot.plot(times, P50, "orange")
+matplotlib.pyplot.plot(times, P100, "purple")
