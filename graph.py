@@ -18,7 +18,7 @@ for r in results:
     row_counter += 1
     if row_counter>0:
         #Append each column in CSV to a separate list
-        times.append(parser.parse(r[0])) #converts str date and time to datetime
+        #times.append(parser.parse(r[0])) #converts str date and time to datetime
         P3.append(r[1])
         P5.append(r[2])
         P10.append(r[3])
@@ -33,5 +33,3 @@ for r in results:
         matplotlib.pyplot.plot(times[r], P25[r], "m")
         matplotlib.pyplot.plot(times[r], P50[r], "orange")
         matplotlib.pyplot.plot(times[r], P100[r], "purple")
-
-        
