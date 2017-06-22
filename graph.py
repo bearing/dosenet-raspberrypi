@@ -13,10 +13,10 @@ P25 = []
 P50 = []
 p100 = []
 
-for i in range(len(results)):
-    r = results[i]
-    if i>0: #To ignore metadata
-
+row_counter= 0
+for r in results:
+    row_counter += 1
+    if row_counter>0:
         #Append each column in CSV to a separate list
         times.append(parser.parse(r[0])) #converts str date and time to datetime
         P3.append(r[1])
