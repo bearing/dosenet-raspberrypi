@@ -80,7 +80,7 @@ while True:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[])
+            pen_results.writerow(results[0:7])
 
         else:
             print('Check Sum Failed')
@@ -89,4 +89,4 @@ while True:
             date_time = datetime.datetime.now()
             results.append(date_time)
             results.append('Check Sum Failed')
-            pen_results.writerow(results[:])
+            pen_results.writerow(results[0:2])
