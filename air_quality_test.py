@@ -3,8 +3,7 @@ import ast
 import binascii
 import csv
 import datetime
-from time import strftime
-from time import gmtime
+from time import strftime and gmtime
 import argparse
 
 #Initiate timer
@@ -12,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("runtime", type = int)
 info = parser.parse_args()
 time = info.runtime
-counter_time= int(time.gmtime())
+counter_time= time.perf_counter()
 
 # Open CSV file to save results
 metadata = []
@@ -32,7 +31,8 @@ pen_results.writerow(metadata[:])
 
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-while time.gmtime()<counter_time+time:
+now_time = time.perf_counter()
+while now_time<counter_time+time:
     print('next')
     text = port.read(32)
     #print(text)
@@ -93,6 +93,8 @@ while time.gmtime()<counter_time+time:
             results.append(repr(P100))
             pen_results.writerow(results[0:7])
 
+            now_time = time.perf_counter()
+
         else:
             print('Check Sum Failed')
             # Put results in a CSV file
@@ -101,3 +103,5 @@ while time.gmtime()<counter_time+time:
             results.append(date_time)
             results.append('Check Sum Failed')
             pen_results.writerow(results[0:2])
+
+            now_time = time.perf_counter()
