@@ -58,7 +58,8 @@ while True:
 
             # Print Concentrations [ug/m3]
             date_time = datetime.datetime.now()
-            print("\n"+str(date_time))
+            print("\n")
+            print(date_time)
             print('\nConcentration of Particulate Matter [ug/m3]\n')
             print('PM 1.0 = ' + repr(PM01Val) +' ug/m3')
             print('PM 2.5 = ' + repr(PM25Val) +' ug/m3')
