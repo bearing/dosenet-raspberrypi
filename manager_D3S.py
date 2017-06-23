@@ -327,7 +327,7 @@ class Manager_D3S(object):
             self.takedown()
 
     # D3S control over the LED
-    if self.running:
+    if running:
         self.d3s_LED = LED(d3s_LED_pin)
 
         self.d3s_LED.on()
