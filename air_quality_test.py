@@ -4,6 +4,7 @@ import binascii
 import csv
 import datetime
 from time import gmtime, strftime
+import argparse
 
 # Open CSV file to save results
 metadata = []
