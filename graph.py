@@ -109,7 +109,7 @@ for i in range((len(P100)/combine_number)-1):
 
 #Get rid of last time if unecessary
 if remainder_P25 !=0:
-    times.pop(-1:remainder_P25)
+    times.pop(remainder_P25)
 
 #Convert time into epoch seconds
 seconds_times = [timedelta.total_seconds(t) for t in times]
