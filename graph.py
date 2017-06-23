@@ -30,7 +30,7 @@ for r in results:
     row_counter += 1
     if row_counter>1:
         #Append each column in CSV to a separate list
-        times.append(parser.parse(r[0])) #converts str date and time to datetime
+        times.append(dateutil.parser.parse(r[0])) #converts str date and time to datetime
         P3.append(r[1])
         P5.append(r[2])
         P10.append(r[3])
