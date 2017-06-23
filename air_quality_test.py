@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("runtime", type = int)
 info = parser.parse_args()
 time = info.runtime
-counter_time= time.gmtime()
+counter_time= int(time.gmtime())
 
 # Open CSV file to save results
 metadata = []
