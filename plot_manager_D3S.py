@@ -49,6 +49,7 @@ class Manager_D3S(object):
 
     def __init__(self,
                  interval=1,
+                 maxspectra=None,
                  count=0,
                  transport='any',
                  device='all',
@@ -73,6 +74,7 @@ class Manager_D3S(object):
         self.create_structures = True
 
         self.interval = interval
+        self.maxspectra = maxspectra
         self.count = count
 
         self.config = None
@@ -118,13 +120,12 @@ class Manager_D3S(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
-        
+
         if self.plot:
             print('creating plotter')
             self.rt_plot = Real_Time_Spectra(
-                manager=self, 
+                manager=self,
                 verbosity=self.v)
-            self.wqueue = []
 
     def z_flag(self):
         """
@@ -313,8 +314,9 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         if self.plot:
-            self.rt_plot.plot_waterfall(spectra)
-            self.rt_plot.plot_sum(spectra)
+            self.rt_plot.add_data(spectra, self.maxspectra)
+            self.rt_plot.plot_waterfall()
+            self.rt_plot.plot_sum()
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
@@ -340,6 +342,7 @@ class Manager_D3S(object):
         parser.add_argument('--test', '-t', action='store_true', default=False)
         parser.add_argument('--transport', '-n', default='any')
         parser.add_argument('--interval', '-i', type=int, default=None)
+        parser.add_argument('--maxspectra', '-s', default=25)
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument(
@@ -351,8 +354,8 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        parser.add_argument('--plot', '-p', action = 'store_true', default=True)
-        
+        parser.add_argument('--plot', '-p', action='store_true', default=True)
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
