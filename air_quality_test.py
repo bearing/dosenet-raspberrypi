@@ -16,7 +16,7 @@ counter_time= int(time.time())
 
 # Open CSV file to save results
 metadata = []
-file_time= strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "air_quality_test_results"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
