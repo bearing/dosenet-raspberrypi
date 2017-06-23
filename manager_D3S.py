@@ -110,7 +110,7 @@ class Manager_D3S(object):
         self.test = test
 
         self.d3s_LED = LED(d3s_LED_pin)
-        
+
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
 
@@ -378,7 +378,10 @@ class Manager_D3S(object):
         self.running = False
         self.data_handler.send_all_to_backlog()
 
-        self.d3s_LED.off()
+        try:
+            self.d3s_LED.off()
+        except AttributeError:
+            pass
 
         try:
             GPIO.cleanup()
