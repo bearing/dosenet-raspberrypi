@@ -48,27 +48,27 @@ new_P100 = []
 #Get rid of unnecessary data
 remainder_P3 = 0-(len(P3)%(combine_number))
 if remainder_P3 !=0:
-    P3.pop(-1:remainder_P3)
+    P3.pop(remainder_P3)
 
 remainder_P5 = 0-(len(P5)%(combine_number))
 if remainder_P5 !=0:
-    P5.pop(-1:remainder_P5)
+    P5.pop(remainder_P5)
 
 remainder_P10 = 0-(len(P10)%(combine_number))
 if remainder_P10 !=0:
-    P10.pop(-1:remainder_P10)
+    P10.pop(remainder_P10)
 
 remainder_P25 = 0-(len(P25)%(combine_number))
 if remainder_P25 !=0:
-    P25.pop(-1:remainder_P25)
+    P25.pop(remainder_P25)
 
 remainder_P50 = 0-(len(P50)%(combine_number))
 if remainder_P50 !=0:
-    P50.pop(-1:remainder_P50)
+    P50.pop(remainder_P50)
 
 remainder_P100 = 0-(len(P100)%(combine_number))
 if remainder_P100 !=0:
-    P100.pop(-1:remainder_P100)
+    P100.pop(remainder_P100)
 
 #Add up data
 for i in range((len(P3)/combine_number)-1):
