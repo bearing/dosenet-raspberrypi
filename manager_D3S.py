@@ -109,6 +109,8 @@ class Manager_D3S(object):
 
         self.test = test
 
+        self.d3s_LED = LED(d3s_LED_pin)
+        
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
 
@@ -276,8 +278,6 @@ class Manager_D3S(object):
         """
         # D3S control over the LED
         if self.running:
-            self.d3s_LED = LED(d3s_LED_pin)
-
             self.d3s_LED.on()
         else:
             self.d3s_LED = None
