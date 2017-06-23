@@ -14,7 +14,6 @@ case "$1" in
     ;;
   stop)
     echo "Stopping D3S script" >> $LOG
-    sudo python -c 'import manager_D3S; manager_D3S.takedown()'
     sudo pkill -SIGTERM -f manager_D3S.py
     ;;
  *)
