@@ -3,8 +3,15 @@ import ast
 import binascii
 import csv
 import datetime
-from time import gmtime, strftime
+import time
 import argparse
+
+#Initiate timer
+parser = argparse.ArgumentParser()
+parser.add_argument("runtime", type = int)
+info = parser.parse_args()
+time = info.runtime
+counter_time= time.perf_counter()
 
 # Open CSV file to save results
 metadata = []
@@ -24,7 +31,7 @@ pen_results.writerow(metadata[:])
 
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-while True:
+while time.perf_counter()<counter_time+time:
     print('next')
     text = port.read(32)
     #print(text)
