@@ -374,10 +374,17 @@ class Manager_D3S(object):
 
     def takedown(self):
         """
-        Sets self.running to False and deletes self. Also turns off LEDs
+        Sets self.running to False and deletes self. Also turns off LED
         """
         self.running = False
         self.data_handler.send_all_to_backlog()
+
+        self.d3s_LED.off()
+
+        try:
+            GPIO.cleanup()
+        except NameError:
+            pass
 
         del(self)
 
