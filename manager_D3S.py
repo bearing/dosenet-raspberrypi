@@ -83,14 +83,6 @@ class Manager_D3S(object):
         self.lst = None
         self.create_structures = True
 
-        # D3S control over the LED
-        if RPI:
-            self.d3s_LED = LED(d3s_LED_pin)
-
-            self.d3s_LED.on()
-        else:
-            self.d3s_LED = None
-
         self.interval = interval
         self.count = count
 
@@ -333,6 +325,14 @@ class Manager_D3S(object):
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.takedown()
+
+    # D3S control over the LED
+    if self.running:
+        self.d3s_LED = LED(d3s_LED_pin)
+
+        self.d3s_LED.on()
+    else:
+        self.d3s_LED.off()
 
     def get_interval(self, start_time):
         """
