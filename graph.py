@@ -2,9 +2,11 @@
 import matplotlib.pyplot as plt
 import csv
 from dateutil import parser
+import argparse
 
 user_file = input("What air quality test result file do you want to graph? (Put quotes around the file name) Name: ")
 results = csv.reader(open(user_file), delimiter=',')
+
 times = []
 P3 = []
 P5 = []
@@ -19,12 +21,18 @@ for r in results:
     if row_counter>1:
         #Append each column in CSV to a separate list
         times.append(parser.parse(r[0])) #converts str date and time to datetime
+        print(parser.parse(r[0]))
         P3.append(r[1])
         P5.append(r[2])
         P10.append(r[3])
         P25.append(r[4])
         P50.append(r[5])
         P100.append(r[6])
+
+#Given a certain argument, combine results for each diameter
+
+
+
 
 #Use plot() method to graph
 plt.plot(times, P3, "b.")
