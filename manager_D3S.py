@@ -274,6 +274,13 @@ class Manager_D3S(object):
 
         Current way to stop is only using a keyboard interrupt.
         """
+        # D3S control over the LED
+        if self.running:
+            self.d3s_LED = LED(d3s_LED_pin)
+
+            self.d3s_LED.on()
+        else:
+            self.d3s_LED = None
 
         if self.transport == 'any':
             devs = kromek.discover()
@@ -325,14 +332,6 @@ class Manager_D3S(object):
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.takedown()
-
-    # D3S control over the LED
-    if running:
-        self.d3s_LED = LED(d3s_LED_pin)
-
-        self.d3s_LED.on()
-    else:
-        self.d3s_LED.off()
 
     def get_interval(self, start_time):
         """
