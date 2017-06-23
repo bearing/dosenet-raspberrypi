@@ -10,8 +10,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("runtime", type = int)
 info = parser.parse_args()
-time = info.runtime
-counter_time= time.perf_counter()
+run_time = info.runtime
+counter_time= int(strftime("%S", gmtime()))
 
 # Open CSV file to save results
 metadata = []
@@ -31,8 +31,8 @@ pen_results.writerow(metadata[:])
 
 print('Running Test Script')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-now_time = time.perf_counter()
-while now_time<counter_time+time:
+now_time = int(strftime("%S", gmtime()))
+while now_time<counter_time+run_time:
     print('next')
     text = port.read(32)
     #print(text)
@@ -93,7 +93,7 @@ while now_time<counter_time+time:
             results.append(repr(P100))
             pen_results.writerow(results[0:7])
 
-            now_time = time.perf_counter()
+            now_time = int(strftime("%S", gmtime()))
 
         else:
             print('Check Sum Failed')
@@ -104,4 +104,4 @@ while now_time<counter_time+time:
             results.append('Check Sum Failed')
             pen_results.writerow(results[0:2])
 
-            now_time = time.perf_counter()
+            now_time = int(strftime("%S", gmtime()))
