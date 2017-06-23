@@ -3,7 +3,8 @@ import ast
 import binascii
 import csv
 import datetime
-from time import strftime and gmtime
+from time import strftime
+from time import gmtime
 import argparse
 
 #Initiate timer
