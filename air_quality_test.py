@@ -57,6 +57,8 @@ while True:
             P100=((buf[25]<<8) + buf[26])
 
             # Print Concentrations [ug/m3]
+            date_time = datetime.datetime.now()
+            print(date_time)
             print('\nConcentration of Particulate Matter [ug/m3]\n')
             print('PM 1.0 = ' + repr(PM01Val) +' ug/m3')
             print('PM 2.5 = ' + repr(PM25Val) +' ug/m3')
@@ -73,7 +75,6 @@ while True:
 
             # Put results in a CSV file
             results = []
-            date_time = datetime.datetime.now()
             results.append(date_time)
             results.append(repr(P3))
             results.append(repr(P5))
