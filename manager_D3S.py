@@ -8,10 +8,20 @@ import sys
 from Crypto.Cipher import AES
 from collections import deque
 
+try:
+    import RPi.GPIO as GPIO
+    RPI = True
+except ImportError:
+    print('Not connected to a Raspberry Pi, try again')
+    RPI = False
+
 from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
+
+from auxiliaries import LED
+from globalvalues import D3S_LED_PIN
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -64,6 +74,7 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
+                 d3s_LED_pin=D3S_LED_PIN,
                  ):
 
         self.running = running
@@ -71,6 +82,14 @@ class Manager_D3S(object):
         self.total = None
         self.lst = None
         self.create_structures = True
+
+        # D3S control over the LED
+        if RPI:
+            self.d3s_LED = LED(d3s_LED_pin)
+
+            self.d3s_LED.on()
+        else:
+            self.d3s_LED = None
 
         self.interval = interval
         self.count = count
@@ -390,7 +409,7 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
