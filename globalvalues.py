@@ -10,12 +10,18 @@ except ImportError:
     print('Not on a Raspberry Pi, proceeding anyway')
     RPI = False
 
+try:
+    import kromek
+    D3S = True
+except ImportError:
+    print('D3S not detected, proceeding anyway')
+    D3S = False
 # Hardware pin numbers
 # (using Broadcom numbering)
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-POWER_LED_PIN = 19
+D3S_LED_PIN = 19
 NETWORK_LED_PIN = 20
 COUNTS_LED_PIN = 21
 
