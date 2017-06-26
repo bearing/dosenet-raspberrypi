@@ -216,7 +216,7 @@ class Real_Time_Spectra(object):
             self.data = np.concatenate((np.transpose(temp),
                                         self.data), axis=0)
 
-        def fix_array(self, array):
+    def fix_array(self, array):
         """
         Used to format arrays for the waterfall plot.
         """
