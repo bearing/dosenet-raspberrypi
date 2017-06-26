@@ -129,7 +129,6 @@ class Real_Time_Spectra(object):
 
             # # Save the original size of the data queue.
             # data_length = len(data)
-        print(self.queue)
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -223,7 +222,7 @@ class Real_Time_Spectra(object):
         """
         Used to format arrays for the waterfall plot.
         """
-        new_array = array.copy()[:self.resolution]
+        new_array = array.copy()[0][:self.resolution]
         return new_array
 
     def sum_graph(self,data):
