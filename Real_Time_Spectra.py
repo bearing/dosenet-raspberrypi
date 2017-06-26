@@ -198,22 +198,25 @@ class Real_Time_Spectra(object):
         """
         Prepares an array for the waterfall plot
         """
+
         if self.first:
 
             self.data = np.zeros((1, self.resolution), dtype=float)
 
             self.first = False
 
-            temp = self.fix_array(self.queue)
+            #temp = self.fix_array(self.queue)
 
-            self.data[0, :] = np.ndarray.flatten(temp)
+            #self.data[0, :] = np.ndarray.flatten(temp)
 
         else:
 
-            temp = self.fix_array(self.queue)
+            #temp = self.fix_array(self.queue)
 
-            self.data = np.concatenate((np.transpose(temp),
-                                        self.data), axis=0)
+            #self.data = np.concatenate((np.transpose(temp),
+            #                            self.data), axis=0)
+
+            self.data = self.queue
 
     def fix_array(self, array):
         """
