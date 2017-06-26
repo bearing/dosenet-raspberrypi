@@ -129,6 +129,7 @@ class Real_Time_Spectra(object):
 
             # # Save the original size of the data queue.
             # data_length = len(data)
+        print(self.queue)
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -209,11 +210,7 @@ class Real_Time_Spectra(object):
 
             temp = self.fix_array(self.queue)
 
-            print(temp)
-
             self.data[0, :] = np.ndarray.flatten(temp)
-
-            print(self.data)
 
         else:
 
