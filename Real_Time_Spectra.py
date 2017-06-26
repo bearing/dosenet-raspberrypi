@@ -205,20 +205,18 @@ class Real_Time_Spectra(object):
 
             self.first = False
 
-            #temp = self.fix_array(self.queue)
+            temp = self.fix_array(self.queue)
 
-            #self.data[0, :] = np.ndarray.flatten(temp)
+            self.data[0, :] = np.ndarray.flatten(temp)
 
         else:
 
-            #temp = self.fix_array(self.queue)
+            temp = self.fix_array(self.queue)
 
-            #self.data = np.concatenate((np.transpose(temp),
-            #                            self.data), axis=0)
+            self.data = np.concatenate((np.transpose(temp),
+                                        self.data), axis=0)
 
-            self.data = self.queue
-
-    def fix_array(self, array):
+        def fix_array(self, array):
         """
         Used to format arrays for the waterfall plot.
         """
