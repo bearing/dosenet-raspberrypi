@@ -34,6 +34,5 @@ if __name__ == '__main__':
         p.join()
         t.join()
         print('we can reboot here')
-    except
+    except:
         pass
-        
