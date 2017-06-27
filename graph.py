@@ -1,6 +1,7 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import csv
 import dateutil
 import argparse
@@ -178,11 +179,12 @@ for i in range(len(middletimes)):
     loc_zone = t.astimezone(to_zone)
     middletime_final.append(loc_zone)
 
-#Use plot() method to graph
-plt.plot(middletime_final, new_P3, "b.")
-plt.plot(middletime_final, new_P5, "g.")
-plt.plot(middletime_final, new_P10, "r.")
-plt.plot(middletime_final, new_P25, "m.")
-plt.plot(middletime_final, new_P50, "y.")
-plt.plot(middletime_final, new_P100, "c.")
+#Use plot() method to graph points and add legend
+plt.plot(middletime_final, new_P3, "b.", label='P3')
+plt.plot(middletime_final, new_P5, "g.", label = 'P5')
+plt.plot(middletime_final, new_P10, "r.", label = 'P10')
+plt.plot(middletime_final, new_P25, "m.", label = 'P25')
+plt.plot(middletime_final, new_P50, "y.", label = 'P50')
+plt.plot(middletime_final, new_P100, "c.", label = 'P100')
+plt.legend(loc="upper right")
 plt.show()
