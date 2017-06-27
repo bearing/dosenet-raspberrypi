@@ -98,31 +98,31 @@ if remainder_P100 !=0:
 
 #Add up data
 for i in range(int(len(P3)/combine_number)):
-    numberA = int((i*combine_number) + 1)
+    numberA = int(i*combine_number)
     numberB = int((i*combine_number) + combine_number)
     sum_P3 = [sum(P3[numberA:numberB])]
     new_P3.append(sum_P3)
 
 for i in range(int(len(P5)/combine_number)):
-    numberC = int((i*combine_number) + 1)
+    numberC = int(i*combine_number)
     numberD = int((i*combine_number) + combine_number)
     sum_P5 = [sum(P5[numberC:numberD])]
     new_P5.append(sum_P5)
 
 for i in range(int(len(P10)/combine_number)):
-    numberE = int((i*combine_number) + 1)
+    numberE = int(i*combine_number)
     numberF = int((i*combine_number) + combine_number)
     sum_P10 = [sum(P10[numberE:numberF])]
     new_P10.append(sum_P10)
 
 for i in range(int(len(P25)/combine_number)):
-    numberG = int((i*combine_number) + 1)
+    numberG = int(i*combine_number)
     numberH = int((i*combine_number) + combine_number)
     sum_P25 = [sum(P25[numberG:numberH])]
     new_P25.append(sum_P25)
 
 for i in range(int(len(P50)/combine_number)):
-    numberJ = int((i*combine_number) + 1)
+    numberJ = int(i*combine_number)
     numberK = int((i*combine_number) + combine_number)
     sum_P50 = [sum(P50[numberJ:numberK])]
     new_P50.append(sum_P50)
@@ -151,7 +151,7 @@ seconds_times = [time.mktime(t.timetuple()) for t in times]
 #Find middle time
 middletimes = []
 for i in range(int(len(seconds_times)/combine_number)):
-    numberN = int((i*combine_number) + 1)
+    numberN = int(i*combine_number)
     numberP = int((i*combine_number) + combine_number)
     time = numpy.array(seconds_times[numberN:numberP])
     timelength = numpy.where(time)
