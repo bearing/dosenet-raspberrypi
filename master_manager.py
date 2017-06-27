@@ -38,7 +38,9 @@ if __name__ == '__main__':
         print('KeyboardInterrupt: stopping Manager run')
         os.system('sudo pkill -SIGTERM -f manager_D3S.py')
         os.system('sudo pkill -SIGTERM -f manager.py')
+        os.system('sudo killall python &')
     except SystemExit:
         print('SystemExit: taking down Manager')
         os.system('sudo pkill -SIGTERM -f manager_D3S.py')
         os.system('sudo pkill -SIGTERM -f manager.py')
+        os.system('sudo killall python &')
