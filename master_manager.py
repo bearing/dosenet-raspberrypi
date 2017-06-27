@@ -8,8 +8,8 @@ def start_dosenet():
 
 def start_D3S():
     os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh start')
-    
-    
+
+
 if __name__ == '__main__':
     print('Waiting for NTP to be synced...')
     os.system('sudo service ntp stop')
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         ser.close()
     except:
         pass
-    
+
     p = multiprocessing.Process(target=start_D3S, args=())
     t = multiprocessing.Process(target=start_dosenet, args=())
     try:
@@ -34,5 +34,11 @@ if __name__ == '__main__':
         p.join()
         t.join()
         print('we can reboot here')
-    except:
-        pass
+    except KeyboardInterrupt:
+        print('KeyboardInterrupt: stopping Manager run')
+        os.system('sudo pkill -SIGTERM -f manager_D3S.py')
+        os.system('sudo pkill -SIGTERM -f manager.py')
+    except SystemExit:
+        print('SystemExit: taking down Manager')
+        os.system('sudo pkill -SIGTERM -f manager_D3S.py')
+        os.system('sudo pkill -SIGTERM -f manager.py')
