@@ -8,14 +8,14 @@ import numpy
 import time
 import datetime
 
-user_file = input("What air quality test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
-results = csv.reader(open(user_file), delimiter=',')
-
 #Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
 parser.add_argument("combinenumber", type = int, help = "Enter a natural number value that will determine the amount of results added together before being graphed")
 info = parser.parse_args()
 combine_number = info.combinenumber
+
+user_file = input("What air quality test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
+results = csv.reader(open(user_file), delimiter=',')
 
 times = []
 P3 = []
