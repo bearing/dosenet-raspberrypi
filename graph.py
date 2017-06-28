@@ -44,6 +44,14 @@ for r in results:
         Val25.append(r[8])
         Val100.append(r[9])
 
+while len(times)<= combine_number:
+    if len(times) == 1:
+        print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
+        combine_number = 1
+
+    else:
+        combine_number = input("The number provided was too large or not a natural number. There are "+str(len(times))+" results. Choose a natural number between 1 and "+str(len(times))+" that will determine the amount of results added together before being graphed. Number: ")
+
 #convert str into int
 for i in range(len(P3)):
     P3[i] = int(P3[i])
