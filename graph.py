@@ -1,7 +1,6 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import csv
 import dateutil
 import argparse
@@ -187,4 +186,7 @@ plt.plot(middletime_final, new_P25, "m.", label = 'P25')
 plt.plot(middletime_final, new_P50, "y.", label = 'P50')
 plt.plot(middletime_final, new_P100, "c.", label = 'P100')
 plt.legend(loc="best")
+plt.xlabel("Time")
+plt.ylabel("Particle Count")
+plt.title("Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S"))
 plt.show()
