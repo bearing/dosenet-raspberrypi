@@ -35,6 +35,7 @@ now_time = int(time.time())
 while now_time<counter_time+run_time:
     print('next')
     text = port.read(32)
+    print(text)
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
         print(buffer)
