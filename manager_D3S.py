@@ -308,7 +308,7 @@ class Manager_D3S(object):
         while self.signal_test_loop:
             with kromek.Controller(devs, self.signal_test_time) as controller:
                 for reading in controller.read():
-                    if np.any(np.array(reading[4])[:, 0] != 0)
+                    if sum(reading[4] != 0):
                         self.signal_test_loop = False
                         self.light_switch = True
 
