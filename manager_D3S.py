@@ -335,10 +335,11 @@ class Manager_D3S(object):
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
+                            self.d3s_LED.on()
+
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
 
-                            self.d3s_LED.on()
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
