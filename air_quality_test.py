@@ -36,7 +36,6 @@ now_time = int(time.time())
 while now_time<counter_time+run_time:
     print('next')
     text = port.read(32)
-    print(text)
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
         print(buffer)
@@ -44,8 +43,8 @@ while now_time<counter_time+run_time:
         #Check sum with last byte of list
         sumation = sum(buffer[0:30])
         checkbyte = (buffer[30]<<8)+buffer[31]
-        #print(sumation)
-        #print(checkbyte)
+        print(sumation)
+        print(checkbyte)
         if sumation == ((buffer[30]<<8)+buffer[31]):
             #print('Sum check complete')
             buf = buffer[1:32]
