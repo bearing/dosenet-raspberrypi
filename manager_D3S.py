@@ -306,11 +306,11 @@ class Manager_D3S(object):
             return
 
         #while self.signal_test_loop:
-            with kromek.Controller(devs, self.signal_test_time) as controller:
-                for reading in controller.read():
-                    if sum(reading[4] != 0):
-                        self.signal_test_loop = False
-                        self.light_switch = True
+            #with kromek.Controller(devs, self.signal_test_time) as controller:
+                #for reading in controller.read():
+                    #if sum(reading[4] != 0):
+                        #self.signal_test_loop = False
+                        #self.light_switch = True
 
         #If the D3S is receiving data, turn the D3S light on
         #if self.light_switch:
