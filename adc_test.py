@@ -34,6 +34,9 @@ while True:
         # The read_adc function will get the value of the specified channel (0-7).
         values[i] = mcp.read_adc(i)
     # Print the ADC values.
-    print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
+    # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
+    print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
+    concentration = 5000/496*values[0] - 1250
+    print('|{}|'.format(concentration)
     # Pause for half a second.
     time.sleep(0.5)
