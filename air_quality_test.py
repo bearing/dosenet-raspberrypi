@@ -95,7 +95,7 @@ while now_time<counter_time+run_time:
             results.append(repr(P100))
             results.append(repr(PM01Val))
             results.append(repr(PM25Val))
-            results.append(repr(PM100Val))
+            results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
 
             now_time = int(time.time())
