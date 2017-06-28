@@ -305,7 +305,7 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             return
 
-        while self.signal_test_loop:
+        #while self.signal_test_loop:
             with kromek.Controller(devs, self.signal_test_time) as controller:
                 for reading in controller.read():
                     if sum(reading[4] != 0):
@@ -313,8 +313,8 @@ class Manager_D3S(object):
                         self.light_switch = True
 
         #If the D3S is receiving data, turn the D3S light on
-        if self.light_switch:
-            self.d3s_LED.on()
+        #if self.light_switch:
+            #self.d3s_LED.on()
 
         done_devices = set()
         try:
@@ -337,6 +337,8 @@ class Manager_D3S(object):
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
+
+                            self.d3s_LED.on()
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
