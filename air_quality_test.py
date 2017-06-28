@@ -32,7 +32,7 @@ metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 
-print('Running Test Script')
+print('Printing Results')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
@@ -40,14 +40,10 @@ while now_time<counter_time+run_time:
     text = port.read(32)
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
-        #print(len(buffer))
         #Check sum with last byte of list
         sumation = sum(buffer[0:30])
         checkbyte = (buffer[30]<<8)+buffer[31]
-        print(sumation)
-        print(checkbyte)
         if sumation == ((buffer[30]<<8)+buffer[31]):
-            #print('Sum check complete')
             buf = buffer[1:32]
 
             # Get concentrations ug/m3
@@ -102,6 +98,7 @@ while now_time<counter_time+run_time:
 
         else:
             print('Check Sum Failed')
+            
             # Put results in a CSV file
             results = []
             date_time = datetime.datetime.now()

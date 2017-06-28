@@ -44,6 +44,7 @@ for r in results:
         Val25.append(r[8])
         Val100.append(r[9])
 
+#Make sure the argument was valid
 while len(times)< combine_number or combine_number<1:
     if len(times) == 1:
         print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
