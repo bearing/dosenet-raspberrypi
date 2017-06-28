@@ -1,5 +1,4 @@
 import serial
-#import ast
 import binascii
 import csv
 import datetime
