@@ -8,7 +8,7 @@ import numpy
 import time
 import datetime
 
-user_file = input("What air quality test result file do you want to graph? (Put quotes around the file name.) File Name: ")
+user_file = input("What air quality test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
 results = csv.reader(open(user_file), delimiter=',')
 
 #Given a certain argument, combine results for each size molecule
@@ -231,28 +231,26 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
-f = plt
-f.plot(middletime_final, new_P3, "b.", label='P3')
-f.plot(middletime_final, new_P5, "g.", label = 'P5')
-f.plot(middletime_final, new_P10, "r.", label = 'P10')
-f.plot(middletime_final, new_P25, "m.", label = 'P25')
-f.plot(middletime_final, new_P50, "y.", label = 'P50')
-f.plot(middletime_final, new_P100, "c.", label = 'P100')
-f.legend(loc="best")
-f.xlabel("Time")
-f.ylabel("Particle Count")
+plt.plot(middletime_final, new_P3, "b.", label='P3')
+plt.plot(middletime_final, new_P5, "g.", label = 'P5')
+plt.plot(middletime_final, new_P10, "r.", label = 'P10')
+plt.plot(middletime_final, new_P25, "m.", label = 'P25')
+plt.plot(middletime_final, new_P50, "y.", label = 'P50')
+plt.plot(middletime_final, new_P100, "c.", label = 'P100')
+plt.legend(loc="best")
+plt.xlabel("Time")
+plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-f.title(file_title)
-f.show()
+plt.title(file_title)
+plt.show()
 
 #Use plot() method to graph particle concentration vs. time and add legend
-g = plt
-g.plot(middletime_final, new_Val10, "b.", label='1.0')
-g.plot(middletime_final, new_Val25, "g.", label = '2.5')
-g.plot(middletime_final, new_Val100, "r.", label = '10')
-g.legend(loc="best")
-g.xlabel("Time")
-g.ylabel("Particle Concentration")
+plt.plot(middletime_final, new_Val10, "b.", label='1.0')
+plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
+plt.plot(middletime_final, new_Val100, "r.", label = '10')
+plt.legend(loc="best")
+plt.xlabel("Time")
+plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-g.title(file_title)
-g.show()
+plt.title(file_title)
+plt.show()
