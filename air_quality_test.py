@@ -64,9 +64,10 @@ while now_time<counter_time+run_time:
             P25 =((buf[21]<<8) + buf[22])
             P50 =((buf[23]<<8) + buf[24])
             P100=((buf[25]<<8) + buf[26])
-            '''
+
             # Print Concentrations [ug/m3]
             date_time = datetime.datetime.now()
+            '''
             print("\n")
             print(date_time)
             print('\nConcentration of Particulate Matter [ug/m3]\n')
