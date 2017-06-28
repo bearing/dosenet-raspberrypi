@@ -13,7 +13,7 @@ results = csv.reader(open(user_file), delimiter=',')
 
 #Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
-parser.add_argument("combinenumber", type = float)
+parser.add_argument("combinenumber", type = int)
 info = parser.parse_args()
 combine_number = info.combinenumber
 
@@ -44,7 +44,7 @@ for r in results:
         Val25.append(r[8])
         Val100.append(r[9])
 
-while len(times)<= combine_number:
+while len(times)<= combine_number or combine_number<1:
     if len(times) == 1:
         print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
         combine_number = 1
