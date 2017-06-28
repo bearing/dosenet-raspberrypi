@@ -30,7 +30,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
-from globalvalues import DEFAULT_INTERVAL_TEST_D3S
+from globalvalues import DEFAULT_D3STEST_LOG, DEFAULT_D3STEST_TIME
 
 
 def signal_term_handler(signal, frame):
@@ -75,13 +75,19 @@ class Manager_D3S(object):
                  log=False,
                  running=False,
                  d3s_LED_pin=D3S_LED_PIN,
+                 signal_test_time=DEFAULT_D3STEST_TIME,
+                 signal_test_log=DEFAULT_D3STEST_LOG,
+                 signal_test_loop=True,
                  ):
 
         self.running = running
 
         self.total = None
+        self.test_total = None
         self.lst = None
+        self.test_lst = None
         self.create_structures = True
+        self.test_create_structures = True
 
         self.interval = interval
         self.count = count
@@ -109,7 +115,12 @@ class Manager_D3S(object):
 
         self.test = test
 
+        self.signal_test_log = signal_test_log
+        self.signal_test_time = signal_test_time
+        self.signal_test_loop = signal_test_loop
+
         self.d3s_LED = LED(d3s_LED_pin)
+        self.light_switch = False
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
@@ -276,12 +287,6 @@ class Manager_D3S(object):
 
         Current way to stop is only using a keyboard interrupt.
         """
-        # D3S control over the LED
-        if self.running:
-            self.d3s_LED.on()
-        else:
-            self.d3s_LED = None
-
         if self.transport == 'any':
             devs = kromek.discover()
         else:
@@ -299,6 +304,17 @@ class Manager_D3S(object):
         devs = filtered
         if len(devs) <= 0:
             return
+
+        while self.signal_test_loop:
+            with kromek.Controller(devs, self.signal_test_time) as controller:
+                for reading in controller.read():
+                    if np.any(np.array(reading[4])[:, 0] != 0)
+                        self.signal_test_loop = False
+                        self.light_switch = True
+
+        #If the D3S is receiving data, turn the D3S light on
+        if self.light_switch:
+            self.d3s_LED.on()
 
         done_devices = set()
         try:

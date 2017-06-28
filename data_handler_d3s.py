@@ -80,15 +80,15 @@ class Data_Handler_D3S(object):
         if self.queue:
             self.vprint(1, "Flushing memory queue to backlog file")
             temp = []
-            while self.queue: 
+            while self.queue:
                 temp.append(self.queue.popleft())
-            with open(path, "ab") as f: # might only work for python 3? 
+            with open(path, "ab") as f: # might only work for python 3?
                 writer = csv.writer(f)
                 writer.writerows(temp)
-                
+
     def send_to_queue(self, spectra):
         """
-        Adds the time and spectra to the deque object.
+        Adds the time and spectra to the queue object.
         """
         time_string = time.time()
         self.queue.append([time_string, spectra])
