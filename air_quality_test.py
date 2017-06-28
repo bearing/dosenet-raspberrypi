@@ -64,7 +64,7 @@ while now_time<counter_time+run_time:
             P25 =((buf[21]<<8) + buf[22])
             P50 =((buf[23]<<8) + buf[24])
             P100=((buf[25]<<8) + buf[26])
-'''
+            '''
             # Print Concentrations [ug/m3]
             date_time = datetime.datetime.now()
             print("\n")
@@ -82,7 +82,7 @@ while now_time<counter_time+run_time:
             print('#Particles, diameter over 2.5 um = ' + repr(P25))
             print('#Particles, diameter over 5.0 um = ' + repr(P50))
             print('#Particles, diameter over 10  um = ' + repr(P100))
-'''
+            '''
             # Put results in a CSV file
             results = []
             results.append(date_time)
