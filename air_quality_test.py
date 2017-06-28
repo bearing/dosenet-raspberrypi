@@ -7,7 +7,7 @@ import argparse
 
 #Initiate timer
 parser = argparse.ArgumentParser()
-parser.add_argument("runtime", type = int)
+parser.add_argument("runtime", type = int, help = "Enter a whole number. This will determine the length of time in seconds for which the test will run.")
 info = parser.parse_args()
 run_time = info.runtime
 counter_time= int(time.time())
@@ -98,7 +98,7 @@ while now_time<counter_time+run_time:
 
         else:
             print('Check Sum Failed')
-            
+
             # Put results in a CSV file
             results = []
             date_time = datetime.datetime.now()

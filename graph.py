@@ -13,7 +13,7 @@ results = csv.reader(open(user_file), delimiter=',')
 
 #Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
-parser.add_argument("combinenumber", type = int)
+parser.add_argument("combinenumber", type = int, help = "Enter a natural number value that will determine the amount of results added together before being graphed")
 info = parser.parse_args()
 combine_number = info.combinenumber
 
