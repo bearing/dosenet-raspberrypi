@@ -27,6 +27,9 @@ metadata.append("1.0 um")
 metadata.append("2.5 um")
 metadata.append("5.0 um")
 metadata.append("10 um")
+metadata.append("PM 1.0")
+metadata.append("PM 2.5")
+metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 
 print('Running Test Script')
@@ -35,10 +38,8 @@ now_time = int(time.time())
 while now_time<counter_time+run_time:
     print('next')
     text = port.read(32)
-    print(text)
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
-        print(buffer)
         #print(len(buffer))
         #Check sum with last byte of list
         sumation = sum(buffer[0:30])
@@ -66,7 +67,7 @@ while now_time<counter_time+run_time:
 
             # Print Concentrations [ug/m3]
             date_time = datetime.datetime.now()
-            '''
+
             print("\n")
             print(date_time)
             print('\nConcentration of Particulate Matter [ug/m3]\n')
@@ -82,7 +83,7 @@ while now_time<counter_time+run_time:
             print('#Particles, diameter over 2.5 um = ' + repr(P25))
             print('#Particles, diameter over 5.0 um = ' + repr(P50))
             print('#Particles, diameter over 10  um = ' + repr(P100))
-            '''
+
             # Put results in a CSV file
             results = []
             results.append(date_time)
@@ -92,7 +93,10 @@ while now_time<counter_time+run_time:
             results.append(repr(P25))
             results.append(repr(P50))
             results.append(repr(P100))
-            pen_results.writerow(results[0:7])
+            results.append(repr(PM01Val))
+            results.append(repr(PM25Val))
+            results.append(repr(PM100Val))
+            pen_results.writerow(results[0:10])
 
             now_time = int(time.time())
 

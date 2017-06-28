@@ -24,6 +24,9 @@ P10 = []
 P25 = []
 P50 = []
 P100 = []
+Val10 = []
+Val25 = []
+Val100 = []
 
 row_counter= 0
 for r in results:
@@ -37,6 +40,9 @@ for r in results:
         P25.append(r[4])
         P50.append(r[5])
         P100.append(r[6])
+        Val10.append(r[7])
+        Val25.append(r[8])
+        Val100.append(r[9])
 
 #convert str into int
 for i in range(len(P3)):
@@ -57,12 +63,24 @@ for i in range(len(P50)):
 for i in range(len(P100)):
     P100[i] = int(P100[i])
 
+for i in range(len(Val10)):
+    Val10[i] = int(Val10[i])
+
+for i in range(len(Val25)):
+    Val25[i] = int(Val25[i])
+
+for i in range(len(Val100)):
+    Val100[i] = int(Val100[i])
+
 new_P3 = []
 new_P5 = []
 new_P10 = []
 new_P25 = []
 new_P50 = []
 new_P100 = []
+new_Val10 = []
+new_Val25 = []
+new_Val100 = []
 
 #Get rid of unnecessary data
 remainder_P3 = (len(P3)%(combine_number))
@@ -94,6 +112,21 @@ remainder_P100 = (len(P100)%(combine_number))
 if remainder_P100 !=0:
     for i in range(int(remainder_P100)):
         P100.pop()
+
+remainder_Val10 = (len(Val10)%(combine_number))
+if remainder_Val10 !=0:
+    for i in range(int(remainder_Val10)):
+        Val10.pop()
+
+remainder_Val25 = (len(Val25)%(combine_number))
+if remainder_Val25 !=0:
+    for i in range(int(remainder_Val25)):
+        Val25.pop()
+
+remainder_Val100 = (len(Val100)%(combine_number))
+if remainder_Val100 !=0:
+    for i in range(int(remainder_Val100)):
+        Val100.pop()
 
 #Add up data
 for i in range(int(len(P3)/combine_number)):
@@ -131,6 +164,25 @@ for i in range(int(len(P100)/combine_number)):
     numberM = int((i*combine_number) + combine_number)
     sum_P100 = [sum(P100[numberL:numberM])]
     new_P100.append(sum_P100)
+
+for i in range(int(len(Val10)/combine_number)):
+    numberQ = int(i*combine_number)
+    numberR = int((i*combine_number) + combine_number)
+    sum_Val10 = [sum(Val10[numberQ:numberR])]
+    new_Val10.append(sum_Val10)
+
+for i in range(int(len(Val25)/combine_number)):
+    numberS = int(i*combine_number)
+    numberT = int((i*combine_number) + combine_number)
+    sum_Val25 = [sum(Val25[numberS:numberT])]
+    new_Val25.append(sum_Val25)
+
+for i in range(int(len(Val100)/combine_number)):
+    numberV = int(i*combine_number)
+    numberW = int((i*combine_number) + combine_number)
+    sum_Val100 = [sum(Val100[numberV:numberW])]
+    new_Val100.append(sum_Val100)
+
 
 #Get rid of last time if unecessary
 if remainder_P25 !=0:
@@ -178,7 +230,7 @@ for i in range(len(middletimes)):
     loc_zone = t.astimezone(to_zone)
     middletime_final.append(loc_zone)
 
-#Use plot() method to graph points and add legend
+#Use plot() method to graph particle count vs. time and add legend
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
 plt.plot(middletime_final, new_P10, "r.", label = 'P10')
@@ -188,6 +240,17 @@ plt.plot(middletime_final, new_P100, "c.", label = 'P100')
 plt.legend(loc="best")
 plt.xlabel("Time")
 plt.ylabel("Particle Count")
+file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
+plt.title(file_title)
+plt.show()
+
+#Use plot() method to graph particle concentration vs. time and add legend
+plt.plot(middletime_final, new_Val10, "b.", label='1.0')
+plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
+plt.plot(middletime_final, new_Val100, "r.", label = '10')
+plt.legend(loc="best")
+plt.xlabel("Time")
+plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
 plt.show()
