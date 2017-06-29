@@ -265,7 +265,7 @@ plt.title(file_title)
 #Use plot() method to graph particle concentration vs. time and add legend
 fig2 = plt.plot(figsize = [14,14])
 #fig.add_subplot(num=None, facecolor='w')
-axe2 = fig1.add_axes([.5,.3,.35,.15])
+axe2 = fig2.add_axes([.5,.3,.35,.15])
 axe2.plot(middletime_final, new_Val10, "b.", label='1.0')
 axe2.plot(middletime_final, new_Val25, "g.", label = '2.5')
 axe2.plot(middletime_final, new_Val100, "r.", label = '10')
