@@ -5,8 +5,7 @@ import dateutil
 import time
 import datetime
 
-date_time = datetime.datetime.now()
-results = csv.reader(open(date_time), delimiter=',')
+results = csv.reader(open("adc_data.csv"), delimiter=',')
 times = []
 CO2 = []
 row_counter = 0
