@@ -247,7 +247,7 @@ for i in range(len(middletimes)):
 #Use plot() method to graph particle count vs. time and add legend
 fig1 = plt.plot(1)
 plt.figure(figsize = [10,12])
-fig.add_subplot(num=None, sfacecolor='w')
+#fig.add_subplot(num=None, sfacecolor='w')
 #axe = fig1.add_axes([.5,.3,.35,.15])
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
@@ -264,7 +264,7 @@ plt.title(file_title)
 
 #Use plot() method to graph particle concentration vs. time and add legend
 fig2 = plt.plot(figsize = [14,14])
-fig.add_subplot(num=None, facecolor='w')
+#fig.add_subplot(num=None, facecolor='w')
 axe2 = fig1.add_axes([.5,.3,.35,.15])
 axe2.plot(middletime_final, new_Val10, "b.", label='1.0')
 axe2.plot(middletime_final, new_Val25, "g.", label = '2.5')
