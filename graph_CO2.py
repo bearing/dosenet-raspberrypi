@@ -5,7 +5,8 @@ import dateutil
 import time
 import datetime
 
-user_file = datetime.datetime.now("%Y-%m-%d %H:%M:%S")
+date_time = datetime.datetime.now()
+user_file = date_time
 results = csv.reader(open(user_file), delimiter=',')
 times = []
 CO2 = []
