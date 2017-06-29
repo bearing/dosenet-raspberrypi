@@ -245,9 +245,9 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
+plt.subplots(num=None, figsize=(10, 12), dpi=80, facecolor='w', edgecolor='k')
 plt.figure(1)
 fig1 = plt.figure(1)
-plt.subplots(num=None, figsize=(10, 12), dpi=80, facecolor='w', edgecolor='k')
 axe = fig1.add_axes([.5,.3,.35,.15])
 axe.plot(middletime_final, new_P3, "b.", label='P3')
 axe.plot(middletime_final, new_P5, "g.", label = 'P5')
