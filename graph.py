@@ -260,7 +260,7 @@ plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
-plt.set_window_title('Test')
+figure.set_window_title('Test')
 
 #Use plot() method to graph particle concentration vs. time and add legend
 #plt.figure(2)
