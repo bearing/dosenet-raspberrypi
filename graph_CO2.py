@@ -5,6 +5,8 @@ import dateutil
 import time
 import datetime
 
+user_file = input("What CO2 concentration test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
+
 results = csv.reader(open("adc_data.csv"), delimiter=',')
 times = []
 CO2 = []
