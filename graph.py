@@ -246,7 +246,7 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
-plt.figure(figsize = [1,12])
+plt.figure(figsize = [5,5])
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
 plt.plot(middletime_final, new_P10, "r.", label = 'P10')
@@ -262,7 +262,7 @@ wtitle = pyl.gcf()
 wtitle.canvas.set_window_title('Particle Count vs. Time')
 
 #Use plot() method to graph particle concentration vs. time and add legend
-plt.figure(figsize = [1,14])
+plt.figure(figsize = [5,5])
 plt.plot(middletime_final, new_Val10, "b.", label='1.0')
 plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
 plt.plot(middletime_final, new_Val100, "r.", label = '10')
