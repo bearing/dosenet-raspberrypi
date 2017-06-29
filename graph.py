@@ -1,6 +1,7 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
+import matplotlib.figure
 import csv
 import dateutil
 import argparse
