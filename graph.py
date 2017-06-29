@@ -11,11 +11,16 @@ import numpy
 import time
 import datetime
 
-#Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
-parser.add_argument("combinenumber", type = int, help = "Enter a natural number value that will determine the amount of results added together before being graphed")
 info = parser.parse_args()
+
+#Get an argument to determine combine results for each size molecule
+parser.add_argument("combinenumber", type = int, help = "Enter a natural number value that will determine the amount of results added together before being graphed")
 combine_number = info.combinenumber
+
+#Optional argument that does not allow for the off set of data points
+parser.add_argument("--o","--offset", type = bool, action = "store_true", options = [True, False])
+offsetvalue = info.offset
 
 user_file = input("What air quality test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
 results = csv.reader(open(user_file), delimiter=',')
@@ -235,43 +240,96 @@ for i in range(int(len(seconds_times)/combine_number)):
         middletime_sec = time[middle_item]
         middletimes.append(middletime_sec)
 
-#Convert epoch seconds back into h:m:s
-middletime_final = []
-for i in range(len(middletimes)):
-    t = datetime.datetime.utcfromtimestamp(middletimes[i]/1000)
-    from_zone = dateutil.tz.tzutc()
-    to_zone = dateutil.tz.tzlocal()
-    t = t.replace(tzinfo=from_zone)
-    loc_zone = t.astimezone(to_zone)
-    middletime_final.append(loc_zone)
+#Off set points to make graph more clear
+if offsetvalue == True:
+    if len(middletime_final) == 1:
 
-#Use plot() method to graph particle count vs. time and add legend
-plt.figure(figsize = [5,5])
-plt.plot(middletime_final, new_P3, "b.", label='P3')
-plt.plot(middletime_final, new_P5, "g.", label = 'P5')
-plt.plot(middletime_final, new_P10, "r.", label = 'P10')
-plt.plot(middletime_final, new_P25, "m.", label = 'P25')
-plt.plot(middletime_final, new_P50, "y.", label = 'P50')
-plt.plot(middletime_final, new_P100, "c.", label = 'P100')
-plt.legend(loc="best", title = "Key")
-plt.xlabel("Time")
-plt.ylabel("Particle Count")
-file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title("Particle Count vs. Time")
-wtitle = pyl.gcf()
-wtitle.canvas.set_window_title(file_title)
+        print("Yeahhhh!")
 
-#Use plot() method to graph particle concentration vs. time and add legend
-plt.figure(figsize = [5,5])
-plt.plot(middletime_final, new_Val10, "b.", label='1.0')
-plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
-plt.plot(middletime_final, new_Val100, "r.", label = '10')
-plt.legend(loc="best", title = "Key")
-plt.xlabel("Time")
-plt.ylabel("Particle Concentration")
-file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title("Particle Concentration vs. Time")
-wtitle = pyl.gcf()
-wtitle.canvas.set_window_title(file_title)
+    else:
 
-plt.show()
+
+        print("Yeah")
+
+    #Convert epoch seconds back into h:m:s
+    middletime_final = []
+    for i in range(len(middletimes)):
+        t = datetime.datetime.utcfromtimestamp(middletimes[i]/1000)
+        from_zone = dateutil.tz.tzutc()
+        to_zone = dateutil.tz.tzlocal()
+        t = t.replace(tzinfo=from_zone)
+        loc_zone = t.astimezone(to_zone)
+        middletime_final.append(loc_zone)
+
+    #Use plot() method to graph particle count vs. time and add legend
+    plt.figure(figsize = [5,5])
+    plt.plot(middletime_final_P3, new_P3, "b.", label='P3')
+    plt.plot(middletime_final_P5, new_P5, "g.", label = 'P5')
+    plt.plot(middletime_final_P10, new_P10, "r.", label = 'P10')
+    plt.plot(middletime_final_P25, new_P25, "m.", label = 'P25')
+    plt.plot(middletime_final_P50, new_P50, "y.", label = 'P50')
+    plt.plot(middletime_final_P100, new_P100, "c.", label = 'P100')
+    plt.legend(loc="best", title = "Key")
+    plt.xlabel("Time")
+    plt.ylabel("Particle Count")
+    file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
+    plt.title("Particle Count vs. Time")
+    wtitle = pyl.gcf()
+    wtitle.canvas.set_window_title(file_title)
+
+    #Use plot() method to graph particle concentration vs. time and add legend
+    plt.figure(figsize = [5,5])
+    plt.plot(middletime_final_Val10, new_Val10, "b.", label='1.0')
+    plt.plot(middletime_final_Val25, new_Val25, "g.", label = '2.5')
+    plt.plot(middletime_final_Val100, new_Val100, "r.", label = '10')
+    plt.legend(loc="best", title = "Key")
+    plt.xlabel("Time")
+    plt.ylabel("Particle Concentration")
+    file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
+    plt.title("Particle Concentration vs. Time")
+    wtitle = pyl.gcf()
+    wtitle.canvas.set_window_title(file_title)
+
+    plt.show()
+
+else:
+    #Convert epoch seconds back into h:m:s
+    middletime_final = []
+    for i in range(len(middletimes)):
+        t = datetime.datetime.utcfromtimestamp(middletimes[i]/1000)
+        from_zone = dateutil.tz.tzutc()
+        to_zone = dateutil.tz.tzlocal()
+        t = t.replace(tzinfo=from_zone)
+        loc_zone = t.astimezone(to_zone)
+        middletime_final.append(loc_zone)
+
+    #Use plot() method to graph particle count vs. time and add legend
+    plt.figure(figsize = [5,5])
+    plt.plot(middletime_final, new_P3, "b.", label='P3')
+    plt.plot(middletime_final, new_P5, "g.", label = 'P5')
+    plt.plot(middletime_final, new_P10, "r.", label = 'P10')
+    plt.plot(middletime_final, new_P25, "m.", label = 'P25')
+    plt.plot(middletime_final, new_P50, "y.", label = 'P50')
+    plt.plot(middletime_final, new_P100, "c.", label = 'P100')
+    plt.legend(loc="best", title = "Key")
+    plt.xlabel("Time")
+    plt.ylabel("Particle Count")
+    file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
+    plt.title("Particle Count vs. Time")
+    wtitle = pyl.gcf()
+    wtitle.canvas.set_window_title(file_title)
+
+    #Use plot() method to graph particle concentration vs. time and add legend
+    plt.figure(figsize = [5,5])
+    plt.plot(middletime_final, new_Val10, "b.", label='1.0')
+    plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
+    plt.plot(middletime_final, new_Val100, "r.", label = '10')
+    plt.legend(loc="best", title = "Key")
+    plt.xlabel("Time")
+    plt.ylabel("Particle Concentration")
+    file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
+    plt.title("Particle Concentration vs. Time")
+    wtitle = pyl.gcf()
+    wtitle.canvas.set_window_title(file_title)
+
+    plt.show()
