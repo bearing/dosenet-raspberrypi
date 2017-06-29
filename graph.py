@@ -49,7 +49,9 @@ while len(times)< combine_number or combine_number<1:
     if len(times) == 1:
         print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
         combine_number = 1
-
+    elif len(times) == 0:
+        print("There are no results in the document provided.")
+        quit()
     else:
         combine_number = input("The number provided was too large or not a natural number. There are "+str(len(times))+" results. Choose a natural number between 1 and "+str(len(times))+" that will determine the amount of results added together before being graphed. Number: ")
 
