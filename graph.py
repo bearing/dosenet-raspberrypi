@@ -253,10 +253,10 @@ axe.plot(middletime_final, new_P25, "m.", label = 'P25')
 axe.plot(middletime_final, new_P50, "y.", label = 'P50')
 axe.plot(middletime_final, new_P100, "c.", label = 'P100')
 axe.legend(loc="best")
-#axe.xlabel("Time")
-#axe.ylabel("Particle Count")
+plt.xlabel("Time")
+plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-#axe.title(file_title)
+plt.title(file_title)
 
 #Use plot() method to graph particle concentration vs. time and add legend
 plt.figure(2)
