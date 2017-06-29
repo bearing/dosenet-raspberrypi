@@ -1,7 +1,7 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
-import matplotlib.figure
+import matplotlib.figure as fig
 import csv
 import dateutil
 import argparse
@@ -244,7 +244,7 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
-fig1 = plt.figure(1)
+plt.figure(1)
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
 plt.plot(middletime_final, new_P10, "r.", label = 'P10')
@@ -256,10 +256,10 @@ plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
-add_axes([.5,.3,.35,.15])
+fig.add_axes([.5,.3,.35,.15])
 
 #Use plot() method to graph particle concentration vs. time and add legend
-fig2 = plt.figure(2)
+plt.figure(2)
 plt.plot(middletime_final, new_Val10, "b.", label='1.0')
 plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
 plt.plot(middletime_final, new_Val100, "r.", label = '10')
