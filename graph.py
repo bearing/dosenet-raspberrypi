@@ -278,6 +278,6 @@ plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
 wtitle = pyl.gcf()
-wtitle.canvas.set_window_title('Particle Count vs. Time')
+wtitle.canvas.set_window_title('Particle Concentration vs. Time')
 
 plt.show()
