@@ -29,7 +29,7 @@ print('Reading MCP3008 values, press Ctrl-C to quit...')
 print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*range(8)))
 print('-' * 57)
 
-adc_results = csv.writer(open("adc_data.csv"), delimiter = ",")
+adc_results = csv.writer(open("adc_data.csv", "ab+"), delimiter = ",")
 
 metadata = []
 metadata.append("Date and Time")
