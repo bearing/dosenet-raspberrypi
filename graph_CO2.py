@@ -18,4 +18,6 @@ for r in results:
 		CO2.append(int(r[1]))
 
 plt.plot(times, CO2, "b.")
+plt.xlabel("Time")
+plt.ylabel("CO2 (ppm)")
 plt.show()		
