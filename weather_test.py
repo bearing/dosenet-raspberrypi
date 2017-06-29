@@ -13,6 +13,7 @@ results.writerow(metadata)
 
 time_of_program=input("Enter the number of seconds the program will last: ")
 time_passed=0
+
 while time_passed<times of program:
     date_time = datetime.datetime.now()
     degrees = sensor.read_temperature()
