@@ -4,6 +4,7 @@
 # License: Public Domain
 import time
 import datetime
+import csv
 
 # Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
@@ -57,5 +58,5 @@ while True:
     results.append(uv_index)
 
     adc_results.writerow(results[:])
-    
+
     time.sleep(0.5)
