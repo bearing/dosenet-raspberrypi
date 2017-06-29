@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.figure as fig
-import matplotlib
+#import matplotlib
 import csv
 import dateutil
 import argparse
