@@ -6,8 +6,7 @@ import time
 import datetime
 
 date_time = datetime.datetime.now()
-user_file = date_time
-results = csv.reader(open(user_file), delimiter=',')
+results = csv.reader(open(date_time), delimiter=',')
 times = []
 CO2 = []
 row_counter = 0
