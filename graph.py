@@ -196,9 +196,6 @@ for i in range(int(len(Val100)/combine_number)):
     sum_Val100 = [sum(Val100[numberV:numberW])]
     new_Val100.append(sum_Val100)
 
-print(new_Val100)
-print(new_Val25)
-print(new_Val10)
 #Get rid of last time if unecessary
 if remainder_P25 !=0:
     for i in range(int(remainder_P25)):
@@ -244,7 +241,7 @@ for i in range(len(middletimes)):
     t = t.replace(tzinfo=from_zone)
     loc_zone = t.astimezone(to_zone)
     middletime_final.append(loc_zone)
-'''
+
 #Use plot() method to graph particle count vs. time and add legend
 fig1 = plt.figure(1)
 plt.plot(middletime_final, new_P3, "b.", label='P3')
@@ -272,4 +269,3 @@ file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[
 plt.title(file_title)
 
 plt.show()
-'''
