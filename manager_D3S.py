@@ -305,16 +305,31 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             return
 
+        test_done_devices = set()
         while self.signal_test_loop:
-            with kromek.Controller(devs, self.signal_test_time) as controller:
-                for reading in controller.read():
-                    if sum(reading[4]) != 0:
-                        self.signal_test_loop = False
-                        self.light_switch = True
+            if self.test_create_structures:
+            	self.test_total = np.array(reading[4])
+            	self.test_lst = np.array([reading[4]])
+            	self.test_create_structures = False
+            else:
+            	self.test_total += np.array(reading[4])
+            	self.test_lst = np.concatenate(
+            		(self.test_lst, [np.array(reading[4])]))
+            test_serial = reading[0]
+            test_dev_count = reading[1]
+            if test_serial not in test_done_devices:
+            	test_start, test_end = self.get_interval(
+            		time.time() - self.signal_test_time)
 
-        #If the D3S is receiving data, turn the D3S light on
-        if self.light_switch:
-            self.d3s_LED.on()
+                self.d3s_LED.on()
+
+            	self.handle_spectra(
+            		test_start, test_end, reading[4])
+            if test_dev_count >= self.count > 0:
+            	test_done_devices.add(test_serial)
+            	controller.stop_collector(test_serial)
+            if len(test_done_devices) >= len(devs):
+            	break
 
         done_devices = set()
         try:
