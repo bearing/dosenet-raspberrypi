@@ -313,8 +313,8 @@ class Manager_D3S(object):
                         self.light_switch = True
 
         #If the D3S is receiving data, turn the D3S light on
-        #if self.light_switch:
-            #self.d3s_LED.on()
+        if self.light_switch:
+            self.d3s_LED.on()
 
         done_devices = set()
         try:
