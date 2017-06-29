@@ -3,6 +3,7 @@
 # Author: Tony DiCola
 # License: Public Domain
 import time
+import datetime
 
 # Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
@@ -26,8 +27,18 @@ print('Reading MCP3008 values, press Ctrl-C to quit...')
 # Print nice channel column headers.
 print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*range(8)))
 print('-' * 57)
+
+adc_results = csv.writer(open("adc_data.csv"), delimiter = ",")
+
+metadata = []
+metadata.append("Date and Time")
+metadata.append("CO2 (ppm)")
+metadata.append("UV")
+adc_results.writerow(metadata[:])
+
 # Main program loop.
 while True:
+    date_time = datetime.datetime.now()
     # Read all the ADC channel values in a list.
     values = [0]*8
     for i in range(8):
@@ -39,4 +50,12 @@ while True:
     concentration = 5000/496*values[0] - 1250
     print('|{}|'.format(concentration))
     # Pause for half a second.
+    uv_index = values[7]
+    results = []
+    results.append(date_time)
+    results.append(concentration)
+    results.append(uv_index)
+
+    adc_results.writerow(results[:])
+    
     time.sleep(0.5)
