@@ -19,7 +19,7 @@ parser.add_argument("combinenumber", type = int, help = "Enter a natural number 
 combine_number = info.combinenumber
 
 #Optional argument that does not allow for the off set of data points
-parser.add_argument("--o","--offset", type = bool, action = "store_true", options = [True, False])
+parser.add_argument("--o","--offset", type = bool, action = "store_false")
 offsetvalue = info.offset
 
 user_file = input("What air quality test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
