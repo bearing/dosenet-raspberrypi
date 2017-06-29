@@ -5,12 +5,15 @@ from Adafruit_BME280 import *
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-filename = "weather test results"+file_time+".csv"
+filename = "weather_test_results_"+file_time+".csv"
 results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity %"]
 results.writerow(metadata)
-while True:
+
+time_of_program=input("Enter the number of seconds the program will last: ")
+time_passed=0
+while time_passed<times of program:
     date_time = datetime.datetime.now()
     degrees = sensor.read_temperature()
     pascals = sensor.read_pressure()
@@ -30,4 +33,6 @@ while True:
     results.writerow(data)
     
     time.sleep(1)
+    
+    time_passed+=1
     
