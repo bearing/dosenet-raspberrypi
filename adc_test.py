@@ -64,5 +64,5 @@ while now_time<counter_time+run_time:
 
     adc_results.writerow(results[:])
 
-    time.sleep(0.5)
+    time.sleep(1)
     now_time = int(time.time())
