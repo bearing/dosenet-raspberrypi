@@ -247,6 +247,7 @@ for i in range(len(middletimes)):
 #Use plot() method to graph particle count vs. time and add legend
 plt.figure(1)
 fig1 = plt.figure(1)
+ax = plt.subplots(num=None, figsize=(10, 12), dpi=80, facecolor='w', edgecolor='k')
 axe = fig1.add_axes([.5,.3,.35,.15])
 axe.plot(middletime_final, new_P3, "b.", label='P3')
 axe.plot(middletime_final, new_P5, "g.", label = 'P5')
@@ -259,7 +260,6 @@ plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
-ax = plt.subplots(num=None, figsize=(10, 12), dpi=80, facecolor='w', edgecolor='k')
 #ax.set_window_title('Test')
 
 #Use plot() method to graph particle concentration vs. time and add legend
