@@ -23,6 +23,7 @@ mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 # SPI_DEVICE = 0
 # mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
+run_time = input("Set run time (seconds): ")
 
 print('Reading MCP3008 values, press Ctrl-C to quit...')
 # Print nice channel column headers.
@@ -40,7 +41,9 @@ metadata.append("UV")
 adc_results.writerow(metadata[:])
 
 # Main program loop.
-while True:
+now_time = int(time.time())
+counter_time = now_time
+while now_time<counter_time+run_time:
     date_time = datetime.datetime.now()
     # Read all the ADC channel values in a list.
     values = [0]*8
@@ -62,3 +65,4 @@ while True:
     adc_results.writerow(results[:])
 
     time.sleep(0.5)
+    now_time = int(time.time())
