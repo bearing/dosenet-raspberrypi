@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.figure as fig
+import matplotlib.pylab as pyl
 import matplotlib
 import csv
 import dateutil
@@ -260,7 +261,8 @@ plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
-figure.set_window_title('Test')
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title('Particle Count vs. Time')
 
 #Use plot() method to graph particle concentration vs. time and add legend
 #plt.figure(2)
@@ -275,5 +277,7 @@ plt.xlabel("Time")
 plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title('Particle Count vs. Time')
 
 plt.show()
