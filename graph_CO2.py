@@ -37,10 +37,10 @@ for i in range(nsum_data):
 	itime = itimes[int(len(itimes)/2)]
 	merge_times.append(itime)
 
-
+fig = plt.figure()
 plt.plot(merge_times, data_ave, "b.")
 plt.errorbar(merge_times, data_ave, yerr = data_unc)
 plt.xlabel("Time")
 plt.ylabel("CO2 (ppm)")
-plt.autofmt_xdate()
+fig.autofmt_xdate()
 plt.show()		
