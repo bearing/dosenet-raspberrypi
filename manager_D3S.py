@@ -304,15 +304,21 @@ class Manager_D3S(object):
         devs = filtered
         if len(devs) <= 0:
             return
-
-        while self.signal_test_loop:
-            with kromek.Controller(devs, self.signal_test_time) as controller:
-                for reading in controller.read():
-                    print(reading[4])
-                    if sum(reading[4]) != 0:
-                        self.d3s_LED.on()
-                        #self.signal_test_loop = False
-                        break
+        try:
+            while self.signal_test_loop:
+                with kromek.Controller(devs, self.signal_test_time) as controller:
+                    for reading in controller.read():
+                        print(reading[4])
+                        if sum(reading[4]) != 0:
+                            self.d3s_LED.on()
+                            #self.signal_test_loop = False
+                            break
+        except KeyboardInterrupt:
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            self.takedown()
+        except SystemExit:
+            self.vprint(1, '\nSystemExit: taking down Manager')
+            self.takedown()
 
         done_devices = set()
         try:
