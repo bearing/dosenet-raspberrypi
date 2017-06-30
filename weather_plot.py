@@ -32,18 +32,19 @@ for r in results:
     row_counter+=1
     
     
-plt.plot(times, degrees_list)
+plt.plot1(times, degrees_list, "b.")
 plt.xlabel("Time(s)")
 plt.ylabel("Degrees(C)")
 plt.show
 
-plt.plot(times, pressure_list)
+plt.plot2(times, pressure_list)
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure hPa")
 plt.show()
 
-plt.plot(times, humidity_list)
+plt.plot3(times, humidity_list)
 plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
+plt.show()
 
 
