@@ -209,6 +209,8 @@ class Real_Time_Spectra(object):
 
             temp = self.fix_array(self.queue)
 
+            print(temp)
+
             self.data[0, :] = np.ndarray.flatten(temp)
 
         else:
