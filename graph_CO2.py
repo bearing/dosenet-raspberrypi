@@ -24,6 +24,7 @@ nsum_data = int(ndata/n_merge)
 
 data_ave = []
 data_unc = []
+merge_times = []
 
 for i in range(nsum_data):
 	idata = CO2[i*n_merge:(i+1)*n_merge]
@@ -32,8 +33,13 @@ for i in range(nsum_data):
 	CO2sigma = np.sqrt(np.var(idata_array))
 	data_ave.append(CO2mean)
 	data_unc.append(CO2sigma)
+	itimes = times[i*n_merge:(i+1)*n_merge]
+	itime = itimes[int(len(itimes)/2)]
+	merge_times.append(itime)
 
-plt.plot(times, CO2, "b.")
+
+plt.plot(merge_times, data_ave, "b.")
+plt.errorbar(merge_times, data_ave, yerr = data_unc)
 plt.xlabel("Time")
 plt.ylabel("CO2 (ppm)")
 plt.show()		
