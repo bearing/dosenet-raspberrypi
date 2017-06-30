@@ -27,7 +27,7 @@ for r in results:
         times.append(dateutil.parser.parse(r[0]))
         degrees_list.append(r[1])
         pressure_list.append(r[2])
-        huidity_list.append(r[3])
+        humidity_list.append(r[3])
         
     row_counter+=1
     
