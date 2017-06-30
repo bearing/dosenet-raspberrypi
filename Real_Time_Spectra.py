@@ -211,7 +211,7 @@ class Real_Time_Spectra(object):
 
             print(temp)
 
-            #self.data[0, :] = np.ndarray.flatten(temp)
+            self.data[0, :] = np.ndarray.flatten(temp)
 
         else:
 
