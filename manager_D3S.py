@@ -318,23 +318,13 @@ class Manager_D3S(object):
         #Checks if the RaspberryPi is getting data from the D3S
         #and turns on the red LED if it is.
         try:
-            while self.signal_test_attempts < 3 or not self.signal_test_connection:
-                test_time = time.time() + self.signal_test_time
-                while time.time() < test_time or self.signal_test_loop:
-                    with kromek.Controller(devs, self.signal_test_time) as controller:
-                        for reading in controller.read():
-                            if sum(reading[4]) != 0:
-                                self.d3s_light_switch = True
-                                self.signal_test_loop = False
-                                break
-                if self.d3s_light_switch:
-                    self.signal_test_connection = True
-                else:
-                    self.signal_test_attempts += 1
-                    print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
-            if not self.signal_test_connection:
-                print("No D3S found, shutting down script")
-                self.takedown()
+            while self.signal_test_loop:
+ -                with kromek.Controller(devs, self.signal_test_time) as controller:
+ -                    for reading in controller.read():
+ -                        if sum(reading[4]) != 0:
+ -                            self.d3s_light_switch = True
+ -                            self.signal_test_loop = False
+ -                            break
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
