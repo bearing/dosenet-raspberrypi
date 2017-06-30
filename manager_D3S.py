@@ -8,10 +8,20 @@ import sys
 from Crypto.Cipher import AES
 from collections import deque
 
+try:
+    import RPi.GPIO as GPIO
+    RPI = True
+except ImportError:
+    print('Not connected to a Raspberry Pi, try again')
+    RPI = False
+
 from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
+
+from auxiliaries import LED
+from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -20,7 +30,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
-from globalvalues import DEFAULT_INTERVAL_TEST_D3S
+from globalvalues import DEFAULT_D3STEST_TIME
 
 
 def signal_term_handler(signal, frame):
@@ -64,6 +74,12 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
+                 d3s_LED_pin=D3S_LED_PIN,
+                 d3s_light_switch=False,
+                 d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
+                 d3s_LED_blink=True,
+                 signal_test_time=DEFAULT_D3STEST_TIME,
+                 signal_test_loop=True,
                  ):
 
         self.running = running
@@ -97,6 +113,20 @@ class Manager_D3S(object):
         self.make_data_log(self.datalog)
 
         self.test = test
+
+        self.signal_test_time = signal_test_time
+        self.signal_test_loop = signal_test_loop
+
+        self.d3s_LED = LED(d3s_LED_pin)
+        self.d3s_light_switch = d3s_light_switch
+        self.d3s_LED_blink_period = d3s_LED_blink_period
+        self.d3s_LED_blink = d3s_LED_blink
+
+        if d3s_LED_blink:
+            print("Attempting to connect to D3S now")
+            self.d3s_LED.start_blink(interval=d3s_LED_blink_period)
+        else:
+            self.d3s_LED.on()
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
@@ -263,7 +293,6 @@ class Manager_D3S(object):
 
         Current way to stop is only using a keyboard interrupt.
         """
-
         if self.transport == 'any':
             devs = kromek.discover()
         else:
@@ -281,6 +310,28 @@ class Manager_D3S(object):
         devs = filtered
         if len(devs) <= 0:
             return
+
+        #Checks if the RaspberryPi is getting data from the D3S
+        #and turns on the red LED if it is.
+        try:
+            while self.signal_test_loop:
+                with kromek.Controller(devs, self.signal_test_time) as controller:
+                    for reading in controller.read():
+                        if sum(reading[4]) != 0:
+                            self.d3s_light_switch = True
+                            self.signal_test_loop = False
+                            break
+        except KeyboardInterrupt:
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            self.takedown()
+        except SystemExit:
+            self.vprint(1, '\nSystemExit: taking down Manager')
+            self.takedown()
+
+        if self.d3s_light_switch:
+            self.d3s_LED.stop_blink()
+            print("D3S data connection found, continuing with normal collection")
+            self.d3s_LED.on()
 
         done_devices = set()
         try:
@@ -303,6 +354,7 @@ class Manager_D3S(object):
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
+
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -355,10 +407,20 @@ class Manager_D3S(object):
 
     def takedown(self):
         """
-        Sets self.running to False and deletes self. Also turns off LEDs
+        Sets self.running to False and deletes self. Also turns off LED
         """
         self.running = False
         self.data_handler.send_all_to_backlog()
+
+        try:
+            self.d3s_LED.off()
+        except AttributeError:
+            pass
+
+        try:
+            GPIO.cleanup()
+        except NameError:
+            pass
 
         del(self)
 
@@ -390,7 +452,7 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
