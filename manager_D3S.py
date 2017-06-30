@@ -311,7 +311,8 @@ class Manager_D3S(object):
                     print(reading[4])
                     if sum(reading[4]) != 0:
                         self.d3s_LED.on()
-                        self.signal_test_loop = False
+                        #self.signal_test_loop = False
+                        break
 
         done_devices = set()
         try:
