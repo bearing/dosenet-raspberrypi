@@ -21,7 +21,7 @@ from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from auxiliaries import LED
-from globalvalues import D3S_LED_PIN
+from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -75,6 +75,9 @@ class Manager_D3S(object):
                  log=False,
                  running=False,
                  d3s_LED_pin=D3S_LED_PIN,
+                 d3s_light_switch=False
+                 d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
+                 d3s_LED_blink=True
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
                  ):
@@ -115,6 +118,15 @@ class Manager_D3S(object):
         self.signal_test_loop = signal_test_loop
 
         self.d3s_LED = LED(d3s_LED_pin)
+        self.d3s_light_switch = d3s_light_switch
+        self.d3s_LED_blink_period = d3s_LED_blink_period
+        self.d3s_LED_blink = d3s_LED_blink
+
+        if d3s_LED_blink:
+            print("Attempting to connect to D3S now")
+            self.d3s_LED.start_blink(interval=d3s_LED_blink_period)
+        else:
+            self.d3s_LED.on()
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
@@ -306,7 +318,7 @@ class Manager_D3S(object):
                 with kromek.Controller(devs, self.signal_test_time) as controller:
                     for reading in controller.read():
                         if sum(reading[4]) != 0:
-                            self.d3s_LED.on()
+                            self.d3s_light_switch = True
                             self.signal_test_loop = False
                             break
         except KeyboardInterrupt:
@@ -315,6 +327,11 @@ class Manager_D3S(object):
         except SystemExit:
             self.vprint(1, '\nSystemExit: taking down Manager')
             self.takedown()
+
+        if self.d3s_light_switch:
+            self.d3s_LED.stop_blink()
+            print("D3S data connection found, continuing with normal collection")
+            self.d3s_LED.on()
 
         done_devices = set()
         try:
