@@ -79,7 +79,8 @@ class Manager_D3S(object):
                  d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
                  d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
-                 signal_test_loop=True,
+                 signal_test_loops=0,
+                 signal_test_connection=True,
                  ):
 
         self.running = running
@@ -115,7 +116,9 @@ class Manager_D3S(object):
         self.test = test
 
         self.signal_test_time = signal_test_time
-        self.signal_test_loop = signal_test_loop
+        self.signal_test_loops = signal_test_loops
+
+        self.signal_test_connection = signal_test_connection
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
@@ -314,13 +317,24 @@ class Manager_D3S(object):
         #Checks if the RaspberryPi is getting data from the D3S
         #and turns on the red LED if it is.
         try:
-            while self.signal_test_loop:
-                with kromek.Controller(devs, self.signal_test_time) as controller:
-                    for reading in controller.read():
-                        if sum(reading[4]) != 0:
-                            self.d3s_light_switch = True
-                            self.signal_test_loop = False
-                            break
+            while self.signal_test_attempts < 3:
+                while self.signal_test_loops < 6:
+                    with kromek.Controller(devs, self.signal_test_time) as controller:
+                        for reading in controller.read():
+                            self.signal_test_loops += 1
+                            if sum(reading[4]) != 0:
+                                self.d3s_light_switch = True
+                                self.signal_test_loops = 6
+                                break
+                            if self.signal_test_loops >= 6:
+                                break
+                if self.d3s_light_switch:
+                    self.signal_test_attempts = 3
+                else:
+                    self.signal_test_attempts += 1
+            if not self.signal_test_connection:
+                self.d3s_LED.stop_blink()
+                self.takedown()
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
