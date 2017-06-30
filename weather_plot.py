@@ -52,7 +52,8 @@ for i in range(nsum_data):
 	temp_ave.append(temp_mean)
 	temp_unc.append(temp_sigma)
     
-    ipressure = pressure_list[i*n_merge:(i+1)*n_merge]
+    
+    ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
     ipressure_array = np.asarray(ipressure)
     pressure_mean = np.mean(ipressure_array)
     pressure_sigma = np.sqrt(np.var(ipressure_array))
