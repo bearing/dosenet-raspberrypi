@@ -52,7 +52,7 @@ for i in range(nsum_data):
 	temp_ave.append(temp_mean)
 	temp_unc.append(temp_sigma)
     
-    
+for i in range(nsum_data):
     ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
     ipressure_array = np.asarray(ipressure)
     pressure_mean = np.mean(ipressure_array)
@@ -60,16 +60,22 @@ for i in range(nsum_data):
     pressure_ave.append(pressure_mean)
     pressure_unc.append(pressure_sigma)
     
+for i in range(nsum_data):
     ihumid = humidity_list[i*n_merge:(i+1*n_merge)]
     ihumid_array = np.asarray(ihumid)
     humid_mean = np.mean(ihumid_array)
     humid_sigma = np.sqrt(np.var(ihumid_array))
     humidity_ave.append(humid_mean)
     humidity_unc.append(humid_sigma)
+
+for i in range(nsum_data):
+    itimes = times[i*n_merge:(i+1)*n_merge]
+    itime = itimes[int(len(itimes)/2)]
+    merge_times.append(itime)
+
+
     
-	itimes = times[i*n_merge:(i+1)*n_merge]
-	itime = itimes[int(len(itimes)/2)]
-	merge_times.append(itime)
+    
     
 plt.plot(merge_times, temp_ave, "b.")
 plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
