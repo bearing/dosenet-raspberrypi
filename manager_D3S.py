@@ -77,7 +77,7 @@ class Manager_D3S(object):
                  d3s_LED_pin=D3S_LED_PIN,
                  d3s_light_switch=False
                  d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
-                 d3s_LED_blink=True
+                 d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
                  ):
