@@ -308,10 +308,11 @@ class Manager_D3S(object):
             while self.signal_test_loop:
                 with kromek.Controller(devs, self.signal_test_time) as controller:
                     for reading in controller.read():
+                        len(reading)
                         print(reading[4])
                         if sum(reading[4]) != 0:
                             self.d3s_LED.on()
-                            #self.signal_test_loop = False
+                            self.signal_test_loop = False
                             break
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
