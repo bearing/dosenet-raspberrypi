@@ -30,7 +30,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
-from globalvalues import DEFAULT_D3STEST_LOG, DEFAULT_D3STEST_TIME
+from globalvalues import DEFAULT_D3STEST_TIME
 
 
 def signal_term_handler(signal, frame):
