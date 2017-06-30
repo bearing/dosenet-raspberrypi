@@ -35,7 +35,7 @@ for r in results:
 plt.plot(times, degrees_list, "b.")
 plt.xlabel("Time(s)")
 plt.ylabel("Degrees(C)")
-plt.show
+plt.show()
 
 plt.plot(times, pressure_list)
 plt.xlabel("Time(s)")
