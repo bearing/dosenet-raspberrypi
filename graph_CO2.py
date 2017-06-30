@@ -4,6 +4,7 @@ import csv
 import dateutil
 import time
 import datetime
+import numpy as np
 
 user_file = input("What CO2 concentration test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
 
@@ -16,6 +17,21 @@ for r in results:
 	if row_counter>1:
 		times.append(dateutil.parser.parse(r[0]))
 		CO2.append(int(r[1]))
+
+n_merge = int(input("n data points to combine:"))
+ndata = len(CO2)
+nsum_data = int(ndata/n_merge)
+
+data_ave = []
+data_unc = []
+
+for i in range(nsum_data):
+	idata = CO2[i*n_merge:(i+1)*n_merge]
+	idata_array = np.asarray(idata)
+	CO2mean = np.mean(idata_array)
+	CO2sigma = np.sqrt(np.var(idata_array))
+	data_ave.append(CO2mean)
+	data_unc.append(CO2sigma)
 
 plt.plot(times, CO2, "b.")
 plt.xlabel("Time")
