@@ -76,18 +76,14 @@ class Manager_D3S(object):
                  running=False,
                  d3s_LED_pin=D3S_LED_PIN,
                  signal_test_time=DEFAULT_D3STEST_TIME,
-                 signal_test_log=DEFAULT_D3STEST_LOG,
                  signal_test_loop=True,
                  ):
 
         self.running = running
 
         self.total = None
-        self.test_total = None
         self.lst = None
-        self.test_lst = None
         self.create_structures = True
-        self.test_create_structures = True
 
         self.interval = interval
         self.count = count
@@ -115,12 +111,10 @@ class Manager_D3S(object):
 
         self.test = test
 
-        self.signal_test_log = signal_test_log
         self.signal_test_time = signal_test_time
         self.signal_test_loop = signal_test_loop
 
         self.d3s_LED = LED(d3s_LED_pin)
-        self.light_switch = False
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
@@ -304,12 +298,13 @@ class Manager_D3S(object):
         devs = filtered
         if len(devs) <= 0:
             return
+
+        #Checks if the RaspberryPi is getting data from the D3S
+        #and turns on the red LED if it is.
         try:
             while self.signal_test_loop:
                 with kromek.Controller(devs, self.signal_test_time) as controller:
                     for reading in controller.read():
-                        len(reading)
-                        print(reading[4])
                         if sum(reading[4]) != 0:
                             self.d3s_LED.on()
                             self.signal_test_loop = False
@@ -339,8 +334,6 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-
-                            self.d3s_LED.on()
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
