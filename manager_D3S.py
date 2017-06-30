@@ -81,6 +81,7 @@ class Manager_D3S(object):
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
                  signal_test_connection=False,
+                 signal_test_attempts=0,
                  ):
 
         self.running = running
@@ -118,6 +119,7 @@ class Manager_D3S(object):
         self.signal_test_time = signal_test_time
         self.signal_test_loop = signal_test_loop
         self.signal_test_connection = signal_test_connection
+        self.signal_test_attempts = signal_test_attempts
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
@@ -317,7 +319,7 @@ class Manager_D3S(object):
         #and turns on the red LED if it is.
         test_time = time.time() + self.signal_test_time
         try:
-            while self.signal_test_attempts < 6 or not self.signal_test_connection:
+            while self.signal_test_attempts < 3 or not self.signal_test_connection:
                 while time.time() != test_time or self.signal_test_loop:
                     with kromek.Controller(devs, self.signal_test_time) as controller:
                         for reading in controller.read():
@@ -329,6 +331,7 @@ class Manager_D3S(object):
                     self.signal_test_connection = True
                 else:
                     self.signal_test_attempts += 1
+                    print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
             if not self.signal_test_connection:
                 self.takedown()
         except KeyboardInterrupt:
