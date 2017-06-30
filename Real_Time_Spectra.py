@@ -215,10 +215,10 @@ class Real_Time_Spectra(object):
 
         else:
 
-            self.data = self.fix_array(np.array(self.queue))
+            temp = self.fix_array(np.array(self.queue))
 
-#            self.data = np.concatenate((np.transpose(temp),
-#                                        self.data), axis=0)
+            self.data = np.concatenate((np.transpose(temp),
+                                        self.data), axis=0)
 
     def fix_array(self, array):
         """
