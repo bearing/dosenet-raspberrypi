@@ -216,7 +216,7 @@ class Real_Time_Spectra(object):
         else:
 
             temp = self.fix_array(np.array(self.queue))
-
+            print(temp)
             self.data = np.concatenate((np.transpose(temp),
                                         self.data), axis=0)
 
