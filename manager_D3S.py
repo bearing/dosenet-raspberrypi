@@ -305,6 +305,18 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             return
 
+        while self.signal_test_loop:
+            with kromek.Controller(devs, self.signal_test_time) as controller:
+                for reading in controller.read():
+                    if sum(reading[4]) != 0:
+                        self.signal_test_loop = False
+                        self.light_switch = True
+                        test_serial = reading[0]
+                        controller.stop_collector(test_serial)
+
+        if self.light_switch:
+            self.d3s_LED.on()
+
         done_devices = set()
         try:
             while self.running:
