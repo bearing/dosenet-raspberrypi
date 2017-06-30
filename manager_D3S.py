@@ -311,8 +311,6 @@ class Manager_D3S(object):
                     if sum(reading[4]) != 0:
                         self.signal_test_loop = False
                         self.light_switch = True
-                        test_serial = reading[0]
-                        controller.stop_collector(test_serial)
 
         if self.light_switch:
             self.d3s_LED.on()
