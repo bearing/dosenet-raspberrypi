@@ -80,7 +80,7 @@ class Manager_D3S(object):
                  d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loops=0,
-                 signal_test_connection=True,
+                 signal_test_connection=False,
                  ):
 
         self.running = running
@@ -326,14 +326,14 @@ class Manager_D3S(object):
                                 self.d3s_light_switch = True
                                 self.signal_test_loops = 6
                                 break
-                            if self.signal_test_loops >= 6:
+                            elif self.signal_test_loops >= 6:
                                 break
                 if self.d3s_light_switch:
                     self.signal_test_attempts = 3
+                    self.signal_test_connection = True
                 else:
                     self.signal_test_attempts += 1
             if not self.signal_test_connection:
-                self.d3s_LED.stop_blink()
                 self.takedown()
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
