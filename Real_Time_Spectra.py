@@ -203,6 +203,8 @@ class Real_Time_Spectra(object):
 
             self.data = np.zeros((1, self.resolution), dtype=float)
 
+            print(len(self.data))
+
             print(self.data)
 
             self.first = False
