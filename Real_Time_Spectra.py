@@ -234,7 +234,7 @@ class Real_Time_Spectra(object):
 
             #temp = self.fix_array(np.array(self.queue)
             #print(temp)
-            self.data = np.concatenate((temp,
+            self.data[1] = np.concatenate((temp,
                                         self.data), axis=0)
 
     def fix_array(self, array):
