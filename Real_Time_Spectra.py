@@ -221,6 +221,9 @@ class Real_Time_Spectra(object):
 
             print(self.queue)
             print(self.queue[-1])
+
+            temp = np.ndarray.flatten(self.queue[-1])
+
             print(np.ndarray.flatten(self.queue[-1]))
             #temp = self.fix_array(self.queue[-1])
 
@@ -230,8 +233,8 @@ class Real_Time_Spectra(object):
 
             #temp = self.fix_array(np.array(self.queue)
             #print(temp)
-            #self.data = np.concatenate((np.transpose(temp),
-            #                            self.data), axis=0)
+            self.data = np.concatenate(temp,
+                                        self.data), axis=0)
 
     def fix_array(self, array):
         """
