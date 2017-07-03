@@ -244,8 +244,7 @@ class Real_Time_Spectra(object):
                                         self.data), axis=0)
 
             if len(self.data) > self.maxspectra:
-
-                self.data = self.data[-1:]
+                self.data = self.data[:-1]
 
     def fix_array(self, array):
         """
