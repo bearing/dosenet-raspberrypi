@@ -203,45 +203,21 @@ class Real_Time_Spectra(object):
 
             self.data = np.zeros((1, self.resolution), dtype=float)
 
-            print(len(self.data))
-
-            print(self.data)
-
             self.first = False
-
-            print(self.queue)
-            print(np.array(self.queue))
 
             temp = self.fix_array(np.array(self.queue))
 
-            print(temp)
-
             self.data[0, :] = np.ndarray.flatten(temp)
-
-            print(self.data)
 
         else:
 
-            print(self.queue)
-            print(self.queue[-1])
-
             temp = np.zeros((1, self.resolution), dtype=float)
+
             temp[0, :] = np.ndarray.flatten(np.array(self.queue[-1]))
 
-            print(temp)
-            print(self.data)
-            print(self.maxspectra)
+            self.data = np.concatenate((temp, self.data), axis=0)
 
-            #temp = self.fix_array(self.queue[-1])
-
-            #print(temp)
-
-            #self.data = np.array(self.queue)
-
-            #temp = self.fix_array(np.array(self.queue)
-            #print(temp)
-            self.data = np.concatenate((temp,
-                                        self.data), axis=0)
+            # Removes oldest spectra to keep size = maxspectra
 
             if len(self.data) > self.maxspectra:
                 self.data = self.data[:-1]
