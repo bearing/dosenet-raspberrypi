@@ -230,6 +230,7 @@ class Real_Time_Spectra(object):
 
             print(temp)
             print(self.data)
+            print(self.maxspectra)
             #temp = self.fix_array(self.queue[-1])
 
             #print(temp)
