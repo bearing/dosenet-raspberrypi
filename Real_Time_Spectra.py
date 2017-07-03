@@ -203,7 +203,7 @@ class Real_Time_Spectra(object):
 
             self.data = np.zeros((1, self.resolution), dtype=float)
 
-            print(self.data)
+            print(len(self.data))
 
             self.first = False
 
@@ -211,16 +211,16 @@ class Real_Time_Spectra(object):
 
             self.data[0, :] = np.ndarray.flatten(temp)
 
-            print(self.data)
+            print(len(self.data))
 
         else:
 
-            print(self.queue)
-            print(self.queue[-1])
+            print(len(self.queue))
+            print(len(self.queue[-1]))
 
             temp = self.fix_array(np.array(self.queue[-1]))
 
-            print(temp)
+            print(len(temp))
 
             #self.data = np.array(self.queue)
 
