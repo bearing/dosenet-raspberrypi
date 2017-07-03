@@ -210,6 +210,7 @@ class Real_Time_Spectra(object):
             self.first = False
 
             print(self.queue)
+            print(np.array(self.queue))
 
             temp = self.fix_array(np.array(self.queue))
 
