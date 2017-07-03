@@ -231,7 +231,7 @@ class Real_Time_Spectra(object):
             print(temp)
             print(self.data)
             print(self.maxspectra)
-        
+
             #temp = self.fix_array(self.queue[-1])
 
             #print(temp)
@@ -245,7 +245,7 @@ class Real_Time_Spectra(object):
 
             if len(self.data) > self.maxspectra:
 
-                self.data.popleft()
+                self.data = self.data[1:]
 
     def fix_array(self, array):
         """
