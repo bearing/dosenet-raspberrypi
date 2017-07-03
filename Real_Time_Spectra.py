@@ -221,10 +221,10 @@ class Real_Time_Spectra(object):
 
             print(self.queue)
             print(self.queue[-1])
+            print(np.flatten(self.queue[-1]))
+            #temp = self.fix_array(self.queue[-1])
 
-            temp = self.fix_array(self.queue[-1])
-
-            print(temp)
+            #print(temp)
 
             #self.data = np.array(self.queue)
 
