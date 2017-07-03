@@ -225,6 +225,7 @@ class Real_Time_Spectra(object):
             print(self.queue)
             print(self.queue[-1])
 
+            temp = np.zeros((1, self.resolution), dtype=float)
             temp[0, :] = np.ndarray.flatten(np.array(self.queue[-1]))
 
             print(temp)
