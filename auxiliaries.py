@@ -212,7 +212,7 @@ class PublicKey(object):
             self.vprint(
                 1, 'Failed to load public key file, {}!'.format(filename))
 
-class D3S_data_absence(object):
+class D3S_data_absence:
     """
     Used for the reboot cycle if the D3S is not connected and/or
     not transmitting any data.
