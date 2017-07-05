@@ -19,7 +19,6 @@ from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
-from auxiliaries import D3S_data_absence
 
 from auxiliaries import LED
 from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
