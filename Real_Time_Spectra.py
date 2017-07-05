@@ -212,11 +212,12 @@ class Real_Time_Spectra(object):
         else:
 
             temp = np.zeros((1, self.resolution), dtype=float)
-
+            print(temp)
             temp[0, :] = np.ndarray.flatten(np.array(self.queue[-1]))
-
+            print(self.queue[-1])
+            print(temp)
             self.data = np.concatenate((temp, self.data), axis=0)
-
+            print(self.data)
             # Removes oldest spectra to keep size = maxspectra
 
             if len(self.data) > self.maxspectra:
