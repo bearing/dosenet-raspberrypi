@@ -207,7 +207,7 @@ class Real_Time_Spectra(object):
 
             # self.data[0, :] = np.ndarray.flatten(self.queue[-1])
 
-            self.data = fix_array(self.queue[-1])
+            self.data = self.fix_array(self.queue[-1])
 
         else:
 
@@ -215,7 +215,7 @@ class Real_Time_Spectra(object):
 
             # temp[0, :] = np.ndarray.flatten(np.array(self.queue[-1]))
 
-            self.data = np.concatenate((fix_array(self.queue[-1]), self.data), axis=0)
+            self.data = np.concatenate((self.fix_array(self.queue[-1]), self.data), axis=0)
 
             # Removes oldest spectra to keep size = maxspectra
 
