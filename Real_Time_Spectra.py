@@ -221,9 +221,9 @@ class Real_Time_Spectra(object):
                 self.data = self.data[:-1]
 """
     def fix_array(self, array):
-        """
+
         Used to format arrays for the waterfall plot.
-        """
+        
         new_array = array.copy()[0][:self.resolution]
         return new_array
 """
