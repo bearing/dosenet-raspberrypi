@@ -338,7 +338,7 @@ class Manager_D3S(object):
                                 break
                 if self.d3s_light_switch:
                     self.signal_test_connection = True
-                    d3s_data_absence.change_claim(False)
+                    d3s_data_absence.claim == False
                 else:
                     self.signal_test_attempts += 1
                     print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
