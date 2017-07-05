@@ -1,14 +1,10 @@
 import fileinput
 import os
 import sys
-            
-log_phrase = 'total counts from'
-found_phrase = False
-for line in fileinput.input("/tmp/d3s_manager.log"):
-    if log_phrase in line:
-    	found_phrase = True
 
-if found_phrase:
-	sys.exit()
+from auxiliaries import D3S_data_absence
+
+if D3S_data_absence.claim:
+    os.system('sudo reboot')
 else:
-	os.system('sudo reboot')
+	sys.exit()
