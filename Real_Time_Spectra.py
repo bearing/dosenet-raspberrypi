@@ -198,7 +198,6 @@ class Real_Time_Spectra(object):
         """
         Prepares an array for the waterfall plot
         """
-
         if self.first:
 
             self.first = False
