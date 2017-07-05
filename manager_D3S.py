@@ -19,7 +19,7 @@ from auxiliaries import Config, PublicKey, set_verbosity
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
-from auxiliaries import D3S_data_absence
+from auxiliaries import d3s_data_absence
 
 from auxiliaries import LED
 from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
@@ -316,7 +316,7 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             return
 
-        if devs != None:
+        if devs != "('/dev')":
             print("Not none but can test for this")
         else:
             print("None but can test for this")
@@ -338,7 +338,7 @@ class Manager_D3S(object):
                                 break
                 if self.d3s_light_switch:
                     self.signal_test_connection = True
-                    D3S_data_absence.change_claim(False)
+                    d3s_data_absence.change_claim(False)
                 else:
                     self.signal_test_attempts += 1
                     print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
