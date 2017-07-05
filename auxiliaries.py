@@ -211,3 +211,15 @@ class PublicKey(object):
             self.encrypter = None
             self.vprint(
                 1, 'Failed to load public key file, {}!'.format(filename))
+
+class D3S_data_absence(object):
+    """
+    Used for the reboot cycle if the D3S is not connected and/or
+    not transmitting any data.
+    """
+    def __init__(self):
+        self.claim = True
+
+    def change_claim(self, new_claim):
+        assert new_claim == True or False
+        self.claim = new_claim
