@@ -219,14 +219,14 @@ class Real_Time_Spectra(object):
 
             if len(self.data) > self.maxspectra:
                 self.data = self.data[:-1]
-"""
+    """
     def fix_array(self, array):
 
         Used to format arrays for the waterfall plot.
-        
+
         new_array = array.copy()[0][:self.resolution]
         return new_array
-"""
+    """
     def sum_graph(self,data):
         """
         Prepares plot for sum graph
