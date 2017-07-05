@@ -221,7 +221,7 @@ class D3S_data_absence:
         self.claim = True
 
     def change_claim(self, new_claim):
-        assert new_claim == True or False
+        assert new_claim == "True" or "False"
         self.claim = new_claim
 
 d3s_data_absence = D3S_data_absence()
