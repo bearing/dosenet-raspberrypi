@@ -318,7 +318,7 @@ class Manager_D3S(object):
         #Checks if the RaspberryPi is getting data from the D3S
         #and turns on the red LED if it is.
         try:
-            if kromek.Controller(devs, self.signal_test_time) = None:
+            if kromek.Controller(devs, self.signal_test_time) == None:
                 print("No Kromek detected")
                 self.d3s_LED.stop_blink()
                 self.d3s_LED.start_blink(interval=0.25)
