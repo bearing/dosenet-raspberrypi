@@ -207,7 +207,7 @@ class Real_Time_Spectra(object):
 
             # self.data[0, :] = np.ndarray.flatten(self.queue[-1])
 
-            self.data = self.fix_array(self.queue[-1])
+            self.data = self.fix_array()
 
         else:
 
@@ -215,19 +215,19 @@ class Real_Time_Spectra(object):
 
             # temp[0, :] = np.ndarray.flatten(np.array(self.queue[-1]))
 
-            self.data = np.concatenate((self.fix_array(self.queue[-1]), self.data), axis=0)
+            self.data = np.concatenate((self.fix_array(), self.data), axis=0)
 
             # Removes oldest spectra to keep size = maxspectra
 
             if len(self.data) > self.maxspectra:
                 self.data = self.data[:-1]
 
-    def fix_array(self, array):
+    def fix_array(self):
         """
         Used to format arrays for the waterfall plot.
         """
         new_array = np.zeros((1, self.resolution), dtype = float)
-        new_array[0, :] = np.ndarray.flatten(array)
+        new_array[0, :] = np.ndarray.flatten(self.queue[-1])
 
         return new_array
 
