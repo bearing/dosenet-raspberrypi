@@ -1,3 +1,4 @@
+import time
 import datetime
 import csv
 from Adafruit_BME280 import *
