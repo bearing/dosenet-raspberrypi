@@ -26,9 +26,9 @@ results = csv.reader(open(user_file), delimiter=',')
 for r in results:
     if row_counter>0:
         times.append(dateutil.parser.parse(r[0]))
-        degrees_list.append(r[1])
-        pressure_list.append(r[2])
-        humidity_list.append(r[3])
+        degrees_list.append(int(r[1]))
+        pressure_list.append(int(r[2]))
+        humidity_list.append(int(r[3]))
         
     row_counter+=1
     
@@ -76,19 +76,21 @@ for i in range(nsum_data):
 
     
     
-    
+fig=plt.figure()   
 plt.plot(merge_times, temp_ave, "b.")
 plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
 plt.xlabel("Time(s)")
 plt.ylabel("Degrees(C)")
 plt.show()
 
+fig=plt.figure()
 plt.plot(merge_times, pressure_ave,"g." )
 plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure hPa")
 plt.show()
 
+fig=plt.figure()
 plt.plot(merge_times, humidity_ave,"r." )
 plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
 plt.xlabel("Time(s)")
