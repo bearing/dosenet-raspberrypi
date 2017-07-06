@@ -209,6 +209,7 @@ class Real_Time_Spectra(object):
 
             # Removes oldest spectra to keep size equal to maxspectra
             if len(self.data) > self.maxspectra:
+
                 self.data = self.data[:-1]
 
     def fix_array(self):
