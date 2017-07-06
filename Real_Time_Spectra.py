@@ -206,6 +206,7 @@ class Real_Time_Spectra(object):
         else:
 
             self.data = np.concatenate((self.fix_array(), self.data), axis=0)
+
             # Removes oldest spectra to keep size equal to maxspectra
             if len(self.data) > self.maxspectra:
                 self.data = self.data[:-1]
