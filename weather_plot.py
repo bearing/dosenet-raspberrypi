@@ -5,7 +5,6 @@ Created on Thu Jun 29 15:31:03 2017
 @author: Ludi Cao
 """
 
-from Adafruit_BME280 import *
 
 import matplotlib.pyplot as plt
 import csv
@@ -26,9 +25,9 @@ results = csv.reader(open(user_file), delimiter=',')
 for r in results:
     if row_counter>0:
         times.append(dateutil.parser.parse(r[0]))
-        degrees_list.append(int(r[1]))
-        pressure_list.append(int(r[2]))
-        humidity_list.append(int(r[3]))
+        degrees_list.append(float(r[1]))
+        pressure_list.append(float(r[2]))
+        humidity_list.append(float(r[3]))
         
     row_counter+=1
     
@@ -45,12 +44,13 @@ ndata = len(degrees_list)
 nsum_data = int(ndata/n_merge)
 
 for i in range(nsum_data):
-	itemp = degrees_list[i*n_merge:(i+1)*n_merge]
-	itemp_array = np.asarray(itemp)
-	temp_mean = np.mean(itemp_array)
-	temp_sigma = np.sqrt(np.var(itemp_array))
-	temp_ave.append(temp_mean)
-	temp_unc.append(temp_sigma)
+    itemp = degrees_list[i*n_merge:(i+1)*n_merge]
+    itemp_array = np.asarray(itemp)
+    print(itemp_array)
+    temp_mean = np.mean(itemp_array)
+    temp_sigma = np.sqrt(np.var(itemp_array))
+    temp_ave.append(temp_mean)
+    temp_unc.append(temp_sigma)
     
 for i in range(nsum_data):
     ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
