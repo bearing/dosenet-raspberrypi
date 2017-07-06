@@ -9,7 +9,7 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
-metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity %"]
+metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
 results.writerow(metadata)
 
 time_of_program=input("Enter the number of seconds the program will last: ")
