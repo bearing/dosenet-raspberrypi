@@ -22,7 +22,8 @@ from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from auxiliaries import LED
-from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
+from globalvalues import D3S_LED_PIN
+from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -77,7 +78,8 @@ class Manager_D3S(object):
                  running=False,
                  d3s_LED_pin=D3S_LED_PIN,
                  d3s_light_switch=False,
-                 d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
+                 d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
+                 d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
                  d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
@@ -124,12 +126,13 @@ class Manager_D3S(object):
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
-        self.d3s_LED_blink_period = d3s_LED_blink_period
+        self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
+        self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
         self.d3s_LED_blink = d3s_LED_blink
 
         if d3s_LED_blink:
             print("Attempting to connect to D3S now")
-            self.d3s_LED.start_blink(interval=d3s_LED_blink_period)
+            self.d3s_LED.start_blink(interval=d3s_LED_blink_period_1)
         else:
             self.d3s_LED.on()
 
@@ -310,6 +313,8 @@ class Manager_D3S(object):
             return
         else:
             print 'Discovered %s' % devs
+            print("D3S device found, checking for data now")
+            self.d3s_LED.start_blink(interval=d3s_LED_blink_period_2)
         filtered = []
 
         for dev in devs:
