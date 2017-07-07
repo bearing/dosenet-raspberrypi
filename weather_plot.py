@@ -12,6 +12,7 @@ import dateutil
 import time
 import datetime
 import numpy as np
+from matplotlib.dates import date2num, DateFormatter
 
 times=[]
 degrees_list=[]
@@ -89,7 +90,9 @@ plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
 plt.title("Pressure")
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
-plt.gcf().autofmt_xdate()
+fig.autofmt_xdate()
+plt.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+
 
 
 fig=plt.figure()
@@ -98,6 +101,6 @@ plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
 plt.title("Humidity")
 plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
-plt.gcf().autofmt_xdate()
+fig.autofmt_xdate()
 plt.show()
 
