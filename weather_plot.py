@@ -76,13 +76,15 @@ for i in range(nsum_data):
 
     
     
-fig=plt.figure()   
+fig=plt.figure()
+ax=fig.add_subplot(111)   
 plt.plot(merge_times, temp_ave, "b.")
 plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
 plt.title("Temperature")
 plt.xlabel("Time(s)")
 plt.ylabel("Temperature(C)")
 fig.autofmt_xdate()
+ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 
 fig=plt.figure()
 ax=fig.add_subplot(111)
@@ -97,11 +99,13 @@ ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 
 
 fig=plt.figure()
+ax=fig.add_subplot(111)
 plt.plot(merge_times, humidity_ave,"r." )
 plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
 plt.title("Humidity")
 plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
 fig.autofmt_xdate()
+ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 plt.show()
 
