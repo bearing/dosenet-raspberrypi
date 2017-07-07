@@ -16,7 +16,7 @@ time_of_program=input("Enter the number of seconds the program will last: ")
 time_passed=0
 
 while time_passed<time_of_program:
-    date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    date_time = datetime.datetime.now()
     degrees = sensor.read_temperature()
     pascals = sensor.read_pressure()
     hectopascals = pascals / 100

@@ -89,7 +89,7 @@ plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
 plt.title("Pressure")
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
-fig.autofmt_xdate()
+plt.gcf().autofmt_xdate()
 
 
 fig=plt.figure()
@@ -98,6 +98,6 @@ plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
 plt.title("Humidity")
 plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
-fig.autofmt_xdate()
+plt.gcf().autofmt_xdate()
 plt.show()
 
