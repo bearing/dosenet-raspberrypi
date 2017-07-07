@@ -306,6 +306,7 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             print("No D3S connected, exiting manager now")
             self.d3s_LED.stop_blink()
+            GPIO.cleanup()
             return
 
         filtered = []
@@ -318,6 +319,7 @@ class Manager_D3S(object):
         if len(devs) <= 0:
             print("No D3S connected, exiting manager now")
             self.d3s_LED.stop_blink()
+            GPIO.cleanup()
             return
 
         # Checks if the RaspberryPi is getting data from the D3S and turns on
