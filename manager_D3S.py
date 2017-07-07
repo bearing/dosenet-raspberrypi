@@ -302,13 +302,14 @@ class Manager_D3S(object):
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
+
         if len(devs) <= 0:
             print("No D3S connected, exiting manager now")
             self.d3s_LED.stop_blink()
             GPIO.cleanup()
             return
-
+        else:
+            print 'Discovered %s' % devs
         filtered = []
 
         for dev in devs:
