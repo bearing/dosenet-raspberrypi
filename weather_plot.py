@@ -13,6 +13,7 @@ import time
 import datetime
 import numpy as np
 from matplotlib.dates import date2num, DateFormatter
+import argparse
 
 times=[]
 degrees_list=[]
@@ -20,7 +21,10 @@ pressure_list=[]
 humidity_list=[]
 row_counter=0
 
-user_file = input(str("What weather test result file do you want to graph? File Name: "))
+parser = argparse.ArgumentParser()
+parser.add_argument("file", help="Enter the file name: ", type=str)
+args = parser.parse_args()
+user_file=args.file
 results = csv.reader(open(user_file), delimiter=',')
 
 for r in results:
