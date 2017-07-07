@@ -345,6 +345,7 @@ class Manager(object):
         Sleep until the given timestamp.
 
         Input:
+
           end_time: number of seconds since epoch, e.g. time.time()
         """
 
