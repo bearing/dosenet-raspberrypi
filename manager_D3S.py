@@ -80,7 +80,6 @@ class Manager_D3S(object):
                  d3s_light_switch=False,
                  d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
                  d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
-                 d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
                  signal_test_connection=False,
@@ -128,13 +127,10 @@ class Manager_D3S(object):
         self.d3s_light_switch = d3s_light_switch
         self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
         self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
-        self.d3s_LED_blink = d3s_LED_blink
 
-        if d3s_LED_blink:
+        if d3s_LED != None:
             print("Attempting to connect to D3S now")
             self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
-        else:
-            self.d3s_LED.on()
 
         self.handle_input(
             log, logfile, verbosity, interval, config, publickey, aeskey)
