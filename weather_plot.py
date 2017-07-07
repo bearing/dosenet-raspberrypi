@@ -19,7 +19,7 @@ pressure_list=[]
 humidity_list=[]
 row_counter=0
 
-user_file = input("What weather test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
+user_file = input(str("What weather test result file do you want to graph? File Name: "))
 results = csv.reader(open(user_file), delimiter=',')
 
 for r in results:
