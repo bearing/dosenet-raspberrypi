@@ -33,7 +33,7 @@ metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 
 print('Printing Results')
-port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
+port = serial.Serial("/dev/tty50", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
     print('next')
