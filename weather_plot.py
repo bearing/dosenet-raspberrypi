@@ -85,13 +85,14 @@ plt.ylabel("Temperature(C)")
 fig.autofmt_xdate()
 
 fig=plt.figure()
+ax=fig.add_subplot(111)
 plt.plot(merge_times, pressure_ave,"g." )
 plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
 plt.title("Pressure")
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
 fig.autofmt_xdate()
-plt.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 
 
 
