@@ -132,7 +132,7 @@ class Manager_D3S(object):
 
         if d3s_LED_blink:
             print("Attempting to connect to D3S now")
-            self.d3s_LED.start_blink(interval=d3s_LED_blink_period_1)
+            self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
         else:
             self.d3s_LED.on()
 
@@ -314,7 +314,7 @@ class Manager_D3S(object):
         else:
             print 'Discovered %s' % devs
             print("D3S device found, checking for data now")
-            self.d3s_LED.start_blink(interval=d3s_LED_blink_period_2)
+            self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
         filtered = []
 
         for dev in devs:
