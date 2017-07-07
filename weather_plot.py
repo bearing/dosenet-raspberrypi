@@ -46,7 +46,6 @@ nsum_data = int(ndata/n_merge)
 for i in range(nsum_data):
     itemp = degrees_list[i*n_merge:(i+1)*n_merge]
     itemp_array = np.asarray(itemp)
-    print(itemp_array)
     temp_mean = np.mean(itemp_array)
     temp_sigma = np.sqrt(np.var(itemp_array))
     temp_ave.append(temp_mean)
@@ -61,7 +60,7 @@ for i in range(nsum_data):
     pressure_unc.append(pressure_sigma)
     
 for i in range(nsum_data):
-    ihumid = humidity_list[i*n_merge:(i+1*n_merge)]
+    ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
     ihumid_array = np.asarray(ihumid)
     humid_mean = np.mean(ihumid_array)
     humid_sigma = np.sqrt(np.var(ihumid_array))
