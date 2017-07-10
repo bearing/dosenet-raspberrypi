@@ -69,9 +69,9 @@ def weather_plot(btn):
     row_counter=0
 
     file_name=[]
-    for filename in os.listdir('dosenet-raspberrypi'):
+    for filename in os.listdir('test results'):
         if filename.endswith(".csv"):
-            file_name.append(os.path.join('dosenet-raspberrypi', filename))
+            file_name.append(os.path.join('test results', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
     user_file=app.getOptionBox("Files")
