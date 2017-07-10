@@ -89,7 +89,7 @@ def weather_plot(btn):
                 pressure_list.append(float(r[2]))
                 humidity_list.append(float(r[3]))
         
-                row_counter+=1
+            row_counter+=1
     
         temp_ave=[]
         temp_unc = []
