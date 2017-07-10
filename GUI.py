@@ -34,7 +34,7 @@ def weather_test(btn):
     results.writerow(metadata)
     time_passed=0
     
-    while time_passed<time_of_program:
+    while time_passed<3:
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
