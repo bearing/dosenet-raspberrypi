@@ -20,9 +20,11 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
+    app=gui()
     app.addEntry("seconds")
     app.setEntryDefault("seconds","Number of seconds for the program to run")
     time_of_program=app.getEntry("seconds")
+   
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
     app.addEntry("seconds")
     app.setEntryDefault("seconds","Number of seconds for the program to run")
