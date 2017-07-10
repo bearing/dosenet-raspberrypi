@@ -25,11 +25,10 @@ def weather_test(btn):
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
 
-    app.addEntry("seconds")
-    time_of_program=app.getEntry("seconds")
+    app.setFocus("seconds")
     time_passed=0
     
-    while time_passed<time_of_program:
+    while time_passed<app.getEntry("seconds")
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
