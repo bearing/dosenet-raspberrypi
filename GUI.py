@@ -25,7 +25,7 @@ filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
     app=gui("Weather Test","800x400")
-    app.addLabelNumericEntry("seconds","Number of Seconds")
+    app.addNumericEntry("seconds")
     app.setFocus("seconds")
     def n(btn):
         time_of_program=app.getEntry("seconds")
@@ -74,7 +74,7 @@ def weather_plot(btn):
             file_name.append(os.path.join('.', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
-    app.addLabelNumericEntry("n","n data points to combine")
+    app.addNumericEntry("n")
     app.setFocus("n")
     
     def ok(btn):
