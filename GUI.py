@@ -9,7 +9,10 @@ from appJar import gui
 import os
 
 app = gui()
-
+import matplotlib.pyplot as plt
+import dateutil
+import numpy as np
+from matplotlib.dates import DateFormatter
 import time
 import datetime
 import csv
@@ -58,11 +61,6 @@ def weather_test(btn):
     app.go() 
     
 def weather_plot(btn):
-    import matplotlib.pyplot as plt
-    import dateutil
-    import numpy as np
-    from matplotlib.dates import DateFormatter
-
     times=[]
     degrees_list=[]
     pressure_list=[]
