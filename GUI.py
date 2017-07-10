@@ -67,6 +67,8 @@ def weather_plot(btn):
     humidity_list=[]
     row_counter=0
 
+    def get(btn):
+        return user_file
     file_name=[]
     for filename in os.listdir('.'):
         if filename.endswith(".csv"):
@@ -74,6 +76,7 @@ def weather_plot(btn):
     app.setFont(20)
     app.addOptionBox("Files",file_name)
     user_file=app.getOptionBox("Files")
+    app.addButton("OK",get)
     app.go()
     
     results = csv.reader(open(user_file), delimiter=',')
