@@ -23,37 +23,39 @@ filename = "weather_test_results_"+file_time+".csv"
 def weather_test(btn):
     app=gui()
     app.addNumericEntry("seconds")
-    time_of_program=app.getEntry("seconds")
-    app.go()
-   
-    results=csv.writer(open(filename, "ab+"), delimiter = ",")
+    def n(btn):
+        time_of_program=app.getEntry("seconds")
+        results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
-    metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
-    results.writerow(metadata)
-    time_passed=0
+        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+        results.writerow(metadata)
+        time_passed=0
     
-    while time_passed<time_of_program:
-        date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
-        pascals = sensor.read_pressure()
-        hectopascals = pascals /100
-        humidity = sensor.read_humidity()
+        while time_passed<time_of_program:
+            date_time = datetime.datetime.now()
+            degrees = sensor.read_temperature()
+            pascals = sensor.read_pressure()
+            hectopascals = pascals /100
+            humidity = sensor.read_humidity()
 
-        print ('Temp     = {0:0.3f} deg C'.format(degrees))
-        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %'.format(humidity))
+            print ('Temp     = {0:0.3f} deg C'.format(degrees))
+            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+            print ('Humidity = {0:0.2f} %'.format(humidity))
     
-        data=[]
-        data.append(date_time)
-        data.append(degrees)
-        data.append(hectopascals)
-        data.append(humidity)
+            data=[]
+            data.append(date_time)
+            data.append(degrees)
+            data.append(hectopascals)
+            data.append(humidity)
     
-        results.writerow(data)
+            results.writerow(data)
     
-        time.sleep(1)
+            time.sleep(1)
     
-        time_passed+=1
+            time_passed+=1
+
+    app.addButton("OK",n)      
+    app.go() 
     
 def weather_plot(btn):
     import matplotlib.pyplot as plt
@@ -67,8 +69,6 @@ def weather_plot(btn):
     humidity_list=[]
     row_counter=0
 
-    def get(btn):
-        return user_file
     file_name=[]
     for filename in os.listdir('.'):
         if filename.endswith(".csv"):
@@ -76,8 +76,10 @@ def weather_plot(btn):
     app.setFont(20)
     app.addOptionBox("Files",file_name)
     user_file=app.getOptionBox("Files")
-    app.addButton("OK",get)
     app.go()
+    
+    def ok(btn):
+        user_file=app.getOptionBox("Files")
     
     results = csv.reader(open(user_file), delimiter=',')
 
