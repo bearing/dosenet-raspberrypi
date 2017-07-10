@@ -60,7 +60,7 @@ def weather_test(btn):
 
     app.addButton("OK",n)    
     app.setButtonWidth("OK",200)
-    app.setBUttonHeight("OK",100)
+    app.setButtonHeight("OK",100)
     app.go() 
     
 def weather_plot(btn):
