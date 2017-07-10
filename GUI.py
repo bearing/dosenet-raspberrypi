@@ -21,18 +21,19 @@ filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
+    app.addEntry("seconds")
+    app.setEntryDefault("seconds","Number of seconds for the program to run")
+    time_of_program=app.getEntry("seconds")
 
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
-    app.addEntry("seconds")
-    app.setFocus("seconds")
     time_passed=0
     
-    while time_passed<10:
+    while time_passed<time_of_program:
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
-        hectopascals = pascals / 100
+        hectopascals = pascals /100
         humidity = sensor.read_humidity()
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
