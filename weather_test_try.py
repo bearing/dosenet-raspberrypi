@@ -114,6 +114,5 @@ def weather_plot(btn):
     app.addButton("OK",ok)
     app.go()
 
-app.addButton("Record Weather Data", weather_test)
 app.addButton("Plot Weather Data",weather_plot)
 app.go()
