@@ -20,18 +20,15 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
-    import argparse
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("n", help="Enter the number of seconds the program will last: ", type=int)
-    args = parser.parse_args()
-    time_of_program=args.n
+    app.addAutoEntry("seconds","Add number of seconds you want the program to run:")
+    time_of_program=app.getEntry("seconds")
     time_passed=0
-
+    
     while time_passed<time_of_program:
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
