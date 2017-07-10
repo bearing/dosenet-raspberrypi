@@ -8,7 +8,7 @@ Created on Fri Jul  7 14:44:14 2017
 from appJar import gui
 import os
 
-app = gui()
+app = gui("Adafruit Weather Sensor", "800x400")
 import matplotlib.pyplot as plt
 import dateutil
 import numpy as np
@@ -24,8 +24,9 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
-    app=gui()
-    app.addNumericEntry("seconds")
+    app=gui("Weather Test","800x400")
+    app.addLabelNumericEntry("seconds","Number of Seconds")
+    app.setFocus("seconds")
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -61,7 +62,7 @@ def weather_test(btn):
     app.go() 
     
 def weather_plot(btn):
-    app=gui()
+    app=gui("Weather Plot","800x400")
     times=[]
     degrees_list=[]
     pressure_list=[]
@@ -73,8 +74,8 @@ def weather_plot(btn):
             file_name.append(os.path.join('.', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
-    app.addNumericEntry("n")
-    
+    app.addLabelNumericEntry("n","n data points to combine")
+    app.setFocus("n")
     
     def ok(btn):
         user_file=app.getOptionBox("Files")
