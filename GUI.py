@@ -23,7 +23,6 @@ filename = "weather_test_results_"+file_time+".csv"
 def weather_test(btn):
     app=gui()
     app.addNumericEntry("seconds")
-    app.setEntryDefault("seconds","Number of seconds")
     time_of_program=app.getEntry("seconds")
     app.go()
    
