@@ -25,8 +25,8 @@ def weather_test(btn):
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
 
-    app.addLabelEntry("Add number of seconds you want the program to run:")
-    time_of_program=app.getEntry("Add number of seconds you want the program to run:")
+    app.addEntry("seconds")
+    time_of_program=app.getEntry("seconds")
     time_passed=0
     
     while time_passed<time_of_program:
