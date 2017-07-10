@@ -26,9 +26,6 @@ def weather_test(btn):
     time_of_program=app.getEntry("seconds")
    
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
-    app.addEntry("seconds")
-    app.setEntryDefault("seconds","Number of seconds for the program to run")
-    time_of_program=app.getEntry("seconds")
 
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
