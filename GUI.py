@@ -59,7 +59,7 @@ def weather_test(btn):
             time_passed+=1
 
     app.addButton("OK",n)    
-    app.setButtonWidth("OK","10")
+    app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
     app.go() 
     
@@ -174,5 +174,9 @@ def weather_plot(btn):
     
 
 app.addButton("Record Weather Data", weather_test)
+app.setButtonWidth("Record Weather Data", "30")
+app.setButtonHeight("Record Weather Data","4")
 app.addButton("Plot Weather Data",weather_plot)
+app.setButtonWidth("Plot Weather Data","30")
+app.setButtonWidth("Plot Weather Data","4")
 app.go()
