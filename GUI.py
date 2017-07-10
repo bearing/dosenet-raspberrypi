@@ -24,7 +24,7 @@ def weather_test(btn):
 
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
-
+    app.addEntry("seconds")
     app.setFocus("seconds")
     time_passed=0
     
