@@ -6,6 +6,7 @@ Created on Fri Jul  7 14:44:14 2017
 """
 
 from appJar import gui
+import os
 
 app = gui()
 
@@ -22,7 +23,7 @@ filename = "weather_test_results_"+file_time+".csv"
 def weather_test(btn):
     app=gui()
     app.addNumericEntry("seconds")
-    app.setEntryDefault("seconds","Number of seconds for the program to run")
+    app.setEntryDefault("seconds","Number of seconds")
     time_of_program=app.getEntry("seconds")
     app.go()
    
@@ -32,7 +33,7 @@ def weather_test(btn):
     results.writerow(metadata)
     time_passed=0
     
-    while time_passed<3:
+    while time_passed<time_of_program:
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
@@ -67,9 +68,15 @@ def weather_plot(btn):
     humidity_list=[]
     row_counter=0
 
+    file_name=[]
+    for filename in os.listdir(dosenet-raspberrypi):
+        if filename.endswith(".csv"):
+            file_name.append(os.path.join(dosenet-raspberrypi, filename))
     app.setFont(20)
-    app.addOptionBox("Files",[filename])
+    app.addOptionBox("Files",file_name)
     user_file=app.getOptionBox("Files")
+    app.go()
+    
     results = csv.reader(open(user_file), delimiter=',')
 
     for r in results:
