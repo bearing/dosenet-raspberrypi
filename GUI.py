@@ -28,7 +28,7 @@ def weather_test(btn):
     app.setFocus("seconds")
     time_passed=0
     
-    while time_passed<app.getEntry("seconds")
+    while time_passed<10
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
