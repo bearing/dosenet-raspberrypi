@@ -10,7 +10,7 @@ if RPI:
     import RPi.GPIO as GPIO
 
 from sender import ServerSender
-from data_handler import Data_Handler_AQ
+from data_handler_aq import Data_Handler_AQ
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
