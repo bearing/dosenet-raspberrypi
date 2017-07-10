@@ -42,7 +42,7 @@ def weather_plot(btn):
         humidity_unc=[]
         merge_times = []
 
-        n_merge = int(input("n data points to combine:"))
+        n_merge = 8
         ndata = len(degrees_list)
         nsum_data = int(ndata/n_merge)
 
