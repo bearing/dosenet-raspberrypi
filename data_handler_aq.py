@@ -11,9 +11,25 @@ import errno
 import csv
 
 class Data_Handler_AQ(object):
+    """
+    Object for sending the data from the Air Quality
+    sensor to the server.
+
+    Also handles writing data to datalog and storing
+    data to the memory
+    """
 
     def __init__(self,
                  manager=None,
+                 verbosity=1,
+                 logfile=None,
                  ):
 
+        self.v = verbosity
+        if manager and logfile is None:
+            set_verbosity(self, logfile=manager.logfile)
+        else:
+            set_verbosity(self, logfile=logfile)
+
         self.manager = manager
+        self.queue = deque('')

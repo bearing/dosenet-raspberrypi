@@ -29,6 +29,7 @@ class Manager_AQ(object):
                  datalog=None,
                  datalogflag=False,
                  config=None,
+                 publickey=None,
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  test=None,
@@ -42,6 +43,9 @@ class Manager_AQ(object):
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
+
+        self.handle_input(
+            log, logfile, verbosity, interval, config, publickey)
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
@@ -79,3 +83,140 @@ class Manager_AQ(object):
         if self.datalogflag:
             with open(file, 'a') as f:
                 pass
+
+    def handle_input(self, log, logfile, verbosity, interval,
+                     config, publickey):
+
+        if log and logfile is None:
+            logfile = DEFAULT_LOGFILE_AQ
+
+        if logfile and not log:
+            log = True
+
+        if log:
+            self.logfile = logfile
+        else:
+            self.logfile = None
+
+        if verbosity is None:
+            verbosity = 1
+
+        self.v = verbosity
+        set_verbosity(self, logfile=logfile)
+
+        if log:
+            self.vprint(1, '')
+            self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
+        self.running = False
+
+        if interval is None:
+            self.vprint(
+                2, "No interval given, using interval at 5 minutes")
+            interval = DEFAULT_INTERVAL_NORMAL_AQ
+        if config is None:
+            self.vprint(2, "No config file given, " +
+                        "attempting to use default config path")
+            config = DEFAULT_CONFIG
+        if publickey is None:
+            self.vprint(2, "No publickey file given, " +
+                        "attempting to use default publickey path")
+            publickey = DEFAULT_PUBLICKEY
+
+        self.interval = interval
+
+        if config:
+            try:
+                self.config = Config(config,
+                                     verbosity=self.v, logfile=self.logfile)
+            except IOError:
+                raise IOError(
+                    'Unable to open config file {}!'.format(config))
+        else:
+            self.vprint(
+                1, 'WARNING: no config file given. Not posting to server')
+            self.config = None
+
+        if publickey:
+            try:
+                self.publickey = PublicKey(
+                    publickey, verbosity=self.v, logfile=self.logfile)
+            except IOError:
+                raise IOError(
+                    'Unable to load publickey file {}!'.format(publickey))
+        else:
+            self.vprint(
+                1, 'WARNING: no public key given. Not posting to server')
+            self.publickey = None
+
+        self.aes = None     #checked in sender, used for the manager_d3s
+
+    def run(self):
+
+        this_start, this_end = self.get_interval(time.time())
+        self.vprint(
+            1, ('Manager is starting to run at {}' +
+                ' with intervals of {}s').format(
+                datatime_from_epoch(this_start), self.interval))
+        self.running = True
+
+    def stop(self):
+        """Stop counting time"""
+        self.running = False
+
+    def get_interval(self, start_time):
+        """
+        Return start and end time for interval, based on given start_time.
+        """
+        end_time = start_time + self.interval
+        return start_time, end_time
+
+    def data_log(self):
+        pass
+
+    def handle_air_counts(self, this_start):
+
+    def takedown(self):
+        """
+        Sends data to the backlog and shuts
+        down the manager
+        """
+        self.data_handler.send_all_to_backlog()
+
+        del(self)
+
+    @classmethod
+    def from_argparse(cls):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--interval', '-i', type=int, default=None)
+        parser.add_argument(
+            '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
+            choices=['udp', 'tcp', 'UDP', 'TCP'])
+        parser.add_argument('--verbosity', '-v', type=int, default=None)
+        parser.add_argument('--log', '-l', action='store_true', default=False)
+        parser.add_argument('--logfile', '-f', type=str, default=None)
+        parser.add_argument('--datalog', '-d', default=None)
+        parser.add_argument(
+            '--datalogflag', '-a', action='store_true', default=False)
+        parser.add_argument('--config', '-c', default=None)
+        parser.add_argument('--publickey', '-k', default=None)
+        parser.add_argument('--hostname', '-s', default=DEFAULT_HOSTNAME)
+        parser.add_argument('--port', '-p', type=int, default=None)
+        parser.add_argument('--test', '-t', action='store_true', default=False)
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        mgr = Manager_D3S(**arg_dict)
+
+        return mgr
+
+if __name__ == '__main__':
+    mgr = Manager_D3S.from_argparse()
+    try:
+        mgr.run()
+    except:
+        if mgr.logfile:
+            # print exception info to logfile
+            with open(mgr.logfile, 'a') as f:
+                traceback.print_exc(15, f)
+        # regardless, re-raise the error which will print to stderr
+        raise

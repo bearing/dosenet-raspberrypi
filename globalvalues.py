@@ -27,6 +27,7 @@ DEFAULT_PUBLICKEY = '/home/pi/config/id_rsa_lbl.pub'
 DEFAULT_AESKEY = '/home/pi/config/secret.aes'
 DEFAULT_LOGFILE = '/home/pi/debug.log'
 DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
+DEFAULT_LOGFILE_AQ = '/home/pi/debug.log_AQ'
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
 TESTING_UDP_PORT = 5006
@@ -35,6 +36,7 @@ TESTING_TCP_PORT = 5101
 DEFAULT_SENDER_MODE = 'tcp'
 DEFAULT_DATALOG = '/home/pi/data-log.txt'
 DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
+DEFAULT_DATALOG_AQ = '/home/pi/data-log_AQ.txt'
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
 DEFAULT_DATA_BACKLOG_FILE_D3S = '/home/pi/data_backlog_file_D3S.csv'
 DEFAULT_DATA_BACKLOG_FILE_AQ = 'home/pi/data_backlog_file_AQ.csv'
@@ -47,11 +49,11 @@ DEFAULT_INTERVAL_TEST = 30
 DEFAULT_MAX_ACCUM_TIME = 3600
 
 DEFAULT_INTERVAL_NORMAL_D3S = 300
-
 DEFAULT_D3STEST_TIME = 5
-
 D3S_LED_BLINK_PERIOD_INITIAL = 0.75
 D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
+
+DEFAULT_INTERVAL_NORMAL_AQ = 300
 # ANSI color codes
 ANSI_RESET = '\033[0m'
 ANSI_BOLD = '\033[1m'
