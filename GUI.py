@@ -79,7 +79,7 @@ def weather_plot(btn):
     
     def ok(btn):
         user_file=app.getOptionBox("Files")
-        n_merge=app.getEntry("n")
+        n_merge=int(app.getEntry("n"))
         row_counter=0
         results = csv.reader(open(user_file), delimiter=',')
 
