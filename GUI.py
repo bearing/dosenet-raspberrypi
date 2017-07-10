@@ -61,6 +61,7 @@ def weather_test(btn):
     app.go() 
     
 def weather_plot(btn):
+    app=gui()
     times=[]
     degrees_list=[]
     pressure_list=[]
