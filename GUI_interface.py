@@ -28,6 +28,10 @@ def weather_test(btn):
     def press(button):
         if button == "Start":
             while True:
+                def press2(btn):
+                    if btn == "Stop":
+                        app.stop()
+                app.addButton("Stop",press2)
                 results=csv.writer(open(filename, "ab+"), delimiter = ",")
                 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
                 results.writerow(metadata)
@@ -58,9 +62,7 @@ def weather_test(btn):
                 
                 
     
-    app.addButtons(["Start","Stop"],press)    
-    app.setButtonsWidth(["Start","Stop"],"20")
-    app.setButtonHeight(["Start","Stop"],"4")
+    app.addButton("Start",press)    
     app.setButtonFont("20",font="Helvetica")
     app.go() 
     
