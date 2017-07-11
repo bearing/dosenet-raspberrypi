@@ -25,12 +25,8 @@ filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
     app=gui("Weather Test","800x400")
-    def press(button):
+    def press1(button):
         if button == "Start":
-            def press2(btn):
-                if btn == "Stop":
-                    app.stop()
-            app.addButton("Stop",press2)
             while True:
                 def press2(btn):
                     if btn == "Stop":
@@ -57,9 +53,12 @@ def weather_test(btn):
                 results.writerow(data)
                 
                 time.sleep(1)
+    def press2(btn):
+        if btn == "Stop":
+            app.stop()
     
-    app.addButton("Start",press)    
-    app.setButtonFont("20",font="Helvetica")
+    app.addButton("Start",press1)    
+    app.addButton("Stop",press2)
     app.go() 
     
 def weather_plot(btn):
