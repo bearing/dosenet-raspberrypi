@@ -226,20 +226,31 @@ class Real_Time_Spectra(object):
         Prepares plot for sum graph
         """
 
+        # Switch to working on the spectrum figure window.
         plt.figure(2)
 
+        # Set the labels for the spectrum plot.
         plt.xlabel('Channel')
         plt.ylabel('Counts')
 
+        # Resize the spectrum figure window to make room for the axes labels.
+        plt.tight_layout()
+
+        # Set a logarithmic y-scale.
         plt.yscale('log')
 
+        # Plot the spectrum plot.
         x = np.linspace(0, 4096, 256)
         plt.plot(x,
                  data,
                  drawstyle='steps-mid')
 
+        # Show the spectrum plot.
         plt.show()
-        plt.pause(0.6)
+
+        # Wait before displaying another plot. Otherwise, wait the specified
+        #   number of seconds before continuing with the code execution.
+        plt.pause(0.0005)
 
     def waterfall_graph(self):
         """
