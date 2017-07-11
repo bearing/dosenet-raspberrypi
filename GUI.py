@@ -180,7 +180,7 @@ def weather_plot(btn):
     app.addButton("OK",ok)
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
-    app.setButtonFont("OK",font="Helvetica")
+    app.setButtonFont("20","Helvetica")
     app.go()
     
     
