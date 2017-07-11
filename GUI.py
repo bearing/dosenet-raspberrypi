@@ -29,7 +29,7 @@ def weather_test(btn):
     app.setLabelFont("20","Heletica")
     app.addNumericEntry("seconds")
     app.setFocus("seconds")
-    app.setEntryHeight("seconds","4")
+    app.setNumericEntryHeight("seconds","4")
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -86,7 +86,7 @@ def weather_plot(btn):
     app.setLabelFont("20","Heletica")
     app.addNumericEntry("n")
     app.setFocus("n")
-    app.setEntryHeight("n","4")
+    app.setNumericEntryHeight("n","4")
     
     def ok(btn):
         user_file=app.getOptionBox("Files")
