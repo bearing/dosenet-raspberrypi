@@ -62,7 +62,7 @@ def weather_test(btn):
     app.addButton("OK",n)    
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
-    app.getButtin("OK").config(font="Helvetica 20")
+    app.setButtonFont("20",font="Helvetica")
     app.go() 
     
 def weather_plot(btn):
@@ -174,7 +174,7 @@ def weather_plot(btn):
     app.addButton("OK",ok)
     app.setButtin("OK","20")
     app.setButtonHeight("OK","4")
-    app.getButton("OK").config(font="Helvetica 20")
+    app.setButtonFont("20",font="Helvetica")
     app.go()
     
     
@@ -182,9 +182,9 @@ def weather_plot(btn):
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
 app.setButtonHeight("Record Weather Data","4")
-app.getButton("Record Weather Data").config(font="Helvetica 20")
+app.setButtionFont("20",font="Helvetica")
 app.addButton("Plot Weather Data",weather_plot)
 app.setButtonWidth("Plot Weather Data","30")
 app.setButtonHeight("Plot Weather Data","4")
-app.getButton("Plot Weather Data").config(font="Helvetica 20")
+app.setButtonFont("20",font="Helvetica")
 app.go()
