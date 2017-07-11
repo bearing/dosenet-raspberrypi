@@ -28,6 +28,7 @@ def weather_test(btn):
     app.addNumericEntry("seconds")
     app.setFocus("seconds")
     app.setEntryHeight("seconds","4")
+    app.addLabel("instructions","Enter the numer of seconds to record:")
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -71,13 +72,15 @@ def weather_plot(btn):
     degrees_list=[]
     pressure_list=[]
     humidity_list=[]
-
+    
+    app.addLabel("1","Please choose a following .csv file")
     file_name=[]
     for filename in os.listdir('.'):
         if filename.endswith(".csv"):
             file_name.append(os.path.join('.', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
+    app.addLabel("2","Enter the number of data points to merge:")
     app.addNumericEntry("n")
     app.setFocus("n")
     app.setEntryHeight("n","4")
