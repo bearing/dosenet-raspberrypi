@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 10 10:25:03 2017
-
-@author: Ludi Cao
-"""
+#!/usr/bin/env python
 
 from appJar import gui
 import os
