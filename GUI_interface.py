@@ -53,6 +53,7 @@ def weather_test(btn):
                 time.sleep(1)
     def press2(btn):
         if btn == "Stop":
+            app.disableButton("Start")
             app.stop()
     
     app.addButton("Start",press1)    
