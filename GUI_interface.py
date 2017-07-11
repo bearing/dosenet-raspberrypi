@@ -27,30 +27,31 @@ def weather_test(btn):
     app=gui("Weather Test","800x400")
     def press(button):
         if button == "Start":
-            results=csv.writer(open(filename, "ab+"), delimiter = ",")
-            metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
-            results.writerow(metadata)
-            date_time = datetime.datetime.now()
-            degrees = sensor.read_temperature()
-            pascals = sensor.read_pressure()
-            hectopascals = pascals /100
-            humidity = sensor.read_humidity()
-
-            print ('Temp     = {0:0.3f} deg C'.format(degrees))
-            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-            print ('Humidity = {0:0.2f} %'.format(humidity))
-    
-            data=[]
-            data.append(date_time)
-            data.append(degrees)
-            data.append(hectopascals)
-            data.append(humidity)
-    
-            results.writerow(data)
-    
-            time.sleep(1)
+            if True:
+                results=csv.writer(open(filename, "ab+"), delimiter = ",")
+                metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+                results.writerow(metadata)
+                date_time = datetime.datetime.now()
+                degrees = sensor.read_temperature()
+                pascals = sensor.read_pressure()
+                hectopascals = pascals /100
+                humidity = sensor.read_humidity()
+                
+                print ('Temp     = {0:0.3f} deg C'.format(degrees))
+                print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+                print ('Humidity = {0:0.2f} %'.format(humidity))
+                
+                data=[]
+                data.append(date_time)
+                data.append(degrees)
+                data.append(hectopascals)
+                data.append(humidity)
+                    
+                results.writerow(data)
+                
+                time.sleep(1)
         elif button=="Stop":
-            press.stop()
+            app.stop()
                 
                 
     
