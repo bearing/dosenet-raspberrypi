@@ -28,9 +28,6 @@ def weather_test(btn):
     def press1(button):
         if button == "Start":
             while True:
-                def press2(btn):
-                    if btn == "Stop":
-                        app.stop()
                 results=csv.writer(open(filename, "ab+"), delimiter = ",")
                 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
                 results.writerow(metadata)
