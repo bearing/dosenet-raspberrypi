@@ -2,7 +2,6 @@ import time
 import datetime
 import csv
 from Adafruit_BME280 import *
-import argparse
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
@@ -13,13 +12,7 @@ results=csv.writer(open(filename, "ab+"), delimiter = ",")
 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
 results.writerow(metadata)
 
-parser = argparse.ArgumentParser()
-parser.add_argument("n", help="Enter the number of seconds the program will last: ", type=int)
-args = parser.parse_args()
-time_of_program=args.n
-time_passed=0
-
-while time_passed<time_of_program:
+while True:
     date_time = datetime.datetime.now()
     degrees = sensor.read_temperature()
     pascals = sensor.read_pressure()
@@ -39,6 +32,4 @@ while time_passed<time_of_program:
     results.writerow(data)
     
     time.sleep(1)
-    
-    time_passed+=1
     
