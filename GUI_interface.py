@@ -17,16 +17,16 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 def weather_test(btn):
     app=gui("Weather Test","800x400")
     def press1(btn):
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/python weather_test.py')
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather_test.py')
     def press2(btn):
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/python weather_test_stop py')
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather_test_stop.py')
     app.addButton("Start",press1)
     app.setButtonWidth("Start","20")
     app.setButtonHeight("Start","4")
     app.setButtonFont("20","Helvetica")
     app.addButton("Stop",press2)
     app.setButtonWidth("Stop","20")
-    app.setButtonHeigth("Stop","4")
+    app.setButtonHeight("Stop","4")
     app.go()
     
 def weather_plot(btn):
