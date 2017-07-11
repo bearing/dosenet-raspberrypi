@@ -27,6 +27,7 @@ def weather_test(btn):
     app=gui("Weather Test","800x400")
     app.addNumericEntry("seconds")
     app.setFocus("seconds")
+    app.setEntryHeight("seconds","4")
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -61,6 +62,7 @@ def weather_test(btn):
     app.addButton("OK",n)    
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
+    app.getButtin("OK").config(font="Helvetica 20")
     app.go() 
     
 def weather_plot(btn):
@@ -78,6 +80,7 @@ def weather_plot(btn):
     app.addOptionBox("Files",file_name)
     app.addNumericEntry("n")
     app.setFocus("n")
+    app.setEntryHeight("n","4")
     
     def ok(btn):
         user_file=app.getOptionBox("Files")
@@ -169,6 +172,9 @@ def weather_plot(btn):
         plt.show()
     
     app.addButton("OK",ok)
+    app.setButtin("OK","20")
+    app.setButtonHeight("OK","4")
+    app.getButton("OK").config(font="Helvetica 20")
     app.go()
     
     
@@ -176,7 +182,9 @@ def weather_plot(btn):
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
 app.setButtonHeight("Record Weather Data","4")
+app.getButton("Record Weather Data").config(font="Helvetica 20")
 app.addButton("Plot Weather Data",weather_plot)
 app.setButtonWidth("Plot Weather Data","30")
-app.setButtonWidth("Plot Weather Data","4")
+app.setButtonHeight("Plot Weather Data","4")
+app.getButton("Plot Weather Data").config(font="Helvetica 20")
 app.go()
