@@ -106,7 +106,7 @@ class Real_Time_Spectra(object):
 
         # plt.ioff()
 
-    def add_data(self, spectra, maxspectra):
+    def add_data(self, spectra, maxspectra, queue=self.queue):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
