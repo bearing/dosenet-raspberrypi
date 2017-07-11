@@ -8,6 +8,7 @@ Created on Mon Jul 10 10:25:03 2017
 from appJar import gui
 import os
 
+
 app = gui("Adafruit Weather Sensor", "800x400")
 from Adafruit_BME280 import *
 
@@ -16,9 +17,9 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 def weather_test(btn):
     app=gui("Weather Test","800x400")
     def press1(btn):
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather_test.py start')
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/python weather_test.py')
     def press2(btn):
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather_test_stop py start')
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/python weather_test_stop py')
     app.addButton("Start",press1)
     app.setButtonWidth("Start","20")
     app.setButtonHeight("Start","4")
