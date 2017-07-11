@@ -27,8 +27,8 @@ def weather_test(btn):
     app=gui("Weather Test","800x400")
     def press1(button):
         if button == "Start":
-            while True:
-                app.enableButton("Stop")
+            running=True
+            while running:
                 results=csv.writer(open(filename, "ab+"), delimiter = ",")
                 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
                 results.writerow(metadata)
@@ -53,7 +53,6 @@ def weather_test(btn):
                 time.sleep(1)
     def press2(btn):
         if btn == "Stop":
-            app.disableButton("Start")
             app.stop()
     
     app.addButton("Start",press1)    
