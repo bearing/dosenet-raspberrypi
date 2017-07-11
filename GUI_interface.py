@@ -54,13 +54,6 @@ def weather_test(btn):
                 results.writerow(data)
                 
                 time.sleep(1)
-                app.enableButton("Stop")
-        
-        elif button=="Stop":
-            app.disableButton("Start")
-            app.stop()
-                
-                
     
     app.addButton("Start",press)    
     app.setButtonFont("20",font="Helvetica")
