@@ -25,10 +25,10 @@ filename = "weather_test_results_"+file_time+".csv"
 
 def weather_test(btn):
     app=gui("Weather Test","800x400")
+    app.addLabel("instructions","Enter the numer of seconds to record:")
     app.addNumericEntry("seconds")
     app.setFocus("seconds")
     app.setEntryHeight("seconds","4")
-    app.addLabel("instructions","Enter the numer of seconds to record:")
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -175,7 +175,7 @@ def weather_plot(btn):
         plt.show()
     
     app.addButton("OK",ok)
-    app.setButtin("OK","20")
+    app.setButton("OK","20")
     app.setButtonHeight("OK","4")
     app.setButtonFont("20",font="Helvetica")
     app.go()
