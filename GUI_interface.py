@@ -50,6 +50,8 @@ def weather_test(btn):
                 results.writerow(data)
                 
                 time.sleep(1)
+                app.enableButton("Stop")
+        
         elif button=="Stop":
             app.disableButton("Start")
             app.stop()
