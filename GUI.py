@@ -26,6 +26,7 @@ filename = "weather_test_results_"+file_time+".csv"
 def weather_test(btn):
     app=gui("Weather Test","800x400")
     app.addLabel("instructions","Enter the numer of seconds to record:")
+    app.setLabelFont("20","Heletica")
     app.addNumericEntry("seconds")
     app.setFocus("seconds")
     app.setEntryHeight("seconds","4")
@@ -80,7 +81,9 @@ def weather_plot(btn):
             file_name.append(os.path.join('.', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
+    app.setOptionBoxHeight("Files","4")
     app.addLabel("2","Enter the number of data points to merge:")
+    app.setLabelFont("20","Heletica")
     app.addNumericEntry("n")
     app.setFocus("n")
     app.setEntryHeight("n","4")
@@ -175,9 +178,9 @@ def weather_plot(btn):
         plt.show()
     
     app.addButton("OK",ok)
-    app.setButton("OK","20")
+    app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
-    app.setButtonFont("20",font="Helvetica")
+    app.setButtonFont("OK",font="Helvetica")
     app.go()
     
     
@@ -185,7 +188,7 @@ def weather_plot(btn):
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
 app.setButtonHeight("Record Weather Data","4")
-app.setButtionFont("20",font="Helvetica")
+app.setButtonFont("20",font="Helvetica")
 app.addButton("Plot Weather Data",weather_plot)
 app.setButtonWidth("Plot Weather Data","30")
 app.setButtonHeight("Plot Weather Data","4")
