@@ -33,24 +33,7 @@ def weather_test(btn):
         results.writerow(metadata)
         global job1
         if running == True:
-            date_time = datetime.datetime.now()
-            degrees = sensor.read_temperature()
-            pascals = sensor.read_pressure()
-            hectopascals = pascals / 100
-            humidity = sensor.read_humidity()
-
-            print ('Temp     = {0:0.3f} deg C'.format(degrees))
-            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-            print ('Humidity = {0:0.2f} %'.format(humidity))
-    
-            data=[]
-            data.append(date_time)
-            data.append(degrees)
-            data.append(hectopascals)
-            data.append(humidity)
-            
-            results.writerow(data)
-            job1 = top.after(1000, start)
+            os.system('sudo python /home/pi/dosenet-raspberrypi/weather_test')
             
     def stop():
         global running
