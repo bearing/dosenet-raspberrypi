@@ -30,7 +30,7 @@ def weather_test(btn):
         global job1
         if force:
             running = True
-            if running:
+            while running:
                 date_time = datetime.datetime.now()
                 degrees = sensor.read_temperature()
                 pascals = sensor.read_pressure()
@@ -48,7 +48,7 @@ def weather_test(btn):
                 data.append(humidity)
             
                 results.writerow(data)
-                job1=top.after(1000, start)
+                time.sleep(1)
             
     def stop():
         global running
