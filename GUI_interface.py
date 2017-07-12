@@ -19,39 +19,20 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 def weather_test(btn):
     import Tkinter
     top = Tkinter.Tk()
-    top.title('Record Weather')
-    top.geometry('200x100')
-    after_id=None
-    secs=0
-    
+    file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+    filename = "weather_test_results_"+file_time+".csv"
+    results=csv.writer(open(filename, "ab+"), delimiter = ",")
+    metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+    results.writerow(metadata)
+    running = True
     def start():
-        global secs
-        secs = 0
-        beeper()
-        
-    def stop():
-        global after_id
-        if after_id:
-            top.after_cancel(after_id)
-            after_id = None
-        
-    def beeper():
-        global after_id
-        global secs
-        secs += 1
-        file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "weather_test_results_"+file_time+".csv"
-        results=csv.writer(open(filename, "ab+"), delimiter = ",")
-
-        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
-        results.writerow(metadata)
-        if True:
+        while running == True:
             date_time = datetime.datetime.now()
             degrees = sensor.read_temperature()
             pascals = sensor.read_pressure()
             hectopascals = pascals / 100
             humidity = sensor.read_humidity()
-            
+
             print ('Temp     = {0:0.3f} deg C'.format(degrees))
             print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
             print ('Humidity = {0:0.2f} %'.format(humidity))
@@ -61,16 +42,22 @@ def weather_test(btn):
             data.append(degrees)
             data.append(hectopascals)
             data.append(humidity)
-        
+            
             results.writerow(data)
-        
-        after_id = top.after(1000, beeper)
+            time.sleep(1)
+            
 
-    startButton = Tkinter.Button(top, height=2, width=20, text="Start", command=start)
-    stopButton = Tkinter.Button(top, height=2, width=20, text="Stop",command=stop)    
+    def stop():
+        running = False
+
+    startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
+    stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
+
     startButton.pack()
     stopButton.pack()
+
     top.mainloop()
+
 
 def weather_plot(btn):
     app=gui("Weather Plot","800x400")
