@@ -20,15 +20,14 @@ wdaq = weather_DAQ.weather_DAQ()
 
 def weather_test(btn):
     import Tkinter
-    global top
     top = Tkinter.Tk()
     
     wdaq.open_file()
     wdaq.start()
     wdaq.stop()
 
-    startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
-    stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
+    startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = wdaq.start())
+    stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = wdaq.stop())
 
     startButton.pack()
     stopButton.pack()
