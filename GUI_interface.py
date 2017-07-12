@@ -27,6 +27,7 @@ def weather_test(btn):
     running = True
     def start(force=True):
         global running
+        global job1
         if force:
             running = True
             if running:
@@ -47,12 +48,13 @@ def weather_test(btn):
                 data.append(humidity)
             
                 results.writerow(data)
-                top.after(1000, start)
+                job1=top.after(1000, start)
             
     def stop():
         global running
+        global job1
         running=False
-        top.stop()
+        top.after_cancel(job1)
 
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
