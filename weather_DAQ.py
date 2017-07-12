@@ -8,6 +8,7 @@ import time
 import datetime
 import csv
 from Adafruit_BME280 import *
+import Tkinter
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
@@ -24,29 +25,43 @@ class weather_DAQ(object):
         metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
         results.writerow(metadata)
 
-    def start(self):
-        global job1
-        global results
-        date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
-        pascals = sensor.read_pressure()
-        hectopascals = pascals / 100
-        humidity = sensor.read_humidity()
+    def startstop(self):
+        import Tkinter
+        top = Tkinter.Tk()
+        def start():
+            global job1
+            global results
+            date_time = datetime.datetime.now()
+            degrees = sensor.read_temperature()
+            pascals = sensor.read_pressure()
+            hectopascals = pascals / 100
+            humidity = sensor.read_humidity()
 
-        print ('Temp     = {0:0.3f} deg C'.format(degrees))
-        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %'.format(humidity))
+            print ('Temp     = {0:0.3f} deg C'.format(degrees))
+            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+            print ('Humidity = {0:0.2f} %'.format(humidity))
     
-        data=[]
-        data.append(date_time)
-        data.append(degrees)
-        data.append(hectopascals)
-        data.append(humidity)
+            data=[]
+            data.append(date_time)
+            data.append(degrees)
+            data.append(hectopascals)
+            data.append(humidity)
     
-        results.writerow(data)
-        job1=top.after(1000,start)
-    
-    def stop(self):
-        global job1
-        top.after_cancel(job1)
+            results.writerow(data)
+            job1=top.after(1000,start)
+        
+        def stop(self):
+            global job1
+            top.after_cancel(job1)
+             
+         
+        startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = wdaq.start())
+        stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = wdaq.stop())
+
+        startButton.pack()
+        stopButton.pack()
+
+        top.mainloop()
+
+
         
