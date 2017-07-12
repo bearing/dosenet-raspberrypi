@@ -24,8 +24,8 @@ def weather_test(btn):
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
-    def start(force=True):
-        global running
+    running = True
+    def start():
         if running == True:
             date_time = datetime.datetime.now()
             degrees = sensor.read_temperature()
