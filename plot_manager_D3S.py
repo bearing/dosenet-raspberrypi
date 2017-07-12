@@ -314,7 +314,7 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         if self.plot:
-            self.rt_plot.add_data(spectra, self.maxspectra)
+            self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
             self.rt_plot.plot_waterfall()
             self.rt_plot.plot_sum()
         else:

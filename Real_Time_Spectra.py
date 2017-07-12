@@ -106,7 +106,7 @@ class Real_Time_Spectra(object):
 
         # plt.ioff()
 
-    def add_data(self, spectra, maxspectra, queue=self.queue):
+    def add_data(self, queue, spectra, maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -115,17 +115,17 @@ class Real_Time_Spectra(object):
         new_spectra = self.rebin(spectra)
 
         # Add the new spectrum to queue.
-        self.queue.append(new_spectra)
+        queue.append(new_spectra)
 
         # Save the original size of the data queue.
-        data_length = len(self.queue)
+        data_length = len(queue)
 
         # Pop off the first data point if the total number of counts in the
         # spectrum is more than the count window defined by the sum interval
         # to create a running average.
         if data_length > maxspectra:
 
-            self.queue.popleft()
+            queue.popleft()
 
             # # Save the original size of the data queue.
             # data_length = len(data)
