@@ -55,8 +55,8 @@ class weather_DAQ(object):
             top.after_cancel(job1)
              
          
-        startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = wdaq.start())
-        stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = wdaq.stop())
+        startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
+        stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
 
         startButton.pack()
         stopButton.pack()
