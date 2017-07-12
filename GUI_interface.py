@@ -26,7 +26,8 @@ def weather_test(btn):
     results.writerow(metadata)
     running = True
     def start():
-        while running == True:
+        global job1
+        if running == True:
             date_time = datetime.datetime.now()
             degrees = sensor.read_temperature()
             pascals = sensor.read_pressure()
@@ -44,11 +45,12 @@ def weather_test(btn):
             data.append(humidity)
             
             results.writerow(data)
-            time.sleep(1)
+            job1 = top.after(1000, start)
             
 
     def stop():
-        running = False
+        global job1
+        top.after_cancel(job1)
 
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
