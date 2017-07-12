@@ -14,14 +14,14 @@ class weather_DAQ(object):
         self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
         self.running=False
         
-    def open_file():
+    def open_file(self):
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "weather_test_results_"+file_time+".csv"
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
         results.writerow(metadata)
 
-    def start():
+    def start(self):
         global job1
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
@@ -42,6 +42,6 @@ class weather_DAQ(object):
         results.writerow(data)
         job1=top.after(1000,start)
     
-    def stop():
+    def stop(self):
         global job1
         top.after_cancel(job1)
