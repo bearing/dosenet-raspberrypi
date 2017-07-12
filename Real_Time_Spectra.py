@@ -166,7 +166,9 @@ class Real_Time_Spectra(object):
         #   summation of the spectra in the temporary data array.
         running_avg_array = sum(temp_data) / temp_length
 
-        return running_avg_array
+        sum_data = sum(temp_data)
+
+        return running_avg_array, sum_data
 
     def rebin(self, data, n=4):
         """
