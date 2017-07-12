@@ -7,6 +7,7 @@ Created on Wed Jul 12 11:32:41 2017
 import time
 import datetime
 import csv
+import GUI_interface
 from Adafruit_BME280 import *
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
@@ -44,7 +45,7 @@ class weather_DAQ(object):
         data.append(humidity)
     
         results.writerow(data)
-        job1=top.after(1000,start)
+        job1=GUI_interface.top.after(1000,start)
     
     def stop(self):
         global job1
