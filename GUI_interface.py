@@ -26,20 +26,30 @@ def weather_test(btn):
     results.writerow(metadata)
     running = True
     def start(force=True):
-        file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "weather_test_results_"+file_time+".csv"
-        results=csv.writer(open(filename, "ab+"), delimiter = ",")
-        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
-        results.writerow(metadata)
-        global job1
         if running == True:
-            os.system('sudo python /home/pi/dosenet-raspberrypi/weather_test.py')
-            
+            date_time = datetime.datetime.now()
+            degrees = sensor.read_temperature()
+            pascals = sensor.read_pressure()
+            hectopascals = pascals / 100
+            humidity = sensor.read_humidity()
+
+            print ('Temp     = {0:0.3f} deg C'.format(degrees))
+            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+            print ('Humidity = {0:0.2f} %'.format(humidity))
+    
+            data=[]
+            data.append(date_time)
+            data.append(degrees)
+            data.append(hectopascals)
+            data.append(humidity)
+    
+            results.writerow(data)
+            top.after(1000,start)
+    
     def stop():
         global running
-        global job1
-        running=False
-        top.after_cancel(job1)
+        running = False
+        top.after_cancel(start)
 
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
