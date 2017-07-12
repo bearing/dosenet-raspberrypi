@@ -9,27 +9,67 @@ from matplotlib.dates import DateFormatter
 import time
 import datetime
 import csv
+import Tkinter
 
 app = gui("Adafruit Weather Sensor", "800x400")
 from Adafruit_BME280 import *
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
+
 def weather_test(btn):
-    app=gui("Weather Test","800x400")
-    def press1(btn):
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh start & ')
-    def press2(btn): 
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh stop')
-    app.addButton("Start",press1)
-    app.setButtonWidth("Start","20")
-    app.setButtonHeight("Start","4")
-    app.setButtonFont("20","Helvetica")
-    app.addButton("Stop",press2)
-    app.setButtonWidth("Stop","20")
-    app.setButtonHeight("Stop","4")
-    app.go()
+    top = Tkinter.Tk()
+    after_id=None
+    secs=0
     
+    def start():
+        global secs
+        secs = 0
+        beeper()
+        
+    def stop():
+        global after_id
+        if after_id:
+            top.after_cancel(after_id)
+            after_id = None
+        
+    def beeper():
+        global after_id
+        global secs
+        secs += 1
+        file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+        filename = "weather_test_results_"+file_time+".csv"
+        results=csv.writer(open(filename, "ab+"), delimiter = ",")
+
+        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+        results.writerow(metadata)
+        if True:
+            date_time = datetime.datetime.now()
+            degrees = sensor.read_temperature()
+            pascals = sensor.read_pressure()
+            hectopascals = pascals / 100
+            humidity = sensor.read_humidity()
+            
+            print ('Temp     = {0:0.3f} deg C'.format(degrees))
+            print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+            print ('Humidity = {0:0.2f} %'.format(humidity))
+    
+            data=[]
+            data.append(date_time)
+            data.append(degrees)
+            data.append(hectopascals)
+            data.append(humidity)
+        
+            results.writerow(data)
+        
+        after_id = top.after(1000, beeper)
+
+    startButton = Tkinter.Button(top, height=2, width=20, text="Start", command=start)
+    stopButton = Tkinter.Button(top, height=2, width=20, text="Stop",command=stop)    
+    startButton.pack()
+    stopButton.pack()
+    top.mainloop()
+
 def weather_plot(btn):
     app=gui("Weather Plot","800x400")
     times=[]
