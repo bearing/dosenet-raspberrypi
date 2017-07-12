@@ -5,6 +5,7 @@ import kromek
 import numpy as np
 import signal
 import sys
+import os
 from Crypto.Cipher import AES
 from collections import deque
 
@@ -21,7 +22,8 @@ from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 
 from auxiliaries import LED
-from globalvalues import D3S_LED_PIN, D3S_LED_BLINK_PERIOD_S
+from globalvalues import D3S_LED_PIN
+from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -76,10 +78,13 @@ class Manager_D3S(object):
                  running=False,
                  d3s_LED_pin=D3S_LED_PIN,
                  d3s_light_switch=False,
-                 d3s_LED_blink_period=D3S_LED_BLINK_PERIOD_S,
+                 d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
+                 d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
                  d3s_LED_blink=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  signal_test_loop=True,
+                 signal_test_connection=False,
+                 signal_test_attempts=0,
                  ):
 
         self.running = running
@@ -116,15 +121,18 @@ class Manager_D3S(object):
 
         self.signal_test_time = signal_test_time
         self.signal_test_loop = signal_test_loop
+        self.signal_test_connection = signal_test_connection
+        self.signal_test_attempts = signal_test_attempts
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
-        self.d3s_LED_blink_period = d3s_LED_blink_period
+        self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
+        self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
         self.d3s_LED_blink = d3s_LED_blink
 
         if d3s_LED_blink:
             print("Attempting to connect to D3S now")
-            self.d3s_LED.start_blink(interval=d3s_LED_blink_period)
+            self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
         else:
             self.d3s_LED.on()
 
@@ -297,10 +305,16 @@ class Manager_D3S(object):
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
-        if len(devs) <= 0:
-            return
 
+        if len(devs) <= 0:
+            print("No D3S connected, exiting manager now")
+            self.d3s_LED.stop_blink()
+            GPIO.cleanup()
+            return
+        else:
+            print 'Discovered %s' % devs
+            print("D3S device found, checking for data now")
+            self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
         filtered = []
 
         for dev in devs:
@@ -309,18 +323,36 @@ class Manager_D3S(object):
 
         devs = filtered
         if len(devs) <= 0:
+            print("No D3S connected, exiting manager now")
+            self.d3s_LED.stop_blink()
+            GPIO.cleanup()
             return
 
-        #Checks if the RaspberryPi is getting data from the D3S
-        #and turns on the red LED if it is.
+        # Checks if the RaspberryPi is getting data from the D3S and turns on
+        # the red LED if it is. If a D3S is connected but no data is being recieved,
+        # it tries a couple times then reboots the RaspberryPi.
         try:
-            while self.signal_test_loop:
-                with kromek.Controller(devs, self.signal_test_time) as controller:
-                    for reading in controller.read():
-                        if sum(reading[4]) != 0:
-                            self.d3s_light_switch = True
-                            self.signal_test_loop = False
-                            break
+            while self.signal_test_attempts < 3 and self.signal_test_connection == False:
+                test_time = time.time() + self.signal_test_time + 5
+                while time.time() < test_time and self.signal_test_loop:
+                    with kromek.Controller(devs, self.signal_test_time) as controller:
+                        for reading in controller.read():
+                            if sum(reading[4]) != 0:
+                                self.d3s_light_switch = True
+                                self.signal_test_loop = False
+                                break
+                            else:
+                                self.signal_test_loop = False
+                                break
+                if self.d3s_light_switch:
+                    self.signal_test_connection = True
+                else:
+                    self.signal_test_attempts += 1
+                    self.signal_test_loop = True
+                    print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
+            if not self.signal_test_connection:
+                print("No data from D3S found, restarting now")
+                os.system('sudo reboot')
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
@@ -330,7 +362,7 @@ class Manager_D3S(object):
 
         if self.d3s_light_switch:
             self.d3s_LED.stop_blink()
-            print("D3S data connection found, continuing with normal collection")
+            print("D3S data connection found, continuing with normal data collection")
             self.d3s_LED.on()
 
         done_devices = set()
