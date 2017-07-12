@@ -17,6 +17,7 @@ class weather_DAQ(object):
         self.running=False
         
     def open_file(self):
+        global results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "weather_test_results_"+file_time+".csv"
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
@@ -25,6 +26,7 @@ class weather_DAQ(object):
 
     def start(self):
         global job1
+        global results
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
