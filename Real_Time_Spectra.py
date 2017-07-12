@@ -281,6 +281,7 @@ class Real_Time_Spectra(object):
 
             self.waterfall_plot.set_data(self.data)
 
+        plt.tight_layout()
         # plt.draw()
         plt.show()
         # plt.pause(self.interval)
