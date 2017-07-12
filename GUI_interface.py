@@ -9,19 +9,19 @@ from matplotlib.dates import DateFormatter
 import time
 import datetime
 import csv
-import weather_DAQ.py
+import weather_DAQ
 
 app = gui("Adafruit Weather Sensor", "800x400")
 from Adafruit_BME280 import *
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
+wdaq = weather_DAQ()
 
 def weather_test(btn):
     import Tkinter
     top = Tkinter.Tk()
     
-    wdaq = weather_DAQ()
     wdaq.open_file()
     wdaq.start()
     wdaq.stop()
