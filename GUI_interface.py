@@ -47,9 +47,7 @@ def weather_test(btn):
             top.after(1000,start)
     
     def stop():
-        global running
         running = False
-        top.quit()
 
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
