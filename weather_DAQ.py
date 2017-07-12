@@ -9,9 +9,11 @@ import datetime
 import csv
 from Adafruit_BME280 import *
 
+sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+
 class weather_DAQ(object):
     def __init__(self):
-        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+        self.sensor = sensor
         self.running=False
         
     def open_file(self):
