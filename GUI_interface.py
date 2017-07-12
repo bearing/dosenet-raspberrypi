@@ -20,6 +20,7 @@ wdaq = weather_DAQ.weather_DAQ()
 
 def weather_test(btn):
     import Tkinter
+    global top
     top = Tkinter.Tk()
     
     wdaq.open_file()
