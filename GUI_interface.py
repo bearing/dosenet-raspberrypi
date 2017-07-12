@@ -24,6 +24,7 @@ def weather_test(btn):
     results=csv.writer(open(filename, "ab+"), delimiter = ",")
     metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
     results.writerow(metadata)
+    global running
     running = True
     def start():
         if running == True:
@@ -47,6 +48,7 @@ def weather_test(btn):
             top.after(1000,start)
     
     def stop():
+        global running
         running = False
 
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
