@@ -20,7 +20,7 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 def weather_test(btn):
     top = Tkinter.Tk()
     top.title('Record Weather')
-    top.geometry('800x400')
+    top.geometry('200x100')
     after_id=None
     secs=0
     
@@ -66,8 +66,8 @@ def weather_test(btn):
         
         after_id = top.after(1000, beeper)
 
-    startButton = Tkinter.Button(top, height=8, width=80, text="Start", command=start)
-    stopButton = Tkinter.Button(top, height=8, width=80, text="Stop",command=stop)    
+    startButton = Tkinter.Button(top, height=2, width=20, text="Start", command=start)
+    stopButton = Tkinter.Button(top, height=2, width=20, text="Stop",command=stop)    
     startButton.pack()
     stopButton.pack()
     top.mainloop()
