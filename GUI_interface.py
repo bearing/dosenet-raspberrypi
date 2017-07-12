@@ -16,7 +16,7 @@ from Adafruit_BME280 import *
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
-wdaq = weather_DAQ()
+wdaq = weather_DAQ.weather_DAQ()
 
 def weather_test(btn):
     import Tkinter
