@@ -9,7 +9,6 @@ from matplotlib.dates import DateFormatter
 import time
 import datetime
 import csv
-import Tkinter
 
 app = gui("Adafruit Weather Sensor", "800x400")
 from Adafruit_BME280 import *
@@ -18,6 +17,7 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 
 
 def weather_test(btn):
+    import Tkinter
     top = Tkinter.Tk()
     top.title('Record Weather')
     top.geometry('200x100')
