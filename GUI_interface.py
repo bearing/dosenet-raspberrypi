@@ -33,7 +33,7 @@ def weather_test(btn):
         results.writerow(metadata)
         global job1
         if running == True:
-            os.system('sudo python /home/pi/dosenet-raspberrypi/weather_test')
+            os.system('sudo python /home/pi/dosenet-raspberrypi/weather_test.py')
             
     def stop():
         global running
