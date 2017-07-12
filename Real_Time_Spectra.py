@@ -168,7 +168,6 @@ class Real_Time_Spectra(object):
 
         return running_avg_array
 
-
     def rebin(self, data, n=4):
         """
         Rebins the array. n is the divisor. Rebin the data in the grab_data
@@ -296,7 +295,7 @@ class Real_Time_Spectra(object):
         plt.figure(2)
 
         # Get the running average
-        run_avg = self.run_avg_data(self.queue, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         plt.clf()
 

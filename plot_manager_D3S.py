@@ -362,7 +362,8 @@ class Manager_D3S(object):
 
         return mgr
 
-if __name__ == '__main__':
+def main():
+
     mgr = Manager_D3S.from_argparse()
     try:
         mgr.run()
@@ -373,3 +374,7 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+
+if __name__ == '__main__':
+
+    main()
