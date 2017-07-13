@@ -8,7 +8,7 @@ counter = 0
 for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
     counter += 1
 
-metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0:1]
+metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0]
 print(metadata_line)
 metadata = [line.split(",") for line in metadata_line]
 print metadata
