@@ -51,6 +51,7 @@ class weather_DAQ(object):
 
         
     def plotdata(self):
+        
         times=[]
         degrees_list=[]
         pressure_list=[]
@@ -75,12 +76,10 @@ class weather_DAQ(object):
         app.addLabel("2","Enter the number of data points to merge:")
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
-        app.setFocus("n")
-        user_file=app.getOptionBox("Files")     
+        app.setFocus("n")     
     
         def ok(btn):
-            global user_file
-            global n_merge
+            user_file=app.getOptionBox("Files") 
             n_merge=int(app.getEntry("n"))
             row_counter=0
             results = csv.reader(open(user_file), delimiter=',')

@@ -32,8 +32,7 @@ def weather_test(btn):
     top.mainloop()
 
 def weather_plot(btn):
-     
-    wdaq.lists()
+
     wdaq.plotdata()    
 
 app.addButton("Record Weather Data", weather_test)
