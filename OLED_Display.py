@@ -47,6 +47,8 @@ ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
 for i in range(1,len(lastline)):
+    print("works")
     to_be_displayed = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+lastline[i])
+    print(to_be_displayed)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(50,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 6
     time.sleep(3)
