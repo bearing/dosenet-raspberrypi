@@ -24,7 +24,7 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    if len(lastline[0]):
+    while len(lastline) > 0:
         for i in range(1,len(lastline[0])):
             this_hour = datetime.datetime.now().hour
 
