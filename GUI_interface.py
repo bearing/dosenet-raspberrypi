@@ -18,10 +18,26 @@ def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
+    temp=[]
+    time=[]
+    date_time = datetime.datetime.now()
+    degrees = sensor.read_temperature()
+    plt.ion()
+    fig = plt.figure(1)
+    ax=fig.add_subplot(111)
+    plt.xlabel("Time")
+    plt.ylabel("Temperature(C)")
+    fig.autofmt_xdate()
+    ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     def start():
         global job1
-        global results
+        wdaq.create_file()
         wdaq.start()
+        time.append(date_time)
+        temp.append(degrees)
+        plt.plot(time, temp,"r." )
+        plt.pause(0.0005)
+        plt.show()
         job1=top.after(1000,start)
     def stop():
         global job1
