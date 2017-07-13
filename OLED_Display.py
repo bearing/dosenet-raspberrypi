@@ -17,6 +17,7 @@ while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[-1:]
     lastline = [line.split(",") for line in results]
+    print(lastline)
 
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
