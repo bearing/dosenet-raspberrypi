@@ -189,6 +189,7 @@ class weather_DAQ(object):
         app.setEntryHeight("n","4")
         user_file=app.getOptionBox("Files")
         n_merge=int(app.getEntry("n"))
+        app.go()
 
 
 
