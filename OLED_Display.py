@@ -2,10 +2,10 @@ import ctypes
 import datetime
 
 constant_count = 0
-    for i in open("air_quality_test_results_2017-06-29_17-33-06.csv"):
-        constant_count += 1
+for i in open("air_quality_test_results_2017-06-29_17-33-06.csv"):
+        counter += 1
 
-while constant_count < counter:
+while constant_count =< counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-06-29_17-33-06.csv").readlines()[-1:]
     lastline = [line.split(",") for line in results]
@@ -21,6 +21,8 @@ while constant_count < counter:
     for i in range(1,len(lastline)+2):
         to_be_displayed = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+lastline[i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(50,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 6
+
+    counter = 0
 
     for i in open("air_quality_test_results_2017-06-29_17-33-06.csv"):
         counter += 1
