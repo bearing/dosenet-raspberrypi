@@ -1,14 +1,6 @@
 #!/usr/bin/env/python
 
 from appJar import gui
-import os
-import matplotlib.pyplot as plt
-import dateutil
-import numpy as np
-from matplotlib.dates import DateFormatter
-import time
-import datetime
-import csv
 import weather_DAQ
 
 app = gui("Adafruit Weather Sensor", "800x400")
