@@ -18,6 +18,7 @@ def weather_test(btn):
         global job1
         global results
         wdaq.start()
+        wdaq.real_time_data()
         job1=top.after(1000,start)
     def stop():
         global job1

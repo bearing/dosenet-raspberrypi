@@ -50,6 +50,27 @@ class weather_DAQ(object):
         results.writerow(data)
 
         
+    def real_time_data(self):
+        date_time = datetime.datetime.now()
+        degrees = sensor.read_temperature()
+        temp=[]
+        time=[]
+        time.append(date_time)
+        temp.append(degrees)
+        plt.ion()
+        plt.figure(1)
+        plt.xlabel("Time")
+        plt.ylabel("Temperature(C)")
+        plt.plot(time, temp,"r." )
+        plt.show()
+        
+
+        
+        
+        
+        
+
+        
     def plotdata(self):
         
         times=[]
