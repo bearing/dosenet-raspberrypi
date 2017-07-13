@@ -48,6 +48,20 @@ class weather_DAQ(object):
         data.append(humidity)
     
         results.writerow(data)
+        
+        temp=[]
+        time=[]
+        time.append(date_time)
+        temp.append(degrees)
+        plt.ion()
+        fig = plt.figure(1)
+        ax=fig.add_subplot(111)
+        plt.xlabel("Time")
+        plt.ylabel("Temperature(C)")
+        plt.plot(time, temp,"r." )
+        fig.autofmt_xdate()
+        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        plt.pause(0.0005)
 
     def plotdata(self):
         
