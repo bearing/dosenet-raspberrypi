@@ -8,16 +8,13 @@ counter = 0
 for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
     counter += 1
 
-metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0]
-print(metadata_line)
+metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0:1]
 metadata = [line.split(",") for line in metadata_line]
-print(metadata)
 
 while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[-1:]
     lastline = [line.split(",") for line in results]
-    print(lastline)
 
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
@@ -26,12 +23,6 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-
-    #testing
-    print(len(metadata))
-    print(len(metadata[0]))
-    print(metadata)
-    print(metadata[1])
 
     for i in range(1,len(lastline[0])):
         to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" "+metadata[0][i]+" /n"+lastline[0][i])
