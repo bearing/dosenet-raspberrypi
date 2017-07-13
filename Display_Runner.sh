@@ -3,19 +3,17 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
-LOG=/tmp/pocket_manager.log
-
 case "$1" in
   Start)
-    echo "Starting Display" > $LOG
-    sudo python $DOSENET/OLED_Display.py --logfile $LOG >>$LOG 2>&1
+    echo "Starting Display"
+    sudo python $DOSENET/OLED_Display.py
     ;;
   Stop)
-    echo "Stopping Display" >> $LOG
+    echo "Stopping Display"
     sudo pkill -SIGTERM -f OLED_Display.py
     ;;
  *)
-    echo "Usage: /home/pi/dosenet-raspberrypi/Display_Runner.sh {start|stop}"
+    echo "Usage: /home/pi/dosenet-raspberrypi/Display_Runner.sh {Start|Stop}"
     exit 1
     ;;
 esac
