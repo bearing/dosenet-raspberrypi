@@ -46,6 +46,8 @@ ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
 ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
+print(len(lastline))
+
 for i in range(1,len(lastline)):
     print("works")
     to_be_displayed = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+lastline[i])
