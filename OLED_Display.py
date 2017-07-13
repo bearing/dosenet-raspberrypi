@@ -27,9 +27,8 @@ while constant_count <= counter:
     for i in range(1,len(lastline[0])):
         to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" ("+metadata[0][i]+") "+lastline[0][i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 7
-        time.sleep(3)
+        time.sleep(2)
 
     counter = 0
-
     for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
         counter += 1
