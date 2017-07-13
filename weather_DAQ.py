@@ -26,6 +26,7 @@ class weather_DAQ(object):
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
+        self.maxdata=10
         
     def create_file(self):
         global results
