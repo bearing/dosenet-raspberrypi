@@ -13,17 +13,17 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 
 wdaq = weather_DAQ.weather_DAQ()
 
-date_time = datetime.datetime.now()
-degrees = sensor.read_temperature()
-global temp
-global time
-temp=[]
-time=[]
 
 def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
+    date_time = datetime.datetime.now()
+    degrees = sensor.read_temperature()
+    global temp
+    global time
+    temp=[]
+    time=[]
     def start():
         global job1
         global results
