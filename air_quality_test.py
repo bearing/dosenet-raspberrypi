@@ -37,11 +37,11 @@ metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 pen_display_results.writerow(metadata[:])
 
-print('Printing Results')
+#print('Printing Results')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
-    print('next')
+    #print('next')
     text = port.read(32)
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
