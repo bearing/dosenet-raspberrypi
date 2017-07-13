@@ -98,6 +98,7 @@ class weather_DAQ(object):
         app.setEntryHeight("n","4")
         user_file=app.getOptionBox("Files")
         n_merge=int(app.getEntry("n"))
+        app.go()
         
     def plotdata(self):
         global times
@@ -127,7 +128,7 @@ class weather_DAQ(object):
         merge_times = []
 
         ndata = len(degrees_list)
-        nsum_data = int(ndata/5)
+        nsum_data = int(ndata/n_merge)
 
         for i in range(nsum_data):
             itemp = degrees_list[i*n_merge:(i+1)*n_merge]
