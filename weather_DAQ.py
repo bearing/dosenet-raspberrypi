@@ -53,7 +53,6 @@ class weather_DAQ(object):
         time.append(date_time)
         temp.append(degrees)
         plt.ion()
-        plt.figure(1)
         fig=plt.figure()
         ax=fig.add_subplot(111)
         plt.xlabel("Time")
