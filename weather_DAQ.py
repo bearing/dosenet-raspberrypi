@@ -37,27 +37,33 @@ class weather_DAQ(object):
         results.writerow(metadata)
 
     def start(self):
+        
         if self.running==False:
             self.running=True
             plt.ion()
             self.tempfig = plt.figure(1)
             ax=self.tempfig.add_subplot(111)
             plt.xlabel("Time")
-            plt.ylabel("Temperature(C)")
+            plt.ylabel("Temperature(C)") 
+            plt.title("Teperature")
             self.tempfig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+           
             plt.ion()
             self.humidfig = plt.figure(2)
             ax=self.humidfig.add_subplot(111)
             plt.xlabel("Time")
             plt.ylabel("Humidity(%)")
+            plt.title("Humdity")
             self.humidfig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+            
             plt.ion()
             self.pressfig = plt.figure(3)
             ax=self.pressfig.add_subplot(111)
             plt.xlabel("Time")
             plt.ylabel("Pressure(hPa)")
+            plt.title("Pressure")
             self.pressfig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
             
@@ -90,12 +96,12 @@ class weather_DAQ(object):
         plt.plot(self.time_queue,self.temp_queue,"r.")
         self.tempfig.show()
         plt.figure(2)
-        plt.clf
+        plt.clf()
         plt.plot(self.time_queue, self.humid_queue,"r.")
         self.humidfig.show()
         self.humidfig.show()
         plt.figure(3)
-        plt.clf
+        plt.clf()
         plt.plot(self.time_queue, self.press_queue, "r.")
         self.pressfig.show()
         plt.pause(0.0005)
