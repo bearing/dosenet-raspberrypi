@@ -11,9 +11,6 @@ for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
 metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0:1]
 metadata = [line.split(",") for line in metadata_line]
 
-print("Type \"Y\" to end the program. (Put quotes around the Y.) Do you want to quit the program?: ")
-quit_call = input()
-
 while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[-1:]
