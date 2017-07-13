@@ -78,7 +78,7 @@ class weather_DAQ(object):
         pressure_list=[]
         humidity_list=[]
         
-    def plotdata(btn):
+    def plotdata(self):
         global times
         global degrees_list
         global pressure_list

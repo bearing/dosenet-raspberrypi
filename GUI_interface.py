@@ -18,7 +18,7 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 
 wdaq = weather_DAQ.weather_DAQ()
 
-def weather_test(btn):
+def weather_test()):
 
     wdaq.open_file()
     wdaq.startstop()
