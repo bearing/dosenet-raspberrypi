@@ -78,7 +78,7 @@ class weather_DAQ(object):
         pressure_list=[]
         humidity_list=[]
         
-    def plotdata(self):
+    def plotdata(btn):
         global times
         global degrees_list
         global pressure_list
@@ -189,7 +189,7 @@ class weather_DAQ(object):
         app.setEntryHeight("n","4")
         user_file=app.getOptionBox("Files")
         n_merge=int(app.getEntry("n"))
-        app.go()
+
 
 
     

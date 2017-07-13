@@ -18,7 +18,7 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 
 wdaq = weather_DAQ.weather_DAQ()
 
-def weather_test()):
+def weather_test(btn):
 
     wdaq.open_file()
     wdaq.startstop()
@@ -28,11 +28,11 @@ def weather_plot(btn):
     
     app = gui("Record Weather Data","800x400")
     wdaq.set_widgets()
-    wdaq.lists()
     app.addButton("OK", wdaq.plotdata)
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
     app.setButtonFont("20","Helvetica")
+    wdaq.lists()
     app.go()
     
 
