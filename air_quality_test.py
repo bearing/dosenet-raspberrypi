@@ -4,6 +4,7 @@ import csv
 import datetime
 import time
 import argparse
+import os
 
 #Initiate timer
 parser = argparse.ArgumentParser()
@@ -12,14 +13,17 @@ info = parser.parse_args()
 run_time = info.runtime
 counter_time= int(time.time())
 
-
 # Open CSV file to save results
-metadata = []
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "air_quality_test_results_"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
+#Open CSV file to display results
+os.remove("air_quality_test_results.csv")
+pen_display_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
+
 # Add metadata to CSV file
+metadata = []
 metadata.append("Date and Time")
 metadata.append("0.3 um")
 metadata.append("0.5 um")
@@ -31,6 +35,7 @@ metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
+pen_display_results.writerow(metadata[:])
 
 print('Printing Results')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
@@ -93,17 +98,19 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
+            pen_display_results.writerow(results[0:10])
 
             now_time = int(time.time())
 
         else:
-            print('Check Sum Failed')
+            print('Data Acquisition Failed')
 
             # Put results in a CSV file
             results = []
             date_time = datetime.datetime.now()
             results.append(date_time)
-            results.append('Check Sum Failed')
+            results.append('Data Acquisition Failed')
             pen_results.writerow(results[0:2])
+            pen_display_results.writerow(results[0:2])
 
             now_time = int(time.time())
