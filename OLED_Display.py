@@ -24,20 +24,11 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    print(len(lastline))
     while len(lastline[0]) > 0:
         for i in range(1,len(lastline[0])):
-            this_hour = datetime.datetime.now().hour
-
-            if this_hour < 10:
-                to_be_displayed = str("0"+datetime.datetime.now().strftime("%H:%M:%S")+" ("+metadata[0][i]+") "+lastline[0][i])
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 7
-                time.sleep(3)
-
-            else:
-                to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" ("+metadata[0][i]+") "+lastline[0][i])
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 7
-                time.sleep(3)
+            to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" ("+metadata[0][i]+") "+lastline[0][i])
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 7
+            time.sleep(3)
 
     counter = 0
     for i in open("air_quality_test_results.csv"):
