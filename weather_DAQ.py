@@ -80,6 +80,8 @@ class weather_DAQ(object):
     
     def set_widgets(self):
         global app
+        global user_file
+        global n_merge
         app=gui("Weather Plot","800x400")
         app.addLabel("1","Please choose a following .csv file")
         file_name=[]
@@ -94,14 +96,16 @@ class weather_DAQ(object):
         app.addNumericEntry("n")
         app.setFocus("n")
         app.setEntryHeight("n","4")
+        user_file=app.getOptionBox("Files")
+        n_merge=int(app.getEntry("n"))
         
     def plotdata(self):
         global times
         global degrees_list
         global pressure_list
         global humidity_list
-        user_file=app.getOptionBox("Files")
-        n_merge=int(app.getEntry("n"))
+        global user_file
+        global n_merge
         row_counter=0
         results = csv.reader(open(user_file), delimiter=',')
 
