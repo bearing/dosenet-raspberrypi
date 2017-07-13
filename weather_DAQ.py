@@ -58,6 +58,7 @@ class weather_DAQ(object):
         plt.ylabel("Temperature(C)")
         plt.plot(time, temp,"r." )
         plt.show()
+        plt.pause(0.0005)
 
 
 
