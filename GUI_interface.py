@@ -18,8 +18,8 @@ def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
-    temp=[]
-    time=[]
+    temp=[1,2]
+    time=[3,4]
     date_time = datetime.datetime.now()
     degrees = sensor.read_temperature()
     plt.ion()
