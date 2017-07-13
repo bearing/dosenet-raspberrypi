@@ -29,7 +29,7 @@ print(len(metadata[0]))
 print(metadata)
 print(metadata[1])
 
-    for i in range(1,len(lastline[0])):
+for i in range(1,len(lastline[0])):
         to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" "+metadata[0][i]+" /n"+lastline[0][i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(50,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 6
         time.sleep(3)
