@@ -53,7 +53,7 @@ class weather_DAQ(object):
         time.append(date_time)
         temp.append(degrees)
         plt.ion()
-        fig=plt.figure()
+        plt.figure(1)
         ax=fig.add_subplot(111)
         plt.xlabel("Time")
         plt.ylabel("Temperature(C)")
