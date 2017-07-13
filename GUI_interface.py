@@ -27,7 +27,9 @@ def weather_test(btn):
 def weather_plot(btn):
     
     app = gui("Record Weather Data","800x400")
-    app.addButton("OK",wdaq.plotdata())
+    wdaq.set_widgets()
+    wdaq.lists()
+    app.addButton("OK", wdaq.plotdata)
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
     app.setButtonFont("20","Helvetica")
