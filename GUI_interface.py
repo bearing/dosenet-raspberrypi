@@ -11,9 +11,25 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 wdaq = weather_DAQ.weather_DAQ()
 
 def weather_test(btn):
-
     wdaq.create_file()
-    wdaq.startstop()
+    import Tkinter
+    top = Tkinter.Tk()
+    def start():
+        global job1
+        global results
+        wdaq.start()
+        job1=top.after(1000,start)
+    def stop():
+        global job1
+        top.after_cancel(job1)
+    
+    startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
+    stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
+
+    startButton.pack()
+    stopButton.pack()
+
+    top.mainloop()
 
 def weather_plot(btn):
      
