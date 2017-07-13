@@ -127,7 +127,7 @@ class weather_DAQ(object):
         merge_times = []
 
         ndata = len(degrees_list)
-        nsum_data = int(ndata/n_merge)
+        nsum_data = int(ndata/5)
 
         for i in range(nsum_data):
             itemp = degrees_list[i*n_merge:(i+1)*n_merge]
