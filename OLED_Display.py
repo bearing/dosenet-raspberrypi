@@ -9,6 +9,7 @@ for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
     counter += 1
 
 metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0]
+print(metadata_line)
 metadata = [line.split(",") for line in metadata_line]
 
 while constant_count <= counter:
@@ -24,6 +25,7 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
+    #testing
     print(len(metadata))
     print(len(metadata[0]))
     print(metadata)
