@@ -59,17 +59,8 @@ class weather_DAQ(object):
         plt.plot(time, temp,"r." )
         plt.show()
 
-        
-    def real_time_data(self):
 
-        
 
-        
-        
-        
-        
-
-        
     def plotdata(self):
         
         times=[]
