@@ -119,7 +119,6 @@ class weather_DAQ(object):
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
         app.setFocus("n")
-        app.setNumericEntryHeight("n","4")
         user_file=app.getOptionBox("Files")
         n_merge=int(app.getEntry("n"))
     
@@ -201,11 +200,11 @@ class weather_DAQ(object):
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
             plt.show()
     
-            app.addButton("OK",ok)
-            app.setButtonWidth("OK","20")
-            app.setButtonHeight("OK","4")
-            app.setButtonFont("20","Helvetica")
-            app.go()
+        app.addButton("OK",ok)
+        app.setButtonWidth("OK","20")
+        app.setButtonHeight("OK","4")
+        app.setButtonFont("20","Helvetica")
+        app.go()
     
 
 
