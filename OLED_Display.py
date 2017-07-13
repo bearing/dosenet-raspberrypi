@@ -6,7 +6,7 @@ constant_count = 0
 counter = 0
 
 for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
-        counter += 1
+    counter += 1
 
 while constant_count <= counter:
     constant_count = counter
@@ -21,7 +21,7 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    for i in range(1,len(lastline)+2):
+    for i in range(1,len(lastline)):
         to_be_displayed = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+lastline[i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(50,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 6
         time.sleep(3)
