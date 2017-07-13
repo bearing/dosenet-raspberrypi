@@ -77,28 +77,6 @@ class weather_DAQ(object):
         degrees_list=[]
         pressure_list=[]
         humidity_list=[]
-    
-    def set_widgets(self):
-        global app
-        global user_file
-        global n_merge
-        app=gui("Weather Plot","800x400")
-        app.addLabel("1","Please choose a following .csv file")
-        file_name=[]
-        for filename in os.listdir('.'):
-            if filename.endswith(".csv"):
-                file_name.append(os.path.join('.', filename))
-        app.setFont(20)
-        app.addOptionBox("Files",file_name)
-        app.setOptionBoxHeight("Files","4")
-        app.addLabel("2","Enter the number of data points to merge:")
-        app.setLabelFont("20","Heletica")
-        app.addNumericEntry("n")
-        app.setFocus("n")
-        app.setEntryHeight("n","4")
-        user_file=app.getOptionBox("Files")
-        n_merge=int(app.getEntry("n"))
-        app.go()
         
     def plotdata(self):
         global times
@@ -190,6 +168,29 @@ class weather_DAQ(object):
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.show()
         
+        
+    def set_widgets(self):
+        global app
+        global user_file
+        global n_merge
+        app=gui("Weather Plot","800x400")
+        app.addLabel("1","Please choose a following .csv file")
+        file_name=[]
+        for filename in os.listdir('.'):
+            if filename.endswith(".csv"):
+                file_name.append(os.path.join('.', filename))
+        app.setFont(20)
+        app.addOptionBox("Files",file_name)
+        app.setOptionBoxHeight("Files","4")
+        app.addLabel("2","Enter the number of data points to merge:")
+        app.setLabelFont("20","Heletica")
+        app.addNumericEntry("n")
+        app.setFocus("n")
+        app.setEntryHeight("n","4")
+        user_file=app.getOptionBox("Files")
+        n_merge=int(app.getEntry("n"))
+
+
 
     
 
