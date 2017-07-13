@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 app = gui("Adafruit Weather Sensor", "800x400")
 from Adafruit_BME280 import *
 
-sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
-
 wdaq = weather_DAQ.weather_DAQ()
 
 
@@ -18,28 +16,10 @@ def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
-    temp=[1,2]
-    time=[3,4]
-    date_time = datetime.datetime.now()
-    degrees = sensor.read_temperature()
-    plt.ion()
-    fig = plt.figure(1)
-    ax=fig.add_subplot(111)
-    plt.xlabel("Time")
-    plt.ylabel("Temperature(C)")
-    plt.plot(time, temp,"r." )
-    plt.show()
-    fig.autofmt_xdate()
-    ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     def start():
         global job1
         wdaq.create_file()
         wdaq.start()
-        time.append(date_time)
-        temp.append(degrees)
-        plt.plot(time, temp,"r." )
-        plt.pause(0.0005)
-        plt.show()
         job1=top.after(1000,start)
     def stop():
         global job1

@@ -14,6 +14,7 @@ import numpy as np
 import dateutil
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
+from collections import deque
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
@@ -21,6 +22,10 @@ class weather_DAQ(object):
     def __init__(self):
         self.sensor = sensor
         self.running=False
+        self.time_queue=deque()
+        self.temp_queue=deque()
+        self.humid_queue=deque()
+        self.press_queue=deque()
         
     def create_file(self):
         global results
@@ -31,6 +36,16 @@ class weather_DAQ(object):
         results.writerow(metadata)
 
     def start(self):
+        if self.running==False:
+            self.running=True
+            plt.ion()
+            self.tempfig = plt.figure(1)
+            ax=self.tempfig.add_subplot(111)
+            plt.xlabel("Time")
+            plt.ylabel("Temperature(C)")
+            self.tempfig.autofmt_xdate()
+            ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+
         global results
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
@@ -49,6 +64,21 @@ class weather_DAQ(object):
         data.append(humidity)
     
         results.writerow(data)
+
+        self.add_data(self.temp_queue, degrees)
+        self.add_data(self.humid_queue,humidity)
+        self.add_data(self.press_queue,hectopascals)
+        self.add_data(self.time_queue, date_time)
+        plt.figure(1)
+        plt.clf()
+        plt.plot(self.time_queue,self.temp_queue,"r.")
+        self.tempfig.show()
+        plt.pause(0.0005)
+
+    def add_data(self, queue, data):
+        queue.append(data)
+        if len(queue)>self.maxdata:
+            queue.popleft()
 
     def plotdata(self):
         
