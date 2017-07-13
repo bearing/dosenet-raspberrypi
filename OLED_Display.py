@@ -22,6 +22,7 @@ while constant_count <= counter:
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
     for i in range(1,len(lastline[0])):
+        print(i)
         to_be_displayed = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+lastline[i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(50,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 6
         time.sleep(3)
