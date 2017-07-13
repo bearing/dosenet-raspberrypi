@@ -15,6 +15,8 @@ wdaq = weather_DAQ.weather_DAQ()
 
 date_time = datetime.datetime.now()
 degrees = sensor.read_temperature()
+global temp
+global time
 temp=[]
 time=[]
 
@@ -25,6 +27,8 @@ def weather_test(btn):
     def start():
         global job1
         global results
+        global temp
+        global time
         wdaq.start()
         time.append(date_time)
         temp.append(degrees)
