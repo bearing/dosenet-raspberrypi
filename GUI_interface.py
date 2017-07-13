@@ -26,7 +26,7 @@ def weather_test(btn):
 
 def weather_plot(btn):
     
-    app.gui()
+    app=gui()
     wdaq.set_widgets()
     wdaq.lists()
     app.addButton("OK",wdaq.plotdata())
