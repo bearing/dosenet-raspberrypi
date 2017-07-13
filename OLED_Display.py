@@ -11,6 +11,7 @@ for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
 metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0]
 print(metadata_line)
 metadata = [line.split(",") for line in metadata_line]
+print metadata
 
 while constant_count <= counter:
     constant_count = counter
