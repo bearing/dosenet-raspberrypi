@@ -29,7 +29,6 @@ def weather_plot(btn):
     app.gui()
     wdaq.set_widgets()
     wdaq.lists()
-    wdaq.plotdata()
     app.addButton("OK",wdaq.plotdata())
     app.setButtonWidth("OK","20")
     app.setButtonHeight("OK","4")
