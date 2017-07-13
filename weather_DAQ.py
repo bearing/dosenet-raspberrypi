@@ -48,11 +48,6 @@ class weather_DAQ(object):
         data.append(humidity)
     
         results.writerow(data)
-
-        
-    def real_time_data(self):
-        date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
         temp=[]
         time=[]
         time.append(date_time)
@@ -63,6 +58,10 @@ class weather_DAQ(object):
         plt.ylabel("Temperature(C)")
         plt.plot(time, temp,"r." )
         plt.show()
+
+        
+    def real_time_data(self):
+
         
 
         

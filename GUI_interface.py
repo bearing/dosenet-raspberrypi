@@ -21,18 +21,6 @@ def weather_test(btn):
         global job1
         global results
         wdaq.start()
-        date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
-        temp=[]
-        time=[]
-        time.append(date_time)
-        temp.append(degrees)
-        plt.ion()
-        plt.figure(1)
-        plt.xlabel("Time")
-        plt.ylabel("Temperature(C)")
-        plt.plot(time, temp,"r." )
-        plt.show()
         job1=top.after(1000,start)
     def stop():
         global job1
