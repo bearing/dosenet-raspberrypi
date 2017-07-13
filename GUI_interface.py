@@ -27,6 +27,7 @@ def weather_test(btn):
     ax=fig.add_subplot(111)
     plt.xlabel("Time")
     plt.ylabel("Temperature(C)")
+    plt.plot(time, temp,"r." )
     fig.autofmt_xdate()
     ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     def start():
