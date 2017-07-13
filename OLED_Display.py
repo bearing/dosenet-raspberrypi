@@ -3,6 +3,8 @@ import datetime
 import time
 
 constant_count = 0
+counter = 0
+
 for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
         counter += 1
 
