@@ -40,7 +40,7 @@ while constant_count <= counter:
             print(to_be_displayed2)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,to_be_displayed1) # x: until 100 and then starts again from y-axis; y: until 7
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed2)
-            time.sleep(3)
+            time.sleep()
 
     counter = 0
     for i in open("air_quality_test_results.csv"):
