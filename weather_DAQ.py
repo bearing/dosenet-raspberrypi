@@ -30,7 +30,7 @@ class weather_DAQ(object):
         metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
         results.writerow(metadata)
 
-    def start():
+    def start(self):
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
         pascals = sensor.read_pressure()
