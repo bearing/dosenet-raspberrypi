@@ -5,7 +5,7 @@ constant_count = 0
 for i in open("air_quality_test_results_2017-06-29_17-33-06.csv"):
         counter += 1
 
-while constant_count =< counter:
+while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-06-29_17-33-06.csv").readlines()[-1:]
     lastline = [line.split(",") for line in results]
