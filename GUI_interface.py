@@ -26,7 +26,6 @@ def weather_test(btn):
 
 def weather_plot(btn):
     
-    app=gui()
     wdaq.set_widgets()
     wdaq.lists()
     wdaq.plotdata()
