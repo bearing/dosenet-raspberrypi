@@ -20,22 +20,13 @@ wdaq = weather_DAQ.weather_DAQ()
 
 def weather_test(btn):
 
-    wdaq.open_file()
+    wdaq.create_file()
     wdaq.startstop()
 
-
 def weather_plot(btn):
-
-    wdaq.set_widgets()
+     
     wdaq.lists()
-    def plotdata(btn):
-        wdaq.plotdata()
-    app.addButton("OK", plotdata)
-    app.setButtonWidth("OK","20")
-    app.setButtonHeight("OK","4")
-    app.setButtonFont("20","Helvetica")
-    app.go()
-    
+    wdaq.plotdata()    
 
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
