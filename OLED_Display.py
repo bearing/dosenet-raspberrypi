@@ -11,6 +11,9 @@ for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
 metadata_line = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[0:1]
 metadata = [line.split(",") for line in metadata_line]
 
+print("Type \"q\" to end the program: ")
+quit_call = input()
+
 while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results_2017-07-07_21-40-50.csv").readlines()[-1:]
@@ -24,11 +27,17 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
+    if quit_call == "q":
+        break
+
     for i in range(1,len(lastline[0])):
         to_be_displayed = str(datetime.datetime.now().strftime("%H:%M:%S")+" ("+metadata[0][i]+") "+lastline[0][i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed) # x: until 100 and then starts again from y-axis, y: until 7
-        time.sleep(2)
+        time.sleep(3)
 
+        if quit_call == "q":
+            break
+            
     counter = 0
     for i in open("air_quality_test_results_2017-07-07_21-40-50.csv"):
         counter += 1
