@@ -91,15 +91,19 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,humidity)
         self.add_data(self.press_queue,hectopascals)
         self.add_data(self.time_queue, date_time)
+      
         plt.figure(1)
         plt.clf()
         plt.plot(self.time_queue,self.temp_queue,"r.")
         self.tempfig.show()
+        plt.pause(0.0005)
+        
         plt.figure(2)
         plt.clf()
         plt.plot(self.time_queue, self.humid_queue,"r.")
         self.humidfig.show()
-        self.humidfig.show()
+        plt.pause(0.0005)
+       
         plt.figure(3)
         plt.clf()
         plt.plot(self.time_queue, self.press_queue, "r.")
