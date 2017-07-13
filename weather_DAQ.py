@@ -121,6 +121,7 @@ class weather_DAQ(object):
         app.setFocus("n")
         user_file=app.getOptionBox("Files")
         n_merge=int(app.getEntry("n"))
+        print(n_merge)
     
         def ok(btn):
             global user_file
