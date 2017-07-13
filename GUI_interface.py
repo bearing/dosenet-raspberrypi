@@ -13,6 +13,11 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 
 wdaq = weather_DAQ.weather_DAQ()
 
+date_time = datetime.datetime.now()
+degrees = sensor.read_temperature()
+temp=[]
+time=[]
+
 def weather_test(btn):
     wdaq.create_file()
     import Tkinter
@@ -21,6 +26,17 @@ def weather_test(btn):
         global job1
         global results
         wdaq.start()
+        time.append(date_time)
+        temp.append(degrees)
+        plt.ion()
+        fig = plt.figure(1)
+        ax=fig.add_subplot(111)
+        plt.xlabel("Time")
+        plt.ylabel("Temperature(C)")
+        plt.plot(time, temp,"r." )
+        fig.autofmt_xdate()
+        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        plt.pause(0.0005)
         job1=top.after(1000,start)
     def stop():
         global job1
