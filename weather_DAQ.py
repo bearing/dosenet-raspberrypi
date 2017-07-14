@@ -14,8 +14,6 @@ import numpy as np
 import dateutil
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('agg')
 from collections import deque
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
@@ -75,7 +73,7 @@ class weather_DAQ(object):
     def add_time(self, queue, timelist, data):
         timelist.append(data)
         if len(timelist)>=self.n_merge:
-            queue.append(timelist[int(self.n_merge/2)])
+            queue.append(np.asarray(timelist[int(self.n_merge/2)]))
             timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
