@@ -107,10 +107,10 @@ class weather_DAQ(object):
         self.temp_list.append(data)
         self.temp_array = np.asarray(self.temp_list)
         if len(self.temp_array)<self.n_merge:
-            n_mergetest=False
+            self.n_mergetest=False
         if len(self.temp_array)>self.n_merge:
-            n_mergetest=True
-        if n_mergetest==True:
+            self.n_mergetest=True
+        if self.n_mergetest==True:
             queue.append(np.mean(self.temp_array))
             self.temp_array = []
         if len(queue)>self.maxdata:
