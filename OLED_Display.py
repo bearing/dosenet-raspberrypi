@@ -27,7 +27,7 @@ while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results.log").readlines()[-1:]
     lastline = [line.split(",") for line in results]
-
+    print lastline
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
