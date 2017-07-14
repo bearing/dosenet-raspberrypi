@@ -13,7 +13,7 @@ metadata = [line.split(",") for line in metadata_line]
 
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
-while check_any == []:
+while len(check_any[0]) < 2:
     time.sleep(2)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
