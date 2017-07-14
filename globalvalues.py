@@ -2,6 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+import serial
 
 try:
     import RPi.GPIO as GPIO
@@ -53,6 +54,7 @@ DEFAULT_D3STEST_TIME = 5
 D3S_LED_BLINK_PERIOD_INITIAL = 0.75
 D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
+DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 DEFAULT_INTERVAL_NORMAL_AQ = 300
 # ANSI color codes
 ANSI_RESET = '\033[0m'

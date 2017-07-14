@@ -33,3 +33,55 @@ class Data_Handler_AQ(object):
 
         self.manager = manager
         self.queue = deque('')
+
+    """
+    The lot of varaibles is where:
+
+    P03 = Number of paricles in 0.1 L of air over a diameter of 0.3um
+    P05 = Number of paricles in 0.1 L of air over a diameter of 0.5um
+    P10 = Number of paricles in 0.1 L of air over a diameter of 1.0um
+    P25 = Number of paricles in 0.1 L of air over a diameter of 2.5um
+    P50 = Number of paricles in 0.1 L of air over a diameter of 5.0um
+    P100 = Number of paricles in 0.1 L of air over a diameter of 10um
+
+    PM01 = Concentration of Particulate Matter less than 1.0um in ug/m3
+    PM25 = Concentration of Particulate Matter less than 2.5um in ug/m3
+    PM10 = Concentration of Particulate Matter less than 10um in ug/m3
+    """
+
+    def test_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+        """
+        Test Mode
+        """
+        self.vprint(
+            1, ANSI_RED + " * Test mode, not sending to server * " +
+            ANSI_RESET)
+
+    def no_config_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+        """
+        Configuration file not present
+        """
+        self.vprint(1, "Missing config file, not sending to server")
+
+    def no_publickey_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+        """
+        Publickey not present
+        """
+        self.vprint(1, "Missing public key, not sending to server")
+
+    def regular_send(self, this_end, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+        """
+        Normal send
+        """
+        self.manager.sender.send_data_new_AQ(this_end, P03, P05,
+            P10, P25, P50, P100, PM01, PM25, PM10)
+        #print(self.queue)
+        if self.queue:
+            self.vprint(1, "Flushing memory queue to server")
+            while self.queue:
+                #print(len(self.queue))
+                trash = self.queue.popleft()
+                self.manager.sender.send_data_new_AQ(
+                    trash[0], trash[1], trash[2], trash[3],
+                    trash[4], trash[5], trash[6], trash[7],
+                    trash[8], trash[9])

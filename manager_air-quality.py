@@ -4,6 +4,7 @@ import signal
 import sys
 import serial
 import csv
+import datetime
 
 from globalvalues import RPI
 if RPI:
@@ -17,6 +18,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ
+from globalvalues import DEFAULT_AQ_PORT
 
 class Manager_AQ(object):
 
@@ -33,9 +35,12 @@ class Manager_AQ(object):
                  hostname=DEFAULT_HOSTNAME,
                  port=None,
                  test=None,
+                 AQ_port=DEFAULT_AQ_PORT,
                  ):
 
         self.interval = interval
+
+        self.aq-port = AQ_port
 
         self.datalog = datalog
         self.datalogflag = datalogflag
@@ -173,8 +178,29 @@ class Manager_AQ(object):
     def data_log(self):
         pass
 
-    def handle_air_counts(self, this_start):
+    def handle_air_counts(self, this_start, this_end):
 
+        summation = sum(buffer[0:30])
+        checkbyte = (buffer[30]<<8)+buffer[31]
+        current_time = int(time.time())
+        aq_data_set = []
+        while current_time < this_end:
+            text = self.port.read(32)
+            buffer = [ord(c) for c in text]
+            if buffer[0] == 66:
+                summation = sum(buffer[0:30])
+                checkbyte = (buffer[30]<<8)+buffer[31]
+                if summation == checkbyte:
+                    current_second_data = []
+                    buf = buffer[1:32]
+                    current_second_data.append(datetime.datetime.now())
+                    for n in range(1,4):
+                        current_second_data.append(repr(((buf[2n+1]<<8) + buf[2n+2])))
+                    for n in range(1,7):
+                        current_second_data.append(repr(((buf[2n+13]<<8) + buf[2n+14])))
+                    aq_data_set.append(current_second_data)
+        self.data_handler.main(
+            self.datalog, this_start, this_end)
     def takedown(self):
         """
         Sends data to the backlog and shuts
