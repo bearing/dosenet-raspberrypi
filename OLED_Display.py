@@ -53,7 +53,7 @@ while constant_count <= counter:
         time.sleep(3)
         if time_store == to_be_displayed2:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            exit()
+            quit()
         time_store = to_be_displayed2
 
     counter = 0
