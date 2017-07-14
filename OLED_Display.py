@@ -17,9 +17,15 @@ while check_any == []:
     time.sleep(2)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
+print check_any
+
 while len(check_any) < 2:
     time.sleep(2)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
+
+print check_any
+
+print metadata[0]
 
 while constant_count <= counter:
     constant_count = counter
@@ -36,8 +42,8 @@ while constant_count <= counter:
 
     while len(lastline[0]) > 0:
         for i in range(1,len(lastline[0])):
-            if "/n" in metadata[0][i-1]:
-                metadata_final = [metadata[0][i-1].split()]
+            if "/n" in metadata[0][i]:
+                metadata_final = [metadata[0][i].split()]
                 metadata_final.pop()
                 metadata_final.pop()
             if "/n" in lastline[0][i]:
