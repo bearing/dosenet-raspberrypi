@@ -46,7 +46,7 @@ while constant_count <= counter:
             lastline_final.pop()
             lastline_final.pop()
         to_be_displayed1 = str("Time:      "+metadata[0][i]+":")
-        to_be_displayed2 = str(lastline[0][0]+"   "+lastline[0][i])
+        to_be_displayed2 = str(lastline[0][0].strftime("%H:%M:%S")+"   "+lastline[0][i])
         print(to_be_displayed1)
         print(to_be_displayed2)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,to_be_displayed1) # x: until 100 and then starts again from y-axis; y: until 7
