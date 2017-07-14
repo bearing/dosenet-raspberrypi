@@ -27,6 +27,9 @@ class weather_DAQ(object):
         self.humid_queue=deque()
         self.press_queue=deque()
         self.maxdata=10
+        self.n_merge=10
+        self.temp_list=[]
+        self.temp_array = np.asarray(self.temp_list)
         
     def create_file(self):
         global results
@@ -101,7 +104,14 @@ class weather_DAQ(object):
         plt.pause(0.0005)
 
     def add_data(self, queue, data):
-        queue.append(data)
+        self.temp_array.append(data)
+        if len(self.temp_array)<self.n_merge:
+            number_count=False
+        if len(self.temp_array)>self.n_merge:
+            number_count=True
+        if number_count==True:
+            queue.append(np.mean(self.temp_array))
+            self.temp_array = []
         if len(queue)>self.maxdata:
             queue.popleft()
     
