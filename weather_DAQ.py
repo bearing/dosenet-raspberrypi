@@ -29,6 +29,7 @@ class weather_DAQ(object):
         self.maxdata=10
         self.n_merge=10
         self.temp_list=[]
+        self.n_mergetest = False
         
     def create_file(self):
         global results
