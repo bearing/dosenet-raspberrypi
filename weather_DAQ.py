@@ -29,7 +29,6 @@ class weather_DAQ(object):
         self.maxdata=10
         self.n_merge=10
         self.temp_list=[]
-        self.temp_array = np.asarray(self.temp_list)
         
     def create_file(self):
         global results
@@ -104,7 +103,8 @@ class weather_DAQ(object):
         plt.pause(0.0005)
 
     def add_data(self, queue, data):
-        self.temp_array.append(data)
+        self.temp_list.append(data)
+        self.temp_array = np.asarray(self.temp_list)
         if len(self.temp_array)<self.n_merge:
             number_count=False
         if len(self.temp_array)>self.n_merge:
