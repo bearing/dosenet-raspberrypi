@@ -65,10 +65,11 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_list,hectopascals)
         self.add_time(self.time_queue, self.time_list, date_time)
-
-        self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
-        self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
-        self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
+        
+        if len(self.time_queue)>0:
+            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+            self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
     def add_time(self, queue, timelist, data):
         print('Input time: {}'.format(data))
@@ -84,7 +85,7 @@ class weather_DAQ(object):
     def add_data(self, queue, temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
-            queue.append(np.mean(np.assaray(temp_list)))
+            queue.append(np.mean(np.asarray(temp_list)))
             temp_list = []
         if len(queue)>self.maxdata:
             queue.popleft()
