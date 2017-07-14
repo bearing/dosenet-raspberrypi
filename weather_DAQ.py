@@ -42,7 +42,6 @@ class weather_DAQ(object):
             self.running=True
             plt.ion()
             self.tempfig = plt.figure(1)
-            ax=self.tempfig.add_subplot(111)
             plt.xlabel("Time")
             plt.ylabel("Temperature(C)") 
             plt.title("Teperature")
@@ -92,6 +91,7 @@ class weather_DAQ(object):
       
         plt.figure(1)
         plt.clf()
+        ax=self.tempfig.add_subplot(111)
         plt.plot(self.time_queue,self.temp_queue,"r.")
         self.tempfig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
