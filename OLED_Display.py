@@ -4,6 +4,7 @@ import time
 
 constant_count = 0
 counter = 0
+time_store == ""
 
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
@@ -54,7 +55,7 @@ while constant_count <= counter:
             time.sleep(3)
             if time_store == to_be_displayed2:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                break 
+                break
             time_store = to_be_displayed2
 
     counter = 0
