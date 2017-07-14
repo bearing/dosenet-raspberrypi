@@ -37,7 +37,6 @@ while constant_count <= counter:
 
     while len(lastline[0]) > 0:
         for i in range(1,len(lastline[0])):
-            print metadata[0][i]
             if "/n" in metadata[0][i]:
                 metadata_final = [metadata[0][i].split()]
                 metadata_final.pop()
