@@ -40,6 +40,7 @@ while constant_count <= counter:
         if "\n" in metadata[0][i]:
             print "a"
             metadata_final = [metadata[0][i].split()]
+            print(metadata_final)
             metadata_final.pop()
             metadata_final.pop()
         if "\n" in lastline[0][i]:
