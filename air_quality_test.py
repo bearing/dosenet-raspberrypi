@@ -45,13 +45,11 @@ while now_time<counter_time+run_time:
     try:
         text = port.read(32)
     except:
-        print('error')
-        time.sleep(1)
+        print('Error: Exiting')
         exit()
 
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
-        print(buffer)
         #Check sum with last byte of list
         sumation = sum(buffer[0:30])
         checkbyte = (buffer[30]<<8)+buffer[31]
@@ -92,7 +90,7 @@ while now_time<counter_time+run_time:
             print('#Particles, diameter over 2.5 um = ' + repr(P25))
             print('#Particles, diameter over 5.0 um = ' + repr(P50))
             print('#Particles, diameter over 10  um = ' + repr(P100))
-            
+
 
             # Put results in a CSV file
             results = []
