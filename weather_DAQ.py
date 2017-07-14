@@ -77,7 +77,7 @@ class weather_DAQ(object):
         if len(timelist)>=self.n_merge:
             queue.append(timelist[int((self.n_merge)/2)])
             print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
-            timelist=[]
+            self.timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
         
