@@ -12,7 +12,7 @@ check_any = open("air_quality_test_results.log").readlines()[0:2]
 while check_any == []:
     time.sleep(0.5)
     check_any = open("air_quality_test_results.log").readlines()[0:2]
-print len check_any
+print len(check_any)
 while len(check_any) < 2:
     time.sleep(0.5)
     check_any = open("air_quality_test_results.log").readlines()[0:2]
