@@ -73,7 +73,7 @@ class weather_DAQ(object):
     def add_time(self, queue, timelist, data):
         timelist.append(data)
         if len(timelist)>=self.n_merge:
-            queue.append(timelist[5])
+            queue.append(timelist[int(self.n_merge/2)])
             timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
