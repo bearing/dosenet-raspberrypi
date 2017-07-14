@@ -5,8 +5,7 @@ from dateutil import parser
 
 constant_count = 0
 counter = 0
-time_store1 = ""
-time_store2 = ""
+time_store = ""
 
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
@@ -51,15 +50,13 @@ while constant_count <= counter:
         to_be_displayed2 = str(parser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
         print(to_be_displayed1)
         print(to_be_displayed2)
+        if time_store == parser.parse(lastline[0][0]).strftime("%H:%M:%S") and metadata[0][i] == "0.3 um":
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            exit()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,to_be_displayed1) # x: until 100 and then starts again from y-axis; y: until 7
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed2)
         time.sleep(3)
-        if time_store1 == to_be_displayed1 and time_store2 == to_be_displayed2:
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            exit()
-        time_store1 = to_be_displayed1
-        time_store2 = to_be_displayed2
-
+        time_store = parser.parse(lastline[0][0]).strftime("%H:%M:%S")
 
     counter = 0
     for i in open("air_quality_test_results.csv"):
