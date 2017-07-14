@@ -18,12 +18,6 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "air_quality_test_results_"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
-'''
-#Open CSV file to display results
-os.remove("air_quality_test_results.csv")
-pen_display_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
-'''
-
 # Add metadata to CSV file
 metadata = []
 metadata.append("Date and Time")
@@ -37,7 +31,7 @@ metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
-#pen_display_results.writerow(metadata[:])
+
 print(metadata)
 
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
@@ -64,7 +58,6 @@ while now_time<counter_time+run_time:
 
             # Get number of particles in 0.1 L of air above specific diameters
 
-
             P3  =((buf[15]<<8) + buf[16])
             P5  =((buf[17]<<8) + buf[18])
             P10 =((buf[19]<<8) + buf[20])
@@ -74,11 +67,9 @@ while now_time<counter_time+run_time:
 
             date_time = datetime.datetime.now()
 
-
             # Print Concentrations [ug/m3]
             print("\n")
-            print(date_time+","+repr(P3)+","+repr(P5)","+repr(P10)","+repr(P25)","+repr(P50)","+repr(P100)","+repr(PM01Val)","+repr(PM25Val)","+repr(PM10Val))
-
+            print(date_time+","+repr(P3)+","+repr(P5)+","+repr(P10)+","+repr(P25)+","+repr(P50)+","+repr(P100)+","+repr(PM01Val)+","+repr(PM25Val)+","+repr(PM10Val))
 
             # Put results in a CSV file
             results = []
@@ -93,7 +84,6 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
-            #pen_display_results.writerow(results[0:10])
 
             now_time = int(time.time())
 
@@ -106,7 +96,6 @@ while now_time<counter_time+run_time:
             results.append(date_time)
             results.append('Check Sum Failed')
             pen_results.writerow(results[0:2])
-            #pen_display_results.writerow(results[0:2])
 
             now_time = int(time.time())
 
@@ -119,4 +108,3 @@ while now_time<counter_time+run_time:
         results.append(date_time)
         results.append('Check Sum Failed')
         pen_results.writerow(results[0:2])
-        #pen_display_results.writerow(results[0:2])
