@@ -14,6 +14,8 @@ import numpy as np
 import dateutil
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('agg')
 from collections import deque
 
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
