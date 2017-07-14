@@ -32,7 +32,8 @@ metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 
-print(metadata)
+print(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+","+metadata[4]+","+metadata[5]+","+metadata[6]+","+metadata[7]+","+metadata[8]+","+metadata[9])
+
 
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
