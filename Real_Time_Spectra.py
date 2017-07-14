@@ -10,6 +10,7 @@ from auxiliaries import set_verbosity
 # import time
 from collections import deque
 # from multiprocessing import Queue as que
+import seaborn as sns
 
 
 class Real_Time_Spectra(object):
@@ -57,7 +58,15 @@ class Real_Time_Spectra(object):
 
     def start_up(self):
         '''
-        Sets up the new plotting windows.
+        Sets up the ne                                             np.shape(self.data)[0]
+                                                     * self.interval])
+            # plt.colorbar()
+
+            self.waterfall_drawn = False
+
+        if not self.waterfall_drawn:
+
+            self.waterfall_plot.set_data(self.data)w plotting windows.
         '''
 
         # Turn on interactive mode for plotting to allow for two figure windows
