@@ -83,15 +83,20 @@ class weather_DAQ(object):
         self.add_data(self.press_queue,hectopascals)
         self.add_data(self.time_queue, date_time)
       
+        '''
         plt.figure(1)
         plt.clf()
         ax=self.tempfig.add_subplot(111)
+        plt.xlabel("Time")
+        plt.ylabel("Temperature(C)") 
+        plt.title("Teperature")
         plt.plot(self.time_queue,self.temp_queue,"r.")
         self.tempfig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         self.tempfig.show()
         plt.pause(0.0005)
-        
+        '''
+        update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
         plt.figure(2)
         plt.clf()
         ax=self.humidfig.add_subplot(111)
@@ -114,6 +119,20 @@ class weather_DAQ(object):
         queue.append(data)
         if len(queue)>self.maxdata:
             queue.popleft()
+    
+    def update_plot(plot_id,xdata,ydata,xlabel,ylable,title):
+        fig = plt.figure(plot_id)
+        plt.clf()
+        ax=fig.add_subplot(111)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylable) 
+        plt.title("Teperature")
+        plt.plot(xdata,ydata,"r.")
+        fig.autofmt_xdate()
+        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        fig.show()
+        plt.pause(0.0005)
+
 
     def plotdata(self):
         
