@@ -40,25 +40,6 @@ class weather_DAQ(object):
         results.writerow(metadata)
 
     def start(self):
-        
-        if self.running==False:
-            self.running=True
-            plt.ion()
-
-           
-            plt.ion()
-            self.humidfig = plt.figure(2)
-            plt.xlabel("Time")
-            plt.ylabel("Humidity(%)")
-            plt.title("Humdity")
-
-            plt.ion()
-            self.pressfig = plt.figure(3)
-            plt.xlabel("Time")
-            plt.ylabel("Pressure(hPa)")
-            plt.title("Pressure")
-
-
         global results
         date_time = datetime.datetime.now()
         degrees = sensor.read_temperature()
@@ -81,25 +62,17 @@ class weather_DAQ(object):
         self.add_data(self.temp_queue, degrees)
         self.add_data(self.humid_queue,humidity)
         self.add_data(self.press_queue,hectopascals)
+        self.add_time(self.time_queue, date_time)
 
         self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
-        plt.figure(2)
-        plt.clf()
-        ax=self.humidfig.add_subplot(111)
-        plt.plot(self.time_queue, self.humid_queue,"r.")
-        self.humidfig.autofmt_xdate()
-        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        self.humidfig.show()
-        plt.pause(0.0005)
-       
-        plt.figure(3)
-        plt.clf()
-        ax=self.pressfig.add_subplot(111)
-        plt.plot(self.time_queue, self.press_queue, "r.")
-        self.pressfig.autofmt_xdate()
-        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        self.pressfig.show()
-        plt.pause(0.0005)
+        self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+        self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
+        
+    def add_time(self, queue, data):
+        self.queue.append(data)
+        if len(queue)>self.maxdata:
+            queue.popleft()
+        
 
     def add_data(self, queue, data):
         self.temp_list.append(data)
@@ -115,6 +88,7 @@ class weather_DAQ(object):
             queue.popleft()
     
     def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
+        plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
         ax=fig.add_subplot(111)
