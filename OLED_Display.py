@@ -37,12 +37,12 @@ while constant_count <= counter:
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
     for i in range(1,len(lastline[0])):
-        if "/n" in metadata[0][i]:
+        if "\n" in metadata[0][i]:
             print a
             metadata_final = [metadata[0][i].split()]
             metadata_final.pop()
             metadata_final.pop()
-        if "/n" in lastline[0][i]:
+        if "\n" in lastline[0][i]:
             print a
             lastline_final = [lastline[0][i].split()]
             lastline_final.pop()
@@ -56,7 +56,7 @@ while constant_count <= counter:
             exit()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,to_be_displayed1) # x: until 100 and then starts again from y-axis; y: until 7
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed2)
-        time.sleep(3)
+        #time.sleep(3)
         time_store = parser.parse(lastline[0][0]).strftime("%H:%M:%S")
 
     counter = 0
