@@ -4,7 +4,7 @@ import time
 
 constant_count = 0
 counter = 0
-time_store == ""
+time_store = ""
 
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
