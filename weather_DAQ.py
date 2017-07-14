@@ -41,10 +41,7 @@ class weather_DAQ(object):
         if self.running==False:
             self.running=True
             plt.ion()
-            self.tempfig = plt.figure(1)
-            plt.xlabel("Time")
-            plt.ylabel("Temperature(C)") 
-            plt.title("Teperature")
+
            
             plt.ion()
             self.humidfig = plt.figure(2)
@@ -82,20 +79,8 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,humidity)
         self.add_data(self.press_queue,hectopascals)
         self.add_data(self.time_queue, date_time)
-      
-        '''
-        plt.figure(1)
-        plt.clf()
-        ax=self.tempfig.add_subplot(111)
-        plt.xlabel("Time")
-        plt.ylabel("Temperature(C)") 
-        plt.title("Teperature")
-        plt.plot(self.time_queue,self.temp_queue,"r.")
-        self.tempfig.autofmt_xdate()
-        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        self.tempfig.show()
-        plt.pause(0.0005)
-        '''
+
+
         self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
         plt.figure(2)
         plt.clf()
@@ -126,7 +111,7 @@ class weather_DAQ(object):
         ax=fig.add_subplot(111)
         plt.xlabel(xlabel)
         plt.ylabel(ylable) 
-        plt.title("Teperature")
+        plt.title(title)
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
