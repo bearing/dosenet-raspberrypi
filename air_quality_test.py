@@ -38,12 +38,11 @@ metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 #pen_display_results.writerow(metadata[:])
+print(metadata)
 
-print('Printing Results')
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
-    print('next')
     try:
         text = port.read(32)
     except:
@@ -78,20 +77,7 @@ while now_time<counter_time+run_time:
 
             # Print Concentrations [ug/m3]
             print("\n")
-            print(date_time)
-            print('\nConcentration of Particulate Matter [ug/m3]\n')
-            print('PM 1.0 = ' + repr(PM01Val) +' ug/m3')
-            print('PM 2.5 = ' + repr(PM25Val) +' ug/m3')
-            print('PM 10  = ' + repr(PM10Val) +' ug/m3\n')
-
-            # Print number of particles in 0.1 L of air over specific diamaters
-            print('Number of particles in 0.1 L of air with specific diameter\n')
-            print('#Particles, diameter over 0.3 um = ' + repr(P3))
-            print('#Particles, diameter over 0.5 um = ' + repr(P5))
-            print('#Particles, diameter over 1.0 um = ' + repr(P10))
-            print('#Particles, diameter over 2.5 um = ' + repr(P25))
-            print('#Particles, diameter over 5.0 um = ' + repr(P50))
-            print('#Particles, diameter over 10  um = ' + repr(P100))
+            print(date_time+","+repr(P3)+","+repr(P5)","+repr(P10)","+repr(P25)","+repr(P50)","+repr(P100)","+repr(PM01Val)","+repr(PM25Val)","+repr(PM10Val))
 
 
             # Put results in a CSV file

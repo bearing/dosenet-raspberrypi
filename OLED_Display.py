@@ -7,25 +7,25 @@ constant_count = 0
 counter = 0
 time_store = ""
 
-check_any = open("air_quality_test_results.csv").readlines()[0:2]
+check_any = open("air_quality_test_results.log").readlines()[0:2]
 
 while check_any == []:
     time.sleep(0.5)
-    check_any = open("air_quality_test_results.csv").readlines()[0:2]
+    check_any = open("air_quality_test_results.log").readlines()[0:2]
 
 while len(check_any) < 2:
     time.sleep(0.5)
-    check_any = open("air_quality_test_results.csv").readlines()[0:2]
+    check_any = open("air_quality_test_results.log").readlines()[0:2]
 
-for i in open("air_quality_test_results.csv"):
+for i in open("air_quality_test_results.log"):
     counter += 1
 
-metadata_line = open("air_quality_test_results.csv").readlines()[0:1]
+metadata_line = open("air_quality_test_results.log").readlines()[0:1]
 metadata = [line.split(",") for line in metadata_line]
 
 while constant_count <= counter:
     constant_count = counter
-    results = open("air_quality_test_results.csv").readlines()[-1:]
+    results = open("air_quality_test_results.log").readlines()[-1:]
     lastline = [line.split(",") for line in results]
 
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
@@ -54,5 +54,5 @@ while constant_count <= counter:
         time_store = parser.parse(lastline[0][0]).strftime("%H:%M:%S")
 
     counter = 0
-    for i in open("air_quality_test_results.csv"):
+    for i in open("air_quality_test_results.log"):
         counter += 1
