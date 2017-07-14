@@ -31,7 +31,7 @@ class weather_DAQ(object):
         self.temp_list=[]
         self.humid_list=[]
         self.press_list=[]
-        self.nlist=[]
+        self.time_list=[]
         
     def create_file(self):
         global results
@@ -71,13 +71,13 @@ class weather_DAQ(object):
             self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
-    def add_time(self, queue, data):
+    def add_time(self, queue, timelist, data):
         print('Input time: {}'.format(data))
-        self.nlist.append(data)
-        if len(self.nlist)>=self.n_merge:
-            queue.append(self.nlist[int((self.n_merge)/2)])
-            print('Queue time: {}'.format(self.nlist[int((self.n_merge)/2)]))
-            self.nlist=[]
+        timelist.append(data)
+        if len(timelist)>=self.n_merge:
+            queue.append(timelist[int((self.n_merge)/2)])
+            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
+            timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
         
