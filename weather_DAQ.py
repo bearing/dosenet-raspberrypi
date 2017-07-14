@@ -120,7 +120,7 @@ class weather_DAQ(object):
         if len(queue)>self.maxdata:
             queue.popleft()
     
-    def update_plot(plot_id,xdata,ydata,xlabel,ylable,title):
+    def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
         fig = plt.figure(plot_id)
         plt.clf()
         ax=fig.add_subplot(111)
