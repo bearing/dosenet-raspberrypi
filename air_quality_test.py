@@ -69,7 +69,7 @@ while now_time<counter_time+run_time:
 
             # Print Concentrations [ug/m3]
             print("\n")
-            print(datetime.datetime.strftime(date_time)+","+repr(P3)+","+repr(P5)+","+repr(P10)+","+repr(P25)+","+repr(P50)+","+repr(P100)+","+repr(PM01Val)+","+repr(PM25Val)+","+repr(PM10Val))
+            print(datetime.datetime.strftime(date_time, "%H:%M:%S")+","+repr(P3)+","+repr(P5)+","+repr(P10)+","+repr(P25)+","+repr(P50)+","+repr(P100)+","+repr(PM01Val)+","+repr(PM25Val)+","+repr(PM10Val))
 
             # Put results in a CSV file
             results = []
