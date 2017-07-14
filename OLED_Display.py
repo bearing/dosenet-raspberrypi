@@ -12,7 +12,7 @@ check_any = open("air_quality_test_results.log").readlines()[0:2]
 while check_any == []:
     time.sleep(0.5)
     check_any = open("air_quality_test_results.log").readlines()[0:2]
-
+print len check_any
 while len(check_any) < 2:
     time.sleep(0.5)
     check_any = open("air_quality_test_results.log").readlines()[0:2]
@@ -27,7 +27,6 @@ while constant_count <= counter:
     constant_count = counter
     results = open("air_quality_test_results.log").readlines()[-1:]
     lastline = [line.split(",") for line in results]
-    print lastline
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
