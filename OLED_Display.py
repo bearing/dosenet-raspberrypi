@@ -5,30 +5,21 @@ import time
 constant_count = 0
 counter = 0
 
-for i in open("air_quality_test_results.csv"):
-    counter += 1
-
-metadata_line = open("air_quality_test_results.csv").readlines()[0:1]
-metadata = [line.split(",") for line in metadata_line]
-
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
-
-print check_any
 
 while check_any == []:
     time.sleep(2)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
-print check_any
-
 while len(check_any) < 2:
     time.sleep(2)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
-print check_any
+for i in open("air_quality_test_results.csv"):
+    counter += 1
 
-print metadata[0]
-print metadata[0][1]
+metadata_line = open("air_quality_test_results.csv").readlines()[0:1]
+metadata = [line.split(",") for line in metadata_line]
 
 while constant_count <= counter:
     constant_count = counter
