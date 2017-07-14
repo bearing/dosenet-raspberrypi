@@ -38,12 +38,12 @@ while constant_count <= counter:
 
     for i in range(1,len(lastline[0])):
         if "\n" in metadata[0][i]:
-            print a
+            print "a"
             metadata_final = [metadata[0][i].split()]
             metadata_final.pop()
             metadata_final.pop()
         if "\n" in lastline[0][i]:
-            print a
+            print "a"
             lastline_final = [lastline[0][i].split()]
             lastline_final.pop()
             lastline_final.pop()
