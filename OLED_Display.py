@@ -10,11 +10,11 @@ time_store = ""
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
 while check_any == []:
-    time.sleep(2)
+    time.sleep(0.5)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
 while len(check_any) < 2:
-    time.sleep(2)
+    time.sleep(0.5)
     check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
 for i in open("air_quality_test_results.csv"):

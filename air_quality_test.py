@@ -46,7 +46,7 @@ while now_time<counter_time+run_time:
         text = port.read(32)
     except:
         time.sleep(1)
-        continue
+        exit()
 
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
