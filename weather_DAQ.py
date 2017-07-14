@@ -81,8 +81,6 @@ class weather_DAQ(object):
         self.add_data(self.temp_queue, degrees)
         self.add_data(self.humid_queue,humidity)
         self.add_data(self.press_queue,hectopascals)
-        self.add_data(self.time_queue, date_time)
-
 
         self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
         plt.figure(2)
