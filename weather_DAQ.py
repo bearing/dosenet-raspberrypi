@@ -27,7 +27,7 @@ class weather_DAQ(object):
         self.humid_queue=deque()
         self.press_queue=deque()
         self.maxdata=10
-        self.n_merge=10
+        self.n_merge=5
         self.temp_list=[]
         self.humid_list=[]
         self.press_list=[]
@@ -71,11 +71,11 @@ class weather_DAQ(object):
         self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
     def add_time(self, queue, timelist, data):
-        print(data)
+        print('Input time: {}'.format(data))
         timelist.append(data)
         if len(timelist)>=self.n_merge:
             queue.append(timelist[int((self.n_merge)/2)])
-            print(timelist[int((self.n_merge)/2)])
+            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
