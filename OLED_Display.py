@@ -5,7 +5,8 @@ from dateutil import parser
 
 constant_count = 0
 counter = 0
-time_store = ""
+time_store1 = ""
+time_store2 = ""
 
 check_any = open("air_quality_test_results.csv").readlines()[0:2]
 
