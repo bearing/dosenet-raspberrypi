@@ -262,7 +262,10 @@ class Real_Time_Spectra(object):
     def plot_waterfall(self):
 
         plt.figure(1)
-
+        x = np.arange(0, self.resolution, 1)
+        with sns.axes_style("white"):
+            sns.jointplot(x=x, y=self.data, kind="hex", color="r");
+"""
         self.waterfall_graph()
 
         if self.waterfall_drawn:
@@ -287,6 +290,7 @@ class Real_Time_Spectra(object):
         # plt.pause(self.interval)
         plt.pause(0.0005)
         # plt.close()
+"""
 
     def plot_sum(self):
         """
