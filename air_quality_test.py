@@ -42,7 +42,12 @@ port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
     #print('next')
-    text = port.read(32)
+    try:
+        text = port.read(32)
+    except:
+        time.sleep(1)
+        continue
+
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
         #Check sum with last byte of list
