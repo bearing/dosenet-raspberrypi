@@ -35,7 +35,6 @@ while constant_count <= counter:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    #while len(lastline[0]) > 0:
     for i in range(1,len(lastline[0])):
         if "/n" in metadata[0][i]:
             metadata_final = [metadata[0][i].split()]
@@ -54,7 +53,7 @@ while constant_count <= counter:
         time.sleep(3)
         if time_store == to_be_displayed2:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            break
+            exit()
         time_store = to_be_displayed2
 
     counter = 0
