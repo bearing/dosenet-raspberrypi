@@ -96,7 +96,7 @@ class weather_DAQ(object):
         self.tempfig.show()
         plt.pause(0.0005)
         '''
-        update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+        self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
         plt.figure(2)
         plt.clf()
         ax=self.humidfig.add_subplot(111)
