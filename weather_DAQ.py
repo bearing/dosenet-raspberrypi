@@ -29,7 +29,9 @@ class weather_DAQ(object):
         self.maxdata=10
         self.n_merge=10
         self.temp_list=[]
-        self.n_mergetest = False
+        self.humid_list=[]
+        self.press_list=[]
+        self.time_list=[]
         
     def create_file(self):
         global results
@@ -59,31 +61,29 @@ class weather_DAQ(object):
     
         results.writerow(data)
 
-        self.add_data(self.temp_queue, degrees)
-        self.add_data(self.humid_queue,humidity)
-        self.add_data(self.press_queue,hectopascals)
-        self.add_time(self.time_queue, date_time)
+        self.add_data(self.temp_queue,self.temp_list,degrees)
+        self.add_data(self.humid_queue,self.humid_list,humidity)
+        self.add_data(self.press_queue,self.press_list,hectopascals)
+        self.add_time(self.time_queue, self.time_list, date_time)
 
         self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
         self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
         self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
-    def add_time(self, queue, data):
-        queue.append(data)
+    def add_time(self, queue, timelist, data):
+        timelist.append(data)
+        if len(timelist)>=self.n_merge:
+            queue.append(timelist[5])
+            timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
         
 
-    def add_data(self, queue, data):
-        self.temp_list.append(data)
-        self.temp_array = np.asarray(self.temp_list)
-        if len(self.temp_array)<self.n_merge:
-            self.n_mergetest=False
-        if len(self.temp_array)>self.n_merge:
-            self.n_mergetest=True
-        if self.n_mergetest==True:
-            queue.append(np.mean(self.temp_array))
-            self.temp_array = []
+    def add_data(self, queue, temp_list, data):
+        temp_list.append(data)
+        if len(temp_list)>=self.n_merge:
+            queue.append(np.mean(np.assaray(temp_list)))
+            temp_list = []
         if len(queue)>self.maxdata:
             queue.popleft()
     
