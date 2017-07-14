@@ -69,7 +69,7 @@ class weather_DAQ(object):
         self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
     def add_time(self, queue, data):
-        self.queue.append(data)
+        queue.append(data)
         if len(queue)>self.maxdata:
             queue.popleft()
         
