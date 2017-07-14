@@ -46,8 +46,6 @@ class weather_DAQ(object):
             plt.xlabel("Time")
             plt.ylabel("Temperature(C)") 
             plt.title("Teperature")
-            self.tempfig.autofmt_xdate()
-            ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
            
             plt.ion()
             self.humidfig = plt.figure(2)
@@ -95,6 +93,8 @@ class weather_DAQ(object):
         plt.figure(1)
         plt.clf()
         plt.plot(self.time_queue,self.temp_queue,"r.")
+        self.tempfig.autofmt_xdate()
+        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         self.tempfig.show()
         plt.pause(0.0005)
         
