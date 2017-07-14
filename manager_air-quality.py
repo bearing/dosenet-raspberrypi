@@ -195,9 +195,9 @@ class Manager_AQ(object):
                     buf = buffer[1:32]
                     current_second_data.append(datetime.datetime.now())
                     for n in range(1,4):
-                        current_second_data.append(repr(((buf[2n+1]<<8) + buf[2n+2])))
+                        current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
                     for n in range(1,7):
-                        current_second_data.append(repr(((buf[2n+13]<<8) + buf[2n+14])))
+                        current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                     aq_data_set.append(current_second_data)
         self.data_handler.main(
             self.datalog, this_start, this_end)
