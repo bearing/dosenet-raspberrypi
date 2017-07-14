@@ -32,6 +32,7 @@ class weather_DAQ(object):
         self.humid_list=[]
         self.press_list=[]
         self.time_list=[]
+        self.merge_test=False
         
     def create_file(self):
         global results
@@ -61,10 +62,16 @@ class weather_DAQ(object):
     
         results.writerow(data)
 
+        self.merge_test=False
         self.add_data(self.temp_queue,self.temp_list,degrees)
         self.add_data(self.humid_queue,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_list,hectopascals)
-        self.add_time(self.time_queue, date_time)
+        self.add_time(self.time_queue, self.time_list, date_time)
+        if self.merge_test==True:
+            self.temp_list=[]
+            self.humid_list=[]
+            self.press_list=[]
+            self.time_list=[]
         
         if len(self.time_queue)>0:
             self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
@@ -75,6 +82,7 @@ class weather_DAQ(object):
         print('Input time: {}'.format(data))
         timelist.append(data)
         if len(timelist)>=self.n_merge:
+            self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
             print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
