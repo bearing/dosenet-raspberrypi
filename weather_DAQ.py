@@ -246,13 +246,13 @@ class weather_DAQ(object):
                 plt.show()
             
             
-                app.addButton("Tenperature List",temp)
-                app.addButton("Pressure List", press)
-                app.addButton("Humid List", humid)
-                app.setButtonWidth("OK","20")
-                app.setButtonHeight("OK","4")
-                app.setButtonFont("20","Helvetica")
-                app.go() 
+            app.addButton("Tenperature List",temp)
+            app.addButton("Pressure List", press)
+            app.addButton("Humid List", humid)
+            app.setButtonWidth("OK","20")
+            app.setButtonHeight("OK","4")
+            app.setButtonFont("20","Helvetica")
+            app.go() 
             
           
         app.addButton("OK",ok)
@@ -261,7 +261,7 @@ class weather_DAQ(object):
         app.setButtonFont("20","Helvetica")
         app.go()
         
-
+'''
         def temp(btn):
             global row_counter
             global results
