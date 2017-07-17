@@ -145,7 +145,6 @@ class weather_DAQ(object):
 
     
         def ok(btn):
-            app = gui("Weather Plot Choices","800x400")
             def temp(btn):
                 global row_counter
                 row_counter=0
@@ -242,7 +241,7 @@ class weather_DAQ(object):
 
             app.addButton("Temperature List",temp)
             app.addButton("Pressure List", press)
-            app.addButton("Humid List", humid)
+            app.addButton("Humidity List", humid)
             app.setButtonWidth("OK","20")
             app.setButtonHeight("OK","4")
             app.setButtonFont("20","Helvetica")
