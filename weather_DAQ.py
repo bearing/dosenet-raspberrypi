@@ -141,7 +141,6 @@ class weather_DAQ(object):
         app.setFocus("n")     
     
         def ok(btn):
-            app=gui("Weather PLot Choices","800x400")
             user_file=app.getOptionBox("Files") 
             n_merge=int(app.getEntry("n"))
             results = csv.reader(open(user_file), delimiter=',')
@@ -239,8 +238,7 @@ class weather_DAQ(object):
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
-            
-            
+
             app.addButton("Temperature List",temp)
             app.addButton("Pressure List", press)
             app.addButton("Humid List", humid)
@@ -255,6 +253,7 @@ class weather_DAQ(object):
         app.setButtonHeight("OK","4")
         app.setButtonFont("20","Helvetica")
         app.go()
+        app = gui("Weather Plot Choices","800x400")
         
 '''
         def temp(btn):
