@@ -74,24 +74,12 @@ class weather_DAQ(object):
             self.press_list=[]
             self.time_list=[]
             
-        def update_temp(btn):
-            if len(self.time_queue)>0:
-                self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
-
-        def update_humid(btn):
-            if len(self.time_queue)>0:
-                self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
-        def update_press(btn):
-            if len(self.time_queue)>0:
-                self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
-            
-        app=gui()
-        app.addButton("Temperature", update_temp)   
-        app.addButton("Humidity", update_humid)
-        app.addButton("Pressure", update_press)
-        app.go()
-
-   
+        
+        if len(self.time_queue)>0:
+            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+            self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
+        
     def add_time(self, queue, timelist, data):
         print('Input time: {}'.format(data))
         timelist.append(data)
