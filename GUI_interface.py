@@ -32,6 +32,8 @@ def weather_test(btn):
         wdaq.humid()
         job1=top.after(1000,humid)
     def close():
+        global job1
+        top.after_cancel(job1)
         plt.close()
     
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
