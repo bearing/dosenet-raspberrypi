@@ -26,7 +26,6 @@ def weather_test(btn):
             wdaq.press()
             job1=top.after(1000,press1)
     def temp():
-        plt.close()
         def temp1():
             global job1
             wdaq.temp()
