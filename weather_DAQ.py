@@ -144,8 +144,7 @@ class weather_DAQ(object):
         results = csv.reader(open(user_file), delimiter=',')
 
     
-        def ok(btn):
-            app = gui()            
+        def ok(btn):          
             def temp(btn):
                 global row_counter
                 row_counter=0
