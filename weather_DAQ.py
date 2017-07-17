@@ -167,7 +167,6 @@ class weather_DAQ(object):
                     temp_ave.append(temp_mean)
                     temp_unc.append(temp_sigma)
             
-                global merge_times
                 for i in range(nsum_data):
                     itimes = times[i*n_merge:(i+1)*n_merge]
                     itime = itimes[int(len(itimes)/2)]
