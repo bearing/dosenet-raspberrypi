@@ -181,6 +181,7 @@ class weather_DAQ(object):
                 plt.ylabel("Temperature(C)")
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+                plt.show()
             
             def press(btn):
                 global row_counter
@@ -208,6 +209,7 @@ class weather_DAQ(object):
                 plt.ylabel("Pressure(hPa)")
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+                plt.show()
         
             def humid(btn):
                 global row_counter
@@ -238,7 +240,7 @@ class weather_DAQ(object):
                 plt.show()
             
             
-            app.addButton("Tenperature List",temp)
+            app.addButton("Temperature List",temp)
             app.addButton("Pressure List", press)
             app.addButton("Humid List", humid)
             app.setButtonWidth("OK","20")
