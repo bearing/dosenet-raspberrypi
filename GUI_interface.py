@@ -2,6 +2,7 @@
 
 from appJar import gui
 import weather_DAQ
+import matplotlib.pyplot as plt
 
 app = gui("Adafruit Weather Sensor", "800x400")
 
@@ -19,17 +20,23 @@ def weather_test(btn):
         global job1
         top.after_cancel(job1)
     def press():
-        global job1
-        wdaq.press()
-        job1=top.after(1000,press)
+        plt.close()
+        def press1():
+            global job1
+            wdaq.press()
+            job1=top.after(1000,press1)
     def temp():
-        global job1
-        wdaq.temp()
-        job1=top.after(1000,temp)
+        plt.close()
+        def temp1():
+            global job1
+            wdaq.temp()
+            job1=top.after(1000,temp1)
     def humid():
-        global job1
-        wdaq.humid()
-        job1=top.after(1000,humid)
+        plt.close()
+        def humid1():
+            global job1
+            wdaq.humid()
+            job1=top.after(1000,humid1)
     
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
