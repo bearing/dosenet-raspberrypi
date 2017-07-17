@@ -20,20 +20,20 @@ def weather_test(btn):
         global job1
         top.after_cancel(job1)
     def press():
-        global job1
+        global job2
         wdaq.press()
-        job1=top.after(1000,press)
+        job2=top.after(1000,press)
     def temp():
-        global job1
+        global job2
         wdaq.temp()
-        job1=top.after(1000,temp)
+        job2=top.after(1000,temp)
     def humid():
-        global job1
+        global job2
         wdaq.humid()
-        job1=top.after(1000,humid)
+        job2=top.after(1000,humid)
     def close():
-        global job1
-        top.after_cancel(job1)
+        global job2
+        top.after_cancel(job2)
         plt.close()
     
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
