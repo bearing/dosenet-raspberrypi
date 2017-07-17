@@ -88,7 +88,8 @@ class weather_DAQ(object):
         app=gui()
         app.addButton("Temperature", update_temp)   
         app.addButton("Humidity", update_humid)
-        app.addBUtton("Pressure", update_press)
+        app.addButton("Pressure", update_press)
+        app.go()
 
    
     def add_time(self, queue, timelist, data):
