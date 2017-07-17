@@ -183,7 +183,6 @@ class weather_DAQ(object):
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
             
             def press(btn):
-                global results
                 global row_counter
                 for r in results:
                     if row_counter>0:
@@ -211,7 +210,6 @@ class weather_DAQ(object):
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         
             def humid(btn):
-                global results
                 global row_counter
                 for r in results:
                     if row_counter>0:
