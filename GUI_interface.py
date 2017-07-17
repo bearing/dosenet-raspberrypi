@@ -18,12 +18,18 @@ def weather_test(btn):
     def stop():
         global job1
         top.after_cancel(job1)
+    def press():
+        wdaq.press()
+    def temp():
+        wdaq.temp()
+    def humid():
+        wdaq.humid()
     
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
-    PressureButton = Tkinter.Button(top, height=2, width=20, text = "Pressure", command = wdaq.press())
-    TempButton = Tkinter.Button(top, height=2, width=20, text = "Temperature", command = wdaq.temp())
-    HumidButton = Tkinter.Button(top, height=2, width=20, text = "Humidity", command = wdaq.humid())
+    PressureButton = Tkinter.Button(top, height=2, width=20, text = "Pressure", command = press)
+    TempButton = Tkinter.Button(top, height=2, width=20, text = "Temperature", command = temp)
+    HumidButton = Tkinter.Button(top, height=2, width=20, text = "Humidity", command = humid)
     
     startButton.pack()
     stopButton.pack()
