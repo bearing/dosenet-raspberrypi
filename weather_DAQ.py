@@ -141,11 +141,11 @@ class weather_DAQ(object):
         app.setFocus("n")  
         n_merge=int(app.getEntry("n"))
         user_file=app.getOptionBox("Files")
+        results = csv.reader(open(user_file), delimiter=',')
+
     
         def ok(btn):
-            app = gui()
-            results = csv.reader(open(user_file), delimiter=',')
-            
+            app = gui()            
             def temp(btn):
                 global row_counter
                 row_counter=0
