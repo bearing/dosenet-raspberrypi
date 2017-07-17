@@ -187,6 +187,7 @@ class weather_DAQ(object):
             
             def press(btn):
                 global row_counter
+                global nsum_data
                 for r in results:
                     if row_counter>0:
                         times.append(dateutil.parser.parse(r[0]))
@@ -215,6 +216,7 @@ class weather_DAQ(object):
         
             def humid(btn):
                 global row_counter
+                global nsum_data
                 for r in results:
                     if row_counter>0:
                         times.appned(dateutil.parser.parse(r[0]))
