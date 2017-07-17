@@ -79,6 +79,7 @@ class weather_DAQ(object):
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
     def temp(self):
+        plt.close()
         if len(self.time_queue)>0:
             self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
                 
