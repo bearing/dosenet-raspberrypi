@@ -74,12 +74,19 @@ class weather_DAQ(object):
             self.press_list=[]
             self.time_list=[]
             
+        def press(self):
+            if len(self.time_queue)>0:
+                self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
-        if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
-            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
-            self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
-        
+        def temp(self):
+            if len(self.time_queue)>0:
+                            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+                
+        def humid(self):
+            if len(self.time_queue)>0:
+                            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+
+
     def add_time(self, queue, timelist, data):
         print('Input time: {}'.format(data))
         timelist.append(data)

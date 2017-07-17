@@ -21,9 +21,15 @@ def weather_test(btn):
     
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
-
+    PressureButton = Tkinter.Button(top, height=2, width=20, text = "Pressure", command = wdaq.press)
+    TempButton = Tkinter.Button(top, height=2, width=20, text = "Temperature", command = wdaq.temp)
+    HumidButton = Tkinter.Button(top, height=2, width=20, text = "Humidity", command = wdaq.humid)
+    
     startButton.pack()
     stopButton.pack()
+    PressureButton.pack()
+    TempButton.pack()
+    HumidButton.pack()
 
     top.mainloop()
 
