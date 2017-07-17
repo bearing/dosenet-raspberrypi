@@ -2,15 +2,10 @@
 
 from appJar import gui
 import weather_DAQ
-import datetime
-from matplotlib.dates import DateFormatter
-import matplotlib.pyplot as plt
 
 app = gui("Adafruit Weather Sensor", "800x400")
-from Adafruit_BME280 import *
 
 wdaq = weather_DAQ.weather_DAQ()
-
 
 def weather_test(btn):
     wdaq.create_file()
@@ -18,7 +13,6 @@ def weather_test(btn):
     top = Tkinter.Tk()
     def start():
         global job1
-        wdaq.create_file()
         wdaq.start()
         job1=top.after(1000,start)
     def stop():
