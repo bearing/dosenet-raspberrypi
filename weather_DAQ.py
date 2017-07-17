@@ -141,6 +141,7 @@ class weather_DAQ(object):
         app.setFocus("n")     
     
         def ok(btn):
+            app=gui("Weather PLot Choices","800x400")
             user_file=app.getOptionBox("Files") 
             n_merge=int(app.getEntry("n"))
             results = csv.reader(open(user_file), delimiter=',')
