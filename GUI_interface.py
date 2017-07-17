@@ -46,6 +46,7 @@ def weather_test(btn):
     PressureButton.pack()
     TempButton.pack()
     HumidButton.pack()
+    CloseButton.pack()
 
     top.mainloop()
 
