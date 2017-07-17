@@ -189,7 +189,7 @@ class weather_DAQ(object):
                 global row_counter
                 for r in results:
                     if row_counter>0:
-                        times.appned(dateutil.parser.parse(r[0]))
+                        times.append(dateutil.parser.parse(r[0]))
                         pressure_list.append(float(r[2]))
                 
                     row_counter+=1
