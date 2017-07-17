@@ -26,10 +26,9 @@ def weather_test(btn):
             wdaq.press()
             job1=top.after(1000,press1)
     def temp():
-        def temp1():
-            global job1
-            wdaq.temp()
-            job1=top.after(1000,temp1)
+        global job1
+        wdaq.temp()
+        job1=top.after(1000,temp)
     def humid():
         plt.close()
         def humid1():
