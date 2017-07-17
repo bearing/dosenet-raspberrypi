@@ -138,11 +138,12 @@ class weather_DAQ(object):
         app.addLabel("2","Enter the number of data points to merge:")
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
-        app.setFocus("n")     
+        app.setFocus("n")  
+        n_merge=int(app.getEntry("n"))
+        user_file=app.getOptionBox("Files")
     
         def ok(btn):
-            user_file=app.getOptionBox("Files") 
-            n_merge=int(app.getEntry("n"))
+            app = gui()
             results = csv.reader(open(user_file), delimiter=',')
             
             def temp(btn):
@@ -252,7 +253,6 @@ class weather_DAQ(object):
         app.setButtonWidth("OK","20")
         app.setButtonHeight("OK","4")
         app.setButtonFont("20","Helvetica")
-        app = gui("Weather Plot Choices","800x400")
         app.go()
 
         
