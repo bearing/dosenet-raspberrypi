@@ -143,12 +143,11 @@ class weather_DAQ(object):
         def ok(btn):
             user_file=app.getOptionBox("Files") 
             n_merge=int(app.getEntry("n"))
-            row_counter=0
             results = csv.reader(open(user_file), delimiter=',')
             
             def temp(btn):
                 global row_counter
-                global results
+                row_counter=0
                 for r in results:
                     if row_counter>0:
                         times.append(dateutil.parser.parse(r[0]))
