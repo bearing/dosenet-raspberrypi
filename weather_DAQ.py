@@ -252,8 +252,9 @@ class weather_DAQ(object):
         app.setButtonWidth("OK","20")
         app.setButtonHeight("OK","4")
         app.setButtonFont("20","Helvetica")
-        app.go()
         app = gui("Weather Plot Choices","800x400")
+        app.go()
+
         
 '''
         def temp(btn):
