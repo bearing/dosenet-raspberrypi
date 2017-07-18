@@ -159,12 +159,8 @@ class weather_DAQ(object):
             top = Tkinter.Tk()
             n_merge=int(app.getEntry("n"))
             user_file=app.getOptionBox("Files")
-            results = csv.reader(open(user_file), delimiter=',')
-            row_counter=0              
-            for r in results:
-                if row_counter>0:
-                    times.append(r[0])
-                row_counter+=1
+            results = csv.reader(open(user_file), delimiter=',')          
+
                     
             def temp():
                 global n_merge
@@ -173,6 +169,7 @@ class weather_DAQ(object):
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
+                        times.append(r[0])
                         degrees_list.append(float(r[1]))                
                     row_counter+=1
              
