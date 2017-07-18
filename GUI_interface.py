@@ -2,7 +2,6 @@
 
 from appJar import gui
 import weather_DAQ
-import matplotlib.pyplot as plt
 
 app = gui("Adafruit Weather Sensor", "800x400")
 
@@ -12,43 +11,64 @@ def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
+    '''
+    varWeather = Tkinter.IntVar()
+    varCO2 = Tkinter.IntVar()
     def start():
         global job1
-        wdaq.start()
+        if varWeather.get() == 1:
+            wdaq.start()
+        if varCO2.get() == 1:
+            '''
+    def start():
+        global job1
+        wdaq.start()   
         job1=top.after(1000,start)
     def stop():
         global job1
         top.after_cancel(job1)
     def press():
-        global job2
+        global jobpress
+        if jobtemp == None:
+            top.after_cancel(jobtemp)
+        if jobhumid == None:
+            top.after_cancel(jobhumid)
         wdaq.press()
-        job2=top.after(1000,press)
+        jobpress=top.after(1000,press)
     def temp():
-        global job2
+        global jobtemp
+        if jobpress == None:
+            top.after_cancel(jobtemp)
+        if jobhumid == None:
+            top.after_cancel(jobhumid)
         wdaq.temp()
-        job2=top.after(1000,temp)
+        jobtemp=top.after(1000,temp)
     def humid():
-        global job2
+        global jobhumid
+        if jobpress == None:
+            top.after_cancel(jobpress)
+        if jobtemp == None:
+            top.after_cancel(jobtemp)
         wdaq.humid()
-        job2=top.after(1000,humid)
-    def close():
-        global job2
-        top.after_cancel(job2)
-        plt.close()
-    
+        jobhumid=top.after(1000,humid)
+    '''     
+    WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
+    CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)
+    '''
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
     PressureButton = Tkinter.Button(top, height=2, width=20, text = "Pressure", command = press)
     TempButton = Tkinter.Button(top, height=2, width=20, text = "Temperature", command = temp)
     HumidButton = Tkinter.Button(top, height=2, width=20, text = "Humidity", command = humid)
-    CloseButton = Tkinter.Button(top, height=2, width=20, text = "Close Window", command = close)
-    
+    '''
+    WeatherButton.pack()
+    CO2Button.pack()
+    '''
     startButton.pack()
     stopButton.pack()
     PressureButton.pack()
     TempButton.pack()
     HumidButton.pack()
-    CloseButton.pack()
 
     top.mainloop()
 
