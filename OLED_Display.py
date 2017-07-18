@@ -127,7 +127,7 @@ else:
 #try:
 for i in range(len(sensor_name)+1):
     OLED = OLED_Display()
-    OLED.Check_Any(self.log_files[sensor_name[i]], sensor_name[i])
+    OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
 while True:
     for i in range(len(sensor_name)+1):
         OLED.CheckIf_Repeat(OLED.Display_Data(self.log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
