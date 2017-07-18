@@ -137,7 +137,7 @@ try:
             time.sleep(3.5)
 
 except:
-    print(sensor_name)
+    print("testc")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
