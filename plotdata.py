@@ -32,7 +32,7 @@ class plotdata(object):
         self.merge_times2 = []
         self.merge_times3 = []
     
-    def plotdata(self): 
+    def plotdata1(self): 
         app=gui("Weather Plot","800x400")   
         app.addLabel("1","Please choose a following .csv file")
         file_name=[]
@@ -57,13 +57,13 @@ class plotdata(object):
 
                     
             def temp():
-                self.plotting(self.times, self.degrees_list, self.temp_ave, self.temp_unc, self.merge_times)
+                ok.plotting(self.times, self.degrees_list, self.temp_ave, self.temp_unc, self.merge_times)
             
             def humid():
-                self.plotting(self.times2, self.humidity_list, self.humidity_ave, self.humidity_unc, self.merge_times2)
+                ok.plotting(self.times2, self.humidity_list, self.humidity_ave, self.humidity_unc, self.merge_times2)
             
             def press():
-                self.plotting(self.times3, self.pressure_list, self.pressure_ave, self.pressure_unc, self.merge_times3)
+                ok.plotting(self.times3, self.pressure_list, self.pressure_ave, self.pressure_unc, self.merge_times3)
             
             def plotting(self,timelist, datalist, listave, listunc, listmerge):
                 row_counter=0              

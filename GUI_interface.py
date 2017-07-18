@@ -111,7 +111,7 @@ def weather_test(btn):
 
 def weather_plot(btn):
 
-    pd.plotdata()    
+    pd.plotdata1()    
 
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
