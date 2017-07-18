@@ -34,6 +34,9 @@ class weather_DAQ(object):
         self.time_list=[]
         self.merge_test=False
         
+    def close(self):
+        plt.close()
+        
     def create_file(self):
         global results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
