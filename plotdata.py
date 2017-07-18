@@ -31,6 +31,7 @@ class plotdata(object):
         self.merge_times = []
         self.merge_times2 = []
         self.merge_times3 = []
+    
     def plotdata(self): 
         app=gui("Weather Plot","800x400")   
         app.addLabel("1","Please choose a following .csv file")
