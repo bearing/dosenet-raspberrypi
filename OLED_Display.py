@@ -127,6 +127,7 @@ try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
         OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
+        print sensor_name
 
     while True:
         for i in range(len(sensor_name)):
