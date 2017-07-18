@@ -1,7 +1,7 @@
 import ctypes
 import datetime
 import time
-from dateutil import parser
+from dateutil import parser as theparser
 import argparse
 
 class OLED_Display:
@@ -72,7 +72,7 @@ class OLED_Display:
             if "\n" in lastline[0][i]:
                 lastline[0][i] = lastline[0][i].strip("\n")
             to_be_displayed1 = str("Time       "+metadata[0][i])
-            to_be_displayed2 = str(dateutil.parser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
+            to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor) # x: until 100 and then starts again from y-axis; y: until 7
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
