@@ -122,9 +122,9 @@ elif CSI == True:
 else:
     parser.print_help()
     exit()
-
+print(len(sensor_name)+1)
 try:
-    print(len(sensorname)+1)
+    print(len(sensor_name)+1)
     for i in range(len(sensor_name)+1):
         OLED = OLED_Display()
         OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
@@ -136,6 +136,7 @@ try:
             time.sleep(3.5)
 
 except:
+    print(sensor_name)
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
