@@ -93,12 +93,12 @@ class OLED_Display:
 sensor_name = []
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-AQual", type = str, help = "Indicates inclusion of Air Quality Sensor.", action = "store_false")
-parser.add_argument("-CO2", type = str, help = "Indicates inclusion of CO2 Sensor.", action = "store_false")
-parser.add_argument("-Atmos", type = str, help = "Indicates inclusion of Atmosphere Sensor.", action = "store_false")
-parser.add_argument("-UV", type = str, help = "Indicates inclusion of U.V. Sensor.", action = "store_false")
-parser.add_argument("-Si", type = str, help = "Indicates inclusion of Si Radiation Sensor.", action = "store_false")
-parser.add_argument("-CsI", type = str, help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_false")
+parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_false")
+parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_false")
+parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_false")
+parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_false")
+parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_false")
+parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_false")
 
 AQ = parser.parse_args("-AQual")
 CO = parser.parse_args("-CO2")
