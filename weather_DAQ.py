@@ -137,6 +137,8 @@ class weather_DAQ(object):
         humidity_ave=[]
         humidity_unc=[]
         merge_times = []
+        merge_times2 = []
+        merge_times3 = []
         
         app=gui("Weather Plot","800x400")   
         app.addLabel("1","Please choose a following .csv file")
@@ -162,8 +164,6 @@ class weather_DAQ(object):
 
                     
             def temp():
-                global ndata
-                global nsum_dat
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -208,10 +208,10 @@ class weather_DAQ(object):
                         pressure_list.append(float(r[2]))              
                     row_counter+=1
                
-                ndata = int(len(pressure_list))
-                nsum_data = int(ndata/n_merge)
+                ndata2 = int(len(pressure_list))
+                nsum_data2 = int(ndata2/n_merge)
                 
-                for i in range(nsum_data):
+                for i in range(nsum_data2):
                     ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
                     ipressure_array = np.asarray(ipressure)
                     pressure_mean = np.mean(ipressure_array)
@@ -219,15 +219,15 @@ class weather_DAQ(object):
                     pressure_ave.append(pressure_mean)
                     pressure_unc.append(pressure_sigma)
                     
-                for i in range(nsum_data):
-                    itimes = times2[i*n_merge:(i+1)*n_merge]
-                    itime = itimes[int(len(itimes)/2)]
-                    merge_times.append(itime)
+                for i in range(nsum_data2):
+                    itimes2 = times2[i*n_merge:(i+1)*n_merge]
+                    itime2 = itimes2[int(len(itimes2)/2)]
+                    merge_times2.append(itime2)
 
                 fig=plt.figure()
                 ax=fig.add_subplot(111)
-                plt.plot(merge_times, pressure_ave,"g." )
-                plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
+                plt.plot(merge_times2, pressure_ave,"g." )
+                plt.errorbar(merge_times2, pressure_ave, yerr = pressure_unc)
                 plt.title("Pressure")
                 plt.xlabel("Time(s)")
                 plt.ylabel("Pressure(hPa)")
@@ -236,8 +236,6 @@ class weather_DAQ(object):
                 plt.show()
         
             def humid():  
-                global ndata
-                global nsum_data
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -246,10 +244,10 @@ class weather_DAQ(object):
                 
                     row_counter+=1
                     
-                ndata = int(len(humidity_list))
-                nsum_data = int(ndata/n_merge)
+                ndata3 = int(len(humidity_list))
+                nsum_data3 = int(ndata3/n_merge)
                 
-                for i in range(nsum_data):
+                for i in range(nsum_data3):
                     ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
                     ihumid_array = np.asarray(ihumid)
                     humid_mean = np.mean(ihumid_array)
@@ -257,15 +255,15 @@ class weather_DAQ(object):
                     humidity_ave.append(humid_mean)
                     humidity_unc.append(humid_sigma)
                     
-                for i in range(nsum_data):
-                    itimes = times3[i*n_merge:(i+1)*n_merge]
-                    itime = itimes[int(len(itimes)/2)]
-                    merge_times.append(itime)
+                for i in range(nsum_data3):
+                    itimes3 = times3[i*n_merge:(i+1)*n_merge]
+                    itime3 = itimes3[int(len(itimes3)/2)]
+                    merge_times3.append(itime3)
                 
                 fig=plt.figure()
                 ax=fig.add_subplot(111)
-                plt.plot(merge_times, humidity_ave,"r." )
-                plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
+                plt.plot(merge_times3, humidity_ave,"r." )
+                plt.errorbar(merge_times3, humidity_ave, yerr = humidity_unc)
                 plt.title("Humidity")
                 plt.xlabel("Time(s)")
                 plt.ylabel("Humidity(%)")
