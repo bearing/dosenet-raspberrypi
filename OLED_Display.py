@@ -76,7 +76,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor) # x: until 100 and then starts again from y-axis; y: until 7
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
-        return time.mktime(time.timetuple(metadata[0][0]))
+        return time.mktime(t.timetuple() for t in metadata[0][0])
 
     def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
