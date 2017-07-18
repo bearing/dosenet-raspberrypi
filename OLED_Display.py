@@ -123,7 +123,7 @@ else:
     parser.print_help()
     print("test")
     exit()
-
+print("stuff")
 try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
