@@ -5,10 +5,12 @@ from dateutil import parser
 import argparse
 
 class OLED_Display:
-    self.returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
-    self.log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
+    def _init_(self):
+        self.returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
+        self.log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
+
     #Opens General Result Files
-    def Check_Any(a, fname, sensor):
+    def Check_Any(self, fname, sensor):
         begin_time = int(time.time())
         check = open(fname).readlines()[0:2]
         while check == []:
@@ -49,7 +51,7 @@ class OLED_Display:
                 break
 
     #Displays data on screen
-    def Display_Data(a, fname, sensor):
+    def Display_Data(self, fname, sensor):
         metadata_line = open(fname).readlines()[0:1]
         metadata = [line.split(",") for line in metadata_line]
 
@@ -75,7 +77,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
         return time.mktime(t.timetuple(metadata[0][0]))
 
-    def CheckIf_Repeat(a, returned_time, sensor):
+    def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
             ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
             ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
