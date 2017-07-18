@@ -6,8 +6,10 @@ import argparse
 
 class OLED_Display:
     def _init_(self):
-        self.returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
-        self.log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
+        pass
+        
+    self.returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
+    self.log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
 
     #Opens General Result Files
     def Check_Any(self, fname, sensor):
@@ -129,13 +131,13 @@ print(len(sensor_name)+1)
 print("testb")
 for i in range(len(sensor_name)+1):
     OLED = OLED_Display()
-    OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
-    print OLED.log_files[sensor_name[i]]
+    OLED.Check_Any(self.log_files[sensor_name[i]], sensor_name[i])
+    print self.log_files[sensor_name[i]]
 print("testa")
 while True:
     print "test"
     for i in range(len(sensor_name)+1):
-        OLED.CheckIf_Repeat(OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
+        OLED.CheckIf_Repeat(OLED.Display_Data(self.log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
         time.sleep(3.5)
 '''
 except:
