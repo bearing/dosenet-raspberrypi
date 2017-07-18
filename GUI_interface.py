@@ -29,19 +29,34 @@ def weather_test(btn):
         top.after_cancel(job1)
     def press():
         global jobpress
-        close()
+        global jobhumid
+        global jobtemp
+        if jobhumid is not None:
+            top.after_cancel(jobhumid)
+        if jobtemp is not None:
+            top.after_cancel(jobtemp)
         wdaq.press()
         jobpress=top.after(1000,press)
     def temp():
+        global jobpress
+        global jobhumid
         global jobtemp
+        if jobhumid is not None:
+            top.after_cancel(jobhumid)
+        if jobpress is not None:
+            top.after_cancel(jobpress)
         wdaq.temp()
         jobtemp=top.after(1000,temp)
     def humid():
+        global jobpress
         global jobhumid
+        global jobtemp
+        if jobpress is not None:
+            top.after_cancel(jobpress)
+        if jobtemp is not None:
+            top.after_cancel(jobtemp)
         wdaq.humid()
         jobhumid=top.after(1000,humid)
-    def close():
-        wdaq.close()
         
 
     '''     
