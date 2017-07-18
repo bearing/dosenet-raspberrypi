@@ -131,6 +131,7 @@ try:
         print sensor_name
 
     while True:
+        print "test"
         for i in range(len(sensor_name)+1):
             OLED.CheckIf_Repeat(OLED.Display_Data(log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
             time.sleep(3.5)
