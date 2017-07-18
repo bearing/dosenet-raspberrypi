@@ -75,6 +75,7 @@ class weather_DAQ(object):
             self.press_list=[]
             self.time_list=[]
             
+            
     def press(self):
         if len(self.time_queue)>0:
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")

@@ -2,10 +2,12 @@
 
 from appJar import gui
 import weather_DAQ
+import plotdata
 
 app = gui("Adafruit Weather Sensor", "800x400")
 
 wdaq = weather_DAQ.weather_DAQ()
+pd = plotdata.plotdata()
 
 global job1
 global jobpress
@@ -30,6 +32,7 @@ def weather_test(btn):
             wdaq.start()
         if varCO2.get() == 1:
             '''
+
     def start():
         global job1
         wdaq.start()   
@@ -81,12 +84,14 @@ def weather_test(btn):
             wdaq.close(1)
         wdaq.humid()
         jobhumid=top.after(1000,humid)
-        
+     
 
     '''     
     WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
-    CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)
+    CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)  
     '''
+    
+    
     startButton = Tkinter.Button(top, height=2, width=20, text ="Start", command = start)
     stopButton = Tkinter.Button(top, height=2, width=20, text ="Stop", command = stop)
     PressureButton = Tkinter.Button(top, height=2, width=20, text = "Pressure", command = press)
@@ -106,7 +111,7 @@ def weather_test(btn):
 
 def weather_plot(btn):
 
-    wdaq.plotdata()    
+    pd.plotdata()    
 
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
