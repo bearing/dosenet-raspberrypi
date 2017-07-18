@@ -5,6 +5,7 @@ import datetime
 import time
 import argparse
 import os
+import sys
 
 #Initiate timer
 parser = argparse.ArgumentParser()
