@@ -122,7 +122,8 @@ class weather_DAQ(object):
         fig.show()
         plt.pause(0.0005)
 
-    def plotdata(self):  
+    def plotdata(self): 
+        global times
         times=[]
         degrees_list=[]
         pressure_list=[]
@@ -151,6 +152,7 @@ class weather_DAQ(object):
 
     
         def ok(btn):
+            global times
             import Tkinter
             top = Tkinter.Tk()
             n_merge=int(app.getEntry("n"))
@@ -162,12 +164,12 @@ class weather_DAQ(object):
                     times.append(dateutil.parser.parse(r[0]))
                 row_counter+=1
                     
-            def temp(): 
+            def temp():
+                global times
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
-                        degrees_list.append(float(r[1]))
-                
+                        degrees_list.append(float(r[1]))                
                     row_counter+=1
              
                 ndata = int(len(degrees_list))
@@ -198,11 +200,11 @@ class weather_DAQ(object):
                 plt.show()
             
             def press():
+                global times
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        pressure_list.append(float(r[2]))
-                
+                        pressure_list.append(float(r[2]))              
                     row_counter+=1
                
                 ndata = int(len(pressure_list))
@@ -233,6 +235,7 @@ class weather_DAQ(object):
                 plt.show()
         
             def humid():
+                global times
                 row_counter=0
                 for r in results:
                     if row_counter>0:
