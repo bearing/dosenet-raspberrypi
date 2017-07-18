@@ -2,12 +2,12 @@
 
 from appJar import gui
 import weather_DAQ
-import plot_data
+import plotdata
 
 app = gui("Adafruit Weather Sensor", "800x400")
 
 wdaq = weather_DAQ.weather_DAQ()
-pd = plot_data.plot_data()
+pd = plotdata.plotdata()
 
 global job1
 global jobpress
