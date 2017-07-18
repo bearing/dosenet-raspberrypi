@@ -162,6 +162,8 @@ class weather_DAQ(object):
 
                     
             def temp():
+                global ndata
+                global nsum_dat
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -197,6 +199,8 @@ class weather_DAQ(object):
                 plt.show()
             
             def press():
+                global ndata
+                global nsum_data
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -231,7 +235,9 @@ class weather_DAQ(object):
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
         
-            def humid():    
+            def humid():  
+                global ndata
+                global nsum_data
                 row_counter=0
                 for r in results:
                     if row_counter>0:
