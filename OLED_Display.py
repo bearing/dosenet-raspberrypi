@@ -5,7 +5,7 @@ from dateutil import parser
 import argparse
 
 class OLED_Display:
-    def _init_():
+    def _init_(self):
         self.returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
         self.log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
 
@@ -137,7 +137,7 @@ while True:
     for i in range(len(sensor_name)+1):
         OLED.CheckIf_Repeat(OLED.Display_Data(self.log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
         time.sleep(3.5)
-'''
+
 except:
     print("testc")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
@@ -148,6 +148,6 @@ except:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
+    time.time(3)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
-'''
