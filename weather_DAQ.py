@@ -16,11 +16,9 @@ from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from collections import deque
 
-sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
-
 class weather_DAQ(object):
     def __init__(self):
-        self.sensor = sensor
+        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
         self.running=False
         self.time_queue=deque()
         self.temp_queue=deque()
@@ -34,8 +32,6 @@ class weather_DAQ(object):
         self.time_list=[]
         self.merge_test=False
         
-    def close(self):
-        plt.close()
         
     def create_file(self):
         global results
