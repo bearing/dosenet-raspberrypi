@@ -94,19 +94,19 @@ sensor_name = []
 parser = argparse.ArgumentParser()
 inclusion = parser.parse_args()
 
-parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_false")
-parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_false")
-parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_false")
-parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_false")
-parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_false")
-parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_false")
+parser.add_argument("--AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_false")
+parser.add_argument("--CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_false")
+parser.add_argument("--Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_false")
+parser.add_argument("--UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_false")
+parser.add_argument("--Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_false")
+parser.add_argument("--CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_false")
 
-AQ = inclusion.-AQual
-CO = inclusion.-CO2
-AT = inclusion.-Atmos
-uv = inclusion.-UV
-SI = inclusion.-Si
-CSI = inclusion.-CsI
+AQ = inclusion.AQual
+CO = inclusion.CO2
+AT = inclusion.Atmos
+uv = inclusion.UV
+SI = inclusion.Si
+CSI = inclusion.CsI
 
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
