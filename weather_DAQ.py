@@ -152,6 +152,8 @@ class weather_DAQ(object):
 
     
         def ok(btn):
+            global n_merge
+            global results
             global times
             import Tkinter
             top = Tkinter.Tk()
@@ -165,7 +167,9 @@ class weather_DAQ(object):
                 row_counter+=1
                     
             def temp():
+                global n_merge
                 global times
+                global results
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -200,7 +204,9 @@ class weather_DAQ(object):
                 plt.show()
             
             def press():
+                global n_merge
                 global times
+                global results
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -235,7 +241,9 @@ class weather_DAQ(object):
                 plt.show()
         
             def humid():
+                global n_merge
                 global times
+                global results                
                 row_counter=0
                 for r in results:
                     if row_counter>0:
