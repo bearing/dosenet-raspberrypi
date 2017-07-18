@@ -4,6 +4,7 @@ Created on Wed Jul 12 11:32:41 2017
 
 @author: Ludi Cao
 """
+from __future__ import division
 import time
 import datetime
 import csv
@@ -15,7 +16,6 @@ import dateutil
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from collections import deque
-from __future__ import division
 
 class weather_DAQ(object):
     def __init__(self):
