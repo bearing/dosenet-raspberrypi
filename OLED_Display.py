@@ -106,7 +106,7 @@ AT = inclusion.Atmos
 uv = inclusion.UV
 SI = inclusion.Si
 CSI = inclusion.CsI
-
+print("stuff")
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
 elif CO == True:
