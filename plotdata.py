@@ -56,13 +56,13 @@ class plotdata(object):
 
                     
             def temp():
-                plotting(self.times, self.degrees_list, self.temp_ave, self.temp_unc, self.mergetimes)
+                plotting(self.times, self.degrees_list, self.temp_ave, self.temp_unc, self.merge_times)
             
             def humid():
-                plotting(self.times2, self.humidity_list, self.humidity_ave, self.humidity_unc, self.mergetimes)
+                plotting(self.times2, self.humidity_list, self.humidity_ave, self.humidity_unc, self.merge_times2)
             
             def press():
-                plotting(self.times3, self.pressure_list, self.pressure_ave, self.pressure_unc, self.mergetimes)
+                plotting(self.times3, self.pressure_list, self.pressure_ave, self.pressure_unc, self.merge_times3)
             
             def plotting(self,timelist, datalist, listave, listunc, listmerge):
                 row_counter=0              
