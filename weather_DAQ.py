@@ -196,7 +196,6 @@ class weather_DAQ(object):
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
                         pressure_list.append(float(r[2]))
                 
                     row_counter+=1
@@ -232,12 +231,11 @@ class weather_DAQ(object):
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
                         humidity_list.append(float(r[3]))
                 
                     row_counter+=1
                     
-                ndata = int(len(humid_list))
+                ndata = int(len(humidity_list))
                 nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
