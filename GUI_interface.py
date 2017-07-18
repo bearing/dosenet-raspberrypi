@@ -6,15 +6,19 @@ import weather_DAQ
 app = gui("Adafruit Weather Sensor", "800x400")
 
 wdaq = weather_DAQ.weather_DAQ()
+global job1
+global jobpress
+global jobhumid
+global jobtemp
+job1 = None
+jobpress = None
+jobhumid = None
+jobtemp = None
 
 def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
-    global job1 = None
-    global jobpress = None
-    global jobhumid = None
-    global jobtemp = None
 
     '''
     varWeather = Tkinter.IntVar()
