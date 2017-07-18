@@ -40,7 +40,7 @@ pen_results.writerow(metadata[:])
 #pen_display_results.writerow(metadata[:])
 
 print(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+","+metadata[4]+","+metadata[5]+","+metadata[6]+","+metadata[7]+","+metadata[8]+","+metadata[9])
-
+sys.stdout.flush()
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
@@ -76,6 +76,7 @@ while now_time<counter_time+run_time:
 
             # Print Log File Information
             print(datetime.datetime.strftime(date_time, "%H:%M:%S")+","+repr(P3)+","+repr(P5)+","+repr(P10)+","+repr(P25)+","+repr(P50)+","+repr(P100)+","+repr(PM01Val)+","+repr(PM25Val)+","+repr(PM10Val))
+            sys.stdout.flush()
 
             # Put results in a CSV file
             results = []
