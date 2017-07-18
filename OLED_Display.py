@@ -124,12 +124,11 @@ else:
     exit()
 print(len(sensor_name)+1)
 try:
-    print(len(sensor_name)+1)
+    print("testb")
     for i in range(len(sensor_name)+1):
         OLED = OLED_Display()
         OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
         print sensor_name
-
     print("testa")
     while 1 == 1:
         print "test"
