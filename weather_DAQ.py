@@ -4,7 +4,6 @@ Created on Wed Jul 12 11:32:41 2017
 
 @author: Ludi Cao
 """
-from __future__ import division
 import time
 import datetime
 import csv
@@ -150,14 +149,14 @@ class weather_DAQ(object):
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
         app.setFocus("n")  
-        n_merge=int(app.getEntry("n"))
-        user_file=app.getOptionBox("Files")
-        results = csv.reader(open(user_file), delimiter=',')
 
     
         def ok(btn):
             import Tkinter
             top = Tkinter.Tk()
+            n_merge=int(app.getEntry("n"))
+            user_file=app.getOptionBox("Files")
+            results = csv.reader(open(user_file), delimiter=',')
             def temp(): 
                 global n_merge
                 row_counter=0              
