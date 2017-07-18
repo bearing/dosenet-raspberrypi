@@ -10,6 +10,18 @@ import os
 import errno
 import csv
 
+AQ_PM_DISPLAY_TEXT = (
+	'{green} {{variable}} = {reset}' +
+	'{red} {{avg_data}} {reset}' +
+    '{green} ug/m3 {reset}').format(
+    red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
+
+AQ_P_DISPLAY_TEXT = (
+	'{green} # of Particles over {{variable}} = {reset}' +
+	'{red} {{avg_data}} {reset}').format(
+    red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
+strf = '%H:%M:%S'
+
 class Data_Handler_AQ(object):
     """
     Object for sending the data from the Air Quality
@@ -35,7 +47,11 @@ class Data_Handler_AQ(object):
         self.queue = deque('')
 
     """
-    The lot of varaibles is where:
+    The average_data list has elements comprised of:
+
+    PM01 = Concentration of Particulate Matter less than 1.0um in ug/m3
+    PM25 = Concentration of Particulate Matter less than 2.5um in ug/m3
+    PM10 = Concentration of Particulate Matter less than 10um in ug/m3
 
     P03 = Number of paricles in 0.1 L of air over a diameter of 0.3um
     P05 = Number of paricles in 0.1 L of air over a diameter of 0.5um
@@ -43,13 +59,9 @@ class Data_Handler_AQ(object):
     P25 = Number of paricles in 0.1 L of air over a diameter of 2.5um
     P50 = Number of paricles in 0.1 L of air over a diameter of 5.0um
     P100 = Number of paricles in 0.1 L of air over a diameter of 10um
-
-    PM01 = Concentration of Particulate Matter less than 1.0um in ug/m3
-    PM25 = Concentration of Particulate Matter less than 2.5um in ug/m3
-    PM10 = Concentration of Particulate Matter less than 10um in ug/m3
     """
 
-    def test_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+    def test_send(self, average_data):
         """
         Test Mode
         """
@@ -57,19 +69,19 @@ class Data_Handler_AQ(object):
             1, ANSI_RED + " * Test mode, not sending to server * " +
             ANSI_RESET)
 
-    def no_config_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+    def no_config_send(self, average_data):
         """
         Configuration file not present
         """
         self.vprint(1, "Missing config file, not sending to server")
 
-    def no_publickey_send(self, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+    def no_publickey_send(self, average_data):
         """
         Publickey not present
         """
         self.vprint(1, "Missing public key, not sending to server")
 
-    def regular_send(self, this_end, P03, P05, P10, P25, P50, P100, PM01, PM25, PM10):
+    def regular_send(self, this_end, average_data):
         """
         Normal send
         """

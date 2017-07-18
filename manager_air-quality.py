@@ -18,7 +18,15 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ
-from globalvalues import DEFAULT_AQ_PORT
+from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
+
+def signal_term_handler(signal, frame):
+    # If SIGTERM signal is intercepted, the SystemExit exception routines
+    #   get run
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_term_handler)
+
 
 class Manager_AQ(object):
 
@@ -36,11 +44,13 @@ class Manager_AQ(object):
                  port=None,
                  test=None,
                  AQ_port=DEFAULT_AQ_PORT,
+                 variables=AQ_VARIABLES,
                  ):
 
         self.interval = interval
 
-        self.aq-port = AQ_port
+        self.aq_port = AQ_port
+        self.variables = variables
 
         self.datalog = datalog
         self.datalogflag = datalogflag
@@ -163,6 +173,21 @@ class Manager_AQ(object):
                 ' with intervals of {}s').format(
                 datatime_from_epoch(this_start), self.interval))
         self.running = True
+        try:
+            while self.running:
+
+                self.handle_air_counts(this_start, this_end)
+
+                this_start, this_end = self.get_interval(this_end)
+
+        except KeyboardInterrupt:
+            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            self.stop()
+            self.takedown()
+        except SystemExit:
+            self.vprint(1, '\nSystemExit: taking down Manager')
+            self.stop()
+            self.takedown()
 
     def stop(self):
         """Stop counting time"""
@@ -179,13 +204,14 @@ class Manager_AQ(object):
         pass
 
     def handle_air_counts(self, this_start, this_end):
-
-        summation = sum(buffer[0:30])
-        checkbyte = (buffer[30]<<8)+buffer[31]
-        current_time = int(time.time())
+        """
+        Takes air quality data for a given interval and sends
+        a list of data to the data handler
+        """
         aq_data_set = []
-        while current_time < this_end:
-            text = self.port.read(32)
+        average_data = []
+        while time.time() < this_end:
+            text = self.aq_port.read(32)
             buffer = [ord(c) for c in text]
             if buffer[0] == 66:
                 summation = sum(buffer[0:30])
@@ -199,8 +225,17 @@ class Manager_AQ(object):
                     for n in range(1,7):
                         current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                     aq_data_set.append(current_second_data)
+        for c in range(len(self.variables)):
+			c_data = []
+			for i in range(len(aq_data_set)):
+				c_data.append(aq_data_set[i][c+1])
+            c_data_int = list(map(int, c_data))
+            c_sum = sum(c_data_int)
+			avg_c = c_sum/len(c_data_int)
+			average_data.append(avg_c)
+
         self.data_handler.main(
-            self.datalog, this_start, this_end)
+            self.datalog, average_data, this_start, this_end)
     def takedown(self):
         """
         Sends data to the backlog and shuts
