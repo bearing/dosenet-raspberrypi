@@ -124,12 +124,12 @@ else:
     exit()
 
 try:
-    for i in range(len(sensor_name))
+    for i in range(len(sensor_name)):
         OLED = OLED_Display()
         OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
 
     while True:
-        for i in range(len(sensor_name))
+        for i in range(len(sensor_name)):
             OLED.CheckIf_Repeat(OLED.Display_Data(log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
             time.sleep(3.5)
 
