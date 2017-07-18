@@ -152,9 +152,6 @@ class weather_DAQ(object):
 
     
         def ok(btn):
-            global n_merge
-            global results
-            global times
             import Tkinter
             top = Tkinter.Tk()
             n_merge=int(app.getEntry("n"))
@@ -163,9 +160,7 @@ class weather_DAQ(object):
 
                     
             def temp():
-                global n_merge
-                global times
-                global results
+                times=[]
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -199,12 +194,9 @@ class weather_DAQ(object):
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
-                times=[]
             
             def press():
-                global n_merge
-                global times
-                global results
+                times=[]
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -238,12 +230,9 @@ class weather_DAQ(object):
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
-                times=[]
         
-            def humid():
-                global n_merge
-                global times
-                global results                
+            def humid():    
+                times=[]
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -278,7 +267,6 @@ class weather_DAQ(object):
                 fig.autofmt_xdate()
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
-                times=[]
 
             tempButton = Tkinter.Button(top, height=2, width=20, text="Temperature PLot", command=temp)
             pressButton =Tkinter.Button(top, height=2, width=20, text="Pressure Plot", command=press)
