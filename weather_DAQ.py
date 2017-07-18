@@ -201,7 +201,7 @@ class weather_DAQ(object):
                 
                     row_counter+=1
                
-                ndata = int(len(degrees_list))
+                ndata = int(len(pressure_list))
                 nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
@@ -237,7 +237,7 @@ class weather_DAQ(object):
                 
                     row_counter+=1
                     
-                ndata = int(len(degrees_list))
+                ndata = int(len(humid_list))
                 nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
