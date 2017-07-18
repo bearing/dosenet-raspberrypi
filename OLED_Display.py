@@ -121,6 +121,7 @@ elif CSI == True:
     sensor_name.append("CsI Sensor")
 else:
     parser.print_help()
+    print("test")
     exit()
 
 try:
