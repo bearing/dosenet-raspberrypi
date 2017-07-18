@@ -106,8 +106,7 @@ AT = inclusion.Atmos
 uv = inclusion.UV
 SI = inclusion.Si
 CSI = inclusion.CsI
-print("stuff")
-print AQ
+
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
 elif CO == True:
@@ -122,9 +121,8 @@ elif CSI == True:
     sensor_name.append("CsI Sensor")
 else:
     parser.print_help()
-    print("test")
     exit()
-print("stuff")
+
 try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
