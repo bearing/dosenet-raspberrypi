@@ -122,24 +122,24 @@ class weather_DAQ(object):
         fig.show()
         plt.pause(0.0005)
 
+class plotdata(object):
+    def __init__(self):
+        self.times=[]
+        self.times2=[]
+        self.times3=[]
+        self.degrees_list=[]
+        self.pressure_list=[]
+        self.humidity_list=[]
+        self.temp_ave=[]
+        self.temp_unc = []
+        self.pressure_ave=[]
+        self.pressure_unc=[]
+        self.humidity_ave=[]
+        self.humidity_unc=[]
+        self.merge_times = []
+        self.merge_times2 = []
+        self.merge_times3 = []
     def plotdata(self): 
-        global times
-        times=[]
-        times2=[]
-        times3=[]
-        degrees_list=[]
-        pressure_list=[]
-        humidity_list=[]
-        temp_ave=[]
-        temp_unc = []
-        pressure_ave=[]
-        pressure_unc=[]
-        humidity_ave=[]
-        humidity_unc=[]
-        merge_times = []
-        merge_times2 = []
-        merge_times3 = []
-        
         app=gui("Weather Plot","800x400")   
         app.addLabel("1","Please choose a following .csv file")
         file_name=[]
@@ -167,30 +167,30 @@ class weather_DAQ(object):
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
-                        times.append(r[0])
-                        degrees_list.append(float(r[1]))                
+                        self.times.append(dateutil.parser.parse(r[0]))
+                        self.degrees_list.append(float(r[1]))                
                     row_counter+=1
              
-                ndata = int(len(degrees_list))
+                ndata = int(len(self.degrees_list))
                 nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
-                    itemp = degrees_list[i*n_merge:(i+1)*n_merge]
+                    itemp = self.degrees_list[i*n_merge:(i+1)*n_merge]
                     itemp_array = np.asarray(itemp)
                     temp_mean = np.mean(itemp_array)
                     temp_sigma = np.sqrt(np.var(itemp_array))
-                    temp_ave.append(temp_mean)
-                    temp_unc.append(temp_sigma)
+                    self.temp_ave.append(temp_mean)
+                    self.temp_unc.append(temp_sigma)
             
                 for i in range(nsum_data):
-                    itimes = times[i*n_merge:(i+1)*n_merge]
+                    itimes = self.times[i*n_merge:(i+1)*n_merge]
                     itime = itimes[int(len(itimes)/2)]
-                    merge_times.append(itime)
+                    self.merge_times.append(itime)
 
                 fig=plt.figure()
                 ax=fig.add_subplot(111)   
-                plt.plot(merge_times, temp_ave, "b.")
-                plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
+                plt.plot(self.merge_times, self.temp_ave, "b.")
+                plt.errorbar(self.merge_times, self.temp_ave, yerr = self.temp_unc)
                 plt.title("Temperature")
                 plt.xlabel("Time(s)")
                 plt.ylabel("Temperature(C)")
@@ -204,30 +204,30 @@ class weather_DAQ(object):
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times2.append(r[0])
-                        pressure_list.append(float(r[2]))              
+                        self.times2.append(dateutil.parser.parse(r[0]))
+                        self.pressure_list.append(float(r[2]))              
                     row_counter+=1
                
-                ndata2 = int(len(pressure_list))
+                ndata2 = int(len(self.pressure_list))
                 nsum_data2 = int(ndata2/n_merge)
                 
                 for i in range(nsum_data2):
-                    ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
+                    ipressure = self.pressure_list[i*n_merge:(i+1)*n_merge]   
                     ipressure_array = np.asarray(ipressure)
                     pressure_mean = np.mean(ipressure_array)
                     pressure_sigma = np.sqrt(np.var(ipressure_array))
-                    pressure_ave.append(pressure_mean)
-                    pressure_unc.append(pressure_sigma)
+                    self.pressure_ave.append(pressure_mean)
+                    self.pressure_unc.append(pressure_sigma)
                     
                 for i in range(nsum_data2):
-                    itimes2 = times2[i*n_merge:(i+1)*n_merge]
+                    itimes2 = self.times2[i*n_merge:(i+1)*n_merge]
                     itime2 = itimes2[int(len(itimes2)/2)]
-                    merge_times2.append(itime2)
+                    self.merge_times2.append(itime2)
 
                 fig=plt.figure()
                 ax=fig.add_subplot(111)
-                plt.plot(merge_times2, pressure_ave,"g." )
-                plt.errorbar(merge_times2, pressure_ave, yerr = pressure_unc)
+                plt.plot(self.merge_times2, self.pressure_ave,"g." )
+                plt.errorbar(self.merge_times2, self.pressure_ave, yerr = self.pressure_unc)
                 plt.title("Pressure")
                 plt.xlabel("Time(s)")
                 plt.ylabel("Pressure(hPa)")
@@ -239,31 +239,31 @@ class weather_DAQ(object):
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times3.append(r[0])
-                        humidity_list.append(float(r[3]))
+                        self.times3.append(dateutil.parser.parse(r[0]))
+                        self.humidity_list.append(float(r[3]))
                 
                     row_counter+=1
                     
-                ndata3 = int(len(humidity_list))
+                ndata3 = int(len(self.humidity_list))
                 nsum_data3 = int(ndata3/n_merge)
                 
                 for i in range(nsum_data3):
-                    ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
+                    ihumid = self.humidity_list[i*n_merge:(i+1)*n_merge]
                     ihumid_array = np.asarray(ihumid)
                     humid_mean = np.mean(ihumid_array)
                     humid_sigma = np.sqrt(np.var(ihumid_array))
-                    humidity_ave.append(humid_mean)
-                    humidity_unc.append(humid_sigma)
+                    self.humidity_ave.append(humid_mean)
+                    self.humidity_unc.append(humid_sigma)
                     
                 for i in range(nsum_data3):
-                    itimes3 = times3[i*n_merge:(i+1)*n_merge]
+                    itimes3 = self.times3[i*n_merge:(i+1)*n_merge]
                     itime3 = itimes3[int(len(itimes3)/2)]
-                    merge_times3.append(itime3)
+                    self.merge_times3.append(itime3)
                 
                 fig=plt.figure()
                 ax=fig.add_subplot(111)
-                plt.plot(merge_times3, humidity_ave,"r." )
-                plt.errorbar(merge_times3, humidity_ave, yerr = humidity_unc)
+                plt.plot(self.merge_times3, self.humidity_ave,"r." )
+                plt.errorbar(self.merge_times3, self.humidity_ave, yerr = self.humidity_unc)
                 plt.title("Humidity")
                 plt.xlabel("Time(s)")
                 plt.ylabel("Humidity(%)")

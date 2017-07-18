@@ -2,10 +2,13 @@
 
 from appJar import gui
 import weather_DAQ
+import plot_data
 
 app = gui("Adafruit Weather Sensor", "800x400")
 
 wdaq = weather_DAQ.weather_DAQ()
+pd = plot_data.plot_data()
+
 global job1
 global jobpress
 global jobhumid
@@ -50,6 +53,7 @@ def weather_test(btn):
             wdaq.close(1)
         wdaq.press()
         jobpress=top.after(1000,press)
+        
     def temp():
         global jobpress
         global jobhumid
@@ -64,6 +68,7 @@ def weather_test(btn):
             wdaq.close(3)
         wdaq.temp()
         jobtemp=top.after(1000,temp)
+        
     def humid():
         global jobpress
         global jobhumid
@@ -103,7 +108,7 @@ def weather_test(btn):
 
 def weather_plot(btn):
 
-    wdaq.plotdata()    
+    pd.plotdata()    
 
 app.addButton("Record Weather Data", weather_test)
 app.setButtonWidth("Record Weather Data", "30")
