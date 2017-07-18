@@ -5,8 +5,19 @@ from dateutil import parser
 import argparse
 
 class OLED_Display:
-    self.returned_times = dict(("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0))
-    self.log_files = dict(("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log"))
+    self.returned_times = dict("Air Quality Sensor", 0)
+    self.returned_times = dict("CO2 Sensor", 0)
+    self.returned_times = dict("Atmosphere Sensor", 0)
+    self.returned_times = dict("U.V. Sensor", 0)
+    self.returned_times = dict("Si Radiation Sensor", 0)
+    self.returned_times = dict("CsI Radiation Sensor", 0)
+    self.log_files = dict("Air Quality Sensor", "air_quality_test_results.log")
+    self.log_files = dict("CO2 Sensor", "CO2_test_results.log")
+    self.log_files = dict("Atmosphere Sensor", "atmosphere_test_results.log")
+    self.log_files = dict("U.V. Sensor", "UV_test_results.log")
+    self.log_files = dict("Si Radiation Sensor", "si_rad_test_results.log")
+    self.log_files = dict("CsI Radiation Sensor", "csi_rad_test_results.log")
+    
     #Opens General Result Files
     def Check_Any(a, fname, sensor):
         begin_time = int(time.time())
