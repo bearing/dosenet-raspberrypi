@@ -117,7 +117,7 @@ elif uv == True:
     sensor_name.append("U.V. Sensor")
 elif SI == True:
     sensor_name.append("Si Sensor")
-elif CSI = True:
+elif CSI == True:
     sensor_name.append("CsI Sensor")
 else:
     parser.print_help()
