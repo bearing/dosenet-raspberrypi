@@ -11,6 +11,9 @@ def weather_test(btn):
     wdaq.create_file()
     import Tkinter
     top = Tkinter.Tk()
+    global jobpress
+    global jobtemp
+    global jobhumid
     '''
     varWeather = Tkinter.IntVar()
     varCO2 = Tkinter.IntVar()
