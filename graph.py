@@ -61,7 +61,7 @@ while len(times)< combine_number or combine_number<1:
         combine_number = input("The number provided was too large or not a natural number. There are "+str(len(times))+" results. Choose a natural number between 1 and "+str(len(times))+" that will determine the amount of results added together before being graphed. Number: ")
 
 #convert str into int
-for i in range(len(P3)+1):
+for i in range(len(P3)):
     P3[i] = int(P3[i])
 
 for i in range(len(P5)):
