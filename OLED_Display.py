@@ -27,7 +27,6 @@ class OLED_Display:
                 ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Data")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
@@ -77,7 +76,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
             time.sleep(3.5)
-        return metadata[0][0]
+        return lastline[0][0]
 
     def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
