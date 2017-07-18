@@ -27,7 +27,7 @@ class OLED_Display:
                 ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Could Not Recieve Data")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Data")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
@@ -46,7 +46,7 @@ class OLED_Display:
                 ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Could Not Recieve Data")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Data")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
@@ -88,7 +88,7 @@ class OLED_Display:
             ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Could Not Recieve Data")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
 
         else:
             self.returned_times[sensor] = returned_time
