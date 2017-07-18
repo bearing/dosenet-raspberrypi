@@ -122,7 +122,7 @@ elif CSI == True:
 else:
     parser.print_help()
     exit()
-
+print sensor_name
 try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
