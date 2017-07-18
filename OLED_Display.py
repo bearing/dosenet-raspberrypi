@@ -101,12 +101,12 @@ parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action 
 parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_false")
 parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_false")
 
-AQ = inclusion.AQual
-CO = inclusion.CO2
-AT = inclusion.Atmos
-uv = inclusion.UV
-SI = inclusion.Si
-CSI = inclusion.CsI
+AQ = inclusion.-AQual
+CO = inclusion.-CO2
+AT = inclusion.-Atmos
+uv = inclusion.-UV
+SI = inclusion.-Si
+CSI = inclusion.-CsI
 
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
