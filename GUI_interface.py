@@ -29,34 +29,33 @@ def weather_test(btn):
         top.after_cancel(job1)
     def press():
         global jobpress
-        global jobtemp
-        global jobhumid
-        if jobtemp is not None:
-            top.after_cancel(jobtemp)
-        if jobhumid is not None:
-            top.after_cancel(jobhumid)
+        cancel()
         wdaq.press()
         jobpress=top.after(1000,press)
     def temp():
         global jobtemp
-        global jobpress
-        global jobhumid
-        if jobpress is not None:
-            top.after_cancel(jobtemp)
-        if jobhumid is not None:
-            top.after_cancel(jobhumid)
+        cancel()
         wdaq.temp()
         jobtemp=top.after(1000,temp)
     def humid():
         global jobhumid
-        global jobpress
-        global jobtemp
-        if jobpress is not None:
-            top.after_cancel(jobpress)
-        if jobtemp is not None:
-            top.after_cancel(jobtemp)
+        cancel()
         wdaq.humid()
         jobhumid=top.after(1000,humid)
+        
+    def cancel():
+        global jobhumid
+        global jobpress
+        global jobtemp
+        if jobhumid is not None:
+            top.after_cancel(jobhumid)
+            jobhumid = None
+        if jobpress is not None:
+            top.after_cancel(jobpress)
+            jobpress = None
+        if jobtemp is not None:
+            top.after_cancel(jobtemp)
+            jobtemp = None
     '''     
     WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
     CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)
