@@ -129,13 +129,13 @@ print(len(sensor_name)+1)
 print("testb")
 for i in range(len(sensor_name)+1):
     OLED = OLED_Display()
-    OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
-    print log_files[sensor_name[i]]
+    OLED.Check_Any(self.log_files[sensor_name[i]], sensor_name[i])
+    print self.log_files[sensor_name[i]]
 print("testa")
-while 1 == 1:
+while True:
     print "test"
     for i in range(len(sensor_name)+1):
-        OLED.CheckIf_Repeat(OLED.Display_Data(log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
+        OLED.CheckIf_Repeat(OLED.Display_Data(self.log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
         time.sleep(3.5)
 '''
 except:
