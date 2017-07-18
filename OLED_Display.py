@@ -6,9 +6,9 @@ import argparse
 
 class OLED_Display:
     def _init_(self):
-        #pass
-        returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
-        log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
+        pass
+    returned_times = dict([("Air Quality Sensor", 0), ("CO2 Sensor", 0), ("Atmosphere Sensor", 0), ("U.V. Sensor", 0), ("Si Radiation Sensor", 0), ("CsI Radiation Sensor", 0)])
+    log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
 
     #Opens General Result Files
     def Check_Any(self, fname, sensor):
@@ -76,7 +76,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor) # x: until 100 and then starts again from y-axis; y: until 7
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
-        return time.mktime(datetime.timetuple(metadata[0][0]))
+        return time.mktime(time.timetuple(metadata[0][0]))
 
     def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
