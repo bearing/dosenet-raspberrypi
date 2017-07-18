@@ -41,7 +41,7 @@ while constant_count <= counter:
             lastline[0][i] = lastline[0][i].strip("\n")
         to_be_displayed1 = str("Time       "+metadata[0][i])
         to_be_displayed2 = str(parser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
-        if time_store == parser.parse(lastline[0][0]).strftime("%H:%M:%S") and metadata[0][i] == "0.3 um":
+        if time_store == parser.parse(lastline[0][0]).strftime("%H:%M:%S") and metadata[0][i] == metadata[0][1]:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
         print(to_be_displayed1)
