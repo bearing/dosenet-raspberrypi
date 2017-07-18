@@ -130,7 +130,7 @@ try:
         OLED.Check_Any(log_files[sensor_name[i]], sensor_name[i])
         print sensor_name
 
-    while True:
+    while 1 == 1:
         print "test"
         for i in range(len(sensor_name)+1):
             OLED.CheckIf_Repeat(OLED.Display_Data(log_files[sensor_name[i]], sensor_name[i]), sensor_name[i])
