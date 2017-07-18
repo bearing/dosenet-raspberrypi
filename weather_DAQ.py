@@ -134,6 +134,7 @@ class weather_DAQ(object):
         humidity_ave=[]
         humidity_unc=[]
         merge_times = []
+        global n_merge
         
         app=gui("Weather Plot","800x400")   
         app.addLabel("1","Please choose a following .csv file")
@@ -157,6 +158,7 @@ class weather_DAQ(object):
             import Tkinter
             top = Tkinter.Tk()
             def temp(): 
+                global n_merge
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -166,7 +168,7 @@ class weather_DAQ(object):
                     row_counter+=1
              
                 ndata = int(len(degrees_list))
-                nsum_data = ndata/n_merge
+                nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
                     itemp = degrees_list[i*n_merge:(i+1)*n_merge]
@@ -194,6 +196,7 @@ class weather_DAQ(object):
             
             def press():
                 row_counter=0
+                global n_merge
                 for r in results:
                     if row_counter>0:
                         times.append(dateutil.parser.parse(r[0]))
@@ -202,7 +205,7 @@ class weather_DAQ(object):
                     row_counter+=1
                
                 ndata = int(len(degrees_list))
-                nsum_data = ndata/n_merge
+                nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
                     ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
@@ -230,6 +233,7 @@ class weather_DAQ(object):
         
             def humid():
                 row_counter=0
+                global n_merge
                 for r in results:
                     if row_counter>0:
                         times.append(dateutil.parser.parse(r[0]))
@@ -238,7 +242,7 @@ class weather_DAQ(object):
                     row_counter+=1
                     
                 ndata = int(len(degrees_list))
-                nsum_data = ndata/n_merge
+                nsum_data = int(ndata/n_merge)
                 
                 for i in range(nsum_data):
                     ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
