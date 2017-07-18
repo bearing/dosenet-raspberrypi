@@ -148,6 +148,6 @@ except:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-    time.time(3)
+    time.sleep(3)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
