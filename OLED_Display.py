@@ -92,7 +92,7 @@ class OLED_Display:
 
 sensor_name = []
 parser = argparse.ArgumentParser()
-inclusion = parser.parse_args
+inclusion = parser.parse_args()
 
 parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_false")
 parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_false")
