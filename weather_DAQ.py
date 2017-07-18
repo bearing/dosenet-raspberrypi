@@ -32,6 +32,8 @@ class weather_DAQ(object):
         self.time_list=[]
         self.merge_test=False
         
+    def close(self,plot_id):
+        plt.close(plot_id)
         
     def create_file(self):
         global results
