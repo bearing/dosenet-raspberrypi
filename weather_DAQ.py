@@ -156,7 +156,7 @@ class weather_DAQ(object):
         def ok(btn):
             import Tkinter
             top = Tkinter.Tk()
-            def temp(btn): 
+            def temp(): 
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -192,7 +192,7 @@ class weather_DAQ(object):
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
             
-            def press(btn):
+            def press():
                 row_counter=0
                 for r in results:
                     if row_counter>0:
@@ -228,7 +228,7 @@ class weather_DAQ(object):
                 ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
                 plt.show()
         
-            def humid(btn):
+            def humid():
                 row_counter=0
                 for r in results:
                     if row_counter>0:
