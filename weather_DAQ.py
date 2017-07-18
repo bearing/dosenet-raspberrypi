@@ -125,6 +125,8 @@ class weather_DAQ(object):
     def plotdata(self): 
         global times
         times=[]
+        times2=[]
+        times3=[]
         degrees_list=[]
         pressure_list=[]
         humidity_list=[]
@@ -160,7 +162,6 @@ class weather_DAQ(object):
 
                     
             def temp():
-                times=[]
                 row_counter=0              
                 for r in results:
                     if row_counter>0:
@@ -196,11 +197,10 @@ class weather_DAQ(object):
                 plt.show()
             
             def press():
-                times=[]
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
+                        times2.append(dateutil.parser.parse(r[0]))
                         pressure_list.append(float(r[2]))              
                     row_counter+=1
                
@@ -216,7 +216,7 @@ class weather_DAQ(object):
                     pressure_unc.append(pressure_sigma)
                     
                 for i in range(nsum_data):
-                    itimes = times[i*n_merge:(i+1)*n_merge]
+                    itimes = times2[i*n_merge:(i+1)*n_merge]
                     itime = itimes[int(len(itimes)/2)]
                     merge_times.append(itime)
 
@@ -232,11 +232,10 @@ class weather_DAQ(object):
                 plt.show()
         
             def humid():    
-                times=[]
                 row_counter=0
                 for r in results:
                     if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
+                        times3.append(dateutil.parser.parse(r[0]))
                         humidity_list.append(float(r[3]))
                 
                     row_counter+=1
@@ -253,7 +252,7 @@ class weather_DAQ(object):
                     humidity_unc.append(humid_sigma)
                     
                 for i in range(nsum_data):
-                    itimes = times[i*n_merge:(i+1)*n_merge]
+                    itimes = times3[i*n_merge:(i+1)*n_merge]
                     itime = itimes[int(len(itimes)/2)]
                     merge_times.append(itime)
                 
