@@ -44,10 +44,10 @@ class weather_DAQ(object):
     def start(self):
         global results
         date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
-        pascals = sensor.read_pressure()
+        degrees = self.sensor.read_temperature()
+        pascals = self.sensor.read_pressure()
         hectopascals = pascals / 100
-        humidity = sensor.read_humidity()
+        humidity = self.sensor.read_humidity()
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
