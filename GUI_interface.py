@@ -29,6 +29,8 @@ def weather_test(btn):
         top.after_cancel(job1)
     def press():
         global jobpress
+        global jobtemp
+        global jobhumid
         if jobtemp == None:
             top.after_cancel(jobtemp)
         if jobhumid == None:
@@ -37,6 +39,8 @@ def weather_test(btn):
         jobpress=top.after(1000,press)
     def temp():
         global jobtemp
+        global jobpress
+        global jobhumid
         if jobpress == None:
             top.after_cancel(jobtemp)
         if jobhumid == None:
@@ -45,6 +49,8 @@ def weather_test(btn):
         jobtemp=top.after(1000,temp)
     def humid():
         global jobhumid
+        global jobpress
+        global jobtemp
         if jobpress == None:
             top.after_cancel(jobpress)
         if jobtemp == None:
