@@ -228,12 +228,11 @@ class Manager_AQ(object):
                     aq_data_set.append(current_second_data)
         for c in range(len(self.variables)):
 			c_data = []
-			for i in range(len(aq_data_set)):
-				c_data.append(aq_data_set[i][c+1])
+            for i in range(len(aq_data_set)):
+                c_data.append(aq_data_set[i][c+1])
             c_data_int = list(map(int, c_data))
-            c_sum = sum(c_data_int)
-			avg_c = c_sum/len(c_data_int)
-			average_data.append(avg_c)
+            avg_c = sum(c_data_int)/len(c_data_int)
+            average_data.append(avg_c)
 
         self.data_handler.main(
             self.datalog, average_data, this_start, this_end)
