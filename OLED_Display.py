@@ -64,7 +64,7 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
 
-        self.CheckIf_Repeatlastline[0][0]
+        self.CheckIf_Repeat(lastline[0][0], sensor)
 
         for i in range(1,len(lastline[0])):
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
