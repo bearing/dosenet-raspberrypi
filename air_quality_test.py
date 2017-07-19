@@ -19,12 +19,6 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "air_quality_test_results_"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
-'''
-#Open CSV file to display results
-os.remove("air_quality_test_results.csv")
-pen_display_results= csv.writer(open("air_quality_test_results.csv", "ab+"), delimiter = ",")
-'''
-
 # Add metadata to CSV file
 metadata = []
 metadata.append("Date and Time")
@@ -38,7 +32,6 @@ metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
-#pen_display_results.writerow(metadata[:])
 
 print(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+","+metadata[4]+","+metadata[5]+","+metadata[6]+","+metadata[7]+","+metadata[8]+","+metadata[9])
 sys.stdout.flush()
@@ -92,7 +85,6 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
-            #pen_display_results.writerow(results[0:10])
 
             now_time = int(time.time())
 
@@ -105,7 +97,6 @@ while now_time<counter_time+run_time:
             results.append(date_time)
             results.append('Check Sum Failed')
             pen_results.writerow(results[0:2])
-            #pen_display_results.writerow(results[0:2])
 
             now_time = int(time.time())
 
@@ -118,4 +109,3 @@ while now_time<counter_time+run_time:
         results.append(date_time)
         results.append('Check Sum Failed')
         pen_results.writerow(results[0:2])
-        #pen_display_results.writerow(results[0:2])
