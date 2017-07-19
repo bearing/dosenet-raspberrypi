@@ -6,6 +6,7 @@ import argparse
 
 class OLED_Display:
     def _init_(self):
+        print("test")
         ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
