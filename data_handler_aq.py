@@ -1,6 +1,7 @@
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
+from globalvalues import ANSI_BLUE, ANSI_CYAN
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
 from collections import deque
 import socket
@@ -11,20 +12,25 @@ import errno
 import csv
 
 AQ_PM_DISPLAY_TEXT = (
-	'{red} {{variable}} = {reset}' +
+	'{cyan} {{variable}} = {reset}' +
 	'{green} {{avg_data}} {reset}' +
-    '{red} ug/m3 {reset}').format(
-    red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
+    '{cyan} ug/m3 {reset}').format(
+    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 AQ_P_DISPLAY_TEXT = (
-	'{red} # of Particles over {{variable}} = {reset}' +
+	'{cyan} # of Particles over {{variable}} = {reset}' +
 	'{green} {{avg_data}} {reset}').format(
-    red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
+    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 TIME_DISPLAY_TEXT = (
-    '{red} This average data was gathered from: {reset}' +
+    '{red} This list of average data was gathered from: {reset}' +
     '{yellow}{{start_time}} to {{end_time}}{reset}').format(
     red=ANSI_RED, reset=ANSI_RESET, yellow=ANSI_YEL)
+
+BREAK_LINE = (
+    '\n{blue}-----------------------------------------------------------\n{reset}' +
+    '\n{blue}-----------------------------------------------------------\n{reset}').format(
+    blue=ANSI_BLUE, reset=ANSI_RESET)
 strf = '%H:%M:%S'
 
 class Data_Handler_AQ(object):
@@ -127,3 +133,5 @@ class Data_Handler_AQ(object):
                 1, AQ_P_DISPLAY_TEXT.format(
                     variable=self.variables[i],
                     avg_data=average_data[i]))
+        self.vprint(
+            1, BREAK_LINE)

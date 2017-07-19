@@ -64,6 +64,8 @@ ANSI_BOLD = '\033[1m'
 ANSI_RED = '\033[31m' + ANSI_BOLD
 ANSI_GR = '\033[32m' + ANSI_BOLD
 ANSI_YEL = '\033[33m' + ANSI_BOLD
+ANSI_BLUE = '\033[34m' + ANSI_BOLD
+ANSI_CYAN = '\033[36m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
 GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
