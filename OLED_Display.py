@@ -116,6 +116,7 @@ else:
     exit()
 
 try:
+    print("testa")
     OLED = OLED_Display()
     for i in range(len(sensor_name)):
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
