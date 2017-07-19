@@ -1,87 +1,30 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 10 10:25:03 2017
-
-@author: Ludi Cao
-"""
-
 from appJar import gui
+app=gui()
 import os
-
-app = gui("Adafruit Weather Sensor", "800x400")
-import matplotlib.pyplot as plt
-import dateutil
-import numpy as np
-from matplotlib.dates import DateFormatter
-import time
-import datetime
 import csv
-from Adafruit_BME280 import *
-
-sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
-
-file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-filename = "weather_test_results_"+file_time+".csv"
-
-def weather_test(btn):
-    app=gui("Weather Test","800x400")
-    def press(button):
-        if button == "Start":
-            while True:
-                results=csv.writer(open(filename, "ab+"), delimiter = ",")
-                metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
-                results.writerow(metadata)
-                date_time = datetime.datetime.now()
-                degrees = sensor.read_temperature()
-                pascals = sensor.read_pressure()
-                hectopascals = pascals /100
-                humidity = sensor.read_humidity()
-
-                print ('Temp     = {0:0.3f} deg C'.format(degrees))
-                print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-                print ('Humidity = {0:0.2f} %'.format(humidity))
-    
-                data=[]
-                data.append(date_time)
-                data.append(degrees)
-                data.append(hectopascals)
-                data.append(humidity)
-    
-                results.writerow(data)
-    
-                time.sleep(1)
-        elif button == "Stop":
-            app.stop()
-            
-    
-    app.addButtons(["Start","Stop"],press)    
-    app.setButtonsWidth(["Start","Stop"],"20")
-    app.setButtonHeight(["Start","Stop"],"4")
-    app.setButtonFont("20",font="Helvetica")
-    app.go() 
-    
 def weather_plot(btn):
-    app=gui("Weather Plot","800x400")   
-    app.addLabel("1","Please choose a following .csv file")
+    import matplotlib.pyplot as plt
+    import dateutil
+    import numpy as np
+    from matplotlib.dates import DateFormatter
+
+    times=[]
+    degrees_list=[]
+    pressure_list=[]
+    humidity_list=[]
+
     file_name=[]
     for filename in os.listdir('.'):
         if filename.endswith(".csv"):
             file_name.append(os.path.join('.', filename))
     app.setFont(20)
     app.addOptionBox("Files",file_name)
-    app.setOptionBoxHeight("Files","4")
-    app.addLabel("2","Enter the number of data points to merge:")
-    app.setLabelFont("20","Heletica")
-    app.addNumericEntry("n")
-    app.setFocus("n")
-    app.setNumericEntryHeight("n","4")
     
     def ok(btn):
         user_file=app.getOptionBox("Files")
-        n_merge=int(app.getEntry("n"))
-        row_counter=0
+    
         results = csv.reader(open(user_file), delimiter=',')
-
+        row_counter=0
         for r in results:
             if row_counter>0:
                 times.append(dateutil.parser.parse(r[0]))
@@ -89,7 +32,7 @@ def weather_plot(btn):
                 pressure_list.append(float(r[2]))
                 humidity_list.append(float(r[3]))
         
-            row_counter+=1
+                row_counter+=1
     
         temp_ave=[]
         temp_unc = []
@@ -99,6 +42,7 @@ def weather_plot(btn):
         humidity_unc=[]
         merge_times = []
 
+        n_merge = 8
         ndata = len(degrees_list)
         nsum_data = int(ndata/n_merge)
 
@@ -154,6 +98,8 @@ def weather_plot(btn):
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 
+
+
         fig=plt.figure()
         ax=fig.add_subplot(111)
         plt.plot(merge_times, humidity_ave,"r." )
@@ -164,21 +110,8 @@ def weather_plot(btn):
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.show()
-    
     app.addButton("OK",ok)
-    app.setButtonWidth("OK","20")
-    app.setButtonHeight("OK","4")
-    app.setButtonFont("20","Helvetica")
     app.go()
-    
-    
 
-app.addButton("Record Weather Data", weather_test)
-app.setButtonWidth("Record Weather Data", "30")
-app.setButtonHeight("Record Weather Data","4")
-app.setButtonFont("20",font="Helvetica")
 app.addButton("Plot Weather Data",weather_plot)
-app.setButtonWidth("Plot Weather Data","30")
-app.setButtonHeight("Plot Weather Data","4")
-app.setButtonFont("20",font="Helvetica")
 app.go()

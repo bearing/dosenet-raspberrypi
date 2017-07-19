@@ -93,7 +93,7 @@ class weather_DAQ(object):
         print('Input time: {}'.format(data))
         timelist.append(data)
 
-\        if len(timelist)>=self.n_merge:
+        if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
             print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
@@ -158,6 +158,7 @@ class weather_DAQ(object):
             row_counter=0
             results = csv.reader(open(user_file), delimiter=',')
 
+
             for r in results:
                 if row_counter>0:
                     times.append(dateutil.parser.parse(r[0]))
@@ -198,7 +199,6 @@ class weather_DAQ(object):
                 itimes = times[i*n_merge:(i+1)*n_merge]
                 itime = itimes[int(len(itimes)/2)]
                 merge_times.append(itime)
-       
             fig=plt.figure()
             ax=fig.add_subplot(111)   
             plt.plot(merge_times, temp_ave, "b.")
@@ -218,7 +218,7 @@ class weather_DAQ(object):
             plt.ylabel("Pressure(hPa)")
             fig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-            
+
             fig=plt.figure()
             ax=fig.add_subplot(111)
             plt.plot(merge_times, humidity_ave,"r." )
@@ -235,17 +235,3 @@ class weather_DAQ(object):
         app.setButtonHeight("OK","4")
         app.setButtonFont("20","Helvetica")
         app.go()
-        
-
-       
-            
-     
-                
-            
-        
-
-
-    
-
-
-        
