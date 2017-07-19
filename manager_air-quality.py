@@ -227,7 +227,7 @@ class Manager_AQ(object):
                         current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                     aq_data_set.append(current_second_data)
         for c in range(len(self.variables)):
-			c_data = []
+            c_data = []
             for i in range(len(aq_data_set)):
                 c_data.append(aq_data_set[i][c+1])
             c_data_int = list(map(int, c_data))
