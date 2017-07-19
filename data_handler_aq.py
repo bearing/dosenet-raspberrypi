@@ -95,22 +95,60 @@ class Data_Handler_AQ(object):
         """
         self.vprint(1, "Missing public key, not sending to server")
 
+    def send_to_memory(self, average_data):
+        """
+        Network is not up
+        """
+        self.send_to_queue(average_data)
+        self.vprint(1, "Network down, saving to queue in memory")
+
     def regular_send(self, this_end, average_data):
         """
         Normal send
         """
-        self.manager.sender.send_data_new_AQ(this_end, P03, P05,
-            P10, P25, P50, P100, PM01, PM25, PM10)
-        #print(self.queue)
+        self.manager.sender.send_data_new_AQ(this_end, average_data)
         if self.queue:
             self.vprint(1, "Flushing memory queue to server")
             while self.queue:
                 #print(len(self.queue))
                 trash = self.queue.popleft()
                 self.manager.sender.send_data_new_AQ(
-                    trash[0], trash[1], trash[2], trash[3],
-                    trash[4], trash[5], trash[6], trash[7],
-                    trash[8], trash[9])
+                    trash[0], trash[1])
+
+    def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
+        if self.queue:
+            self.vprint(1, "Flushing memory queue to backlog file")
+            temp = []
+            while self.queue:
+                temp.append(self.queue.popleft())
+            with open(path, "ab") as f: # might only work for python 3?
+                writer = csv.writer(f)
+                writer.writerows(temp)
+
+    def send_to_queue(self, average_data):
+        """
+        Adds the time and average_data to the queue object.
+        """
+        time_string = time.time()
+        self.queue.append([time_string, average_data])
+
+    def backlog_to_queue(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
+        """
+        Sends data in backlog to queue and deletes the backlog
+        """
+        if os.path.isfile(path):
+            self.vprint(2, "Flushing backlog file to memory queue")
+
+            with open(path, 'rb') as f:
+                reader = csv.reader(f)
+                lst = list(reader)
+            for i in lst:
+                timestring = i[0]
+                average_data = i[1]
+                timestring = ast.literal_eval(timestring)
+                average_data = ast.literal_eval(average_data)
+                self.queue.append([timestring, average_data])
+            os.remove(path)
 
     def main(self, datalog, average_data, this_start, this_end):
         """
@@ -135,3 +173,49 @@ class Data_Handler_AQ(object):
                     avg_data=average_data[i]))
         self.vprint(
             1, BREAK_LINE)
+
+        self.manager.data_log(datalog, average_data)
+
+        if self.manager.test:
+            self.send_to_memory(average_data)
+        elif not self.manager.config:
+            self.no_config_send(average_data)
+        elif not self.manager.publickey:
+            self.no_publickey_send(average_data)
+        else:
+            try:
+                self.regular_send(this_end, average_data)
+            except (socket.gaierror, socket.error, socket.timeout) as e:
+                if e == socket.gaierror:
+                    if e[0] == socket.EAI_AGAIN:
+                        # TCP and UDP
+                        # network is down, but NetworkStatus didn't notice yet
+                        # (resolving DNS like dosenet.dhcp.lbl.gov)
+                        self.vprint(
+                            1,
+                            'Failed to send packet! Address resolution error')
+                    else:
+                        self.vprint(
+                            1, 'Failed to send packet! Address error: ' +
+                            '{}: {}'.format(*e))
+                elif e == socket.error:
+                    if e[0] == errno.ECONNREFUSED:
+                        # TCP
+                        # server is not accepting connections
+                        self.vprint(
+                            1, 'Failed to send packet! Connection refused')
+                    elif e[0] == errno.ENETUNREACH:
+                        # TCP and UDP
+                        # network is down, but NetworkStatus didn't notice yet
+                        # (IP like 131.243.51.241)
+                        self.vprint(
+                            1, 'Failed to send packet! Network is unreachable')
+                    else:
+                        # consider handling errno.ECONNABORTED errno.ECONNRESET
+                        self.vprint(
+                            1, 'Failed to send packet! Socket error: ' +
+                            '{}: {}'.format(*e))
+                elif e == socket.timeout:
+                    # TCP
+                    self.vprint(1, 'Failed to send packet! Socket timeout')
+                self.send_to_memory(average_data)

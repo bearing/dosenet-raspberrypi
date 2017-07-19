@@ -117,8 +117,10 @@ class Manager_AQ(object):
             self.logfile = None
 
         if verbosity is None:
-            verbosity = 1
-
+            if test:
+                verbosity = 2
+            else:
+                verbosity = 1
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
 
@@ -126,6 +128,12 @@ class Manager_AQ(object):
             self.vprint(1, '')
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = False
+
+        if self.test:
+            if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for TEST MODE")
+                interval = DEFAULT_INTERVAL_TEST
 
         if interval is None:
             self.vprint(
