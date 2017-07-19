@@ -10,7 +10,8 @@ from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
-from auxiliaries import Config, PublicKey, set_verbosity
+from auxiliaries import Config, PublicKey
+from auxiliaries import datetime_from_epoch, set_verbosity
 from sender import ServerSender
 from data_handler_aq import Data_Handler_AQ
 
