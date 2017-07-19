@@ -65,7 +65,7 @@ class Manager_AQ(object):
         self.data_handler = Data_Handler_AQ(
             manager=self,
             verbosity=self.v,
-            logfile=self.logfile
+            logfile=self.logfile,
             variables=self.variables)
         self.sender = ServerSender(
             manager=self,
