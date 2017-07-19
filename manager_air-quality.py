@@ -77,7 +77,7 @@ class Manager_AQ(object):
 
         self.test = test
 
-        self.data_handler.backlog_to_queue()
+        #self.data_handler.backlog_to_queue()
 
     def a_flag(self):
         """
