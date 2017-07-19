@@ -271,12 +271,10 @@ class Real_Time_Spectra(object):
                                              interpolation="nearest",
                                              aspect='auto',
                                              extent=[1, 4096, 0,
-                                                     np.shape(self.data)[0]
-                                                     * self.interval])
+                                                     self.interval])
             # plt.colorbar()
 
             self.waterfall_drawn = False
-            print(np.shape(self.data)[0] * self.interval)
         if not self.waterfall_drawn:
             #self.waterfall_plot = plt.imshow(self.data,
             #                                 interpolation="nearest",
