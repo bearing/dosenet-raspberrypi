@@ -149,11 +149,11 @@ class air_quality_DAQ(object):
 				queue.popleft()
 
 
-		def add_data(self, queue, PM01_list, data):
-			PM01_list.append(data)
-			if len(PM01_list)>=self.n_merge:
-				queue.append(np.mean(np.asarray(PM01_list)))
-				PM01_list = []
+		def add_data(self, queue, datalist, data):
+			datalist.append(data)
+			if len(datalist)>=self.n_merge:
+				queue.append(np.mean(np.asarray(datalist)))
+				datalist = []
 			if len(queue)>self.maxdata:
 				queue.popleft()
 
