@@ -271,7 +271,8 @@ class Real_Time_Spectra(object):
                                          extent=[1, 4096, 0,
                                                  self.interval])
 
-        #plt.colorbar()
+        plt.remove()
+        plt.colorbar()
 
         plt.tight_layout()
         # plt.draw()
