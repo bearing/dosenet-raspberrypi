@@ -16,11 +16,9 @@ from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from collections import deque
 
-sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
-
 class weather_DAQ(object):
     def __init__(self):
-        self.sensor = sensor
+        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
         self.running=False
         self.time_queue=deque()
         self.temp_queue=deque()
@@ -34,6 +32,9 @@ class weather_DAQ(object):
         self.time_list=[]
         self.merge_test=False
         
+    def close(self,plot_id):
+        plt.close(plot_id)
+        
     def create_file(self):
         global results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
@@ -45,10 +46,10 @@ class weather_DAQ(object):
     def start(self):
         global results
         date_time = datetime.datetime.now()
-        degrees = sensor.read_temperature()
-        pascals = sensor.read_pressure()
+        degrees = self.sensor.read_temperature()
+        pascals = self.sensor.read_pressure()
         hectopascals = pascals / 100
-        humidity = sensor.read_humidity()
+        humidity = self.sensor.read_humidity()
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
@@ -74,15 +75,24 @@ class weather_DAQ(object):
             self.press_list=[]
             self.time_list=[]
             
-        
+            
+    def press(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
-            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
         
+    def temp(self):
+        if len(self.time_queue)>0:
+            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+                
+    def humid(self):
+        if len(self.time_queue)>0:
+            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+
+
     def add_time(self, queue, timelist, data):
         print('Input time: {}'.format(data))
         timelist.append(data)
+
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
@@ -114,7 +124,8 @@ class weather_DAQ(object):
         fig.show()
         plt.pause(0.0005)
 
-    def plotdata(self):  
+    def plotdata(self):
+        
         times=[]
         degrees_list=[]
         pressure_list=[]
@@ -139,142 +150,27 @@ class weather_DAQ(object):
         app.addLabel("2","Enter the number of data points to merge:")
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
-        app.setFocus("n")  
-        n_merge=int(app.getEntry("n"))
-        user_file=app.getOptionBox("Files")
-        results = csv.reader(open(user_file), delimiter=',')
-
+        app.setFocus("n")     
     
         def ok(btn):
-            global row_counter
+            user_file=app.getOptionBox("Files") 
+            n_merge=int(app.getEntry("n"))
             row_counter=0
-            def temp(btn):
-                global row_counter
+            results = csv.reader(open(user_file), delimiter=',')
 
-                for r in results:
-                    if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
-                        degrees_list.append(float(r[1]))
-                
-                    row_counter+=1
-             
-                global nsum_data
-                ndata = int(len(degrees_list))
-                nsum_data = int(ndata/n_merge)
-                
-                for i in range(nsum_data):
-                    itemp = degrees_list[i*n_merge:(i+1)*n_merge]
-                    itemp_array = np.asarray(itemp)
-                    temp_mean = np.mean(itemp_array)
-                    temp_sigma = np.sqrt(np.var(itemp_array))
-                    temp_ave.append(temp_mean)
-                    temp_unc.append(temp_sigma)
-            
-                for i in range(nsum_data):
-                    itimes = times[i*n_merge:(i+1)*n_merge]
-                    itime = itimes[int(len(itimes)/2)]
-                    merge_times.append(itime)
 
-                fig=plt.figure()
-                ax=fig.add_subplot(111)   
-                plt.plot(merge_times, temp_ave, "b.")
-                plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
-                plt.title("Temperature")
-                plt.xlabel("Time(s)")
-                plt.ylabel("Temperature(C)")
-                fig.autofmt_xdate()
-                ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-                plt.show()
-            
-            def press(btn):
-                global row_counter
-                global nsum_data
-                for r in results:
-                    if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
-                        pressure_list.append(float(r[2]))
-                
-                    row_counter+=1
-                
-                for i in range(nsum_data):
-                    ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
-                    ipressure_array = np.asarray(ipressure)
-                    pressure_mean = np.mean(ipressure_array)
-                    pressure_sigma = np.sqrt(np.var(ipressure_array))
-                    pressure_ave.append(pressure_mean)
-                    pressure_unc.append(pressure_sigma)
-
-                fig=plt.figure()
-                ax=fig.add_subplot(111)
-                plt.plot(merge_times, pressure_ave,"g." )
-                plt.errorbar(merge_times, pressure_ave, yerr = pressure_unc)
-                plt.title("Pressure")
-                plt.xlabel("Time(s)")
-                plt.ylabel("Pressure(hPa)")
-                fig.autofmt_xdate()
-                ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-                plt.show()
-        
-            def humid(btn):
-                global row_counter
-                global nsum_data
-                for r in results:
-                    if row_counter>0:
-                        times.append(dateutil.parser.parse(r[0]))
-                        humidity_list.append(float(r[3]))
-                
-                    row_counter+=1
-                
-                for i in range(nsum_data):
-                    ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
-                    ihumid_array = np.asarray(ihumid)
-                    humid_mean = np.mean(ihumid_array)
-                    humid_sigma = np.sqrt(np.var(ihumid_array))
-                    humidity_ave.append(humid_mean)
-                    humidity_unc.append(humid_sigma)
-                
-                fig=plt.figure()
-                ax=fig.add_subplot(111)
-                plt.plot(merge_times, humidity_ave,"r." )
-                plt.errorbar(merge_times, humidity_ave, yerr = humidity_unc)
-                plt.title("Humidity")
-                plt.xlabel("Time(s)")
-                plt.ylabel("Humidity(%)")
-                fig.autofmt_xdate()
-                ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-                plt.show()
-
-            app.addButton("Temperature List",temp)
-            app.addButton("Pressure List", press)
-            app.addButton("Humidity List", humid)
-            app.setButtonWidth("OK","20")
-            app.setButtonHeight("OK","4")
-            app.setButtonFont("20","Helvetica")
-            app.go() 
-            
-          
-        app.addButton("OK",ok)
-        app.setButtonWidth("OK","20")
-        app.setButtonHeight("OK","4")
-        app.setButtonFont("20","Helvetica")
-        app.go()
-
-        
-'''
-        def temp(btn):
-            global row_counter
-            global results
             for r in results:
                 if row_counter>0:
                     times.append(dateutil.parser.parse(r[0]))
                     degrees_list.append(float(r[1]))
-                
+                    pressure_list.append(float(r[2]))
+                    humidity_list.append(float(r[3]))
+        
                 row_counter+=1
-             
-            global nsum_data
+
             ndata = int(len(degrees_list))
             nsum_data = int(ndata/n_merge)
-                
+
             for i in range(nsum_data):
                 itemp = degrees_list[i*n_merge:(i+1)*n_merge]
                 itemp_array = np.asarray(itemp)
@@ -282,13 +178,27 @@ class weather_DAQ(object):
                 temp_sigma = np.sqrt(np.var(itemp_array))
                 temp_ave.append(temp_mean)
                 temp_unc.append(temp_sigma)
-            
-            global merge_times
+    
+            for i in range(nsum_data):
+                ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
+                ipressure_array = np.asarray(ipressure)
+                pressure_mean = np.mean(ipressure_array)
+                pressure_sigma = np.sqrt(np.var(ipressure_array))
+                pressure_ave.append(pressure_mean)
+                pressure_unc.append(pressure_sigma)
+    
+            for i in range(nsum_data):
+                ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
+                ihumid_array = np.asarray(ihumid)
+                humid_mean = np.mean(ihumid_array)
+                humid_sigma = np.sqrt(np.var(ihumid_array))
+                humidity_ave.append(humid_mean)
+                humidity_unc.append(humid_sigma)
+
             for i in range(nsum_data):
                 itimes = times[i*n_merge:(i+1)*n_merge]
                 itime = itimes[int(len(itimes)/2)]
                 merge_times.append(itime)
-
             fig=plt.figure()
             ax=fig.add_subplot(111)   
             plt.plot(merge_times, temp_ave, "b.")
@@ -298,24 +208,6 @@ class weather_DAQ(object):
             plt.ylabel("Temperature(C)")
             fig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-            
-        def press(btn):
-            global results
-            global row_counter
-            for r in results:
-                if row_counter>0:
-                    times.appned(dateutil.parser.parse(r[0]))
-                    pressure_list.append(float(r[2]))
-                
-                row_counter+=1
-                
-            for i in range(nsum_data):
-                ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
-                ipressure_array = np.asarray(ipressure)
-                pressure_mean = np.mean(ipressure_array)
-                pressure_sigma = np.sqrt(np.var(ipressure_array))
-                pressure_ave.append(pressure_mean)
-                pressure_unc.append(pressure_sigma)
 
             fig=plt.figure()
             ax=fig.add_subplot(111)
@@ -326,25 +218,7 @@ class weather_DAQ(object):
             plt.ylabel("Pressure(hPa)")
             fig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        
-        def humid(btn):
-            global results
-            global row_counter
-            for r in results:
-                if row_counter>0:
-                    times.appned(dateutil.parser.parse(r[0]))
-                    humidity_list.append(float(r[3]))
-                
-                row_counter+=1
-                
-            for i in range(nsum_data):
-                ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
-                ihumid_array = np.asarray(ihumid)
-                humid_mean = np.mean(ihumid_array)
-                humid_sigma = np.sqrt(np.var(ihumid_array))
-                humidity_ave.append(humid_mean)
-                humidity_unc.append(humid_sigma)
-                
+
             fig=plt.figure()
             ax=fig.add_subplot(111)
             plt.plot(merge_times, humidity_ave,"r." )
@@ -355,25 +229,9 @@ class weather_DAQ(object):
             fig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
             plt.show()
-        
-        app.addButton("Tenperature List",temp)
-        app.addButton("Pressure List", press)
-        app.addButton("Humid List", humid)
+    
+        app.addButton("OK",ok)
         app.setButtonWidth("OK","20")
         app.setButtonHeight("OK","4")
         app.setButtonFont("20","Helvetica")
-        app.go() 
-        
-'''
-                
-            
-     
-                
-            
-        
-
-
-    
-
-
-        
+        app.go()

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/bin/python
 
 import time
 import datetime
@@ -34,4 +34,3 @@ while True:
     results.writerow(data)
     
     time.sleep(1)
-    
