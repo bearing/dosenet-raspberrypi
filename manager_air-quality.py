@@ -271,7 +271,7 @@ class Manager_AQ(object):
         return mgr
 
 if __name__ == '__main__':
-    mgr = Manager_D3S.from_argparse()
+    mgr = Manager_AQ.from_argparse()
     try:
         mgr.run()
     except:
