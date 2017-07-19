@@ -271,7 +271,7 @@ class Real_Time_Spectra(object):
                                              interpolation='nearest',
                                              aspect='auto',
                                              extent=[1, 4096, 0,
-                                                     self.interval)
+                                                     self.interval])
             cb = plt.colorbar()
 
             self.waterfall_drawn = False
@@ -282,7 +282,7 @@ class Real_Time_Spectra(object):
                                              interpolation='nearest',
                                              aspect='auto',
                                              extent=[1, 4096, 0,
-                                                     self.interval)
+                                                     self.interval])
 
         cb.remove()
         cb = plt.colorbar()
