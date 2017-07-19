@@ -265,14 +265,27 @@ class Real_Time_Spectra(object):
 
         self.waterfall_graph()
 
-        self.waterfall_plot = plt.imshow(self.data,
-                                         interpolation="nearest",
-                                         aspect='auto',
-                                         extent=[1, 4096, 0,
-                                                 self.interval])
+        if self.waterfall_drawn:
 
-        plt.remove()
-        plt.colorbar()
+            self.waterfall_plot = plt.imshow(self.data,
+                                             interpolation='nearest',
+                                             aspect='auto',
+                                             extent=[1, 4096, 0,
+                                                     self.interval)
+            cb = plt.colorbar()
+
+            self.waterfall_drawn = False
+
+        if not self.waterfall_drawn:
+
+            self.waterfall_plot = plt.imshow(self.data,
+                                             interpolation='nearest',
+                                             aspect='auto',
+                                             extent=[1, 4096, 0,
+                                                     self.interval)
+
+        cb.remove()
+        cb = plt.colorbar()
 
         plt.tight_layout()
         # plt.draw()
@@ -280,6 +293,7 @@ class Real_Time_Spectra(object):
         # plt.pause(self.interval)
         plt.pause(0.0005)
         # plt.close()
+
 
     def plot_sum(self):
         """
