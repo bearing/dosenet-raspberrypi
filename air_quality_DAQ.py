@@ -36,12 +36,12 @@ class air_quality_DAQ(object):
 		self.PM01_list = []
 		self.PM25_list = []
 		self.PM10_list = []
-		self.P3_list = deque()
-		self.P5_list = deque()
-		self.P10_list = deque()
-		self.P25_list = deque()
-		self.P50_list = deque()
-		self.P100_list = deque()
+		self.P3_list = []
+		self.P5_list = []
+		self.P10_list = []
+		self.P25_list = []
+		self.P50_list = []
+		self.P100_list = []
 		self.merge_test=False
 
 	def create_file(self):
