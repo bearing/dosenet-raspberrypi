@@ -272,7 +272,7 @@ class Real_Time_Spectra(object):
                                              aspect='auto',
                                              extent=[1, 4096, 0,
                                                      self.interval])
-            cb = plt.colorbar()
+            self.cb = plt.colorbar()
 
             self.waterfall_drawn = False
 
@@ -284,8 +284,8 @@ class Real_Time_Spectra(object):
                                              extent=[1, 4096, 0,
                                                      self.interval])
 
-        cb.remove()
-        cb = plt.colorbar()
+        self.cb.remove()
+        self.cb = plt.colorbar()
 
         plt.tight_layout()
         # plt.draw()
