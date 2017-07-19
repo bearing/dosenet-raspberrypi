@@ -278,7 +278,9 @@ class Real_Time_Spectra(object):
         if not self.waterfall_drawn:
             self.waterfall_plot = plt.imshow(self.data,
                                              interpolation="nearest",
-                                             aspect='auto')
+                                             aspect='auto',
+                                             extent=[1, 4096, 0,
+                                                     self.interval])
             #self.waterfall_plot.set_data(self.data)
         plt.tight_layout()
         # plt.draw()
