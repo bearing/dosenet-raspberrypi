@@ -42,6 +42,7 @@ class air_quality_DAQ(object):
 		self.P25_list = []
 		self.P50_list = []
 		self.P100_list = []
+		self.time_list = []
 		self.merge_test=False
 
 	def create_file(self):
