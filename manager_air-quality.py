@@ -266,7 +266,7 @@ class Manager_AQ(object):
 
         args = parser.parse_args()
         arg_dict = vars(args)
-        mgr = Manager_D3S(**arg_dict)
+        mgr = Manager_AQ(**arg_dict)
 
         return mgr
 
