@@ -56,8 +56,8 @@ D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
 DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 DEFAULT_INTERVAL_NORMAL_AQ = 300
-AQ_VARIABLES = ['PM01', 'PM25', 'PM10', 'P03', 'P05',
-            'P10', 'P25', 'P50', 'P100']
+AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10', '0.3 um', '0.5 um',
+            '1.0 um', '2.5 um', '5.0 um', '10 um']
 # ANSI color codes
 ANSI_RESET = '\033[0m'
 ANSI_BOLD = '\033[1m'

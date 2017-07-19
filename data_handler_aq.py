@@ -11,15 +11,20 @@ import errno
 import csv
 
 AQ_PM_DISPLAY_TEXT = (
-	'{green} {{variable}} = {reset}' +
-	'{red} {{avg_data}} {reset}' +
-    '{green} ug/m3 {reset}').format(
+	'{red} {{variable}} = {reset}' +
+	'{green} {{avg_data}} {reset}' +
+    '{red} ug/m3 {reset}').format(
     red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
 
 AQ_P_DISPLAY_TEXT = (
-	'{green} # of Particles over {{variable}} = {reset}' +
-	'{red} {{avg_data}} {reset}').format(
+	'{red} # of Particles over {{variable}} = {reset}' +
+	'{green} {{avg_data}} {reset}').format(
     red=ANSI_RED, reset=ANSI_RESET, green=ANSI_GR)
+
+TIME_DISPLAY_TEXT = (
+    '{red} This average data was gathered from: {reset}' +
+    '{yellow}{{start_time}} to {{end_time}}{reset}').format(
+    red=ANSI_RED, reset=ANSI_RESET, yellow=ANSI_YEL)
 strf = '%H:%M:%S'
 
 class Data_Handler_AQ(object):
@@ -35,6 +40,7 @@ class Data_Handler_AQ(object):
                  manager=None,
                  verbosity=1,
                  logfile=None,
+                 variables=None,
                  ):
 
         self.v = verbosity
@@ -45,6 +51,8 @@ class Data_Handler_AQ(object):
 
         self.manager = manager
         self.queue = deque('')
+
+        self.variables = variables
 
     """
     The average_data list has elements comprised of:
@@ -97,3 +105,25 @@ class Data_Handler_AQ(object):
                     trash[0], trash[1], trash[2], trash[3],
                     trash[4], trash[5], trash[6], trash[7],
                     trash[8], trash[9])
+
+    def main(self, datalog, average_data, this_start, this_end):
+        """
+        Determines how to handle the average air quality data
+        """
+        start_text = datetime_from_epoch(this_start).strftime(strf)
+        end_text = datetime_from_epoch(this_end).strftime(strf)
+
+        self.vprint(
+            1, TIME_DISPLAY_TEXT.format(
+                start_time=start_text,
+                end_time=end_text))
+        for i in range(3):
+        	self.vprint(
+                1, AQ_PM_DISPLAY_TEXT.format(
+                    variable=self.variables[i],
+                    avg_data=average_data[i]))
+        for i in range(3, 9):
+        	self.vprint(
+                1, AQ_P_DISPLAY_TEXT.format(
+                    variable=self.variables[i],
+                    avg_data=average_data[i]))
