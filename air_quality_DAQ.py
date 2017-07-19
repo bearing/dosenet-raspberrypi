@@ -58,84 +58,84 @@ class air_quality_DAQ(object):
 		port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 		text = port.read(32)
 		buffer = [ord(c) for c in text]
-    	if buffer[0] == 66:   
-            buf = buffer[1:32]
+	    	if buffer[0] == 66:   
+        		buf = buffer[1:32]
 
-            # Get concentrations ug/m3
-            PM01Val=((buf[3]<<8) + buf[4])
-            PM25Val=((buf[5]<<8) + buf[6])
-            PM10Val=((buf[7]<<8) + buf[8])
+           		# Get concentrations ug/m3
+	        	PM01Val=((buf[3]<<8) + buf[4])
+        	    	PM25Val=((buf[5]<<8) + buf[6])
+            		PM10Val=((buf[7]<<8) + buf[8])
 
-            # Get number of particles in 0.1 L of air above specific diameters
-            P3  =((buf[15]<<8) + buf[16])
-            P5  =((buf[17]<<8) + buf[18])
-            P10 =((buf[19]<<8) + buf[20])
-            P25 =((buf[21]<<8) + buf[22])
-            P50 =((buf[23]<<8) + buf[24])
-            P100=((buf[25]<<8) + buf[26])
+	        	# Get number of particles in 0.1 L of air above specific diameters
+        		P3  =((buf[15]<<8) + buf[16])
+        		P5  =((buf[17]<<8) + buf[18])
+        		P10 =((buf[19]<<8) + buf[20])
+            		P25 =((buf[21]<<8) + buf[22])
+            		P50 =((buf[23]<<8) + buf[24])
+            		P100=((buf[25]<<8) + buf[26])
 
-            print('\nConcentration of Particulate Matter [ug/m3]\n')
-            print('PM 1.0 = '.format(PM01Val) +' ug/m3')
-            print('PM 2.5 = '.format(PM25Val) +' ug/m3')
-            print('PM 10  = '.format(PM10Val) +' ug/m3\n')
+            		print('\nConcentration of Particulate Matter [ug/m3]\n')
+            		print('PM 1.0 = '.format(PM01Val) +' ug/m3')
+            		print('PM 2.5 = '.format(PM25Val) +' ug/m3')
+            		print('PM 10  = '.format(PM10Val) +' ug/m3\n')
 
-            # Print number of particles in 0.1 L of air over specific diamaters
-            print('Number of particles in 0.1 L of air with specific diameter\n')
-            print('#Particles, diameter over 0.3 um = '.format(P3))
-            print('#Particles, diameter over 0.5 um = '.format(P5))
-            print('#Particles, diameter over 1.0 um = '.format(P10))
-            print('#Particles, diameter over 2.5 um = '.format(P25))
-            print('#Particles, diameter over 5.0 um = '.format(P50))
-            print('#Particles, diameter over 10  um = '.format(P100))
+            		# Print number of particles in 0.1 L of air over specific diamaters
+            		print('Number of particles in 0.1 L of air with specific diameter\n')
+            		print('#Particles, diameter over 0.3 um = '.format(P3))
+            		print('#Particles, diameter over 0.5 um = '.format(P5))
+            		print('#Particles, diameter over 1.0 um = '.format(P10))
+            		print('#Particles, diameter over 2.5 um = '.format(P25))
+            		print('#Particles, diameter over 5.0 um = '.format(P50))
+            		print('#Particles, diameter over 10  um = '.format(P100))
 
-            data = []
-            data.append(date_time)
-            data.append(PM01Val)
-            data.append(PM25Val)
-            data.append(PM10Val)
-            data.append(P3)
-            data.append(P5)
-            data.append(P10)
-            data.append(P25)
-            data.append(P50)
-            data.append(P100)
+            		data = []
+            		data.append(date_time)
+            		data.append(PM01Val)
+            		data.append(PM25Val)
+            		data.append(PM10Val)
+            		data.append(P3)
+            		data.append(P5)
+            		data.append(P10)
+            		data.append(P25)
+            		data.append(P50)
+            		data.append(P100)
 
-            results.writerow(data)
+            		results.writerow(data)
 
-            self.merge_test = False
-            self.add_data(self.PM01_queue,self.PM01_list,PM01Val)
-            self.add_data(self.PM25_queue,self.PM25_list,PM25Val)
-            self.add_data(self.PM10_queue,self.PM10_list,PM10Val)
-            self.add_data(self.P3_queue,self.P3_list,P3)
-            self.add_data(self.P5_queue,self.P5_list,P5)
-            self.add_data(self.P10_queue,self.P10_list,P10)
-            self.add_data(self.P25_queue,self.P25_list,P25)
-            self.add_data(self.P50_queue,self.P50_list,P50)
-            self.add_data(self.P100_queue,self.P100_list,P100)
-            self.add_time(self.time_queue, self.time_list, date_time)
+            		self.merge_test = False
+            		self.add_data(self.PM01_queue,self.PM01_list,PM01Val)
+            		self.add_data(self.PM25_queue,self.PM25_list,PM25Val)
+            		self.add_data(self.PM10_queue,self.PM10_list,PM10Val)
+            		self.add_data(self.P3_queue,self.P3_list,P3)
+            		self.add_data(self.P5_queue,self.P5_list,P5)
+            		self.add_data(self.P10_queue,self.P10_list,P10)
+            		self.add_data(self.P25_queue,self.P25_list,P25)
+            		self.add_data(self.P50_queue,self.P50_list,P50)
+            		self.add_data(self.P100_queue,self.P100_list,P100)
+            		self.add_time(self.time_queue, self.time_list, date_time)
 
-            if self.merge_test==True:
-            	self.PM01_list=[]
-            	self.PM25_list=[]
-            	self.PM10_list=[]
-            	self.P3_list=[]
-            	self.P5_list=[]
-            	self.P10_list=[]
-            	self.P25_list=[]
-            	self.P50_list=[]
-            	self.P100_list=[]
+            		if self.merge_test==True:
+            			self.PM01_list=[]
+            			self.PM25_list=[]
+            			self.PM10_list=[]
+            			self.P3_list=[]
+            			self.P5_list=[]
+            			self.P10_list=[]
+            			self.P25_list=[]
+            			self.P50_list=[]
+            			self.P100_list=[]
 
 
-            if len(self.time_queue)>0:
-            	self.update_plot(1,self.time_queue,self.PM01_queue,"Time","PM 1.0 (ug/m3)","PM 1.0 vs. time")
-            	self.update_plot(2,self.time_queue,self.PM25_queue,"Time","PM 2.5 (ug/m3)","PM 2.5 vs. time")
-            	self.update_plot(3,self.time_queue,self.PM10_queue,"Time","PM 10 (ug/m3)","PM 10 vs. time")
-            	self.update_plot(4,self.time_queue,self.P3_queue,"Time","Particles, diameter over 0.3 um","Particles over 0.3 um vs. time")
-            	self.update_plot(5,self.time_queue,self.P5_queue,"Time","Particles, diameter over 0.5 um","Particles over 0.5 um vs. time")
-            	self.update_plot(6,self.time_queue,self.P10_queue,"Time","Particles, diameter over 1.0 um","Particles over 1.0 um vs. time")
-            	self.update_plot(7,self.time_queue,self.P25_queue,"Time","Particles, diameter over 2.5 um","Particles over 2.5 um vs. time")
-            	self.update_plot(8,self.time_queue,self.P50_queue,"Time","Particles, diameter over 5.0 um","Particles over 5.0 um vs. time")
-            	self.update_plot(9,self.time_queue,self.P100_queue,"Time","Particles, diameter over 10 um","Particles over 10 um vs. time")
+            		if len(self.time_queue)>0:
+            			self.update_plot(1,self.time_queue,self.PM01_queue,"Time","PM 1.0 (ug/m3)","PM 1.0 vs. time")
+            			self.update_plot(2,self.time_queue,self.PM25_queue,"Time","PM 2.5 (ug/m3)","PM 2.5 vs. time")
+            			self.update_plot(3,self.time_queue,self.PM10_queue,"Time","PM 10 (ug/m3)","PM 10 vs. time")
+            			self.update_plot(4,self.time_queue,self.P3_queue,"Time","Particles, diameter over 0.3 um","Particles over 0.3 um vs. time")
+            			self.update_plot(5,self.time_queue,self.P5_queue,"Time","Particles, diameter over 0.5 um","Particles over 0.5 um vs. time")
+            			self.update_plot(6,self.time_queue,self.P10_queue,"Time","Particles, diameter over 1.0 um","Particles over 1.0 um vs. time")
+            			self.update_plot(7,self.time_queue,self.P25_queue,"Time","Particles, diameter over 2.5 um","Particles over 2.5 um vs. time")
+            			self.update_plot(8,self.time_queue,self.P50_queue,"Time","Particles, diameter over 5.0 um","Particles over 5.0 um vs. time")
+            			self.update_plot(9,self.time_queue,self.P100_queue,"Time","Particles, diameter over 10 um","Particles over 10 um vs. time")
 
         def add_time(self, queue, timelist, data):
             print('Input time: {}'.format(data))
