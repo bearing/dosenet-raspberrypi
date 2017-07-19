@@ -61,12 +61,7 @@ def weather_test(btn):
     app.go() 
     
 def weather_plot(btn):
-    app=gui("Weather Plot","800x400")
-    times=[]
-    degrees_list=[]
-    pressure_list=[]
-    humidity_list=[]
-    
+    app=gui("Weather Plot","800x400")   
     app.addLabel("1","Please choose a following .csv file")
     file_name=[]
     for filename in os.listdir('.'):
@@ -187,3 +182,18 @@ app.setButtonWidth("Plot Weather Data","30")
 app.setButtonHeight("Plot Weather Data","4")
 app.setButtonFont("20",font="Helvetica")
 app.go()
+
+
+
+
+
+    wdaq.set_widgets()
+    wdaq.lists()
+
+
+
+
+    def press1(btn):
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh start & ')
+    def press2(btn): 
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh stop')
