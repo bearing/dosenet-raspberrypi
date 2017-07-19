@@ -131,6 +131,7 @@ elif CSI == True:
 else:
     parser.print_help()
     exit()
+    
 try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
@@ -138,7 +139,6 @@ try:
     while True:
         for i in range(len(sensor_name)):
             OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
 
 except:
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
@@ -149,6 +149,6 @@ except:
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-    time.sleep(3)
+    time.sleep(3.5)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
