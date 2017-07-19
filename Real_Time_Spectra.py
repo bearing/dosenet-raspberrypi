@@ -282,8 +282,6 @@ class Real_Time_Spectra(object):
             #                                 interpolation="nearest",
             #                                 aspect='auto')
             self.waterfall_plot.set_data(self.data)
-            self.waterfall_plot.interpolation("nearest")
-            self.waterfall_plot.aspect("auto")
         plt.tight_layout()
         # plt.draw()
         plt.show()
