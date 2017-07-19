@@ -174,7 +174,7 @@ class Manager_AQ(object):
         self.vprint(
             1, ('Manager is starting to run at {}' +
                 ' with intervals of {}s').format(
-                datatime_from_epoch(this_start), self.interval))
+                datetime_from_epoch(this_start), self.interval))
         self.running = True
         try:
             while self.running:
