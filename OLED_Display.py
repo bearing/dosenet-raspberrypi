@@ -64,6 +64,8 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
 
+        self.CheckIf_Repeatlastline[0][0]
+
         for i in range(1,len(lastline[0])):
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             if "\n" in metadata[0][i]:
@@ -72,11 +74,11 @@ class OLED_Display:
                 lastline[0][i] = lastline[0][i].strip("\n")
             to_be_displayed1 = str("Time       "+metadata[0][i])
             to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
+
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor) # x: until 100 and then starts again from y-axis; y: until 7
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
             time.sleep(3.5)
-        return lastline[0][0]
 
     def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
@@ -89,6 +91,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
+            time.sleep(3)
 
         else:
             self.returned_times[sensor] = returned_time
