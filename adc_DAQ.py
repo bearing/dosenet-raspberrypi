@@ -37,7 +37,7 @@ class adc_DAQ(object):
 		metadata.append("UV")
 		adc_results.writerow(metadata[:])
 
-	 def start(self):
+	def start(self):
 		global adc_results
 		date_time = datetime.datetime.now()    
 	
