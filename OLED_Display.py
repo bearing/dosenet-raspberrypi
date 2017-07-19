@@ -6,6 +6,12 @@ import argparse
 
 class OLED_Display:
     def _init_(self):
+        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
         pass
     returned_times = dict([("Air Quality Sensor", "0"), ("CO2 Sensor", "0"), ("Atmosphere Sensor", "0"), ("U.V. Sensor", "0"), ("Si Radiation Sensor", "0"), ("CsI Radiation Sensor", "0")])
     log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
@@ -19,12 +25,6 @@ class OLED_Display:
             check = open(fname).readlines()[0:2]
             nowtime = int(time.time())
             if nowtime-begin_time > 3:
-                ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
                 time.sleep(2)
@@ -37,12 +37,6 @@ class OLED_Display:
             check = open(fname).readlines()[0:2]
             nowtime = int(time.time())
             if nowtime-begin_time > 3:
-                ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-                ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Data")
@@ -57,12 +51,6 @@ class OLED_Display:
 
         results = open(fname).readlines()[-1:]
         lastline = [line.split(",") for line in results]
-        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
 
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
@@ -80,12 +68,6 @@ class OLED_Display:
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
-            ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
@@ -131,7 +113,7 @@ elif CSI == True:
 else:
     parser.print_help()
     exit()
-    
+
 try:
     for i in range(len(sensor_name)):
         OLED = OLED_Display()
