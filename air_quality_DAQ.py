@@ -62,31 +62,31 @@ class air_quality_DAQ(object):
 			buf = buffer[1:32]
 
 			# Get concentrations ug/m3
-			PM01Val=((buf[3]<<8) + buf[4])
-			PM25Val=((buf[5]<<8) + buf[6])
-			PM10Val=((buf[7]<<8) + buf[8])
+			PM01Val=repr((buf[3]<<8) + buf[4])
+			PM25Val=repr((buf[5]<<8) + buf[6])
+			PM10Val=repr((buf[7]<<8) + buf[8])
 
 			# Get number of particles in 0.1 L of air above specific diameters
-			P3  =((buf[15]<<8) + buf[16])
-			P5  =((buf[17]<<8) + buf[18])
-			P10 =((buf[19]<<8) + buf[20])
-			P25 =((buf[21]<<8) + buf[22])
-			P50 =((buf[23]<<8) + buf[24])
-			P100=((buf[25]<<8) + buf[26])
+			P3  =repr((buf[15]<<8) + buf[16])
+			P5  =repr((buf[17]<<8) + buf[18])
+			P10 =repr((buf[19]<<8) + buf[20])
+			P25 =repr((buf[21]<<8) + buf[22])
+			P50 =repr((buf[23]<<8) + buf[24])
+			P100=repr((buf[25]<<8) + buf[26])
 
 			print('\nConcentration of Particulate Matter [ug/m3]\n')
-			print('PM 1.0 = '.format(PM01Val) +' ug/m3')
-			print('PM 2.5 = '.format(PM25Val) +' ug/m3')
-			print('PM 10  = '.format(PM10Val) +' ug/m3\n')
+			print('PM 1.0 = {} ug/m3'.format(PM01Val))
+			print('PM 2.5 = {} ug/m3'.format(PM25Val))
+			print('PM 10  = {} ug/m3'.format(PM25Val))
 
 			# Print number of particles in 0.1 L of air over specific diamaters
 			print('Number of particles in 0.1 L of air with specific diameter\n')
-			print('#Particles, diameter over 0.3 um = '.format(P3))
-			print('#Particles, diameter over 0.5 um = '.format(P5))
-			print('#Particles, diameter over 1.0 um = '.format(P10))
-			print('#Particles, diameter over 2.5 um = '.format(P25))
-			print('#Particles, diameter over 5.0 um = '.format(P50))
-			print('#Particles, diameter over 10  um = '.format(P100))
+			print('#Particles, diameter over 0.3 um = {}'.format(P3))
+			print('#Particles, diameter over 0.5 um = {}'.format(P5))
+			print('#Particles, diameter over 1.0 um = {}'.format(P10))
+			print('#Particles, diameter over 2.5 um = {}'.format(P25))
+			print('#Particles, diameter over 5.0 um = {}'.format(P50))
+			print('#Particles, diameter over 10  um = {}'.format(P100))
 
 			data = []
 			data.append(date_time)
@@ -103,15 +103,15 @@ class air_quality_DAQ(object):
 			results.writerow(data)
 
 			self.merge_test = False
-			self.add_data(self.PM01_queue,self.PM01_list,PM01Val)
-			self.add_data(self.PM25_queue,self.PM25_list,PM25Val)
-			self.add_data(self.PM10_queue,self.PM10_list,PM10Val)
-			self.add_data(self.P3_queue,self.P3_list,P3)
-			self.add_data(self.P5_queue,self.P5_list,P5)
-			self.add_data(self.P10_queue,self.P10_list,P10)
-			self.add_data(self.P25_queue,self.P25_list,P25)
-			self.add_data(self.P50_queue,self.P50_list,P50)
-			self.add_data(self.P100_queue,self.P100_list,P100)
+			self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val))
+			self.add_data(self.PM25_queue,self.PM25_list,int(PM25Val))
+			self.add_data(self.PM10_queue,self.PM10_list,int(PM10Val))
+			self.add_data(self.P3_queue,self.P3_list,int(P3))
+			self.add_data(self.P5_queue,self.P5_list,int(P5))
+			self.add_data(self.P10_queue,self.P10_list,int(P10))
+			self.add_data(self.P25_queue,self.P25_list,int(P25))
+			self.add_data(self.P50_queue,self.P50_list,int(P50))
+			self.add_data(self.P100_queue,self.P100_list,int(P100))
 			self.add_time(self.time_queue, self.time_list, date_time)
 
 			if self.merge_test==True:
