@@ -113,11 +113,11 @@ def make_run_gui():
         if jobco2 is not None:
             top1.after_cancel(jobco2)
             jobco2 = None
-            adcdaq.close()
+            adcdaq.close(1)
         if jobaq is not None:
             top1.after_cancel(jobaq)
             jobaq = None
-            aqdaq.close()
+            aqdaq.close(1)
         wdaq.humid()
         jobhumid=top1.after(1000,humid)
         
@@ -138,12 +138,12 @@ def make_run_gui():
         if jobaq is not None:
             top1.after_cancel(jobco2)
             jobaq = None
-            aqdaq.close()
+            aqdaq.close(1)
         if jobhumid is not None:
             top1.after_cancel(jobhumid)
             jobhumid = None
             wdaq.close(2)
-        adcdaq.plot()
+        adcdaq.plot_CO2()
         jobco2=top1.after(1000,CO2)
         
     def airquality():
@@ -168,7 +168,7 @@ def make_run_gui():
             top1.after_cancel(jobhumid)
             jobhumid = None
             wdaq.close(2)
-        aqdaq.plot()
+        aqdaq.pmplot()
         jobhumid=top1.after(1000,humid)
 
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)

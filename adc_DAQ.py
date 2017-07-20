@@ -112,4 +112,4 @@ class adc_DAQ(object):
 			queue.popleft()    
 
 	def close(self,plot_id):
-        plt.close(plot_id)		
+         plt.close(plot_id)		
