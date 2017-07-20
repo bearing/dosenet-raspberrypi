@@ -53,7 +53,7 @@ class weather_DAQ(object):
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %/n'.format(humidity))
+        print ('Humidity = {0:0.2f} %\n'.format(humidity))
     
         data=[]
         data.append(date_time)
