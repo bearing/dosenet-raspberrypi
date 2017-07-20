@@ -74,12 +74,13 @@ class air_quality_DAQ(object):
             P50 =repr((buf[23]<<8) + buf[24])
             P100=repr((buf[25]<<8) + buf[26])
 
-            print('\nConcentration of Particulate Matter [ug/m3]\n')
+            print('Concentration of Particulate Matter [ug/m3]')
             print('PM 1.0 = {} ug/m3'.format(PM01Val))
             print('PM 2.5 = {} ug/m3'.format(PM25Val))
-            print('PM 10  = {} ug/m3'.format(PM25Val))
+            print('PM 10  = {} ug/m3\n'.format(PM25Val))
 
             # Print number of particles in 0.1 L of air over specific diamaters
+            '''
             print('Number of particles in 0.1 L of air with specific diameter\n')
             print('#Particles, diameter over 0.3 um = {}'.format(P3))
             print('#Particles, diameter over 0.5 um = {}'.format(P5))
@@ -87,6 +88,7 @@ class air_quality_DAQ(object):
             print('#Particles, diameter over 2.5 um = {}'.format(P25))
             print('#Particles, diameter over 5.0 um = {}'.format(P50))
             print('#Particles, diameter over 10  um = {}'.format(P100))
+			'''
 
             data = []
             data.append(date_time)
@@ -124,6 +126,7 @@ class air_quality_DAQ(object):
                 self.P25_list=[]
                 self.P50_list=[]
                 self.P100_list=[]
+                self.time_list=[]
             
     def pmplot(self):
         if len(self.time_queue)>0:
@@ -149,10 +152,10 @@ class air_quality_DAQ(object):
             queue.popleft()
 
     def update_plot(self,plot_id,xdata,xlabel,ylable,title,ydata1,ydata2=None,ydata3=None):
-        print("\n\n\n\n\n\n")
+        print("\n\n\n")
         print("Number of time entries = {}".format(len(xdata)))
         print("Number of PM1 entries = {}".format(len(ydata1)))
-        print("\n\n\n\n\n\n")
+        print("\n\n\n")
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()

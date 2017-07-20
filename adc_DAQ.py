@@ -50,7 +50,7 @@ class adc_DAQ(object):
 		# print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
 		print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
 		concentration = 5000/496*values[0] - 1250
-		print('|{}|'.format(concentration))
+		print('|{}|/n'.format(concentration))
 		# Pause for half a second.
 		uv_index = values[7]
 		results = []
@@ -72,7 +72,7 @@ class adc_DAQ(object):
 
 	def plot_CO2(self):
 		if len(self.time_queue)>0:
-			self.update_plot(1,self.time_queue,self.CO2_queue,"Time","Concentration (ppm)","Comcentration vs. time")    
+			self.update_plot(1,self.time_queue,self.CO2_queue,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
 
 	def plot_UV(self):
 		if len(self.time_queue)>0:
