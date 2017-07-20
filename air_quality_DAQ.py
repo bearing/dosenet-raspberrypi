@@ -149,6 +149,8 @@ class air_quality_DAQ(object):
             queue.popleft()
 
     def update_plot(self,plot_id,xdata,xlabel,ylable,title,ydata1,ydata2=None,ydata3=None):
+        print("Number of time entries = {}".format(len(xdata)))
+        print("Number of PM1 entries = {}".format(len(ydata1)))
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
