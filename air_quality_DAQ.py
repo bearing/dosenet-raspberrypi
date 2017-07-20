@@ -51,7 +51,7 @@ class air_quality_DAQ(object):
 	def create_file(self):
 		global results
 		file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-		filename = "air_quality_test_results_"+file_time+".csv"
+		filename = "/home/pi/data/air_quality_test_results_"+file_time+".csv"
 		results = csv.writer(open(filename, "ab+"), delimiter = ",")
 		metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
 		results.writerow(metadata)
