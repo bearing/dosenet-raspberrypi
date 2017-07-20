@@ -193,7 +193,7 @@ def make_run_gui():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
         AirButton.pack()
 
-
+    top1.lift()
     top1.mainloop()
 
 def weather_test():
@@ -207,11 +207,8 @@ def weather_test():
         print("create weather file")
         wdaq.create_file()
 
-    make_run_gui()
-
-def print_check():
-    print("varAir = {}, varCO2 = {}, varWeather = {}".format(varAir.get(),varCO2.get(),varWeather.get()))    
-
+    make_run_gui() 
+  
 
 AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir)     
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
