@@ -128,18 +128,10 @@ class air_quality_DAQ(object):
 				self.P25_list=[]
 				self.P50_list=[]
 				self.P100_list=[]
-
-
-			if len(self.time_queue)>0:
-				self.update_plot(1,self.time_queue,self.PM01_queue,"Time","PM 1.0 (ug/m3)","PM 1.0 vs. time")
-				self.update_plot(2,self.time_queue,self.PM25_queue,"Time","PM 2.5 (ug/m3)","PM 2.5 vs. time")
-				self.update_plot(3,self.time_queue,self.PM10_queue,"Time","PM 10 (ug/m3)","PM 10 vs. time")
-				self.update_plot(4,self.time_queue,self.P3_queue,"Time","Particles, diameter over 0.3 um","Particles over 0.3 um vs. time")
-				self.update_plot(5,self.time_queue,self.P5_queue,"Time","Particles, diameter over 0.5 um","Particles over 0.5 um vs. time")
-				self.update_plot(6,self.time_queue,self.P10_queue,"Time","Particles, diameter over 1.0 um","Particles over 1.0 um vs. time")
-				self.update_plot(7,self.time_queue,self.P25_queue,"Time","Particles, diameter over 2.5 um","Particles over 2.5 um vs. time")
-				self.update_plot(8,self.time_queue,self.P50_queue,"Time","Particles, diameter over 5.0 um","Particles over 5.0 um vs. time")
-				self.update_plot(9,self.time_queue,self.P100_queue,"Time","Particles, diameter over 10 um","Particles over 10 um vs. time")
+			
+	def pmplot(self):
+		if len(self.time_queue)>0:
+            self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue)		
 
 	def add_time(self, queue, timelist, data):
 		print('Input time: {}'.format(data))
@@ -152,7 +144,6 @@ class air_quality_DAQ(object):
 		if len(queue)>self.maxdata:
 			queue.popleft()
 
-
 	def add_data(self, queue, datalist, data):
 		datalist.append(data)
 		if len(datalist)>=self.n_merge:
@@ -161,7 +152,7 @@ class air_quality_DAQ(object):
 		if len(queue)>self.maxdata:
 			queue.popleft()
 
-	def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
+	def update_plot(self,plot_id,xdata,xlabel,ylable,title,ydata1,ydata2=None,ydata3=None):
 		plt.ion()
 		fig = plt.figure(plot_id)
 		plt.clf()
@@ -169,10 +160,15 @@ class air_quality_DAQ(object):
 		plt.xlabel(xlabel)
 		plt.ylabel(ylable) 
 		plt.title(title)
-		plt.plot(xdata,ydata,"r.")
+		plt.plot(xdata,ydata1,"b.", label='1.0')
+		plt.plot(xdata,ydata2,"g.", label = '2.5')
+		plt.plot(xdata,ydata3,"r.", label = '10')
+		plt.legend(loc="best")
 		fig.autofmt_xdate()
 		ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
 		fig.show()
 		plt.pause(0.0005)
+
+
 
 	
