@@ -38,7 +38,7 @@ class weather_DAQ(object):
     def create_file(self):
         global results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "weather_test_results_"+file_time+".csv"
+        filename = "/home/pi/data/weather_test_results_"+file_time+".csv"
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
         results.writerow(metadata)
@@ -53,7 +53,7 @@ class weather_DAQ(object):
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %'.format(humidity))
+        print ('Humidity = {0:0.2f} %/n'.format(humidity))
     
         data=[]
         data.append(date_time)
