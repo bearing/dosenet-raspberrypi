@@ -45,7 +45,7 @@ class Real_Time_Spectra(object):
 
         self.first = True
 
-        self.cb_drawn = True
+        self.colorbar_drawn = True
 
         '''
         Start up the plotting windows.
@@ -322,19 +322,19 @@ class Real_Time_Spectra(object):
                                          interpolation='nearest',
                                          aspect='auto',
                                          extent=[1, 4096, 0,
-                                                 np.shape(self.data)[0]
-                                                 * self.interval])
+                                         np.shape(self.data)[0]
+                                         * self.interval])
+        if self.colorbar_drawn:
 
-        if self.cb_drawn:
+            self.cb = plt.colorbar()
 
-            cb = plt.colorbar()
+            self.colorbar_drawn = False
 
-            self.cb_drawn = False
+        if not self.colorbar_drawn:
 
-        if not self.cb_drawn:
+            self.cb.remove()
 
-            cb.remove()
-            cb = plt.colorbar()
+            self.cb = plt.colorbar()
 
         plt.tight_layout()
         # plt.draw()
