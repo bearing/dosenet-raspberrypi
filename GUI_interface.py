@@ -193,7 +193,7 @@ def make_run_gui():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
         AirButton.pack()
 
-    top1.lift()
+    
     top1.mainloop()
 
 def weather_test():
