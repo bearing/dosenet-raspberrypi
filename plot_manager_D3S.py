@@ -28,7 +28,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
 from globalvalues import DEFAULT_INTERVAL_TEST_D3S
-
+import spectafittertrials as spectra_fitter
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -314,13 +314,14 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         if self.plot:
-            self.rt_plot.add_data(spectra, self.maxspectra)
+            self.rt_plot.add_data(self.rt_plot.queue,spectra, self.maxspectra)
             self.rt_plot.plot_waterfall()
             self.rt_plot.plot_sum()
+            spectra_fitter.main()
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
-
+        
     def takedown(self):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
@@ -361,8 +362,8 @@ class Manager_D3S(object):
         mgr = Manager_D3S(**arg_dict)
 
         return mgr
-
-if __name__ == '__main__':
+def main():
+   
     mgr = Manager_D3S.from_argparse()
     try:
         mgr.run()
@@ -373,3 +374,8 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+
+if __name__ == '__main__': 
+    main()
+    
+

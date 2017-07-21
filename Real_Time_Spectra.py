@@ -106,7 +106,7 @@ class Real_Time_Spectra(object):
 
         # plt.ioff()
 
-    def add_data(self, spectra, maxspectra, queue=self.queue):
+    def add_data(self, spectra, maxspectra, queue):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -165,9 +165,9 @@ class Real_Time_Spectra(object):
         # Define the running average as the mean of each element in the
         #   summation of the spectra in the temporary data array.
         running_avg_array = sum(temp_data) / temp_length
-
-        return running_avg_array
-
+        sum_data= sum(temp_data)
+        return running_avg_array,sum_data
+    
 
     def rebin(self, data, n=4):
         """
@@ -296,7 +296,7 @@ class Real_Time_Spectra(object):
         plt.figure(2)
 
         # Get the running average
-        run_avg = self.run_avg_data(self.queue, self.maxspectra)
+        run_avg,self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         plt.clf()
 
