@@ -2,7 +2,7 @@
 from __future__ import division, print_function
 # from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
-from pandas import DataFrame
+#from pandas import DataFrame
 # import matplotlib
 # matplotlib.use('Qt4Agg')
 import matplotlib.pyplot as plt
@@ -76,7 +76,16 @@ class Real_Time_Spectra(object):
         height = int(height_scaling * self.screen_height)
 
         '''
-        Apply the changes to the window geometry.
+        Apply the changes to the window geometry.if self.colorbar_drawn:
+
+            self.cb = plt.colorbar()
+            self.colorbar_drawn = False
+
+        if not self.colorbar_drawn:
+
+            self.cb.remove()
+            self.cb = plt.colorbar()
+
         '''
         plot_manager.window.setGeometry(x_pos, y_pos, width, height)
 
