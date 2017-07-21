@@ -46,6 +46,7 @@ class Real_Time_Spectra(object):
         self.first = True
 
         self.waterfall_drawn = True
+        self.cb_drawn = True
 
         '''
         Start up the plotting windows.
@@ -330,7 +331,6 @@ class Real_Time_Spectra(object):
         #    self.waterfall_drawn = False
 
         #if not self.waterfall_drawn:
-
         self.waterfall_plot = plt.imshow(self.data,
                                          interpolation='nearest',
                                          aspect='auto',
@@ -338,9 +338,12 @@ class Real_Time_Spectra(object):
                                                  np.shape(self.data)[0]
                                                  * self.interval])
 
-
-        self.cb.remove()
-        self.cb = plt.colorbar()
+        if self.cb_drawn:
+            color_bar = plt.colorbar()
+            self.cb_drawn = False
+        if not self.cb_drawn:
+            color_bar.remove()
+            color_bar = plt.colorbar()
 
         plt.tight_layout()
         # plt.draw()
