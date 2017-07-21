@@ -3,6 +3,8 @@ from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import ANSI_BLUE, ANSI_CYAN
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
+from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
+from globalvalues import BREAK_LINE, TIME_DISPLAY_TEXT, strf
 from collections import deque
 import socket
 import time
@@ -10,28 +12,6 @@ import ast
 import os
 import errno
 import csv
-
-AQ_PM_DISPLAY_TEXT = (
-	'{cyan} {{variable}} = {reset}' +
-	'{green} {{avg_data}} {reset}' +
-    '{cyan} ug/m3 {reset}').format(
-    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
-
-AQ_P_DISPLAY_TEXT = (
-	'{cyan} # of Particles over {{variable}} = {reset}' +
-	'{green} {{avg_data}} {reset}').format(
-    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
-
-TIME_DISPLAY_TEXT = (
-    '{red} This list of average data was gathered from: {reset}' +
-    '{yellow}{{start_time}} to {{end_time}}{reset}').format(
-    red=ANSI_RED, reset=ANSI_RESET, yellow=ANSI_YEL)
-
-BREAK_LINE = (
-    '\n{blue}-----------------------------------------------------------\n{reset}' +
-    '\n{blue}-----------------------------------------------------------\n{reset}').format(
-    blue=ANSI_BLUE, reset=ANSI_RESET)
-strf = '%H:%M:%S'
 
 class Data_Handler_AQ(object):
     """

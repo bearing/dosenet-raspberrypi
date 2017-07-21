@@ -48,6 +48,7 @@ DEFAULT_PROTOCOL = 'new'
 DEFAULT_INTERVAL_NORMAL = 300
 DEFAULT_INTERVAL_TEST = 30
 DEFAULT_MAX_ACCUM_TIME = 3600
+FLUSH_PAUSE_S = 2
 
 DEFAULT_INTERVAL_NORMAL_D3S = 300
 DEFAULT_D3STEST_TIME = 5
@@ -69,6 +70,45 @@ ANSI_CYAN = '\033[36m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
 GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
+
+"""
+Command line output statements used in the data-handlers
+"""
+
+CPM_DISPLAY_TEXT = (
+    '{{time}}: {yellow} {{counts}} cts{reset}' +
+    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
+    ' ({{start_time}} to {{end_time}})').format(
+    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
+
+SPECTRA_DISPLAY_TEXT = (
+    '{{time}}: {yellow} {{total_counts}} {reset}' +
+    '{green} total counts from {reset}' +
+    ' ({{start_time}} to {{end_time}})').format(
+    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
+
+AQ_PM_DISPLAY_TEXT = (
+	'{cyan} {{variable}} = {reset}' +
+	'{green} {{avg_data}} {reset}' +
+    '{cyan} ug/m3 {reset}').format(
+    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
+
+AQ_P_DISPLAY_TEXT = (
+	'{cyan} # of Particles over {{variable}} = {reset}' +
+	'{green} {{avg_data}} {reset}').format(
+    cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
+
+TIME_DISPLAY_TEXT = (
+    '{red} This data was gathered from: {reset}' +
+    '{yellow}{{start_time}} to {{end_time}}{reset}').format(
+    red=ANSI_RED, reset=ANSI_RESET, yellow=ANSI_YEL)
+
+BREAK_LINE = (
+    '\n{blue}-----------------------------------------------------------\n{reset}' +
+    '\n{blue}-----------------------------------------------------------\n{reset}').format(
+    blue=ANSI_BLUE, reset=ANSI_RESET)
+
+strf = '%H:%M:%S'
 
 # --- some old notes:
 # Note: GPIO.LOW  - 0V

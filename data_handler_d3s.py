@@ -2,6 +2,8 @@ from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_D3S
+from globalvalues import SPECTRA_DISPLAY_TEXT
+from globalvalues import strf
 from collections import deque
 import socket
 import time
@@ -9,14 +11,6 @@ import ast
 import os
 import errno
 import csv
-
-SPECTRA_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{total_counts}} {reset}' +
-    '{green} total counts from {reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
-strf = '%H:%M:%S'
-
 
 class Data_Handler_D3S(object):
 

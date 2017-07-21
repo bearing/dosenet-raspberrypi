@@ -19,6 +19,7 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_AQ
+from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
 
@@ -62,7 +63,7 @@ class Manager_AQ(object):
         self.make_data_log(self.datalog)
 
         self.handle_input(
-            log, logfile, verbosity, interval, config, publickey)
+            log, logfile, verbosity, test, interval, config, publickey)
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
@@ -102,7 +103,7 @@ class Manager_AQ(object):
             with open(file, 'a') as f:
                 pass
 
-    def handle_input(self, log, logfile, verbosity, interval,
+    def handle_input(self, log, logfile, verbosity, test, interval,
                      config, publickey):
 
         if log and logfile is None:
