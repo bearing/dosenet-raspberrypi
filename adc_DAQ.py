@@ -24,7 +24,6 @@ class adc_DAQ(object):
 		self.CO2_queue=deque()
 		self.UV_queue=deque()
 		self.merge_test=False
-		self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 	def create_file(self):
 		global adc_results
@@ -36,6 +35,7 @@ class adc_DAQ(object):
 		metadata.append("CO2 (ppm)")
 		metadata.append("UV")
 		adc_results.writerow(metadata[:])
+		self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 	def start(self):
 		global adc_results
