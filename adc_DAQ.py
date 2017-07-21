@@ -24,6 +24,7 @@ class adc_DAQ(object):
 		self.CO2_queue=deque()
 		self.UV_queue=deque()
 		self.merge_test=False
+		self.mcp= None 
 
 	def create_file(self):
 		global adc_results
