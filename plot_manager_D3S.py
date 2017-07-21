@@ -1,4 +1,4 @@
-from globalvalues import RPI
+urdafrom globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
@@ -28,7 +28,7 @@ from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
 from globalvalues import DEFAULT_INTERVAL_TEST_D3S
-import spectafittertrials as spectra_fitter
+import spectra_fitter as spectra_fitter
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
