@@ -326,12 +326,10 @@ class Real_Time_Spectra(object):
                                          extent=[1, 4096, 0,
                                          np.shape(self.data)[0]
                                          * self.interval])
-        cb = plt.colorbar()
-        cb.update_bruteforce()
         """
         Updates the color bar by removing old color bar.
         """
-        """if self.colorbar_drawn:
+        if self.colorbar_drawn:
 
             self.cb = plt.colorbar()
             self.colorbar_drawn = False
@@ -340,7 +338,7 @@ class Real_Time_Spectra(object):
 
             self.cb.remove()
             self.cb = plt.colorbar()
-"""
+
         plt.tight_layout()
         # plt.draw()
         plt.show()
