@@ -315,11 +315,11 @@ class Real_Time_Spectra(object):
         '''
         plt.pause(0.0005)
 
-"""    def waterfall_graph(self):
+        #def waterfall_graph(self):
         """
-        #Grabs the data and prepares the waterfall.
+        Grabs the data and prepares the waterfall.
         """
-        self.make_image()"""
+        #self.make_image()
 
     def plot_waterfall(self):
 
