@@ -112,6 +112,9 @@ class Real_Time_Spectra(object):
         Use the ggplot style available though the mpltools layout method.
         '''
         style.use('ggplot')
+        """
+        Removes toolbar from figures.
+        """
         plt.rcParams['toolbar'] = 'None'
         '''
         Turn on interactive mode for plotting to allow for two figure windows
