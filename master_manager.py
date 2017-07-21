@@ -2,14 +2,14 @@
 import os
 import multiprocessing
 import serial
+import signal
 
 def start_dosenet():
     os.system('sudo bash /home/pi/dosenet-raspberrypi/pocket.sh start')
 
 def start_D3S():
     os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh start')
-    
-    
+
 if __name__ == '__main__':
     print('Waiting for NTP to be synced...')
     os.system('sudo service ntp stop')
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         ser.close()
     except:
         pass
-    
+
     p = multiprocessing.Process(target=start_D3S, args=())
     t = multiprocessing.Process(target=start_dosenet, args=())
     try:
