@@ -112,10 +112,12 @@ class Real_Time_Spectra(object):
         Use the ggplot style available though the mpltools layout method.
         '''
         style.use('ggplot')
+
         """
         Removes toolbar from figures.
         """
         plt.rcParams['toolbar'] = 'None'
+
         '''
         Turn on interactive mode for plotting to allow for two figure windows
         to be open at once.
@@ -347,11 +349,10 @@ class Real_Time_Spectra(object):
             self.cb = plt.colorbar()
 
         plt.tight_layout()
-        # plt.draw()
+
         plt.show()
-        # plt.pause(self.interval)
+        
         plt.pause(0.0005)
-        # plt.close()
 
     def plot_sum(self):
         """
