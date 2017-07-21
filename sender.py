@@ -350,7 +350,7 @@ class ServerSender(object):
         Protocol for sending average air quality data
         """
         packet = self.construct_packet_new_AQ(
-            timestamp, average_data error_code=error_code)
+            timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
