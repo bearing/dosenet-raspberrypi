@@ -315,16 +315,11 @@ class Real_Time_Spectra(object):
         '''
         plt.pause(0.0005)
 
-        #def waterfall_graph(self):
-        """
-        Grabs the data and prepares the waterfall.
-        """
-        #self.make_image()
-
     def plot_waterfall(self):
-
         plt.figure(1)
-
+        """
+        Grabs the data for waterfall plot.
+        """
         self.make_image()
         """
         Plots the data for the waterfall plot.
@@ -336,7 +331,7 @@ class Real_Time_Spectra(object):
                                          np.shape(self.data)[0]
                                          * self.interval])
         """
-        Updates the color bar by removing old color bar.
+        Updates the colorbar by removing old colorbar.
         """
         if self.colorbar_drawn:
 
