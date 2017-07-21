@@ -327,7 +327,7 @@ class Real_Time_Spectra(object):
                                          np.shape(self.data)[0]
                                          * self.interval])
         cb = plt.colorbar()
-        cb.on_mappable_changed()
+        cb.update_bruteforce()
         """
         Updates the color bar by removing old color bar.
         """
