@@ -56,7 +56,6 @@ class air_quality_DAQ(object):
     def start(self):
         global results
         date_time = datetime.datetime.now()
-        port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
         text = port.read(32)
         buffer = [ord(c) for c in text]
         if buffer[0] == 66:   
