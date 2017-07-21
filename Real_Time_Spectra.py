@@ -318,19 +318,18 @@ class Real_Time_Spectra(object):
 
         self.waterfall_graph()
 
-        if self.waterfall_drawn:
+        #if self.waterfall_drawn:
 
-            self.waterfall_plot = plt.imshow(self.data,
-                                             interpolation='nearest',
-                                             aspect='auto',
-                                             extent=[1, 4096, 0,
-                                                     np.shape(self.data)[0]
-                                                     * self.interval])
-            self.cb = plt.colorbar()
+        #    self.waterfall_plot = plt.imshow(self.data,
+        #                                     interpolation='nearest',
+        #                                     aspect='auto',
+        #                                     extent=[1, 4096, 0,
+        #                                             self.interval])
+        #    self.cb = plt.colorbar()
 
-            self.waterfall_drawn = False
+        #    self.waterfall_drawn = False
 
-        if not self.waterfall_drawn:
+        #if not self.waterfall_drawn:
 
             self.waterfall_plot = plt.imshow(self.data,
                                              interpolation='nearest',
