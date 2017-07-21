@@ -40,7 +40,8 @@ class air_quality_DAQ(object):
         self.P100_list = []
         self.time_list = []
         self.merge_test=False
-    
+        self.port = None
+            
     def close(self,plot_id):
         plt.close(plot_id)
 
@@ -51,12 +52,12 @@ class air_quality_DAQ(object):
         results = csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
         results.writerow(metadata)
-        port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
+        self.port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
         
     def start(self):
         global results
         date_time = datetime.datetime.now()
-        text = port.read(32)
+        text = self.port.read(32)
         buffer = [ord(c) for c in text]
         if buffer[0] == 66:   
             buf = buffer[1:32]
