@@ -343,6 +343,7 @@ class Real_Time_Spectra(object):
         # plt.draw()
         plt.show()
         # plt.pause(self.interval)
+        plt.gcf().clear()
         plt.pause(0.0005)
         # plt.close()
 
