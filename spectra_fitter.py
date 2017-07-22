@@ -82,7 +82,8 @@ def make_array(lst,low=40,high=4128):
     '''
     z = np.asarray(make_int(lst[low:high]))
     return z
- '''
+    
+'''
 def get_times(rows, number, n=1):
     
     Get list of times for data: determines time as the midpoint between the upper and lower bounds in the integration window
