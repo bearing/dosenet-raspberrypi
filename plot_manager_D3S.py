@@ -1,4 +1,4 @@
-urdafrom globalvalues import RPI
+from globalvalues import RPI
 if RPI:
     import RPi.GPIO as GPIO
 
