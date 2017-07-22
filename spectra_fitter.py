@@ -13,9 +13,7 @@ import matplotlib.dates as mdates
 from dateutil.parser import parse
 from datetime import datetime
 from datetime import timedelta
-import urllib.request
 import pytz
-import codecs
 from matplotlib.backends.backend_pdf import PdfPages
 from scipy import optimize
 from scipy import asarray as ar,exp
