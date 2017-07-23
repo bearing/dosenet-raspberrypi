@@ -24,18 +24,19 @@ class adc_DAQ(object):
 		self.CO2_queue=deque()
 		self.UV_queue=deque()
 		self.merge_test=False
-		self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+		self.mcp= None 
 
 	def create_file(self):
 		global adc_results
 		file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-		filename = "CO2_test_results_"+file_time+".csv"
+		filename = "/home/pi/data/CO2_test_results_"+file_time+".csv"
 		adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
 		metadata = []
 		metadata.append("Date and Time")
 		metadata.append("CO2 (ppm)")
 		metadata.append("UV")
 		adc_results.writerow(metadata[:])
+		self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 	def start(self):
 		global adc_results
@@ -50,7 +51,7 @@ class adc_DAQ(object):
 		# print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
 		print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
 		concentration = 5000/496*values[0] - 1250
-		print('|{}|'.format(concentration))
+		print("|{}|\n".format(concentration))
 		# Pause for half a second.
 		uv_index = values[7]
 		results = []
@@ -70,11 +71,11 @@ class adc_DAQ(object):
 			self.UV_list=[]
 			self.time_list=[]
 
-	def CO2(self):
+	def plot_CO2(self):
 		if len(self.time_queue)>0:
-			self.update_plot(1,self.time_queue,self.CO2_queue,"Time","Concentration (ppm)","Comcentration vs. time")    
+			self.update_plot(1,self.time_queue,self.CO2_queue,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
 
-	def UV(self):
+	def plot_UV(self):
 		if len(self.time_queue)>0:
 			self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")		
 
@@ -110,3 +111,6 @@ class adc_DAQ(object):
 			timelist=[]
 		if len(queue)>self.maxdata:
 			queue.popleft()    
+
+	def close(self,plot_id):
+         plt.close(plot_id)		
