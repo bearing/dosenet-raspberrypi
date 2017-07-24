@@ -19,6 +19,7 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
+# import spectra_fitter
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -48,8 +49,8 @@ class Manager_D3S(object):
     """
 
     def __init__(self,
-                 interval=None,
-                 maxspectra=None,
+                 interval=5,
+                 maxspectra=20,
                  count=0,
                  transport='any',
                  device='all',
@@ -317,6 +318,13 @@ class Manager_D3S(object):
             self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
             self.rt_plot.plot_waterfall()
             self.rt_plot.plot_sum()
+
+            '''
+            Uncomment 3 lines below to plot the spectra fitter plots.
+            '''
+            # total_time=self.interval*self.maxspectra
+            # times = np.linspace(self.interval,total_time + 1,self.interval)
+            # spectra_fitter.main(self.rt_plot.sum_data, times)
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
@@ -339,11 +347,11 @@ class Manager_D3S(object):
         parser.add_argument(
             '--datalogflag', '-a', action='store_true', default=False)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
-        parser.add_argument('--test', '-t', action='store_true', default=False)
+        parser.add_argument('--test', '-t', action='store_true', default=None)
         parser.add_argument('--transport', '-n', default='any')
-        parser.add_argument('--interval', '-i', type=int, default=10)
-        parser.add_argument('--maxspectra', '-s', default=5)
-        parser.add_argument('--count', '-0', dest='count', default=0)
+        parser.add_argument('--interval', '-i', type=int, default=5)
+        parser.add_argument('--maxspectra', '-s', default=20)
+        parser.add_argument('--count', '-o', dest='count', default=0)
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument(
             '--log-bytes', '-b', dest='log_bytes', default=False,
@@ -362,9 +370,21 @@ class Manager_D3S(object):
 
         return mgr
 
-def main():
+def main(arg_parse=False):
 
-    mgr = Manager_D3S.from_argparse()
+    '''
+    If this script is run directly, use argparse to set the class variables.
+    '''
+    if arg_parse is True:
+        mgr = Manager_D3S.from_argparse()
+
+    '''
+    If this script is called from GUI_interface.py, use the default values for the class
+    variables
+    '''
+    elif arg_parse is False:
+        mgp = Manager_D3S()
+
     try:
         mgr.run()
     except:
@@ -377,4 +397,4 @@ def main():
 
 if __name__ == '__main__':
 
-    main()
+    main(True)
