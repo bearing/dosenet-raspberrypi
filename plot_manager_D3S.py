@@ -375,14 +375,14 @@ def main(arg_parse=False):
     '''
     If this script is run directly, use argparse to set the class variables.
     '''
-    if arg_parse is True:
+    if arg_parse:
         mgr = Manager_D3S.from_argparse()
 
     '''
     If this script is called from GUI_interface.py, use the default values for the class
     variables
     '''
-    elif arg_parse is False:
+    else:
         mgr = Manager_D3S()
 
     try:
