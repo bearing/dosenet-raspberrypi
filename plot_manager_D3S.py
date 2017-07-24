@@ -370,20 +370,9 @@ class Manager_D3S(object):
 
         return mgr
 
-def main(arg_parse=False):
+def main():
 
-    '''
-    If this script is run directly, use argparse to set the class variables.
-    '''
-    if arg_parse:
-        mgr = Manager_D3S.from_argparse()
-
-    '''
-    If this script is called from GUI_interface.py, use the default values for the class
-    variables
-    '''
-    else:
-        mgr = Manager_D3S()
+    mgr = Manager_D3S.from_argparse()
 
     try:
         mgr.run()
@@ -397,4 +386,7 @@ def main(arg_parse=False):
 
 if __name__ == '__main__':
 
-    main(True)
+    '''
+    Execute the main method with argument parsing enabled.
+    '''
+    main()
