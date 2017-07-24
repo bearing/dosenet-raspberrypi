@@ -383,7 +383,7 @@ def main(arg_parse=False):
     variables
     '''
     elif arg_parse is False:
-        mgp = Manager_D3S()
+        mgr = Manager_D3S()
 
     try:
         mgr.run()
