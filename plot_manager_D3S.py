@@ -310,21 +310,40 @@ class Manager_D3S(object):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
+    def plot_waterfall(self):
+        """Wrapper around waterfall plotter in Real_Time_Spectra class"""
+
+        self.rt_plot.plot_waterfall()
+
+    def plot_spectrum(self):
+        """Wrapper around spectrum plotter in Real_Time_Spectra class"""
+
+        self.rt_plot.plot_sum()
+
+    def plot_fitter(self):
+        """Wrapper around spectrum-fitter plotter in Real_Time_Spectra class"""
+
+        total_time=self.interval*self.maxspectra
+        times = np.linspace(self.interval,total_time + 1,self.interval)
+        spectra_fitter.main(self.rt_plot.sum_data, times)
+
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
         if self.plot:
             self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
-            self.rt_plot.plot_waterfall()
-            self.rt_plot.plot_sum()
+
+            '''
+            Plot the data.
+            '''
+            self.plot_waterfall()
+            self.plot_spectrum()
+            # self.plot_fitter()
 
             '''
             Uncomment 3 lines below to plot the spectra fitter plots.
             '''
-            # total_time=self.interval*self.maxspectra
-            # times = np.linspace(self.interval,total_time + 1,self.interval)
-            # spectra_fitter.main(self.rt_plot.sum_data, times)
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
