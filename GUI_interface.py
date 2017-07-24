@@ -224,11 +224,8 @@ def make_run_gui():
             wdaq.close(2)
         aqdaq.pmplot()
         jobaq=top1.after(1000,airquality)
-'''        
-    def D3S_spectra():
-        
-    def D3S_waterfall():
-'''
+
+
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)
     stopButton1 = Tkinter.Button(top1, height=2, width=20, text ="Stop", command = stop)
     startButton1.pack()
