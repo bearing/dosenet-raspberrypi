@@ -1,21 +1,65 @@
 
 #!/usr/bin/env/python
 import Tkinter
+import os
+import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
+import plot_manager_D3S
+
+# pressure, temp, humidity, co2, air, spectra, waterfall
+plot_jobs = [None, None, None, None, None, None, None]
+
+
+def close(index):
+    if index == 0:
+        wdaq.close(3)
+    if index == 1:
+        wdaq.close(1)
+    if index == 2:
+        wdaq.close(2)
+    if index == 3:
+        adcdaq.close(1)
+    if index == 4:
+        aqdaq.close(1)
+    if index == 5:
+        mgrD3S.close()
+    if index == 6:
+        mgrD3S.close()
+
+
+def check_plots(index):
+    for i in range(len(plot_jobs)):
+        if plot_jobs[i] is not None:
+            if i != index:
+                #cancel job, close graph
+                top1.after_cancel(plot_jobs[i])
+                plot_jobs[i] = None
+                close(i)
 
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
+mgrD3S = plot_manager_D3S.Manager_D3S()
+
 
 top = Tkinter.Tk()
 varAir = Tkinter.BooleanVar()
 varAir.set(True)
+vard3s = Tkinter.BooleanVar()
+vard3s.set(True)
 varCO2 = Tkinter.BooleanVar()
 varCO2.set(True)
 varWeather = Tkinter.BooleanVar()
 varWeather.set(True)
+
+def start_D3S():
+    try:
+        mgrD3S.run()
+    except:
+        print("Error: Failed to start D3S")
+    
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -25,16 +69,22 @@ def make_run_gui():
     global jobtemp
     global jobco2
     global jobaq
+    global jobd3s
     job1 = None
     jobpress = None
     jobhumid = None
     jobtemp = None
     jobco2 = None
     jobaq = None
+    jobd3s = None
         
 
     def start():
         global job1
+        global jobd3s
+        if vard3s.get():
+            if jobd3s is None:
+                jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
@@ -128,6 +178,7 @@ def make_run_gui():
         global jobtemp
         global jobco2
         global jobaq
+        '''
         if jobpress is not None:
             top1.after_cancel(jobpress)
             jobpress = None
@@ -144,6 +195,8 @@ def make_run_gui():
             top1.after_cancel(jobhumid)
             jobhumid = None
             wdaq.close(2)
+            '''
+        check_plots(3)
         adcdaq.plot_CO2()
         jobco2=top1.after(1000,CO2)
         
@@ -171,7 +224,11 @@ def make_run_gui():
             wdaq.close(2)
         aqdaq.pmplot()
         jobaq=top1.after(1000,airquality)
-
+'''        
+    def D3S_spectra():
+        
+    def D3S_waterfall():
+'''
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)
     stopButton1 = Tkinter.Button(top1, height=2, width=20, text ="Stop", command = stop)
     startButton1.pack()
@@ -192,6 +249,12 @@ def make_run_gui():
     if varAir.get():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
         AirButton.pack()
+        
+    if vard3s.get():
+        d3sButton_spectra = TKinter.Button(top1, height=2, width=20, text = "D3S Spectra", command = D3S_spectra )
+        d3sButton.pack()
+        d3sButton_waterfall = Tkinter.Button(top1, height=2, width=20, text = "D3S Waterfall", command = D3S_waterfall)
+        d3sButton_waterfall.pack()
     
     top1.attributes("-topmost", True)
     top1.mainloop()
@@ -213,11 +276,13 @@ def weather_test():
 AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir)     
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)
+d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s)
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test)  
 
 AirButton.pack()   
 WeatherButton.pack()
 CO2Button.pack()
+d3sButton.pack()
 RecordButton.pack()
     
 top.mainloop()
