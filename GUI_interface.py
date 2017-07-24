@@ -24,26 +24,20 @@ def close(index):
         adcdaq.close(1)
     if index == 4:
         aqdaq.close(1)
+'''
     if index == 5:
         mgrD3S.close()
     if index == 6:
         mgrD3S.close()
+'''
 
-
-def check_plots(index):
-    for i in range(len(plot_jobs)):
-        if plot_jobs[i] is not None:
-            if i != index:
-                #cancel job, close graph
-                top1.after_cancel(plot_jobs[i])
-                plot_jobs[i] = None
-                close(i)
 
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
+'''
 mgrD3S = plot_manager_D3S.Manager_D3S()
-
+'''
 
 top = Tkinter.Tk()
 varAir = Tkinter.BooleanVar()
@@ -54,13 +48,13 @@ varCO2 = Tkinter.BooleanVar()
 varCO2.set(True)
 varWeather = Tkinter.BooleanVar()
 varWeather.set(True)
-
+'''
 def start_D3S():
     try:
         mgrD3S.run()
     except:
         print("Error: Failed to start D3S")
-    
+'''    
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -78,14 +72,24 @@ def make_run_gui():
     jobco2 = None
     jobaq = None
     jobd3s = None
-        
+    
+    def check_plots(index):
+        for i in range(len(plot_jobs)):
+            if plot_jobs[i] is not None:
+                if i != index:
+                    #cancel job, close graph
+                    top1.after_cancel(plot_jobs[i])
+                    plot_jobs[i] = None
+                    close(i)
 
     def start():
         global job1
         global jobd3s
+        '''
         if vard3s.get():
             if jobd3s is None:
                 jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
+        '''
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
