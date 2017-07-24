@@ -6,8 +6,9 @@ import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
+'''
 import plot_manager_D3S
-
+'''
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -246,12 +247,13 @@ def make_run_gui():
     if varAir.get():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
         AirButton.pack()
-        
+    '''        
     if vard3s.get():
         d3sButton_spectra = TKinter.Button(top1, height=2, width=20, text = "D3S Spectra", command = D3S_spectra )
         d3sButton.pack()
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=20, text = "D3S Waterfall", command = D3S_waterfall)
         d3sButton_waterfall.pack()
+        '''
     
     top1.attributes("-topmost", True)
     top1.mainloop()
