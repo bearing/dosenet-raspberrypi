@@ -1,6 +1,5 @@
 
 #!/usr/bin/env/python
-from appJar import gui
 import Tkinter
 import weather_DAQ
 import air_quality_DAQ
@@ -32,6 +31,7 @@ def make_run_gui():
     jobtemp = None
     jobco2 = None
     jobaq = None
+        
 
     def start():
         global job1
@@ -192,8 +192,8 @@ def make_run_gui():
     if varAir.get():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
         AirButton.pack()
-
     
+    top1.attributes("-topmost", True)
     top1.mainloop()
 
 def weather_test():
