@@ -321,7 +321,10 @@ class Manager_D3S(object):
         self.rt_plot.plot_sum()
 
     def plot_fitter(self):
-        """Wrapper around spectrum-fitter plotter in Real_Time_Spectra class"""
+        """
+        Wrapper around spectrum-fitter data acquisition plotter in
+        spectra_fitter class
+        """
 
         total_time=self.interval*self.maxspectra
         times = np.linspace(self.interval,total_time + 1,self.interval)
