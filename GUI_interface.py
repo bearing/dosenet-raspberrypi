@@ -65,7 +65,6 @@ def make_run_gui():
     global jobco2
     global jobaq
     global jobd3s
-    plot_jobs = [jobpress, jobtemp, jobhumid, jobco2, jobaq]
     job1 = None
     jobpress = None
     jobtemp = None
@@ -73,6 +72,11 @@ def make_run_gui():
     jobco2 = None
     jobaq = None
     jobd3s = None
+    plot_jobs[0] = jobpress
+    plot_jobs[1] = jobtemp
+    plot_jobs[2] = jobhumid
+    plot_jobs[3] = jobco2
+    plot_jobs[4] = jobaq
     
     def check_plots(index):
         global plot_jobs
@@ -188,7 +192,7 @@ def make_run_gui():
         global jobpress
         global jobhumid
         global jobtemp
-        global jobaq
+        
         '''
         global jobco2
         '''
