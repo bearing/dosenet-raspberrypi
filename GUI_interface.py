@@ -39,6 +39,7 @@ mgrD3S = plot_manager_D3S.Manager_D3S()
 '''
 
 top = Tkinter.Tk()
+top.geometry("800x400")
 varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
