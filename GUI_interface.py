@@ -57,6 +57,7 @@ def start_D3S():
 
 def make_run_gui():
     top1 = Tkinter.Tk()
+    global plot_jobs 
     global job1
     global jobpress
     global jobhumid
@@ -64,13 +65,8 @@ def make_run_gui():
     global jobco2
     global jobaq
     global jobd3s
+    plot_jobs = [None, None, None, None, None, None, None]
     job1 = None
-    jobpress = None
-    jobhumid = None
-    jobtemp = None
-    jobco2 = None
-    jobaq = None
-    jobd3s = None
     plot_jobs[0] = jobpress
     plot_jobs[1] = jobtemp
     plot_jobs[2] = jobhumid
@@ -79,6 +75,7 @@ def make_run_gui():
     plot_jobs[5] = jobd3s
     
     def check_plots(index):
+        global plot_jobs
         for i in range(len(plot_jobs)):
             if plot_jobs[i] is not None:
                 if i != index:
@@ -88,8 +85,10 @@ def make_run_gui():
                     close(i)
 
     def start():
+        
         global job1
         global jobd3s
+        
         '''
         if vard3s.get():
             if jobd3s is None:
@@ -108,11 +107,13 @@ def make_run_gui():
         top1.after_cancel(job1)
 
     def press():
+        
         global jobpress
         global jobhumid
         global jobtemp
         global jobco2 
         global jobaq 
+        
         if jobhumid is not None:
             top1.after_cancel(jobhumid)
             jobhumid = None
