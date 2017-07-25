@@ -57,7 +57,8 @@ def start_D3S():
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    global plot_jobs 
+    global job1
+    '''
     global job1
     global jobpress
     global jobhumid
@@ -77,6 +78,7 @@ def make_run_gui():
     plot_jobs[2] = jobhumid
     plot_jobs[3] = jobco2
     plot_jobs[4] = jobaq
+    '''
     
     def check_plots(index):
         global plot_jobs
@@ -194,7 +196,7 @@ def make_run_gui():
         global jobtemp
         
         '''
-        global jobco2
+        global plot_jobs
         '''
         if jobpress is not None:
             top1.after_cancel(jobpress)
@@ -215,7 +217,7 @@ def make_run_gui():
             '''
         check_plots(3)
         adcdaq.plot_CO2()
-        jobco2=top1.after(1000,CO2)
+        plot_jobs[3]=top1.after(1000,CO2)
         
     def airquality():
         '''
@@ -224,7 +226,7 @@ def make_run_gui():
         global jobtemp
         global jobco2
         '''
-        global jobaq
+        global plot_jobs
         '''
         if jobpress is not None:
             top1.after_cancel(jobpress)
@@ -245,7 +247,7 @@ def make_run_gui():
             '''
         check_plots(4)
         aqdaq.pmplot()
-        jobaq=top1.after(1000,airquality)
+        plot_jobs[4]=top1.after(1000,airquality)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)
