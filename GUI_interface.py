@@ -40,13 +40,9 @@ mgrD3S = plot_manager_D3S.Manager_D3S()
 
 top = Tkinter.Tk()
 varAir = Tkinter.BooleanVar()
-varAir.set(True)
 vard3s = Tkinter.BooleanVar()
-vard3s.set(True)
 varCO2 = Tkinter.BooleanVar()
-varCO2.set(True)
 varWeather = Tkinter.BooleanVar()
-varWeather.set(True)
 '''
 def start_D3S():
     try:
