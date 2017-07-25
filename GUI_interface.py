@@ -54,7 +54,7 @@ def start_D3S():
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    top1.geometry('+0+0')
+    top1.geometry('+0+660')
     global job1
     '''
     global jobd3s
@@ -131,25 +131,25 @@ def make_run_gui():
     '''
 
 
-    startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)
-    stopButton1 = Tkinter.Button(top1, height=2, width=20, text ="Stop", command = stop)
+    startButton1 = Tkinter.Button(top1, height=2, width='90', text ="Start", command = start)
+    stopButton1 = Tkinter.Button(top1, height=2, width='90', text ="Stop", command = stop)
     startButton1.grid(row=0, column=0)
     stopButton1.grid(row=0, column=1)
 
     if varWeather.get():
-        PressureButton = Tkinter.Button(top1, height=2, width=20, text = "Pressure", command = press)
+        PressureButton = Tkinter.Button(top1, height=2, width='90', text = "Pressure", command = press)
         PressureButton.grid(row=0, column=2)
-        TempButton = Tkinter.Button(top1, height=2, width=20, text = "Temperature", command = temp)
+        TempButton = Tkinter.Button(top1, height=2, width='90', text = "Temperature", command = temp)
         TempButton.grid(row=0, column=3)
-        HumidButton = Tkinter.Button(top1, height=2, width=20, text = "Humidity", command = humid)
+        HumidButton = Tkinter.Button(top1, height=2, width='90', text = "Humidity", command = humid)
         HumidButton.pack(row=0, column=4)
 
     if varCO2.get():
-        CO2Button = Tkinter.Button(top1, height=2, width=20, text = "CO2", command = CO2)
+        CO2Button = Tkinter.Button(top1, height=2, width='90', text = "CO2", command = CO2)
         CO2Button.grid(row=0, column=5)
         
     if varAir.get():
-        AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
+        AirButton = Tkinter.Button(top1, height=2, width='90', text = "Air Quality", command = airquality)
         AirButton.grid(row=0, column=6)
     '''        
     if vard3s.get():
