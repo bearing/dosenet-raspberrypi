@@ -218,7 +218,7 @@ for i in range(int(len(seconds_times)/combine_number)):
 
     #if length of list is even
     if len(timelength[0])%2 == 0:
-        middle_item1 = len(timelength[0])/2
+        middle_item1 = int(len(timelength[0])/2)
         middle_item2 = middle_item1 - 1
         middletime_sec = (time[middle_item1] + time[middle_item2])/2
         middletimes.append(middletime_sec)
@@ -240,6 +240,8 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
+fig = plt.figure()
+
 plt.figure(1)
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
@@ -252,8 +254,11 @@ plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
+fig.autofmt_xdate()
 
 #Use plot() method to graph particle concentration vs. time and add legend
+fig = plt.figure()
+
 plt.figure(2)
 plt.plot(middletime_final, new_Val10, "b.", label='1.0')
 plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
@@ -263,5 +268,6 @@ plt.xlabel("Time")
 plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
+fig.autofmt_xdate()
 
 plt.show()
