@@ -54,7 +54,7 @@ def start_D3S():
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    top1.geometry('+0+370')
+    top1.geometry('+0+390')
     global job1
     '''
     global jobd3s
