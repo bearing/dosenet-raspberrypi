@@ -11,7 +11,13 @@ import plot_manager_D3S
 '''
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
-
+plot_jobs[0] = None
+plot_jobs[1] = None
+plot_jobs[2] = None
+plot_jobs[3] = None
+plot_jobs[4] = None
+plot_jobs[5] = None
+plot_jobs[6] = None
 
 def close(index):
     if index == 0:
