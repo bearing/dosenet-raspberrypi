@@ -146,17 +146,17 @@ def make_run_gui():
 
     if varCO2.get():
         CO2Button = Tkinter.Button(top1, height=2, width=20, text = "CO2", command = CO2)
-        CO2Button.pack()
+        CO2Button.grid(row=0, column=5)
         
     if varAir.get():
         AirButton = Tkinter.Button(top1, height=2, width=20, text = "Air Quality", command = airquality)
-        AirButton.pack()
+        AirButton.grid(row=0, column=6)
     '''        
     if vard3s.get():
         d3sButton_spectra = TKinter.Button(top1, height=2, width=20, text = "D3S Spectra", command = D3S_spectra )
-        d3sButton.pack()
+        d3sButton_spectra.grid(row=0, column=7)
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=20, text = "D3S Waterfall", command = D3S_waterfall)
-        d3sButton_waterfall.pack()
+        d3sButton_spectra.grid(row=0, column=8)
         '''
     
     top1.attributes("-topmost", True)
@@ -176,10 +176,10 @@ def weather_test():
     make_run_gui() 
   
 
-AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height=2, width=2, font="Times 25")    
-WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25", height=2, width=2)
-CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
-d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
+AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, font="Times 25")    
+WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25")
+CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25")
+d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
 AirButton.pack(fill ='both')   
