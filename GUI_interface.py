@@ -133,16 +133,16 @@ def make_run_gui():
 
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)
     stopButton1 = Tkinter.Button(top1, height=2, width=20, text ="Stop", command = stop)
-    startButton1.pack()
-    stopButton1.pack()
+    startButton1.grid(row=0, column=0)
+    stopButton1.grid(row=0, column=1)
 
     if varWeather.get():
         PressureButton = Tkinter.Button(top1, height=2, width=20, text = "Pressure", command = press)
-        PressureButton.pack()
+        PressureButton.grid(row=0, column=2)
         TempButton = Tkinter.Button(top1, height=2, width=20, text = "Temperature", command = temp)
-        TempButton.pack()
+        TempButton.grid(row=0, column=3)
         HumidButton = Tkinter.Button(top1, height=2, width=20, text = "Humidity", command = humid)
-        HumidButton.pack()
+        HumidButton.pack(row=0, column=4)
 
     if varCO2.get():
         CO2Button = Tkinter.Button(top1, height=2, width=20, text = "CO2", command = CO2)
