@@ -189,11 +189,13 @@ def make_run_gui():
         jobhumid=top1.after(1000,humid)
         
     def CO2():
+        '''
         global jobpress
         global jobhumid
         global jobtemp
-        global jobco2
         global jobaq
+        '''
+        global jobco2
         '''
         if jobpress is not None:
             top1.after_cancel(jobpress)
@@ -217,10 +219,12 @@ def make_run_gui():
         jobco2=top1.after(1000,CO2)
         
     def airquality():
+        '''
         global jobpress
         global jobhumid
         global jobtemp
         global jobco2
+        '''
         global jobaq
         '''
         if jobpress is not None:
