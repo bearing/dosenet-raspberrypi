@@ -175,10 +175,10 @@ def weather_test():
     make_run_gui() 
   
 
-AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, width=4, height=4)     
-WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, width=4, height=4)
-CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, width=4, height=4)
-d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, width=4, height=4)
+AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir).grid(row=0, column=1)     
+WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather).grid(row=1, column=1)
+CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2).grid(row=2, column=1)
+d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s).grid(row=3, column=1)
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test)  
 
 AirButton.pack()   
