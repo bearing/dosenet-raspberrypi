@@ -58,27 +58,6 @@ def start_D3S():
 def make_run_gui():
     top1 = Tkinter.Tk()
     global job1
-    '''
-    global job1
-    global jobpress
-    global jobhumid
-    global jobtemp
-    global jobco2
-    global jobaq
-    global jobd3s
-    job1 = None
-    jobpress = None
-    jobtemp = None
-    jobhumid = None
-    jobco2 = None
-    jobaq = None
-    jobd3s = None
-    plot_jobs[0] = jobpress
-    plot_jobs[1] = jobtemp
-    plot_jobs[2] = jobhumid
-    plot_jobs[3] = jobco2
-    plot_jobs[4] = jobaq
-    '''
     
     def check_plots(index):
         global plot_jobs
@@ -114,137 +93,31 @@ def make_run_gui():
 
     def press():
         
-        global jobpress
-        global jobhumid
-        global jobtemp
-        global jobco2 
-        global jobaq 
-        
-        if jobhumid is not None:
-            top1.after_cancel(jobhumid)
-            jobhumid = None
-            wdaq.close(2)
-        if jobtemp is not None:
-            top1.after_cancel(jobtemp)
-            jobtemp = None
-            wdaq.close(1)
-        if jobco2 is not None:
-            top1.after_cancel(jobco2)
-            jobco2 = None
-            adcdaq.close(1)
-        if jobaq is not None:
-            top1.after_cancel(jobaq)
-            jobaq = None
-            aqdaq.close(1)
+        global plot_jobs
+        check_plots(0)
         wdaq.press()
-        jobpress=top1.after(1000,press)
+        plot_jobs[0]=top1.after(1000,press)
         
     def temp():
-        global jobpress
-        global jobhumid
-        global jobtemp
-        global jobco2
-        global jobaq
-        if jobhumid is not None:
-            top1.after_cancel(jobhumid)
-            jobhumid = None
-            wdaq.close(2)
-        if jobpress is not None:
-            top1.after_cancel(jobpress)
-            jobpress = None
-            wdaq.close(3)
-        if jobco2 is not None:
-            top1.after_cancel(jobco2)
-            jobco2 = None
-            adcdaq.close(1)
-        if jobaq is not None:
-            top1.after_cancel(jobaq)
-            jobaq = None
-            aqdaq.close(1)
+        global plot_jobs
+        check_plots(1)
         wdaq.temp()
-        jobtemp=top1.after(1000,temp)
+        plot_jobs[1]=top1.after(1000,temp)
         
     def humid():
-        global jobpress
-        global jobhumid
-        global jobtemp
-        global jobco2
-        global jobaq
-        if jobpress is not None:
-            top1.after_cancel(jobpress)
-            jobpress = None
-            wdaq.close(3)
-        if jobtemp is not None:
-            top1.after_cancel(jobtemp)
-            jobtemp = None
-            wdaq.close(1)
-        if jobco2 is not None:
-            top1.after_cancel(jobco2)
-            jobco2 = None
-            adcdaq.close(1)
-        if jobaq is not None:
-            top1.after_cancel(jobaq)
-            jobaq = None
-            aqdaq.close(1)
+        global plot_jobs
+        check_plots(2)
         wdaq.humid()
-        jobhumid=top1.after(1000,humid)
+        plot_jobs[2]=top1.after(1000,humid)
         
     def CO2():
-        '''
-        global jobpress
-        global jobhumid
-        global jobtemp
-        
-        '''
         global plot_jobs
-        '''
-        if jobpress is not None:
-            top1.after_cancel(jobpress)
-            jobpress = None
-            wdaq.close(3)
-        if jobtemp is not None:
-            top1.after_cancel(jobtemp)
-            jobtemp = None
-            wdaq.close(1)
-        if jobaq is not None:
-            top1.after_cancel(jobco2)
-            jobaq = None
-            aqdaq.close(1)
-        if jobhumid is not None:
-            top1.after_cancel(jobhumid)
-            jobhumid = None
-            wdaq.close(2)
-            '''
         check_plots(3)
         adcdaq.plot_CO2()
         plot_jobs[3]=top1.after(1000,CO2)
         
     def airquality():
-        '''
-        global jobpress
-        global jobhumid
-        global jobtemp
-        global jobco2
-        '''
         global plot_jobs
-        '''
-        if jobpress is not None:
-            top1.after_cancel(jobpress)
-            jobpress = None
-            wdaq.close(3)
-        if jobtemp is not None:
-            top1.after_cancel(jobtemp)
-            jobtemp = None
-            wdaq.close(1)
-        if jobco2 is not None:
-            top1.after_cancel(jobco2)
-            jobco2 = None
-            adcdaq.close(1)
-        if jobhumid is not None:
-            top1.after_cancel(jobhumid)
-            jobhumid = None
-            wdaq.close(2)
-            '''
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
