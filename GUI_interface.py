@@ -222,6 +222,7 @@ def make_run_gui():
         global jobtemp
         global jobco2
         global jobaq
+        '''
         if jobpress is not None:
             top1.after_cancel(jobpress)
             jobpress = None
@@ -238,6 +239,8 @@ def make_run_gui():
             top1.after_cancel(jobhumid)
             jobhumid = None
             wdaq.close(2)
+            '''
+        check_plots(4)
         aqdaq.pmplot()
         jobaq=top1.after(1000,airquality)
 
