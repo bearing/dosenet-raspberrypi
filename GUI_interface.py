@@ -54,6 +54,7 @@ def start_D3S():
 
 def make_run_gui():
     top1 = Tkinter.Tk()
+    top1.geometry('+0+0')
     global job1
     '''
     global jobd3s
@@ -175,11 +176,11 @@ def weather_test():
     make_run_gui() 
   
 
-AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height=2, width=2, font="25")    
-WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="25", height=2, width=2)
-CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="25", height=2, width=2)
-d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="25", height=2, width=2)
-RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="25")  
+AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height=2, width=2, font="Times 25")    
+WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25", height=2, width=2)
+CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
+d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
+RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
 AirButton.pack(fill ='both')   
 WeatherButton.pack(fill = 'both')
