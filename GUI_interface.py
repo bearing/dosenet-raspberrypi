@@ -58,6 +58,10 @@ def start_D3S():
 def make_run_gui():
     top1 = Tkinter.Tk()
     global job1
+    '''
+    global jobd3s
+    jobd3s = None
+    '''
     
     def check_plots(index):
         global plot_jobs
@@ -72,9 +76,9 @@ def make_run_gui():
     def start():
         
         global job1
-        global jobd3s
-        
         '''
+        global jobd3s
+
         if vard3s.get():
             if jobd3s is None:
                 jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
@@ -121,6 +125,12 @@ def make_run_gui():
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
+    '''
+    def D3S_spectra():
+        
+    def D3S_waterfall():
+        
+    '''
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=20, text ="Start", command = start)

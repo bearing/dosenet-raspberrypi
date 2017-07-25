@@ -70,8 +70,7 @@ class weather_DAQ(object):
         self.add_data(self.press_queue,self.press_list,hectopascals)
         self.add_time(self.time_queue, self.time_list, date_time)
         
-            
-            
+        
     def press(self):
         if len(self.time_queue)>0:
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
@@ -121,6 +120,7 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        plt.subplots_adjust(left = 1)
         fig.show()
         plt.pause(0.0005)
 
