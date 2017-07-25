@@ -67,12 +67,12 @@ def make_run_gui():
     global jobd3s
     plot_jobs = [None, None, None, None, None, None, None]
     job1 = None
-    plot_jobs[0] = jobpress
-    plot_jobs[1] = jobtemp
-    plot_jobs[2] = jobhumid
-    plot_jobs[3] = jobco2
-    plot_jobs[4] = jobaq
-    plot_jobs[5] = jobd3s
+    jobpress = plot_jobs[0]
+    jobtemp = plot_jobs[1]
+    jobhumid = plot_jobs[2]
+    jobco2 = plot_jobs[3]
+    jobaq = plot_jobs[4]
+    jobd3s = plot_jobs[5]
     
     def check_plots(index):
         global plot_jobs
