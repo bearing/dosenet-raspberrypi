@@ -12,13 +12,6 @@ import plot_manager_D3S
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
-plot_jobs[0] = jobpress
-plot_jobs[1] = jobtemp
-plot_jobs[2] = jobhumid
-plot_jobs[3] = jobco2
-plot_jobs[4] = jobaq
-plot_jobs[5] = jobd3s
-
 def close(index):
     if index == 0:
         wdaq.close(3)
@@ -78,6 +71,12 @@ def make_run_gui():
     jobco2 = None
     jobaq = None
     jobd3s = None
+    plot_jobs[0] = jobpress
+    plot_jobs[1] = jobtemp
+    plot_jobs[2] = jobhumid
+    plot_jobs[3] = jobco2
+    plot_jobs[4] = jobaq
+    plot_jobs[5] = jobd3s
     
     def check_plots(index):
         for i in range(len(plot_jobs)):
