@@ -39,6 +39,7 @@ mgrD3S = plot_manager_D3S.Manager_D3S()
 '''
 
 top = Tkinter.Tk()
+top.geometry("800x400")
 varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
@@ -174,7 +175,7 @@ def weather_test():
     make_run_gui() 
   
 
-AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height=2, width=2,)    
+AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height=2, width=2, font="Arial 10 bold")    
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather)
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s)
