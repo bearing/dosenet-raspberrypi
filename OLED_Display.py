@@ -119,6 +119,7 @@ else:
     exit()
 
 try:
+    print("TEST")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
     for i in range(len(sensor_name)):
@@ -128,6 +129,7 @@ try:
             OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 except:
+    print("Test")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
