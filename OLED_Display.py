@@ -15,10 +15,10 @@ class OLED_Display:
     def Pin_SetUp(self):
         ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Opens General Result Files
     def Check_Any(self, fname, sensor):
