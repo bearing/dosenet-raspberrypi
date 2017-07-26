@@ -15,10 +15,10 @@ class OLED_Display:
     def Pin_SetUp(self):
         ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Opens General Result Files
     def Check_Any(self, fname, sensor):
@@ -68,7 +68,7 @@ class OLED_Display:
 
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor) # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,29,to_be_displayed2)
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
@@ -136,10 +136,10 @@ except:
     print("Test")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(5, 1)
+    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(6, 1)
+    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
     time.sleep(3.5)
