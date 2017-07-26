@@ -122,11 +122,14 @@ try:
     print("TEST")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
+    print("TESTD")
     for i in range(len(sensor_name)):
         print("TestA")
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
     while True:
+        print("TestB")
         for i in range(len(sensor_name)):
+            print("TESTC")
             OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 except:
