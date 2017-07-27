@@ -63,7 +63,7 @@ class OLED_Display:
             metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
         if "\\" in metadata[0][len(metadata[0])-1]:
             metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\\")
-
+            print("test")
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -77,7 +77,7 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
-                print(sensor)
+                print(sensor+":")
                 print(to_be_displayed1)
                 print(to_be_displayed2+"\n")
                 time.sleep(3.5)
