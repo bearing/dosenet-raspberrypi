@@ -4,7 +4,8 @@ import csv
 import datetime
 import time
 import argparse
-import os
+
+f.flush()
 
 #Initiate timer
 parser = argparse.ArgumentParser()
@@ -19,9 +20,8 @@ filename = "air_quality_test_results_"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
 #Open CSV file to log results
-os.remove("air_quality_test_results.csv")
 logfilename = "air_quality_test_results.csv"
-log_results = csv.writer(open(logfilename, "ab+", "w", 0), delimiter = ",")
+log_results = csv.writer(open(logfilename, "wb+", 0), delimiter = ",")
 
 # Add metadata to CSV file
 metadata = []

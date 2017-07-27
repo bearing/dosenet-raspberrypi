@@ -5,14 +5,20 @@ import datetime
 import csv
 from Adafruit_BME280 import *
 
+f.flush()
+
 sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
+logfilename = "weather_test_results.csv"
+logresults = csv.writer(open(logfilename, "wb+", 0), delimiter = ",")
+
 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
 results.writerow(metadata)
+logresults.writerow(metadata)
 
 while True:
     date_time = datetime.datetime.now()
@@ -24,13 +30,14 @@ while True:
     print ('Temp     = {0:0.3f} deg C'.format(degrees))
     print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
     print ('Humidity = {0:0.2f} %'.format(humidity))
-    
+
     data=[]
     data.append(date_time)
     data.append(degrees)
     data.append(hectopascals)
     data.append(humidity)
-    
+
     results.writerow(data)
-    
+    logresults.writerow(data)
+
     time.sleep(1)

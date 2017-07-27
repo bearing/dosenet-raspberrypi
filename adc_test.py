@@ -34,11 +34,15 @@ file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "CO2_test_results_"+file_time+".csv"
 adc_results = csv.writer(open(filename, "ab+"), delimiter = ",")
 
+logfilename = "CO2_test_results.csv"
+logresults = csv.writer(open(logfilename, "wb+", 0), delimiter = ",")
+
 metadata = []
 metadata.append("Date and Time")
 metadata.append("CO2 (ppm)")
 metadata.append("UV")
 adc_results.writerow(metadata[:])
+logresults.writerow(metadata[:])
 
 # Main program loop.
 now_time = int(time.time())
@@ -63,6 +67,7 @@ while now_time<counter_time+run_time:
     results.append(uv_index)
 
     adc_results.writerow(results[:])
+    logresults.writerow(results[:])
 
     time.sleep(1)
     now_time = int(time.time())
