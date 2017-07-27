@@ -61,7 +61,7 @@ class OLED_Display:
 
         if "\n" in metadata[0][len(metadata)]:
             metadata[0][len(metadata)] = metadata[0][len(metadata)].strip("\n")
-
+            print "test"
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
