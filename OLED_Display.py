@@ -60,7 +60,7 @@ class OLED_Display:
         lastline = [line.split(",") for line in results]
         print len(metadata)
         print len(metadata[0])
-        print metadata[0][len(metadata[0])]
+        print metadata[0][len(metadata[0])-1]
         if "\n" in metadata[0][len(metadata[0])]:
             metadata[0][len(metadata[0])] = metadata[0][len(metadata[0])].strip("\n")
             print "test"
