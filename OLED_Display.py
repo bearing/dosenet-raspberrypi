@@ -77,11 +77,13 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
+                print(sensor)
                 print(to_be_displayed1)
                 print(to_be_displayed2+"\n")
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
+            print("Couldn't Recieve Data")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
