@@ -72,7 +72,7 @@ class OLED_Display:
                 if "/" in lastline[0][i]:
                     lastline[0][i] = lastline[0][i].strip("/")
 
-                to_be_displayed1 = str("Time:      "+metadata[0][i]+":")
+                to_be_displayed1 = str("Time       "+metadata[0][i])
                 to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
 
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
