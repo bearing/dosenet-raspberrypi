@@ -59,7 +59,7 @@ class OLED_Display:
         results = open(fname).readlines()[-1:]
         lastline = [line.split(",") for line in results]
 
-        if "\n" in metadata[0][len(metadata)]:
+        if "\n" in metadata[0][len(metadata)+1]:
             metadata[0][i] = metadata[0][i].strip("\n")
         if "\\" in metadata[0][len(metadata)]:
             metadata[0][i] = metadata[0][i].strip("\\")
