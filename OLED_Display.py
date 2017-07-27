@@ -78,7 +78,7 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
                 print(to_be_displayed1)
-                print(to_be_displayed2)
+                print(to_be_displayed2+"\n")
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
@@ -129,7 +129,7 @@ else:
     exit()
 
 try:
-    print("OLED Display Print:")
+    print("OLED Display Print: \n")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
     for i in range(len(sensor_name)):
@@ -139,6 +139,7 @@ try:
             OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 except:
+    print("Error: Exiting")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
