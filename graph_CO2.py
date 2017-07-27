@@ -6,7 +6,7 @@ import time
 import datetime
 import numpy as np
 
-user_file = input("What CO2 concentration test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
+user_file = input("File Name: ")
 
 results = csv.reader(open(user_file), delimiter=',')
 times = []
@@ -35,7 +35,7 @@ for i in range(nsum_data):
 	data_unc.append(CO2sigma)
 	itimes = times[i*n_merge:(i+1)*n_merge]
 	itime = itimes[int(len(itimes)/2)]
-	merge_times.append(itime)
+	merge_times.append(itime)	
 
 fig = plt.figure()
 plt.plot(merge_times, data_ave, "b.")
