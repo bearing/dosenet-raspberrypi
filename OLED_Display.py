@@ -59,27 +59,28 @@ class OLED_Display:
         results = open(fname).readlines()[-1:]
         lastline = [line.split(",") for line in results]
 
+        if "\n" in metadata[0][len(metadata)]:
+            metadata[0][i] = metadata[0][i].strip("\n")
+        if "\\" in metadata[0][len(metadata)]:
+            metadata[0][i] = metadata[0][i].strip("\\")
+
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                '''
-                if "\n" in metadata[0][i]:
-                    metadata[0][i] = metadata[0][i].strip("\n")
-                if "\\" in metadata[0][i]:
-                    metadata[0][i] = metadata[0][i].strip("\\")
+
                 if "\n" in lastline[0][i]:
                     lastline[0][i] = lastline[0][i].strip("\n")
                 if "\\" in lastline[0][i]:
                     lastline[0][i] = lastline[0][i].strip("\\")
-                '''
+
                 to_be_displayed1 = str("Time       "+metadata[0][i])
                 to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
 
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
-                print to_be_displayed1
-                print to_be_displayed2
+                print(to_be_displayed1)
+                print(to_be_displayed2)
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
