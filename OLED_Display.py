@@ -58,11 +58,9 @@ class OLED_Display:
 
         results = open(fname).readlines()[-1:]
         lastline = [line.split(",") for line in results]
-        print len(metadata)
-        print len(metadata[0])
-        print metadata[0][len(metadata[0])-1]
-        if "\n" in metadata[0][len(metadata[0])]:
-            metadata[0][len(metadata[0])] = metadata[0][len(metadata[0])].strip("\n")
+
+        if "\n" in metadata[0][len(metadata[0])-1]:
+            metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
             print "test"
 
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
