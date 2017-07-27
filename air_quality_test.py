@@ -39,6 +39,8 @@ metadata.append("PM 10")
 pen_results.writerow(metadata[:])
 log_results.writerow(metadata[:])
 
+print("Results: ")
+
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
@@ -47,8 +49,6 @@ while now_time<counter_time+run_time:
     except:
         print('Error: Exiting')
         exit()
-
-    print("Results: ")
 
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
@@ -76,14 +76,14 @@ while now_time<counter_time+run_time:
 
             # Print Log File Information
             print("Date/Time: "+datetime.datetime.strftime(date_time, "%Y-%m-%d %H:%M:%S")+"\n")
-            print("P3: "+repr(P3)+"\n")
-            print("P5: "+repr(P5)+"\n")
-            print("P10: "+repr(P10)+"\n")
-            print("P25: "+repr(P25)+"\n")
-            print("P50: "+repr(P50)+"\n")
+            print("P3: "+repr(P3))
+            print("P5: "+repr(P5))
+            print("P10: "+repr(P10))
+            print("P25: "+repr(P25))
+            print("P50: "+repr(P50))
             print("P100: "+repr(P100)+"\n")
-            print("PM01: "+repr(PM01Val)+"\n")
-            print("PM25: "+repr(PM25Val)+"\n")
+            print("PM01: "+repr(PM01Val))
+            print("PM25: "+repr(PM25Val))
             print("PM10: "+repr(PM10Val)+"\n")
 
             # Put results in a CSV file
