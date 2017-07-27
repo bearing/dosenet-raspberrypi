@@ -61,6 +61,8 @@ class OLED_Display:
 
         if "\n" in metadata[0][len(metadata[0])-1]:
             metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
+        if "\\" in metadata[0][len(metadata[0])-1]:
+            metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\\")
 
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
@@ -127,6 +129,7 @@ else:
     exit()
 
 try:
+    print("OLED Display Print:")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
     for i in range(len(sensor_name)):
