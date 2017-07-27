@@ -67,7 +67,7 @@ class OLED_Display:
                     metadata[0][i] = metadata[0][i].strip("\n")
                 if "\n" in lastline[0][i]:
                     lastline[0][i] = lastline[0][i].strip("\n")
-            '''        
+'''        
                 to_be_displayed1 = str("Time       "+metadata[0][i])
                 to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
 
