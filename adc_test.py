@@ -69,7 +69,7 @@ while now_time<counter_time+run_time:
     results.append(uv_index)
 
     adc_results.writerow(results[:])
-    logresults.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+results[1]+","+results[2]+"\n")
+    logresults.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+str(results[1])+","+str(results[2])+"\n")
 
     time.sleep(1)
     now_time = int(time.time())
