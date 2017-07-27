@@ -9,7 +9,7 @@ class OLED_Display:
         pass
 
     returned_times = dict([("Air Quality Sensor", "0"), ("CO2 Sensor", "0"), ("Atmosphere Sensor", "0"), ("U.V. Sensor", "0"), ("Si Radiation Sensor", "0"), ("CsI Radiation Sensor", "0")])
-    log_files = dict([("Air Quality Sensor", "air_quality_test_results.log"), ("CO2 Sensor", "CO2_test_results.log"), ("Atmosphere Sensor", "atmosphere_test_results.log"), ("U.V. Sensor", "UV_test_results.log"), ("Si Radiation Sensor", "si_rad_test_results.log"), ("CsI Radiation Sensor", "csi_rad_test_results.log")])
+    log_files = dict([("Air Quality Sensor", "air_quality_test_results.csv"), ("CO2 Sensor", "CO2_test_results.csv"), ("Atmosphere Sensor", "atmosphere_test_results.csv"), ("U.V. Sensor", "UV_test_results.csv"), ("Si Radiation Sensor", "si_rad_test_results.csv"), ("CsI Radiation Sensor", "csi_rad_test_results.csv")])
 
     #Sets up pins
     def Pin_SetUp(self):
@@ -128,7 +128,6 @@ try:
             OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 except:
-    print("Test")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
     ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)

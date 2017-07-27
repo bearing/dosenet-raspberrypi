@@ -5,7 +5,6 @@ import datetime
 import time
 import argparse
 import os
-import sys
 
 #Initiate timer
 parser = argparse.ArgumentParser()
@@ -18,6 +17,11 @@ counter_time= int(time.time())
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "air_quality_test_results_"+file_time+".csv"
 pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
+
+#Open CSV file to log results
+os.remove("air_quality_test_results.csv")
+logfilename = "air_quality_test_results.csv"
+log_results = csv.writer(open(logfilename, "ab+", "w", 0), delimiter = ",")
 
 # Add metadata to CSV file
 metadata = []
@@ -32,9 +36,8 @@ metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
+log_results.writerow(metadata[:])
 
-print(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+","+metadata[4]+","+metadata[5]+","+metadata[6]+","+metadata[7]+","+metadata[8]+","+metadata[9])
-sys.stdout.flush()
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 now_time = int(time.time())
 while now_time<counter_time+run_time:
@@ -43,6 +46,8 @@ while now_time<counter_time+run_time:
     except:
         print('Error: Exiting')
         exit()
+
+    print("Results: ")
 
     buffer = [ord(c) for c in text]
     if buffer[0] == 66:
@@ -69,8 +74,16 @@ while now_time<counter_time+run_time:
             date_time = datetime.datetime.now()
 
             # Print Log File Information
-            print(datetime.datetime.strftime(date_time, "%H:%M:%S")+","+repr(P3)+","+repr(P5)+","+repr(P10)+","+repr(P25)+","+repr(P50)+","+repr(P100)+","+repr(PM01Val)+","+repr(PM25Val)+","+repr(PM10Val))
-            sys.stdout.flush()
+            print("Date/Time: "+date_time+"\n")
+            print("P3: "+repr(P3)+"\n")
+            print("P5: "+repr(P5)+"\n")
+            print("P10: "+repr(P10)+"\n")
+            print("P25: "+repr(P25)+"\n")
+            print("P50: "+repr(P50)+"\n")
+            print("P100: "+repr(P100)+"\n")
+            print("PM01: "+repr(PM01Val)+"\n")
+            print("PM25: "+repr(PM25Val)+"\n")
+            print("PM10: "+repr(PM10Val)+"\n")
 
             # Put results in a CSV file
             results = []
@@ -85,6 +98,7 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
+            log_results.writerow(results[0:10])
 
             now_time = int(time.time())
 
