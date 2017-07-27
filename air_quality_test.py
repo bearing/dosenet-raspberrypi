@@ -22,7 +22,7 @@ pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
 
 #Open CSV file to log results
 logfilename = "air_quality_test_results.csv"
-log_results = csv.writer(open(logfilename, "wb+", 0), delimiter = ",")
+log_results = open(logfilename, "wb+", 0)
 
 # Add metadata to CSV file
 metadata = []
@@ -37,7 +37,7 @@ metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
 pen_results.writerow(metadata[:])
-log_results.writerow(metadata[:])
+log_results.write(metadata[:])
 
 print("Results: ")
 
@@ -99,7 +99,7 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
-            log_results.writerow(results[0:10])
+            log_results.write(results[0:10])
 
             now_time = int(time.time())
 
