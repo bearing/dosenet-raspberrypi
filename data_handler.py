@@ -3,22 +3,14 @@ from auxiliaries import set_verbosity
 from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
+from globalvalues import CPM_DISPLAY_TEXT
+from globalvalues import strf, FLUSH_PAUSE_S
 from collections import deque
 import socket
 import time
 import ast
 import os
 import errno
-
-FLUSH_PAUSE_S = 2
-
-CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
-strf = '%H:%M:%S'
-
 
 class Data_Handler(object):
     """
