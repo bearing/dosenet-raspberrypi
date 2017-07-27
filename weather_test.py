@@ -19,7 +19,7 @@ logresults = open(logfilename, "wb+", 0)
 
 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
 results.writerow(metadata)
-logresults.write(metadata)
+logresults.write(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+"\n")
 
 while True:
     date_time = datetime.datetime.now()
@@ -39,6 +39,6 @@ while True:
     data.append(humidity)
 
     results.writerow(data)
-    logresults.write(data)
+    logresults.write(datetime.datetime.strftime(data[0], "%Y-%m-%d %H:%M:%S")+","+str(data[1])+","+str(data[2])+","+str(data[3])+"\n")
 
     time.sleep(1)
