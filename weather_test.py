@@ -15,11 +15,11 @@ filename = "weather_test_results_"+file_time+".csv"
 results=csv.writer(open(filename, "ab+"), delimiter = ",")
 
 logfilename = "weather_test_results.csv"
-logresults = csv.writer(open(logfilename, "wb+", 0), delimiter = ",")
+logresults = open(logfilename, "wb+", 0)
 
 metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
 results.writerow(metadata)
-logresults.writerow(metadata)
+logresults.write(metadata)
 
 while True:
     date_time = datetime.datetime.now()
@@ -39,6 +39,6 @@ while True:
     data.append(humidity)
 
     results.writerow(data)
-    logresults.writerow(data)
+    logresults.write(data)
 
     time.sleep(1)
