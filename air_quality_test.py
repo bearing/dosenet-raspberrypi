@@ -75,7 +75,7 @@ while now_time<counter_time+run_time:
             date_time = datetime.datetime.now()
 
             # Print Log File Information
-            print("Date/Time: "+datetime.datetime.strftime(date_time)+"\n")
+            print("Date/Time: "+datetime.datetime.strftime(date_time, "%Y-%m-%d %H:%M:%S")+"\n")
             print("P3: "+repr(P3)+"\n")
             print("P5: "+repr(P5)+"\n")
             print("P10: "+repr(P10)+"\n")
