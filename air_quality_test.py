@@ -4,8 +4,9 @@ import csv
 import datetime
 import time
 import argparse
+import sys
 
-f.flush()
+sys.stdout.flush()
 
 #Initiate timer
 parser = argparse.ArgumentParser()

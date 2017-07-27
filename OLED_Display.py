@@ -3,8 +3,9 @@ import datetime
 import time
 from dateutil import parser as theparser
 import argparse
+import sys
 
-f.flush()
+sys.stdout.flush()
 
 class OLED_Display:
     def _init_(self):

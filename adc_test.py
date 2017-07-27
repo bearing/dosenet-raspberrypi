@@ -5,11 +5,13 @@
 import time
 import datetime
 import csv
+import sys
 
 # Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
+sys.stdout.flush()
 
 # Software SPI configuration:
 CLK  = 18
