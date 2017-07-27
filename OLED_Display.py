@@ -62,16 +62,16 @@ class OLED_Display:
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
             for i in range(1,len(lastline[0])):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-
+                '''
                 if "\n" in metadata[0][i]:
                     metadata[0][i] = metadata[0][i].strip("\n")
-                if "/" in metadata[0][i]:
-                    metadata[0][i] = metadata[0][i].strip("/")
+                if "\\" in metadata[0][i]:
+                    metadata[0][i] = metadata[0][i].strip("\\")
                 if "\n" in lastline[0][i]:
                     lastline[0][i] = lastline[0][i].strip("\n")
-                if "/" in lastline[0][i]:
-                    lastline[0][i] = lastline[0][i].strip("/")
-
+                if "\\" in lastline[0][i]:
+                    lastline[0][i] = lastline[0][i].strip("\\")
+                '''
                 to_be_displayed1 = str("Time       "+metadata[0][i])
                 to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
 
