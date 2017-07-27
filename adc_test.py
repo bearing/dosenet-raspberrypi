@@ -44,7 +44,7 @@ metadata.append("Date and Time")
 metadata.append("CO2 (ppm)")
 metadata.append("UV")
 adc_results.writerow(metadata[:])
-logresults.write(metadata[:])
+logresults.write(metadata[0]+","+metadata[1]+","+metadata[2]+"\n")
 
 # Main program loop.
 now_time = int(time.time())
@@ -69,7 +69,7 @@ while now_time<counter_time+run_time:
     results.append(uv_index)
 
     adc_results.writerow(results[:])
-    logresults.write(results[:])
+    logresults.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+results[1]+","+results[2]+"\n")
 
     time.sleep(1)
     now_time = int(time.time())
