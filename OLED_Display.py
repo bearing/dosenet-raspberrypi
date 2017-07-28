@@ -87,6 +87,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data"+"\n")
             time.sleep(3)
 
+        return lastline[0][0]
     def CheckIf_Repeat(self, returned_time, sensor):
         if self.returned_times[sensor] == returned_time:
             return False
@@ -136,8 +137,9 @@ try:
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
     while True:
         for i in range(len(sensor_name)):
-            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
+            Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+            print(Time)
+            
 except:
     print("Error: Exiting")
     ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
