@@ -160,7 +160,7 @@ while True:
     try:
         for i in range(len(sensor_name)):
             Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-            print(Time)
+            print(Time+Time)
     except:
         print("Error: Exiting")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
