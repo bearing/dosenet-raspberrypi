@@ -510,7 +510,7 @@ class Base_Manager(object):
 
     @classmethod
     def from_argparse(cls):
-        parser = argparser.ArgumentParser()
+        parser = argparse.ArgumentParser()
         parser.add_argument(
             '--interval', '-i', type=int, default=None,
             help=('Interval of CPM measurement, in seconds' +
