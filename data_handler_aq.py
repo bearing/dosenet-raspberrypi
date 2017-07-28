@@ -154,7 +154,7 @@ class Data_Handler_AQ(object):
         self.vprint(
             1, BREAK_LINE)
 
-        self.manager.data_log(datalog, avg_data=average_data)
+        self.manager.data_log(datalog, 'avg_data'=average_data)
 
         if self.manager.test:
             self.send_to_memory(average_data)
