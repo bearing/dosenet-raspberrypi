@@ -3,8 +3,8 @@ dose_net_dir=/home/pi/dosenet-raspberrypi
 
 for i in $@
 do
-  echo {i}
-  case {i} in 
+  echo i
+  case i in
     AQ)
       echo "Starting Air Quality Sensor"
       sudo python $dose_net_dir/air_quality_test.py
