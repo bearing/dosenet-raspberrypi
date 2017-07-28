@@ -910,7 +910,7 @@ class Manager_AQ(Manager):
                  variables=AQ_VARIABLES,
                  **kwargs):
 
-        super().__init__(sensor_type=3, **kwargs):
+        super().__init__(sensor_type=3, **kwargs)
 
         self.AQ_port = AQ_port
 
