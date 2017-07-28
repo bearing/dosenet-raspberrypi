@@ -1,5 +1,5 @@
 #! /bin/sh
-$dose_net_dir=/home/pi/dosenet-raspberrypi
+dose_net_dir=/home/pi/dosenet-raspberrypi
 
 case $@ in
   AQ)
