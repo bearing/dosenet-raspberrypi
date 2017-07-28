@@ -305,7 +305,7 @@ class Manager(object):
                 GPIO.cleanup()
                 return
             else:
-                print 'Discovered %s' % devs
+                print ('Discovered %s' % devs)
                 print("D3S device found, checking for data now")
                 self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
             filtered = []
