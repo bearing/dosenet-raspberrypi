@@ -573,7 +573,7 @@ class Manager_Pocket(Base_Manager):
                  protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
-        Base_Manager.__init__(kwargs)
+        Base_Manager.__init__(Base_Manager, kwargs)
 
         self.quit_after_interval = False
 
@@ -740,7 +740,7 @@ class Manager_D3S(Base_Manager):
                  transport='any',
                  **kwargs):
 
-        Base_Manager.__init__(kwargs)
+        Base_Manager.__init__(Base_Manager, kwargs)
 
         self.running = running
 
@@ -915,7 +915,7 @@ class Manager_AQ(Base_Manager):
                  variables=AQ_VARIABLES,
                  **kwargs):
 
-        Base_Manager.__init__(kwargs)
+        Base_Manager.__init__(Base_Manager, kwargs)
 
         self.AQ_port = AQ_port
 
