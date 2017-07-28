@@ -251,12 +251,16 @@ class Base_Manager(object):
             self.aes = None
 
     def run(self):
-
-        this_start, this_end = self.get_interval(int(time.time()))
-        self.vprint(
-            1, ('Manager is starting to run at {}' +
-                ' with intervals of {}s').format(
-                datetime_from_epoch(this_start), self.interval))
+        """
+        Main method to run the sensors continuously, the run
+        procedure is determined by the sensor_type of the instance.
+        """
+        this_start, this_end = self.get_interval(time.time())
+        if self.sensor_type != 2:
+            self.vprint(
+                1, ('Manager is starting to run at {}' +
+                    ' with intervals of {}s').format(
+                    datetime_from_epoch(this_start), self.interval))
         self.running = True
 
         if self.sensor_type == 1:
@@ -269,16 +273,6 @@ class Base_Manager(object):
                         self.sleep_until(this_end)
                     except SleepError:
                         self.vprint(1, 'SleepError: system clock skipped ahead!')
-                        # the previous start/end times are meaningless.
-                        # There are a couple ways this could be handled.
-                        # 1. keep the same start time, but go until time.time()
-                        #    - but if there was actually an execution delay,
-                        #      the CPM will be too high.
-                        # 2. set start time to be time.time() - interval,
-                        #    and end time is time.time().
-                        #    - but if the system clock was adjusted halfway through
-                        #      the interval, the CPM will be too low.
-                        # The second one is more acceptable.
                         self.vprint(
                             3, 'former this_start = {}, this_end = {}'.format(
                                 datetime_from_epoch(this_start),
@@ -286,7 +280,7 @@ class Base_Manager(object):
                         this_start, this_end = self.get_interval(
                             time.time() - self.interval)
 
-                    self.handle_data(this_start, this_end)
+                    self.handle_data(this_start, this_end, None)
                     if self.quit_after_interval:
                         self.vprint(1, 'Reboot: taking down Manager')
                         self.stop()
@@ -330,7 +324,6 @@ class Base_Manager(object):
                 self.d3s_LED.stop_blink()
                 GPIO.cleanup()
                 return
-
             # Checks if the RaspberryPi is getting data from the D3S and turns on
             # the red LED if it is. If a D3S is connected but no data is being recieved,
             # it tries a couple times then reboots the RaspberryPi.
@@ -367,6 +360,11 @@ class Base_Manager(object):
                 self.d3s_LED.stop_blink()
                 print("D3S data connection found, continuing with normal data collection")
                 self.d3s_LED.on()
+
+            self.vprint(
+                1, ('Manager is starting to run at {}' +
+                    ' with intervals of {}s').format(
+                    datetime_from_epoch(this_start), self.interval))
 
             done_devices = set()
             try:
@@ -406,7 +404,7 @@ class Base_Manager(object):
             try:
                 while self.running:
 
-                    self.handle_data(this_start, this_end)
+                    self.handle_data(this_start, this_end, None)
 
                     this_start, this_end = self.get_interval(this_end)
             except KeyboardInterrupt:
@@ -429,21 +427,32 @@ class Base_Manager(object):
         """Stop counting time."""
         self.running = False
 
-    def data_log(self, file, *args):
+    def data_log(self, file, **kwargs):
         """
         Writes measured data to the file.
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
-        data = []
-        for arg in args:
-            data.append(arg)
-        if self.datalogflag:
-            with open(file, 'a') as f:
-                f.write('{}, '.format(time_string))
-                for i in data:
-                    f.write('{}'.format(average_data))
-                f.write('\n')
-                self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+        if self.sensor_type == 1:
+            cpm, cpm_err = kwargs[cpm], kwargs[cpm_err]
+            if self.datalogflag:
+                with open(file, 'a') as f:
+                    f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
+                    f.write('\n')
+                    self.vprint(2, 'Writing CPM to data log at {}'.format(file))
+        if self.sensor_type == 2:
+            spectra = kwargs[spectra]
+            if self.datalogflag:
+                with open(file, 'a') as f:
+                    f.write('{0}, '.format(spectra))
+                    self.vprint(
+                        2, 'Writing spectra to data log at {}'.format(file))
+        if self.sensor_type == 3:
+            average_data = kwargs[average_data]
+            if self.datalogflag:
+                with open(file, 'a') as f:
+                    f.write('{0}, {1}'.format(time_string, average_data))
+                    f.write('\n')
+                    self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
