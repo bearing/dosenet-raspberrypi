@@ -41,7 +41,7 @@ from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_A
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
 from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_PROTOCOL
-from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY
+from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -851,7 +851,7 @@ class Manager_D3S(Base_Manager):
     @classmethod
     def from_argparse(cls):
         super_dict = Base_Manager.from_argparse()
-        parser = argparse.ArgumentParser
+        parser = argparse.ArgumentParser()
         parser.add_argument(
             '--calibrationlog', '-y', default=None,
             help='Specify the calibration log for the D3S ' +
