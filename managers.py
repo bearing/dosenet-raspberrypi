@@ -79,6 +79,7 @@ class Base_Manager(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  aeskey=None,
                  sensor_type=None,
+                 sensor=None,
                  ):
         self.sensor_type = sensor_type
 
@@ -576,7 +577,7 @@ class Manager_Pocket(Base_Manager):
                  protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
-        super(Manager_Pocket, self).__init__(kwargs)
+        super(Manager_Pocket, self).__init__(**kwargs)
 
         self.quit_after_interval = False
 
@@ -743,7 +744,7 @@ class Manager_D3S(Base_Manager):
                  transport='any',
                  **kwargs):
 
-        super(Manager_D3S, self).__init__(kwargs)
+        super(Manager_D3S, self).__init__(**kwargs)
 
         self.running = running
 
