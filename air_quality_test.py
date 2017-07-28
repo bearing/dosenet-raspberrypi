@@ -3,17 +3,9 @@ import binascii
 import csv
 import datetime
 import time
-import argparse
 import sys
 
 sys.stdout.flush()
-
-#Initiate timer
-parser = argparse.ArgumentParser()
-parser.add_argument("runtime", type = int, help = "Enter a whole number. This will determine the length of time in seconds for which the test will run.")
-info = parser.parse_args()
-run_time = info.runtime
-counter_time= int(time.time())
 
 # Open CSV file to save results
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
@@ -42,8 +34,7 @@ log_results.write(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+",
 print("Results: ")
 
 port = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-now_time = int(time.time())
-while now_time<counter_time+run_time:
+while True:
     try:
         text = port.read(32)
     except:
@@ -101,8 +92,6 @@ while now_time<counter_time+run_time:
             pen_results.writerow(results[0:10])
             log_results.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+str(results[1])+","+str(results[2])+","+str(results[3])+","+str(results[4])+","+str(results[5])+","+str(results[6])+","+str(results[7])+","+str(results[8])+","+str(results[9])+"\n")
 
-            now_time = int(time.time())
-
         else:
             print('Check Sum Failed')
 
@@ -112,8 +101,6 @@ while now_time<counter_time+run_time:
             results.append(date_time)
             results.append('Check Sum Failed')
             pen_results.writerow(results[0:2])
-
-            now_time = int(time.time())
 
     else:
         print('Data Acquisition Failed')
