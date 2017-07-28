@@ -223,7 +223,7 @@ class Manager_AQ(object):
                 f.write('{0}, {1}'.format(time_string, average_data))
                 f.write('\n')
                 self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
-                
+
     def handle_air_counts(self, this_start, this_end):
         """
         Takes air quality data for a given interval and sends
