@@ -99,7 +99,7 @@ while now_time<counter_time+run_time:
             results.append(repr(PM25Val))
             results.append(repr(PM10Val))
             pen_results.writerow(results[0:10])
-            log_results.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+str(results[1])+","+str(results[2])+","+str(results[3])+","+str(results[4])+","+str(results[5])+","+str(results[6])+","+str(results[7])+","+str(results[8])+",str(results[9])+"\n")
+            log_results.write(datetime.datetime.strftime(results[0], "%Y-%m-%d %H:%M:%S")+","+str(results[1])+","+str(results[2])+","+str(results[3])+","+str(results[4])+","+str(results[5])+","+str(results[6])+","+str(results[7])+","+str(results[8])+","+str(results[9])+"\n")
 
             now_time = int(time.time())
 
