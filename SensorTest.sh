@@ -1,6 +1,6 @@
 #! /bin/sh
 dose_net_dir=/home/pi/dosenet-raspberrypi
-echo type $@
+echo "`type $@""
 for i in $@
 do
   case i in
