@@ -915,7 +915,7 @@ class Manager_AQ(Base_Manager):
                  variables=AQ_VARIABLES,
                  **kwargs):
 
-        self.variable = variables
+        self.variables = variables
 
         super(Manager_AQ, self).__init__(kwargs)
 
