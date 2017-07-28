@@ -45,9 +45,10 @@ class OLED_Display:
             check = open(fname).readlines()[0:2]
             nowtime = int(time.time())
             if nowtime-begin_time > 3:
+                print("Error: No Data")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Logged Data")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
@@ -85,7 +86,7 @@ class OLED_Display:
             print("Couldn't Recieve Data")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data"+"\n")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
             time.sleep(3)
 
         return lastline[0][0]
@@ -130,11 +131,23 @@ else:
     parser.print_help()
     exit()
 
-print("OLED Display Print: \n")
-OLED = OLED_Display()
-OLED.Pin_SetUp()
+try:
+    print("OLED Display Print: \n")
+    OLED = OLED_Display()
+    OLED.Pin_SetUp()
+except:
+    print("Error Initializing Screen")
+    exit()
 for i in range(len(sensor_name)):
-    OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
+    try:
+        OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
+    except:
+        print("Couldn't Obtain Data")
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Obtain Data")
+        time.sleep(3)
+
 while True:
     try:
         for i in range(len(sensor_name)):
@@ -142,14 +155,8 @@ while True:
             print(Time)
     except:
         print("Error: Exiting")
-        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-        time.sleep(3.5)
+        time.sleep(3)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         exit()
