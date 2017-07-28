@@ -553,7 +553,7 @@ class Base_Manager(object):
             '--aeskey', '-f', default=None,
             help='Specify the aes encription key, mainly used with the D3S ' +
             'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
-        parser.add_argument('--sensor_type', '-w', default=None)
+        parser.add_argument('--sensor_type', '-w', type=int, default=None)
         args = parser.parse_args()
         super_dict = vars(args)
 
@@ -696,6 +696,7 @@ class Manager_Pocket(Base_Manager):
             '--protocol', '-r', default=DEFAULT_PROTOCOL,
             help='Specify what communication protocol is to be used ' +
             '(default {})'.format(DEFAULT_PROTOCOL))
+        parser.add_argument('--sensor_type', '-w', type=int, default=1)
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -884,6 +885,7 @@ class Manager_D3S(Base_Manager):
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
         parser.add_argument('--transport', '-n', default='any')
+        parser.add_argument('--sensor_type', '-w', type=int, default=2)
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -941,6 +943,7 @@ class Manager_AQ(Base_Manager):
             help='Specify which port the Air Quality sensor is sending ' +
             'data through \n[note, this is a Serial Port so be sure to use ' +
             'Serial port notation] (default {})'.format(DEFAULT_AQ_PORT))
+        parser.add_argument('--sensor_type', '-w', type=int, default=3)
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
