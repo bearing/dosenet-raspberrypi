@@ -570,7 +570,7 @@ class Manager_Pocket(Manager):
                  protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
-        super(Manager_Pocket, self).__init__(sensor_type=1, **kwargs)
+        super(Manager_Pocket).__init__(sensor_type=1, **kwargs)
 
         self.quit_after_interval = False
 
@@ -672,7 +672,7 @@ class Manager_Pocket(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_Pocket, self).from_argparse()
+        super_dict = super(Manager_Pocket).from_argparse()
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
@@ -736,7 +736,7 @@ class Manager_D3S(Manager):
                  transport='any',
                  **kwargs):
 
-        super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
+        super(Manager_D3S).__init__(sensor_type=2, **kwargs)
 
         self.running = running
 
@@ -841,7 +841,7 @@ class Manager_D3S(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_D3S, self).from_argparse()
+        super_dict = super(Manager_D3S).from_argparse()
         parser = argparse.ArgumentParser
         parser.add_argument(
             '--calibrationlog', '-y', default=None,
@@ -910,7 +910,7 @@ class Manager_AQ(Manager):
                  variables=AQ_VARIABLES,
                  **kwargs):
 
-        super(Manager_AQ, self).__init__(sensor_type=3, **kwargs)
+        super(Manager_AQ).__init__(sensor_type=3, **kwargs)
 
         self.AQ_port = AQ_port
 
@@ -932,7 +932,7 @@ class Manager_AQ(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_AQ, self).from_argparse()
+        super_dict = super(Manager_AQ).from_argparse()
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--AQ_port', '-a', default=DEFAULT_AQ_PORT,
