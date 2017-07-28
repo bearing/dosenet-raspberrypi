@@ -24,6 +24,7 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Opens General Result Files
+    '''
     def Check_Any(self, fname, sensor):
         begin_time = int(time.time())
         check = open(fname).readlines()[0:2]
@@ -50,7 +51,7 @@ class OLED_Display:
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
-
+    '''
     #Displays data on screen
     def Display_Data(self, fname, sensor):
         metadata_line = open(fname).readlines()[0:1]
