@@ -554,6 +554,7 @@ class Base_Manager(object):
             help='Specify the aes encription key, mainly used with the D3S ' +
             'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
         parser.add_argument('--sensor_type', '-w', type=int, default=None)
+        parser.add_argument('--sensor', '-9', type=int, default=None)
         args = parser.parse_args()
         super_dict = vars(args)
 
@@ -965,7 +966,7 @@ class Manager_AQ(Base_Manager):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--sensor_type', type=int, help='Enter a number corresponding ' +
+        '--sensor', type=int, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
         '\n3 = The Air Quality Sensor')
     sensor_info = parser.parse_args()
