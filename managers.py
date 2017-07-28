@@ -808,9 +808,9 @@ class Manager_D3S(Base_Manager):
         if self.calibrationlogflag:
             self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
 
-    def y_flag(self):
+    def j_flag(self):
         """
-        Checks if the -y from_argparse is called.
+        Checks if the -j from_argparse is called.
         If it is called, sets calibrationlogflag to True.
         Also sets calibrationlogtime to DEFAULT_CALIBRATIONLOG_TIME.
         """
@@ -853,7 +853,7 @@ class Manager_D3S(Base_Manager):
         super_dict = Base_Manager.from_argparse()
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            '--calibrationlog', '-y', default=None,
+            '--calibrationlog', '-j', default=None,
             help='Specify the calibration log for the D3S ' +
             '(default {})'.format(DEFAULT_CALIBRATIONLOG_D3S))
         parser.add_argument(
