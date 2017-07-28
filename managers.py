@@ -970,7 +970,7 @@ if __name__ == '__main__':
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
         '\n3 = The Air Quality Sensor')
     sensor_info = parser.parse_args()
-    sensor = sensor_info.sensor_type
+    sensor = sensor_info.sensor
 
     if sensor == 1:
         mgr = Manager_Pocket.from_argparse()
