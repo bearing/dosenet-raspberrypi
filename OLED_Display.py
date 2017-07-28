@@ -94,10 +94,15 @@ class OLED_Display:
         print(self.returned_times[sensor])
         if self.returned_times[sensor] == returned_time:
             return False
-
+            print("Test")
+            print(returned_time)
         else:
+            print(self.returned_times[sensor])
             self.returned_times[sensor] == returned_time
+            print("TestA")
+            print(returned_time)
             return True
+
 
 sensor_name = []
 parser = argparse.ArgumentParser()
