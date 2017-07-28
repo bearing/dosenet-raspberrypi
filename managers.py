@@ -246,7 +246,7 @@ class Base_Manager(object):
 
     def run(self):
 
-        this_start, this_end = self.get_interval(time.time())
+        this_start, this_end = self.get_interval(int(time.time()))
         self.vprint(
             1, ('Manager is starting to run at {}' +
                 ' with intervals of {}s').format(
