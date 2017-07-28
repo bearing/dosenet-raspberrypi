@@ -433,7 +433,6 @@ class Base_Manager(object):
         """
         Writes measured data to the file.
         """
-        print(kwargs)
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         if self.sensor_type == 1:
             cpm, cpm_err = kwargs.get('counts'), kwargs.get('c_err')
