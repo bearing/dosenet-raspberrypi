@@ -175,15 +175,15 @@ class Base_Manager(object):
                     2, "No interval given, using default for AQ TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST_AQ
 
-        if interval is None and sensor_type == 1:
+        if interval is None and self.sensor_type == 1:
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL
-        if interval is None and sensor_type == 2:
+        if interval is None and self.sensor_type == 2:
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL_D3S
-        if interval is None and sensor_type == 3:
+        if interval is None and self.sensor_type == 3:
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL_AQ
@@ -196,7 +196,7 @@ class Base_Manager(object):
             self.vprint(2, "No publickey file given, " +
                         "attempting to use default publickey path")
             publickey = DEFAULT_PUBLICKEY
-        if aeskey is None and sensor_type == 2:
+        if aeskey is None and self.sensor_type == 2:
             #Only set the AES key when the D3S is being used
             self.vprint(2, "No AES key file given, " +
                         "attempting to use default AES key path")
