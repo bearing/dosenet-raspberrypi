@@ -56,7 +56,7 @@ def signal_quit_handler(signal, frame):
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
 
-class Manager(object):
+class Base_Manager(object):
     """
     Main Manager class that contains the general functions for any
     of the connected detectors or sensors.
@@ -557,7 +557,7 @@ class Manager(object):
 
         return super_dict
 
-class Manager_Pocket(Manager):
+class Manager_Pocket(Base_Manager):
     """
     The subclass that uses the main Manager class and initializes the
     pocket geiger sensor.
@@ -672,7 +672,7 @@ class Manager_Pocket(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_Pocket).from_argparse()
+        super_dict = Base_Manager.from_argparse()
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
@@ -712,7 +712,7 @@ class Manager_Pocket(Manager):
 
         return mgr
 
-class Manager_D3S(Manager):
+class Manager_D3S(Base_Manager):
     """
     The subclass that uses the main Manager class and initializes the D3S.
     """
@@ -841,7 +841,7 @@ class Manager_D3S(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_D3S).from_argparse()
+        super_dict = Base_Manager.from_argparse()
         parser = argparse.ArgumentParser
         parser.add_argument(
             '--calibrationlog', '-y', default=None,
@@ -900,7 +900,7 @@ class Manager_D3S(Manager):
 
         return mgr
 
-class Manager_AQ(Manager):
+class Manager_AQ(Base_Manager):
     """
     The subclass that uses the main Manager class and initializes the
     Air Quality sensor.
@@ -932,7 +932,7 @@ class Manager_AQ(Manager):
 
     @classmethod
     def from_argparse(cls):
-        super_dict = super(Manager_AQ).from_argparse()
+        super_dict = Base_Manager.from_argparse()
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--AQ_port', '-a', default=DEFAULT_AQ_PORT,
