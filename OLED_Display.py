@@ -24,7 +24,6 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Opens General Result Files
-
     def Check_Any(self, fname, sensor):
         begin_time = int(time.time())
         check = open(fname).readlines()[0:2]
@@ -92,6 +91,7 @@ class OLED_Display:
 
         return lastline[0][0]
     def CheckIf_Repeat(self, returned_time, sensor):
+        print(self.returned_times[sensor])
         if self.returned_times[sensor] == returned_time:
             return False
 
