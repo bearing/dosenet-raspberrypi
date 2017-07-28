@@ -559,7 +559,6 @@ class Base_Manager(object):
             '--aeskey', '-f', default=None,
             help='Specify the aes encription key, mainly used with the D3S ' +
             'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
-        parser.add_argument('--sensor_type', '-w', type=int, default=None)
         parser.add_argument('--sensor', '-9', type=int, default=None)
         args = parser.parse_args()
         super_dict = vars(args)
