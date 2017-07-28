@@ -656,11 +656,11 @@ class Manager_AQ(Manager):
         parser.add_argument(
             '--logfile', '-l', type=str, default=None,
             help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE_D3S))
+                DEFAULT_LOGFILE_AQ))
         parser.add_argument(
             '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG_D3S))
+                DEFAULT_DATALOG_AQ))
         args = parser.parse_args()
         arg_dict = vars(args)
         arg_dict.update(super_dict)
