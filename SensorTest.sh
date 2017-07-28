@@ -3,6 +3,7 @@ dose_net_dir=/home/pi/dosenet-raspberrypi
 
 for i in $@
 do
+  echo i
   case i in
     AQ)
       echo "Starting Air Quality Sensor"
