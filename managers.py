@@ -568,8 +568,7 @@ class Manager_Pocket(Manager):
                  noise_pin=NOISE_PIN,
                  signal_pin=SIGNAL_PIN,
                  protocol=DEFAULT_PROTOCOL,
-                 **kwargs,
-                 ):
+                 **kwargs):
 
         super().__init__(sensor_type=1, **kwargs)
 
@@ -735,8 +734,7 @@ class Manager_D3S(Manager):
                  signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  transport='any',
-                 **kwargs,
-                 ):
+                 **kwargs):
 
         super().__init__(sensor_type=2, **kwargs)
 
@@ -910,8 +908,7 @@ class Manager_AQ(Manager):
     def __init__(self,
                  AQ_port=DEFAULT_AQ_PORT,
                  variables=AQ_VARIABLES,
-                 **kwargs,
-                 ):
+                 **kwargs):
 
         super().__init__(sensor_type=3, **kwargs):
 
