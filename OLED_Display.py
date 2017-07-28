@@ -92,24 +92,11 @@ class OLED_Display:
         return lastline[0][0]
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
-        print("BEFORE self.returned_times[sensor]:")
-        print(self.returned_times[sensor])
-        print("BEFORE returned_time:")
-        print(returned_time)
+
         if self.returned_times[sensor] == returned_time:
             return False
-            print("Test returned_time")
-            print(returned_time)
-            print("TEST self.returned_times[sensor] (will be = to returned_time)")
-            print(self.returned_times[sensor])
         else:
-            print("self.returned_times[sensor] in else")
-            print(self.returned_times[sensor])
             self.returned_times[sensor] = returned_time
-            print("AFTER returned_time:")
-            print(returned_time)
-            print("AFTER self.returned_times[sensor]:")
-            print(self.returned_times[sensor])
             return True
 
 
