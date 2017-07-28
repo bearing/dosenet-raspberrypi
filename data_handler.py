@@ -183,7 +183,7 @@ class Data_Handler(object):
                 start_time=start_text,
                 end_time=end_text))
 
-        self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
+        self.manager.data_log(datalog, counts=cpm, c_err=cpm_err)
 
         if self.manager.test:
             # for testing the memory queue
