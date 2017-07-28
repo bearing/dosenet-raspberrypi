@@ -121,16 +121,16 @@ CSI = inclusion.CsI
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
     print("AIR")
-elif CO == True:
+if CO == True:
     sensor_name.append("CO2 Sensor")
     print("CO2Sensor")
-elif AT == True:
+if AT == True:
     sensor_name.append("Atmosphere Sensor")
-elif uv == True:
+if uv == True:
     sensor_name.append("U.V. Sensor")
-elif SI == True:
+if SI == True:
     sensor_name.append("Si Sensor")
-elif CSI == True:
+if CSI == True:
     sensor_name.append("CsI Sensor")
 else:
     parser.print_help()
