@@ -24,7 +24,7 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Opens General Result Files
-    '''
+
     def Check_Any(self, fname, sensor):
         begin_time = int(time.time())
         check = open(fname).readlines()[0:2]
@@ -47,11 +47,11 @@ class OLED_Display:
             if nowtime-begin_time > 3:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Data")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Couldn't Recieve Logged Data")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
-    '''
+
     #Displays data on screen
     def Display_Data(self, fname, sensor):
         metadata_line = open(fname).readlines()[0:1]
@@ -130,27 +130,26 @@ else:
     parser.print_help()
     exit()
 
-try:
-    print("OLED Display Print: \n")
-    OLED = OLED_Display()
-    OLED.Pin_SetUp()
-    for i in range(len(sensor_name)):
-        OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
-    while True:
+print("OLED Display Print: \n")
+OLED = OLED_Display()
+OLED.Pin_SetUp()
+for i in range(len(sensor_name)):
+    OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
+while True:
+    try:
         for i in range(len(sensor_name)):
             Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
             print(Time)
-
-except:
-    print("Error: Exiting")
-    ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-    ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-    time.sleep(3.5)
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    exit()
+    except:
+        print("Error: Exiting")
+        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
+        time.sleep(3.5)
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        exit()
