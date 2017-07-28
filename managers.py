@@ -49,6 +49,13 @@ def signal_term_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
+def signal_quit_handler(signal, frame):
+    # If SIGQUIT signal is intercepted, the SystemExit exception routines
+    #   get run if it's right after an interval
+    mgr.quit_after_interval = True
+
+signal.signal(signal.SIGQUIT, signal_quit_handler)
+
 class Manager(object):
     """
     Main Manager class that contains the general functions for any
@@ -269,7 +276,7 @@ class Manager(object):
                         this_start, this_end = self.get_interval(
                             time.time() - self.interval)
 
-                    self.handle_cpm(this_start, this_end)
+                    self.handle_data(this_start, this_end)
                     if self.quit_after_interval:
                         self.vprint(1, 'Reboot: taking down Manager')
                         self.stop()
@@ -370,7 +377,7 @@ class Manager(object):
                                 this_start, this_end = self.get_interval(
                                     time.time() - self.interval)
 
-                                self.handle_spectra(
+                                self.handle_data(
                                     this_start, this_end, reading[4])
 
                             if dev_count >= self.count > 0:
@@ -565,6 +572,8 @@ class Manager_Pocket(Manager):
                  ):
 
         super().__init__(sensor_type=1, **kwargs)
+
+        self.quit_after_interval = False
 
         if RPI:
             self.counts_LED = LED(counts_LED_pin)
@@ -950,3 +959,28 @@ class Manager_AQ(Manager):
         mgr = Manager_AQ(**arg_dict)
 
         return mgr
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--sensor_type', type=int, help='Enter a number corresponding ' +
+        'to the sensor type where: \n1 = The Pocket Geiger \n2= The D3S' +
+        '\n3 = The Air Quality Sensor')
+    sensor_info = parser.parse_args()
+    sensor = sensor_info.sensor_type
+
+    if sensor == 1:
+        mgr = Manager_Pocket.from_argparse()
+    if sensor == 2:
+        mgr = Manager_D3S.from_argparse()
+    if sensor == 3:
+        mgr = Manager_AQ.from_argparse()
+    try:
+        mgr.run()
+    except:
+        if mgr.logfile:
+            # print exception info to logfile
+            with open(mgr.logfile, 'a') as f:
+                traceback.print_exc(15, f)
+        # regardless, re-raise the error which will print to stderr
+        raise

@@ -10,6 +10,9 @@ def start_dosenet():
 def start_D3S():
     os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh start')
 
+def start_AQ():
+    os.system('sudo bash /home/pi/dosenet-raspbberrypi/AQ.sh start')
+
 if __name__ == '__main__':
     print('Waiting for NTP to be synced...')
     os.system('sudo service ntp stop')
@@ -25,14 +28,18 @@ if __name__ == '__main__':
 
     p = multiprocessing.Process(target=start_D3S, args=())
     t = multiprocessing.Process(target=start_dosenet, args=())
+    a = multiprocessing.Process(target=start_AQ, args=())
     try:
         print('Starting D3S script process')
         p.start()
         print('Starting Pocket Geiger script process')
         t.start()
+        print('Starting Air Quality Sensor script process')
+        a.start()
         print('started')
         p.join()
         t.join()
+        a.join()
         print('we can reboot here')
     except:
         pass
