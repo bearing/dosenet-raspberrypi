@@ -167,7 +167,7 @@ while True:
     try:
         for i in range(len(sensor_name)):
             Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-            print("Time:")
+            print("Time var:")
             print(Time)
     except:
         print("Error: Exiting")
