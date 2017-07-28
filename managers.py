@@ -240,7 +240,7 @@ class Base_Manager(object):
             except IOError:
                 raise IOError('Unable to load AES key file {}!'.format(
                     aeskey))
-        else:
+        if not aeskey and self.sensor_type == 2:
             self.vprint(
                 1, 'WARNING: no AES key given. Not posting to server')
             self.aes = None
