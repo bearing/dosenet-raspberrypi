@@ -94,6 +94,8 @@ class Base_Manager(object):
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey, aeskey)
 
+        self.sender_mode = sender_mode
+
     def a_flag(self):
         """
         Checks if the -a from_argparse is called.
