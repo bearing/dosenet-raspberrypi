@@ -105,7 +105,7 @@ class OLED_Display:
         else:
             print("self.returned_times[sensor] in else")
             print(self.returned_times[sensor])
-            self.returned_times[sensor] == returned_time
+            self.returned_times[sensor] = returned_time
             print("AFTER returned_time:")
             print(returned_time)
             print("AFTER self.returned_times[sensor]:")
