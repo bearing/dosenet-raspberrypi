@@ -132,7 +132,7 @@ if SI == True:
     sensor_name.append("Si Sensor")
 if CSI == True:
     sensor_name.append("CsI Sensor")
-else:
+elif:
     parser.print_help()
     exit()
 
