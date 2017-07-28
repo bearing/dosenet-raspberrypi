@@ -473,7 +473,7 @@ class Base_Manager(object):
             aq_data_set = []
             average_data = []
             while time.time() < this_end:
-                text = self.aq_port.read(32)
+                text = self.AQ_port.read(32)
                 buffer = [ord(c) for c in text]
                 if buffer[0] == 66:
                     summation = sum(buffer[0:30])
