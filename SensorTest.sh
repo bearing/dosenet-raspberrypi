@@ -20,11 +20,13 @@ case $@ in
   Si)
     echo "Starting Silicon Radiation Detector" > /tmp/pocket_manager.log
     sudo python $dose_net_dir/manager.py --logfile /tmp/pocket_manager.log >>/tmp/pocket_manager.log 2>&1
+    ;;
 
   CsI)
     echo "Starting Cesium Iodide Radiation Detector" > /tmp/d3s_manager.log
     sudo python $dose_net_dir/manager_D3S.py --logfile /tmp/d3s_manager.log >> /tmp/d3s_manager.log 2>&1
-
+    ;;
+    
   *)
     echo "Error: Incorrect Usage"
     echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI}"
