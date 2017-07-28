@@ -920,7 +920,7 @@ class Manager_AQ(Base_Manager):
 
         self.variables = variables
 
-        super(Manager_AQ, self).__init__(kwargs)
+        super(Manager_AQ, self).__init__(**kwargs)
 
         self.AQ_port = AQ_port
 
