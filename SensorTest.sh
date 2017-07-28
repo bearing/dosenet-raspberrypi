@@ -4,7 +4,7 @@ $dose_net_dir=/home/pi/dosenet-raspberrypi
 case $@ in
   AQ)
     echo "Starting Air Quality Sensor"
-    sudo python $dose_net_dir/air_quality_test.py
+    sudo python {$dose_net_dir}/air_quality_test.py
     ;;
 
   ADC)
@@ -26,7 +26,7 @@ case $@ in
     echo "Starting Cesium Iodide Radiation Detector" > /tmp/d3s_manager.log
     sudo python $dose_net_dir/manager_D3S.py --logfile /tmp/d3s_manager.log >> /tmp/d3s_manager.log 2>&1
     ;;
-    
+
   *)
     echo "Error: Incorrect Usage"
     echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI}"
