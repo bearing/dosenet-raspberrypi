@@ -89,10 +89,10 @@ class Base_Manager(object):
         self.d_flag()
         self.make_data_log(self.datalog)
 
+        self.test = test
+
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey, aeskey)
-
-        self.test = test
 
     def a_flag(self):
         """
