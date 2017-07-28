@@ -769,7 +769,7 @@ class Manager_D3S(Base_Manager):
         self.calibrationlogtime = calibrationlogtime
 
         self.z_flag()
-        self.y_flag()
+        self.j_flag()
         self.x_flag()
         self.make_calibration_log(self.calibrationlog)
 
