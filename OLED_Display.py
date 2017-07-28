@@ -128,10 +128,8 @@ CSI = inclusion.CsI
 try:
     if AQ == True:
         sensor_name.append("Air Quality Sensor")
-        print("AIR")
     if CO == True:
         sensor_name.append("CO2 Sensor")
-        print("CO2Sensor")
     if AT == True:
         sensor_name.append("Atmosphere Sensor")
     if uv == True:
@@ -161,13 +159,8 @@ for i in range(len(sensor_name)):
 
 while True:
     try:
-        print((len(sensor_name)))
         for i in range(len(sensor_name)):
-            Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-            print("Time var:")
-            print(Time)
-            print(sensor_name[i])
-        print((len(sensor_name)))
+            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
     except:
         print("Error: Exiting")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
