@@ -9,6 +9,7 @@ import csv
 import os
 import subprocess
 import socket
+import kromek
 from Crypto.Cipher import AES
 from collections import deque
 
