@@ -915,11 +915,11 @@ class Manager_AQ(Base_Manager):
                  variables=AQ_VARIABLES,
                  **kwargs):
 
+        self.variable = variables
+
         super(Manager_AQ, self).__init__(kwargs)
 
         self.AQ_port = AQ_port
-
-        self.variable = variables
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
