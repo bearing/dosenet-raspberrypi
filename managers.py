@@ -95,6 +95,7 @@ class Base_Manager(object):
                           test, interval, config, publickey, aeskey)
 
         self.sender_mode = sender_mode
+        self.port = port
 
     def a_flag(self):
         """
