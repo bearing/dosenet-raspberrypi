@@ -100,6 +100,13 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
+try:
+    print("OLED Display Print: \n")
+    OLED = OLED_Display()
+    OLED.Pin_SetUp()
+except:
+    print("Error Initializing Screen")
+    exit()
 
 sensor_name = []
 parser = argparse.ArgumentParser()
@@ -118,31 +125,30 @@ uv = inclusion.UV
 SI = inclusion.Si
 CSI = inclusion.CsI
 
-if AQ == True:
-    sensor_name.append("Air Quality Sensor")
-    print("AIR")
-if CO == True:
-    sensor_name.append("CO2 Sensor")
-    print("CO2Sensor")
-if AT == True:
-    sensor_name.append("Atmosphere Sensor")
-if uv == True:
-    sensor_name.append("U.V. Sensor")
-if SI == True:
-    sensor_name.append("Si Sensor")
-if CSI == True:
-    sensor_name.append("CsI Sensor")
-else:
-    parser.print_help()
-    exit()
-
 try:
-    print("OLED Display Print: \n")
-    OLED = OLED_Display()
-    OLED.Pin_SetUp()
+    if AQ == True:
+        sensor_name.append("Air Quality Sensor")
+        print("AIR")
+    if CO == True:
+        sensor_name.append("CO2 Sensor")
+        print("CO2Sensor")
+    if AT == True:
+        sensor_name.append("Atmosphere Sensor")
+    if uv == True:
+        sensor_name.append("U.V. Sensor")
+    if SI == True:
+        sensor_name.append("Si Sensor")
+    if CSI == True:
+        sensor_name.append("CsI Sensor")
+    if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+        parser.print_help()
+        exit()
 except:
-    print("Error Initializing Screen")
-    exit()
+    print("Error with Arg. Usage")
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3, "Error with Arg. Usage")
+    time.sleep(3)
+
 for i in range(len(sensor_name)):
     try:
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
