@@ -10,6 +10,7 @@ import os
 import subprocess
 import socket
 import kromek
+import numpy as np
 import datetime
 from Crypto.Cipher import AES
 from collections import deque
