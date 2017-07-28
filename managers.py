@@ -595,8 +595,8 @@ class Manager_Pocket(Base_Manager):
             network_led=self.network_LED)
         self.sender = ServerSender(
             manager=self,
-            mode=sender_mode,
-            port=port,
+            mode=self.sender_mode,
+            port=self.port,
             verbosity=self.v,
             logfile=self.logfile)
 
@@ -787,8 +787,8 @@ class Manager_D3S(Base_Manager):
             logfile=self.logfile,)
         self.sender = ServerSender(
             manager=self,
-            mode=sender_mode,
-            port=port,
+            mode=self.sender_mode,
+            port=self.port,
             verbosity=self.v,
             logfile=self.logfile,)
 
@@ -928,8 +928,8 @@ class Manager_AQ(Base_Manager):
             variables=self.variables)
         self.sender = ServerSender(
             manager=self,
-            mode=sender_mode,
-            port=port,
+            mode=self.sender_mode,
+            port=self.port,
             verbosity=self.v,
             logfile=self.logfile)
 
