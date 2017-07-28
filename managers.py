@@ -9,6 +9,8 @@ import csv
 import os
 import subprocess
 import socket
+from Crypto.Cipher import AES
+from collections import deque
 
 from globalvalues import RPI
 if RPI:
@@ -581,6 +583,8 @@ class Manager_Pocket(Base_Manager):
         super(Manager_Pocket, self).__init__(**kwargs)
 
         self.quit_after_interval = False
+
+        self.protocol = protocol
 
         if RPI:
             self.counts_LED = LED(counts_LED_pin)
