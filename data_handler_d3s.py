@@ -120,7 +120,7 @@ class Data_Handler_D3S(object):
                 start_time=start_text,
                 end_time=end_text))
 
-        self.manager.data_log(datalog, 'spectrum'=spectra)
+        self.manager.data_log(datalog, spectrum=spectra)
         self.manager.calibration_log(calibrationlog, spectra)
 
         if self.manager.test:
