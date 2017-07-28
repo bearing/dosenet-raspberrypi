@@ -120,8 +120,10 @@ CSI = inclusion.CsI
 
 if AQ == True:
     sensor_name.append("Air Quality Sensor")
+    print("AIR")
 elif CO == True:
     sensor_name.append("CO2 Sensor")
+    print("CO2Sensor")
 elif AT == True:
     sensor_name.append("Atmosphere Sensor")
 elif uv == True:
