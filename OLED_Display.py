@@ -80,6 +80,7 @@ class OLED_Display:
                 print(sensor+":")
                 print(to_be_displayed1)
                 print(to_be_displayed2+"\n")
+                print("i: "+str(i))
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
