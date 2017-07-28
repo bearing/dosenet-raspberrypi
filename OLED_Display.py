@@ -23,7 +23,7 @@ class OLED_Display:
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
-    #Opens General Result Files
+    #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
         begin_time = int(time.time())
         check = open(fname).readlines()[0:2]
@@ -90,8 +90,10 @@ class OLED_Display:
             time.sleep(3)
 
         return lastline[0][0]
+    #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
         print(self.returned_times[sensor])
+        print(returned_time)
         if self.returned_times[sensor] == returned_time:
             return False
             print("Test")
@@ -148,10 +150,10 @@ for i in range(len(sensor_name)):
     try:
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
     except:
-        print("Couldn't Obtain Data")
+        print("Error Opening CSV")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Obtain Data")
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
         time.sleep(3)
 
 while True:
