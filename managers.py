@@ -523,7 +523,7 @@ class Base_Manager(object):
             help='Specify a publickey file (default {})'.format(
                 DEFAULT_PUBLICKEY))
         parser.add_argument(
-            '--hostname', '-h', default=DEFAULT_HOSTNAME,
+            '--hostname', '-4', default=DEFAULT_HOSTNAME,
             help='Specify a server hostname (default {})'.format(
                 DEFAULT_HOSTNAME))
         parser.add_argument(
