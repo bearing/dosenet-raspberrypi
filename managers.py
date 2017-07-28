@@ -123,7 +123,7 @@ class Base_Manager(object):
                 pass
 
     def handle_input(self, log, logfile, verbosity,
-                         interval, config, publickey, aeskey):
+                         test, interval, config, publickey, aeskey):
 
         if log and self.sensor_type == None:
             self.vprint(1,
