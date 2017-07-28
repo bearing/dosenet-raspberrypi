@@ -92,16 +92,19 @@ class OLED_Display:
         return lastline[0][0]
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
+        print("BEFORE self.returned_times[sensor]:")
         print(self.returned_times[sensor])
+        print("BEFORE returned_time:")
         print(returned_time)
         if self.returned_times[sensor] == returned_time:
             return False
-            print("Test")
+            print("Test returned_time")
             print(returned_time)
         else:
+            print("self.returned_times[sensor] in else")
             print(self.returned_times[sensor])
             self.returned_times[sensor] == returned_time
-            print("TestA")
+            print("AFTER returned_time:")
             print(returned_time)
             return True
 
@@ -160,7 +163,8 @@ while True:
     try:
         for i in range(len(sensor_name)):
             Time = OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-            print(Time+Time)
+            print("Time:")
+            print(Time)
     except:
         print("Error: Exiting")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
