@@ -5,6 +5,7 @@ import argparse
 import traceback
 import signal
 import sys
+import csv
 import os
 import subprocess
 import socket
@@ -232,12 +233,244 @@ class Manager(object):
                 1, 'WARNING: no AES key given. Not posting to server')
             self.aes = None
 
+    def run(self):
+
+        this_start, this_end = self.get_interval(time.time())
+        self.vprint(
+            1, ('Manager is starting to run at {}' +
+                ' with intervals of {}s').format(
+                datetime_from_epoch(this_start), self.interval))
+        self.running = True
+
+        if self.sensor_type == 1:
+            try:
+                while self.running:
+                    self.vprint(3, 'Sleeping at {} until {}'.format(
+                        datetime_from_epoch(time.time()),
+                        datetime_from_epoch(this_end)))
+                    try:
+                        self.sleep_until(this_end)
+                    except SleepError:
+                        self.vprint(1, 'SleepError: system clock skipped ahead!')
+                        # the previous start/end times are meaningless.
+                        # There are a couple ways this could be handled.
+                        # 1. keep the same start time, but go until time.time()
+                        #    - but if there was actually an execution delay,
+                        #      the CPM will be too high.
+                        # 2. set start time to be time.time() - interval,
+                        #    and end time is time.time().
+                        #    - but if the system clock was adjusted halfway through
+                        #      the interval, the CPM will be too low.
+                        # The second one is more acceptable.
+                        self.vprint(
+                            3, 'former this_start = {}, this_end = {}'.format(
+                                datetime_from_epoch(this_start),
+                                datetime_from_epoch(this_end)))
+                        this_start, this_end = self.get_interval(
+                            time.time() - self.interval)
+
+                    self.handle_cpm(this_start, this_end)
+                    if self.quit_after_interval:
+                        self.vprint(1, 'Reboot: taking down Manager')
+                        self.stop()
+                        self.takedown()
+                        os.system('sudo {0} {1}'.format(
+                            REBOOT_SCRIPT, self.branch))
+                    this_start, this_end = self.get_interval(this_end)
+            except KeyboardInterrupt:
+                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                self.stop()
+                self.takedown()
+            except SystemExit:
+                self.vprint(1, '\nSystemExit: taking down Manager')
+                self.stop()
+                self.takedown()
+
+        if self.sensor_type == 2:
+            if self.transport == 'any':
+                devs = kromek.discover()
+            else:
+                devs = kromek.discover(self.transport)
+
+            if len(devs) <= 0:
+                print("No D3S connected, exiting manager now")
+                self.d3s_LED.stop_blink()
+                GPIO.cleanup()
+                return
+            else:
+                print 'Discovered %s' % devs
+                print("D3S device found, checking for data now")
+                self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
+            filtered = []
+
+            for dev in devs:
+                if self.device == 'all' or dev[0] in self.device:
+                    filtered.append(dev)
+
+            devs = filtered
+            if len(devs) <= 0:
+                print("No D3S connected, exiting manager now")
+                self.d3s_LED.stop_blink()
+                GPIO.cleanup()
+                return
+
+            # Checks if the RaspberryPi is getting data from the D3S and turns on
+            # the red LED if it is. If a D3S is connected but no data is being recieved,
+            # it tries a couple times then reboots the RaspberryPi.
+            try:
+                while self.signal_test_attempts < 3 and self.signal_test_connection == False:
+                    test_time = time.time() + self.signal_test_time + 5
+                    while time.time() < test_time and self.signal_test_loop:
+                        with kromek.Controller(devs, self.signal_test_time) as controller:
+                            for reading in controller.read():
+                                if sum(reading[4]) != 0:
+                                    self.d3s_light_switch = True
+                                    self.signal_test_loop = False
+                                    break
+                                else:
+                                    self.signal_test_loop = False
+                                    break
+                    if self.d3s_light_switch:
+                        self.signal_test_connection = True
+                    else:
+                        self.signal_test_attempts += 1
+                        self.signal_test_loop = True
+                        print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
+                if not self.signal_test_connection:
+                    print("No data from D3S found, restarting now")
+                    os.system('sudo reboot')
+            except KeyboardInterrupt:
+                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                self.takedown()
+            except SystemExit:
+                self.vprint(1, '\nSystemExit: taking down Manager')
+                self.takedown()
+
+            if self.d3s_light_switch:
+                self.d3s_LED.stop_blink()
+                print("D3S data connection found, continuing with normal data collection")
+                self.d3s_LED.on()
+
+            done_devices = set()
+            try:
+                while self.running:
+                    with kromek.Controller(devs, self.interval) as controller:
+                        for reading in controller.read():
+                            if self.create_structures:
+                                self.total = np.array(reading[4])
+                                self.lst = np.array([reading[4]])
+                                self.create_structures = False
+                            else:
+                                self.total += np.array(reading[4])
+                                self.lst = np.concatenate(
+                                    (self.lst, [np.array(reading[4])]))
+                            serial = reading[0]
+                            dev_count = reading[1]
+                            if serial not in done_devices:
+                                this_start, this_end = self.get_interval(
+                                    time.time() - self.interval)
+
+                                self.handle_spectra(
+                                    this_start, this_end, reading[4])
+
+                            if dev_count >= self.count > 0:
+                                done_devices.add(serial)
+                                controller.stop_collector(serial)
+                            if len(done_devices) >= len(devs):
+                                break
+            except KeyboardInterrupt:
+                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                self.takedown()
+            except SystemExit:
+                self.vprint(1, '\nSystemExit: taking down Manager')
+                self.takedown()
+
+        if self.sensor_type == 3:
+            try:
+                while self.running:
+
+                    self.handle_data(this_start, this_end)
+
+                    this_start, this_end = self.get_interval(this_end)
+            except KeyboardInterrupt:
+                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                self.stop()
+                self.takedown()
+            except SystemExit:
+                self.vprint(1, '\nSystemExit: taking down Manager')
+                self.stop()
+                self.takedown()
+
     def get_interval(self, start_time):
         """
         Return start and end time for interval, based on given start_time.
         """
         end_time = start_time + self.interval
         return start_time, end_time
+
+    def stop(self):
+        """Stop counting time."""
+        self.running = False
+
+    def data_log(self, file, *args):
+        """
+        Writes measured data to the file.
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        data = []
+        for arg in args:
+            data.append(arg)
+        if self.datalogflag:
+            with open(file, 'a') as f:
+                f.write('{}, '.format(time_string))
+                for i in data:
+                    f.write('{}'.format(average_data))
+                f.write('\n')
+                self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+
+    def handle_data(self, this_start, this_end, spectra):
+        """
+        Chooses the type of sensor that is being used and
+        determines the data handling type to use.
+        """
+        if self.sensor_type == 1:
+            cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
+            counts = int(round(cpm * self.interval / 60))
+            self.data_handler.main(
+                self.datalog, cpm, cpm_err, this_start, this_end, counts)
+
+        if self.sensor_type == 2:
+            self.data_handler.main(
+                self.datalog, self.calibrationlog, spectra, this_start, this_end)
+
+        if self.sensor_type == 3:
+            aq_data_set = []
+            average_data = []
+            while time.time() < this_end:
+                text = self.aq_port.read(32)
+                buffer = [ord(c) for c in text]
+                if buffer[0] == 66:
+                    summation = sum(buffer[0:30])
+                    checkbyte = (buffer[30]<<8)+buffer[31]
+                    if summation == checkbyte:
+                        current_second_data = []
+                        buf = buffer[1:32]
+                        current_second_data.append(datetime.datetime.now())
+                        for n in range(1,4):
+                            current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
+                        for n in range(1,7):
+                            current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                        aq_data_set.append(current_second_data)
+            for c in range(len(self.variables)):
+                c_data = []
+                for i in range(len(aq_data_set)):
+                    c_data.append(aq_data_set[i][c+1])
+                c_data_int = list(map(int, c_data))
+                avg_c = sum(c_data_int)/len(c_data_int)
+                average_data.append(avg_c)
+
+            self.data_handler.main(
+                self.datalog, average_data, this_start, this_end)
 
     def takedown(self):
         """
@@ -308,6 +541,10 @@ class Manager(object):
             choices=['udp', 'tcp', 'UDP', 'TCP'],
             help='The network protocol used in sending data ' +
             '(default {})'.format(DEFAULT_SENDER_MODE))
+        parser.add_argument(
+            '--aeskey', '-f', default=None,
+            help='Specify the aes encription key, mainly used with the D3S ' +
+            'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
         args = parser.parse_args()
         super_dict = vars(args)
 
@@ -392,6 +629,38 @@ class Manager_Pocket(Manager):
                 if self.network_LED.blinker:
                     self.network_LED.stop_blink()
                 self.network_LED.on()
+
+    def sleep_until(self, end_time, retry=True):
+        """
+        Sleep until the given timestamp.
+
+        Input:
+
+          end_time: number of seconds since epoch, e.g. time.time()
+        """
+
+        catching_up_flag = False
+        sleeptime = end_time - time.time()
+        self.vprint(3, 'Sleeping for {} seconds'.format(sleeptime))
+        if sleeptime < 0:
+            # can happen if flushing queue to server takes longer than interval
+            sleeptime = 0
+            catching_up_flag = True
+        time.sleep(sleeptime)
+        if self.quit_after_interval and retry:
+            # SIGQUIT signal somehow interrupts time.sleep
+            # which makes the retry argument needed
+            self.sleep_until(end_time, retry=False)
+        now = time.time()
+        self.vprint(
+            2, 'sleep_until offset is {} seconds'.format(now - end_time))
+        # normally this offset is < 0.1 s
+        # although a reboot normally produces an offset of 9.5 s
+        #   on the first cycle
+        if not catching_up_flag and (now - end_time > 10 or now < end_time):
+            # raspberry pi clock reset during this interval
+            # normally the first half of the condition triggers it.
+            raise SleepError
 
     @classmethod
     def from_argparse(cls):
@@ -548,6 +817,20 @@ class Manager_D3S(Manager):
         if self.calibrationlogflag:
             with open(file, 'a') as f:
                 pass
+
+    def calibration_log(self, file, spectra):
+        """
+        Writes spectra to calibration-log.
+        """
+        if self.calibrationlogflag:
+            with open(file, 'a') as f:
+                f.write('{0}, '.format(spectra))
+                self.vprint(
+                    2, 'Writing spectra to calibration log at {}'.format(file))
+            self.c_timer += self.interval
+            if self.c_timer >= self.calibrationlogtime:
+                self.vprint(1, 'Calibration Complete')
+                self.takedown()
 
     @classmethod
     def from_argparse(cls):
