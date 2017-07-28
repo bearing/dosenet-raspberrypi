@@ -244,6 +244,8 @@ class Base_Manager(object):
             self.vprint(
                 1, 'WARNING: no AES key given. Not posting to server')
             self.aes = None
+        if self.sensor_type != 2:
+            self.aes = None
 
     def run(self):
 
