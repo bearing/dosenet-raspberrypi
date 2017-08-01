@@ -49,8 +49,11 @@ class OLED_Display:
             check = open(fname).readlines()[0:2]
             nowtime = int(time.time())
             if nowtime-begin_time > 3:
+                print(sensor+": \n")
+                print("Waiting")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Waiting")
                 time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 break
@@ -61,6 +64,7 @@ class OLED_Display:
             check = open(fname).readlines()[0:2]
             nowtime = int(time.time())
             if nowtime-begin_time > 3:
+                print(sensor+"\n")
                 print("Error: No Data")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
