@@ -520,10 +520,11 @@ class Base_Manager(object):
             except AttributeError:
                 pass
 
-        try:
-            GPIO.cleanup()
-        except NameError:
-            pass
+        if self.sensor_type != 3:
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
 
         self.data_handler.send_all_to_backlog()
 
@@ -843,16 +844,15 @@ if __name__ == '__main__':
         '(default {} for UDP, {} for TCP)'.format(
             DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
     parser.add_argument(
-        '--test', '-t', action='store_true', default=False,
-        help='Start in test mode (no config, 30s intervals)')
+        '--test', '-t', default=False, help='Start in test mode (no config, 30s intervals)')
     parser.add_argument(
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
     parser.add_argument(
-        '--log', '-g', action='store_true', default=False,
+        '--log', '-g', default=False,
         help='Enable file logging of all verbose text (default off)')
     parser.add_argument(
-        '--datalogflag', '-f', action='store_true', default=False,
+        '--datalogflag', '-f', default=False,
         help='Enable logging local data (default off)')
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
@@ -911,7 +911,7 @@ if __name__ == '__main__':
             help='Specify the calibration log for the D3S ' +
             '(default {})'.format(DEFAULT_CALIBRATIONLOG_D3S))
         parser.add_argument(
-            '--calibrationlogflag', '-z', action='store_true', default=False,
+            '--calibrationlogflag', '-z', default=False,
             help='Specify whether the D3S should store a calibration log ' +
             '(default False)')
         parser.add_argument(
@@ -942,8 +942,7 @@ if __name__ == '__main__':
             '(default Off)')
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument(
-            '--log-bytes', '-y', dest='log_bytes', default=False,
-            action='store_true')
+            '--log-bytes', '-y', dest='log_bytes', default=False)
         parser.add_argument('--transport', '-n', default='any')
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
