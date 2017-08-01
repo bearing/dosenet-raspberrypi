@@ -116,7 +116,6 @@ class OLED_Display:
             return True
 
 try:
-    print("OLED Display Print: \n")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
 except:
@@ -156,6 +155,8 @@ if CSI == True:
 if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
     parser.print_help()
     exit()
+
+print("OLED Display Print: \n")
 
 for i in range(len(sensor_name)):
     try:
