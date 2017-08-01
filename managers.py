@@ -529,56 +529,6 @@ class Base_Manager(object):
 
         del(self)
 
-    @classmethod
-    def from_argparse(cls):
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            '--interval', '-i', type=int, default=None,
-            help=('Interval of CPM measurement, in seconds' +
-                  ' (default 300 for normal mode)'))
-        parser.add_argument(
-            '--config', '-c', default=None,
-            help='Specify a config file (default {})'.format(DEFAULT_CONFIG))
-        parser.add_argument(
-            '--publickey', '-k', default=None,
-            help='Specify a publickey file (default {})'.format(
-                DEFAULT_PUBLICKEY))
-        parser.add_argument(
-            '--hostname', '-4', default=DEFAULT_HOSTNAME,
-            help='Specify a server hostname (default {})'.format(
-                DEFAULT_HOSTNAME))
-        parser.add_argument(
-            '--port', '-p', type=int, default=None,
-            help='Specify a port for the server ' +
-            '(default {} for UDP, {} for TCP)'.format(
-                DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
-        parser.add_argument(
-            '--test', '-t', action='store_true', default=False,
-            help='Start in test mode (no config, 30s intervals)')
-        parser.add_argument(
-            '--verbosity', '-v', type=int, default=None,
-            help='Verbosity level (0 to 3) (default 1)')
-        parser.add_argument(
-            '--log', '-g', action='store_true', default=False,
-            help='Enable file logging of all verbose text (default off)')
-        parser.add_argument(
-            '--datalogflag', '-q', action='store_true', default=False,
-            help='Enable logging local data (default off)')
-        parser.add_argument(
-            '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
-            choices=['udp', 'tcp', 'UDP', 'TCP'],
-            help='The network protocol used in sending data ' +
-            '(default {})'.format(DEFAULT_SENDER_MODE))
-        parser.add_argument(
-            '--aeskey', '-f', default=None,
-            help='Specify the aes encription key, mainly used with the D3S ' +
-            'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
-        parser.add_argument('--sensor', '-9', type=int, default=None)
-        args = parser.parse_args()
-        super_dict = vars(args)
-
-        return super_dict
-
 class Manager_Pocket(Base_Manager):
     """
     The subclass that uses the main Manager class and initializes the
@@ -592,7 +542,7 @@ class Manager_Pocket(Base_Manager):
                  protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
-        super(Manager_Pocket, self).__init__(**kwargs)
+        super(Manager_Pocket, self).__init__(sensor_type=1, **kwargs)
 
         self.quit_after_interval = False
 
@@ -694,49 +644,6 @@ class Manager_Pocket(Base_Manager):
             # normally the first half of the condition triggers it.
             raise SleepError
 
-    @classmethod
-    def from_argparse(cls):
-        super_dict = Base_Manager.from_argparse()
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
-            help='Specify which pin the counts LED is connected to ' +
-            '(default {})'.format(COUNTS_LED_PIN))
-        parser.add_argument(
-            '--network_LED_pin', '-e', default=NETWORK_LED_PIN,
-            help='Specify which pin the network LED is connected to ' +
-            '(default {})'.format(NETWORK_LED_PIN))
-        parser.add_argument(
-            '--noise_pin', '-n', default=NOISE_PIN,
-            help='Specify which pin to the noise reader is connected to ' +
-            '(default {})'.format(NOISE_PIN))
-        parser.add_argument(
-            '--signal_pin', '-s', default=SIGNAL_PIN,
-            help='Specify which pin the signal is coming in from ' +
-            '(default {})'.format(SIGNAL_PIN))
-        parser.add_argument(
-            '--protocol', '-r', default=DEFAULT_PROTOCOL,
-            help='Specify what communication protocol is to be used ' +
-            '(default {})'.format(DEFAULT_PROTOCOL))
-        parser.add_argument('--sensor_type', '-w', type=int, default=1)
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG))
-        args = parser.parse_args()
-        arg_dict = vars(args)
-        arg_dict.update(super_dict)
-        mgr = Manager_Pocket(**arg_dict)
-
-        return mgr
-
 class Manager_D3S(Base_Manager):
     """
     The subclass that uses the main Manager class and initializes the D3S.
@@ -761,7 +668,7 @@ class Manager_D3S(Base_Manager):
                  transport='any',
                  **kwargs):
 
-        super(Manager_D3S, self).__init__(**kwargs)
+        super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
 
         self.running = running
 
@@ -864,10 +771,141 @@ class Manager_D3S(Base_Manager):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
+class Manager_AQ(Base_Manager):
+    """
+    The subclass that uses the main Manager class and initializes the
+    Air Quality sensor.
+    """
+    def __init__(self,
+                 AQ_port=DEFAULT_AQ_PORT,
+                 variables=AQ_VARIABLES,
+                 **kwargs):
+
+        self.variables = variables
+
+        super(Manager_AQ, self).__init__(sensor_type=3, **kwargs)
+
+        self.AQ_port = AQ_port
+
+        self.data_handler = Data_Handler_AQ(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile,
+            variables=self.variables)
+        self.sender = ServerSender(
+            manager=self,
+            mode=self.sender_mode,
+            port=self.port,
+            verbosity=self.v,
+            logfile=self.logfile)
+
+        self.data_handler.backlog_to_queue()
+
     @classmethod
     def from_argparse(cls):
         super_dict = Base_Manager.from_argparse()
         parser = argparse.ArgumentParser()
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        arg_dict.update(super_dict)
+        mgr = Manager_AQ(**arg_dict)
+
+        return mgr
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--sensor', '-s', type=int, help='Enter a number corresponding ' +
+        'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
+        '\n3 = The Air Quality Sensor')
+    sensor_tuple = parser.parse_known_args()
+    sensor = sensor_tuple[0].sensor
+
+    #Generic Manager control variables.
+    parser.add_argument(
+        '--interval', '-i', type=int, default=None,
+        help=('Interval of CPM measurement, in seconds' +
+              ' (default 300 for normal mode)'))
+    parser.add_argument(
+        '--config', '-c', default=None,
+        help='Specify a config file (default {})'.format(DEFAULT_CONFIG))
+    parser.add_argument(
+        '--publickey', '-k', default=None,
+        help='Specify a publickey file (default {})'.format(
+            DEFAULT_PUBLICKEY))
+    parser.add_argument(
+        '--hostname', '-4', default=DEFAULT_HOSTNAME,
+        help='Specify a server hostname (default {})'.format(
+            DEFAULT_HOSTNAME))
+    parser.add_argument(
+        '--port', '-p', type=int, default=None,
+        help='Specify a port for the server ' +
+        '(default {} for UDP, {} for TCP)'.format(
+            DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
+    parser.add_argument(
+        '--test', '-t', action='store_true', default=False,
+        help='Start in test mode (no config, 30s intervals)')
+    parser.add_argument(
+        '--verbosity', '-v', type=int, default=None,
+        help='Verbosity level (0 to 3) (default 1)')
+    parser.add_argument(
+        '--log', '-g', action='store_true', default=False,
+        help='Enable file logging of all verbose text (default off)')
+    parser.add_argument(
+        '--datalogflag', '-f', action='store_true', default=False,
+        help='Enable logging local data (default off)')
+    parser.add_argument(
+        '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
+        choices=['udp', 'tcp', 'UDP', 'TCP'],
+        help='The network protocol used in sending data ' +
+        '(default {})'.format(DEFAULT_SENDER_MODE))
+    parser.add_argument(
+        '--aeskey', '-q', default=None,
+        help='Specify the aes encription key, mainly used with the D3S ' +
+        'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
+
+    if sensor == 1:
+        #Pocket Geiger specific variables.
+        parser.add_argument(
+            '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
+            help='Specify which pin the counts LED is connected to ' +
+            '(default {})'.format(COUNTS_LED_PIN))
+        parser.add_argument(
+            '--network_LED_pin', '-e', default=NETWORK_LED_PIN,
+            help='Specify which pin the network LED is connected to ' +
+            '(default {})'.format(NETWORK_LED_PIN))
+        parser.add_argument(
+            '--noise_pin', '-n', default=NOISE_PIN,
+            help='Specify which pin to the noise reader is connected to ' +
+            '(default {})'.format(NOISE_PIN))
+        parser.add_argument(
+            '--signal_pin', '-u', default=SIGNAL_PIN,
+            help='Specify which pin the signal is coming in from ' +
+            '(default {})'.format(SIGNAL_PIN))
+        parser.add_argument(
+            '--protocol', '-r', default=DEFAULT_PROTOCOL,
+            help='Specify what communication protocol is to be used ' +
+            '(default {})'.format(DEFAULT_PROTOCOL))
+        #Put these last in each subclass argparse
+        #These specify the default datalog/logfile for which
+        #the help is unique to each sensor
+        parser.add_argument(
+            '--logfile', '-l', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE))
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG))
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        del arg_dict['sensor']
+
+        mgr = Manager_Pocket(**arg_dict)
+
+    if sensor == 2:
+        #D3S specific variables.
         parser.add_argument(
             '--calibrationlog', '-j', default=None,
             help='Specify the calibration log for the D3S ' +
@@ -899,7 +937,7 @@ class Manager_D3S(Base_Manager):
             'found \nand is now waiting to recieve initial data from the device ' +
             '(default {})'.format(D3S_LED_BLINK_PERIOD_DEVICE_FOUND))
         parser.add_argument(
-            '--d3s_light_switch', '-s', default=False,
+            '--d3s_light_switch', '-u', default=False,
             help='Specify whether the D3S LED should start on or not ' +
             '(default Off)')
         parser.add_argument('--device', '-e', dest='device', default='all')
@@ -907,7 +945,6 @@ class Manager_D3S(Base_Manager):
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
         parser.add_argument('--transport', '-n', default='any')
-        parser.add_argument('--sensor_type', '-w', type=int, default=2)
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -919,53 +956,20 @@ class Manager_D3S(Base_Manager):
             '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
                 DEFAULT_DATALOG_D3S))
+
         args = parser.parse_args()
         arg_dict = vars(args)
-        arg_dict.update(super_dict)
+        del arg_dict['sensor']
+
         mgr = Manager_D3S(**arg_dict)
 
-        return mgr
-
-class Manager_AQ(Base_Manager):
-    """
-    The subclass that uses the main Manager class and initializes the
-    Air Quality sensor.
-    """
-    def __init__(self,
-                 AQ_port=DEFAULT_AQ_PORT,
-                 variables=AQ_VARIABLES,
-                 **kwargs):
-
-        self.variables = variables
-
-        super(Manager_AQ, self).__init__(**kwargs)
-
-        self.AQ_port = AQ_port
-
-        self.data_handler = Data_Handler_AQ(
-            manager=self,
-            verbosity=self.v,
-            logfile=self.logfile,
-            variables=self.variables)
-        self.sender = ServerSender(
-            manager=self,
-            mode=self.sender_mode,
-            port=self.port,
-            verbosity=self.v,
-            logfile=self.logfile)
-
-        self.data_handler.backlog_to_queue()
-
-    @classmethod
-    def from_argparse(cls):
-        super_dict = Base_Manager.from_argparse()
-        parser = argparse.ArgumentParser()
+    if sensor == 3:
+        #Air Quality Sensor specific variables.
         parser.add_argument(
             '--AQ_port', '-a', default=DEFAULT_AQ_PORT,
             help='Specify which port the Air Quality sensor is sending ' +
             'data through \n[note, this is a Serial Port so be sure to use ' +
             'Serial port notation] (default {})'.format(DEFAULT_AQ_PORT))
-        parser.add_argument('--sensor_type', '-w', type=int, default=3)
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -977,28 +981,13 @@ class Manager_AQ(Base_Manager):
             '--datalog', '-d', default=None,
             help='Specify a path for the datalog (default {})'.format(
                 DEFAULT_DATALOG_AQ))
+
         args = parser.parse_args()
         arg_dict = vars(args)
-        arg_dict.update(super_dict)
+        del arg_dict['sensor']
+
         mgr = Manager_AQ(**arg_dict)
 
-        return mgr
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--sensor', type=int, help='Enter a number corresponding ' +
-        'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
-        '\n3 = The Air Quality Sensor')
-    sensor_info = parser.parse_args()
-    sensor = sensor_info.sensor
-
-    if sensor == 1:
-        mgr = Manager_Pocket.from_argparse()
-    if sensor == 2:
-        mgr = Manager_D3S.from_argparse()
-    if sensor == 3:
-        mgr = Manager_AQ.from_argparse()
     try:
         mgr.run()
     except:
