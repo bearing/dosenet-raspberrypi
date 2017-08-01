@@ -16,6 +16,5 @@ done
 
 echo "Starting Display"
     sudo python $DOSENET/OLED_Display.py $@
-    ;;
 
 exit 0
