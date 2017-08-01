@@ -813,6 +813,9 @@ class Manager_AQ(Base_Manager):
 
         return mgr
 
+class SleepError(Exception):
+    pass
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
