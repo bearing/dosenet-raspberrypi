@@ -20,7 +20,7 @@ class OLED_Display:
         if sensor == "Air Quality Sensor":
             display_which_column = [1, 2]
         if sensor == "CO2 Sensor":
-            display_which_column = [1]
+            display_which_column = [2]
         if sensor == "Atmosphere Sensor":
             display_which_column = [1, 2, 3]
         if sensor == "U.V. Sensor":
