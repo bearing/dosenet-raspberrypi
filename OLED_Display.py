@@ -4,6 +4,7 @@ import time
 from dateutil import parser as theparser
 import argparse
 import sys
+from collections import defaultdict
 
 sys.stdout.flush()
 
@@ -13,21 +14,32 @@ class OLED_Display:
 
     returned_times = dict([("Air Quality Sensor", "0"), ("CO2 Sensor", "0"), ("Atmosphere Sensor", "0"), ("U.V. Sensor", "0"), ("Si Radiation Sensor", "0"), ("CsI Radiation Sensor", "0")])
     log_files = dict([("Air Quality Sensor", "air_quality_test_results.csv"), ("CO2 Sensor", "CO2_test_results.csv"), ("Atmosphere Sensor", "atmosphere_test_results.csv"), ("U.V. Sensor", "UV_test_results.csv"), ("Si Radiation Sensor", "si_rad_test_results.csv"), ("CsI Radiation Sensor", "csi_rad_test_results.csv")])
-    display_which = dict([("Air Quality Sensor", [0, 1, 2])])
+
+    #Selects certain columns to display from CSV files
+    def display_which(self, sensor):
+        if sensor == "Air Quality Sensor":
+            display_which_column = [0, 1, 2]
+        if sensor == "CO2 Sensor":
+            display_which_column = [0, 1]
+        if sensor == "Atmosphere Sensor":
+            display_which_column = [0, 1, 2, 3]
+        if sensor == "U.V. Sensor":
+            display_which_column = [0, 2]
+        if sensor == "Si Radiation Sensor":
+            display_which_column = [0, 1]
+        if sensor == "Csi Radiation Sensor":
+            display_which_column = [0, 1]
+
+        return display_which_column
 
     #Sets up pins
     def Pin_SetUp(self):
-        try:
-            ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
-            
-        except:
-            print("Error Initializing Screen")
-            exit()
+        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
@@ -70,14 +82,14 @@ class OLED_Display:
             metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
 
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
-            for i in self.display_which[sensor]:
+            for i in self.display_which(sensor):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-                if "\n" in lastline[0][sensor[i]]:
-                    lastline[0][sensor[i]] = lastline[0][sensor[i]].strip("\n")
+                if "\n" in lastline[0][i]:
+                    lastline[0][i] = lastline[0][i].strip("\n")
 
-                to_be_displayed1 = str("Time       "+metadata[0][sensor[i]])
-                to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][sensor[i]])
+                to_be_displayed1 = str("Time       "+metadata[0][i])
+                to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
 
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
@@ -93,8 +105,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
             time.sleep(3)
-
-        return lastline[0][0]
+        
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
 
@@ -104,9 +115,13 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-print("OLED Display Print: \n")
-OLED = OLED_Display()
-OLED.Pin_SetUp()
+try:
+    print("OLED Display Print: \n")
+    OLED = OLED_Display()
+    OLED.Pin_SetUp()
+except:
+    print("Error Initializing")
+    exit()
 
 sensor_name = []
 parser = argparse.ArgumentParser()
@@ -125,28 +140,21 @@ uv = inclusion.UV
 SI = inclusion.Si
 CSI = inclusion.CsI
 
-try:
-    if AQ == True:
-        sensor_name.append("Air Quality Sensor")
-    if CO == True:
-        sensor_name.append("CO2 Sensor")
-    if AT == True:
-        sensor_name.append("Atmosphere Sensor")
-    if uv == True:
-        sensor_name.append("U.V. Sensor")
-    if SI == True:
-        sensor_name.append("Si Sensor")
-    if CSI == True:
-        sensor_name.append("CsI Sensor")
-    if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
-        parser.print_help()
-        exit()
-except:
-    print("Error with Arg. Usage")
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3, "Error with Arg. Usage")
-    time.sleep(3)
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+
+if AQ == True:
+    sensor_name.append("Air Quality Sensor")
+if CO == True:
+    sensor_name.append("CO2 Sensor")
+if AT == True:
+    sensor_name.append("Atmosphere Sensor")
+if uv == True:
+    sensor_name.append("U.V. Sensor")
+if SI == True:
+    sensor_name.append("Si Sensor")
+if CSI == True:
+    sensor_name.append("CsI Sensor")
+if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+    parser.print_help()
     exit()
 
 for i in range(len(sensor_name)):
