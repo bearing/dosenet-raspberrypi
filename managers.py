@@ -852,10 +852,10 @@ if __name__ == '__main__':
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
     parser.add_argument(
-        '--log', '-g', default=False,
+        '--log', '-g', action='store_true', default=False,
         help='Enable file logging of all verbose text (default off)')
     parser.add_argument(
-        '--datalogflag', '-f', default=False,
+        '--datalogflag', '-f', action='store_true', default=False,
         help='Enable logging local data (default off)')
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
@@ -914,7 +914,7 @@ if __name__ == '__main__':
             help='Specify the calibration log for the D3S ' +
             '(default {})'.format(DEFAULT_CALIBRATIONLOG_D3S))
         parser.add_argument(
-            '--calibrationlogflag', '-z', default=False,
+            '--calibrationlogflag', '-z', action='store_true', default=False,
             help='Specify whether the D3S should store a calibration log ' +
             '(default False)')
         parser.add_argument(
@@ -945,7 +945,8 @@ if __name__ == '__main__':
             '(default Off)')
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument(
-            '--log-bytes', '-y', dest='log_bytes', default=False)
+            '--log-bytes', '-y', dest='log_bytes', default=False,
+            action='store_true')
         parser.add_argument('--transport', '-n', default='any')
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
