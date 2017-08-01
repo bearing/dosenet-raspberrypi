@@ -30,7 +30,7 @@ do
       ;;
 
     stop)
-      echo "Stopping all sensor run programs."
+      echo "Stopping Sensor Programs."
       sudo pkill -SIGTERM -f manager.py
       sudo pkill -SIGTERM -f air_quality_test.py
       sudo pkill -SIGTERM -f manager_D3S.py
