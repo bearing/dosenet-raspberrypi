@@ -405,10 +405,11 @@ class Manager_D3S(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
-    def data_log(self, file, spectra):
+    def data_log(self, file, **kwargs):
         """
         Writes spectra to data-log.
         """
+        spectra = kwargs.get('spectra')
         if self.datalogflag:
             with open(file, 'a') as f:
                 f.write('{0}, '.format(spectra))

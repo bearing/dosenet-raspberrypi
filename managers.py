@@ -435,21 +435,21 @@ class Base_Manager(object):
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
         if self.sensor_type == 1:
-            cpm, cpm_err = kwargs.get('counts'), kwargs.get('c_err')
+            cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             if self.datalogflag:
                 with open(file, 'a') as f:
                     f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
                     f.write('\n')
                     self.vprint(2, 'Writing CPM to data log at {}'.format(file))
         if self.sensor_type == 2:
-            spectra = kwargs.get('spectrum')
+            spectra = kwargs.get('spectra')
             if self.datalogflag:
                 with open(file, 'a') as f:
                     f.write('{0}, '.format(spectrum))
                     self.vprint(
                         2, 'Writing spectra to data log at {}'.format(file))
         if self.sensor_type == 3:
-            average_data = kwargs.get('avg_data')
+            average_data = kwargs.get('average_data')
             if self.datalogflag:
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
