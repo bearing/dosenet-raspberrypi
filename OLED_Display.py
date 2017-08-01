@@ -161,7 +161,8 @@ for i in range(len(sensor_name)):
     try:
         OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
     except:
-        print("Error Opening "+sensor_name[i]+" CSV \n")
+        print(sensor_name[i]+"\n")
+        print("Error Opening CSV \n")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
