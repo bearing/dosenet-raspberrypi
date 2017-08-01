@@ -18,17 +18,17 @@ class OLED_Display:
     #Selects certain columns to display from CSV files
     def display_which(self, sensor):
         if sensor == "Air Quality Sensor":
-            display_which_column = [0, 1, 2]
+            display_which_column = [1, 2]
         if sensor == "CO2 Sensor":
-            display_which_column = [0, 1]
+            display_which_column = [1]
         if sensor == "Atmosphere Sensor":
-            display_which_column = [0, 1, 2, 3]
+            display_which_column = [1, 2, 3]
         if sensor == "U.V. Sensor":
-            display_which_column = [0, 2]
+            display_which_column = [2]
         if sensor == "Si Radiation Sensor":
-            display_which_column = [0, 1]
+            display_which_column = [1]
         if sensor == "Csi Radiation Sensor":
-            display_which_column = [0, 1]
+            display_which_column = [1]
 
         return display_which_column
 
@@ -105,7 +105,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
             time.sleep(3)
-        
+
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
 
