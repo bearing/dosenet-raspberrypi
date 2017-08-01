@@ -37,6 +37,7 @@ do
       sudo pkill -SIGTERM -f weather_test.py
       sudo pkill -SIGTERM -f adc_test.py
       exit 0
+      ;;
 
     *)
       echo "Error: Incorrect Usage"
