@@ -23,7 +23,7 @@ class OLED_Display:
         if sensor == "Atmosphere Sensor":
             display_which_column = [1, 2, 3]
         if sensor == "U.V. Sensor":
-            display_which_column = [2]
+            display_which_column = [1]
         if sensor == "Si Radiation Sensor":
             display_which_column = [1]
         if sensor == "Csi Radiation Sensor":
