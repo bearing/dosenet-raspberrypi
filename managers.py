@@ -550,6 +550,7 @@ class Manager_Pocket(Base_Manager):
         self.protocol = protocol
 
         if RPI:
+            print("LED setup complete")
             self.counts_LED = LED(counts_LED_pin)
             self.network_LED = LED(network_LED_pin)
         else:
