@@ -17,12 +17,17 @@ class OLED_Display:
 
     #Sets up pins
     def Pin_SetUp(self):
-        ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
+        try:
+            ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
+            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
+            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
+            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
+            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
+            ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
+            
+        except:
+            print("Error Initializing Screen")
+            exit()
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
@@ -99,13 +104,9 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-try:
-    print("OLED Display Print: \n")
-    OLED = OLED_Display()
-    OLED.Pin_SetUp()
-except:
-    print("Error Initializing Screen")
-    exit()
+print("OLED Display Print: \n")
+OLED = OLED_Display()
+OLED.Pin_SetUp()
 
 sensor_name = []
 parser = argparse.ArgumentParser()
