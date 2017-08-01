@@ -4,7 +4,6 @@ import time
 from dateutil import parser as theparser
 import argparse
 import sys
-from collections import defaultdict
 
 sys.stdout.flush()
 
