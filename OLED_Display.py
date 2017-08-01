@@ -17,7 +17,7 @@ class OLED_Display:
     #Selects certain columns to display from CSV files
     def display_which(self, sensor):
         if sensor == "Air Quality Sensor":
-            display_which_column = [1, 2]
+            display_which_column = [1,2,3,4,5,6,7,8,9]
         if sensor == "CO2 Sensor":
             display_which_column = [1]
         if sensor == "Atmosphere Sensor":
