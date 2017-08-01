@@ -6,7 +6,7 @@ DOSENET=$HOME/dosenet-raspberrypi
 for i in $@
 do
   case $i in
-      Stop)
+      stop)
         echo "Stopping OLED Display"
         sudo pkill -SIGTERM -f OLED_Display.py
         exit 0
