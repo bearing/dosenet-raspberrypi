@@ -29,9 +29,18 @@ do
       sudo python $dose_net_dir/manager_D3S.py --logfile /tmp/d3s_manager.log >> /tmp/d3s_manager.log 2>&1
       ;;
 
+    stop)
+      echo "Stopping all sensor run programs."
+      sudo pkill -SIGTERM -f manager.py
+      sudo pkill -SIGTERM -f air_quality_test.py
+      sudo pkill -SIGTERM -f manager_D3S.py
+      sudo pkill -SIGTERM -f weather_test.py
+      sudo pkill -SIGTERM -f adc_test.py
+      exit 0
+
     *)
       echo "Error: Incorrect Usage"
-      echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI}"
+      echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI|Stop}"
       exit 1
       ;;
 
