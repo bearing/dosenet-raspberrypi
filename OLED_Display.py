@@ -13,6 +13,7 @@ class OLED_Display:
 
     returned_times = dict([("Air Quality Sensor", "0"), ("CO2 Sensor", "0"), ("Atmosphere Sensor", "0"), ("U.V. Sensor", "0"), ("Si Radiation Sensor", "0"), ("CsI Radiation Sensor", "0")])
     log_files = dict([("Air Quality Sensor", "air_quality_test_results.csv"), ("CO2 Sensor", "CO2_test_results.csv"), ("Atmosphere Sensor", "atmosphere_test_results.csv"), ("U.V. Sensor", "UV_test_results.csv"), ("Si Radiation Sensor", "si_rad_test_results.csv"), ("CsI Radiation Sensor", "csi_rad_test_results.csv")])
+    display_which = dict([("Air Quality Sensor", [0, 1, 2])])
 
     #Sets up pins
     def Pin_SetUp(self):
@@ -64,14 +65,14 @@ class OLED_Display:
             metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
 
         if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
-            for i in range(1,len(lastline[0])):
+            for i in self.display_which[sensor]:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-                if "\n" in lastline[0][i]:
-                    lastline[0][i] = lastline[0][i].strip("\n")
+                if "\n" in lastline[0][sensor[i]]:
+                    lastline[0][sensor[i]] = lastline[0][sensor[i]].strip("\n")
 
-                to_be_displayed1 = str("Time       "+metadata[0][i])
-                to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
+                to_be_displayed1 = str("Time       "+metadata[0][sensor[i]])
+                to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][sensor[i]])
 
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
