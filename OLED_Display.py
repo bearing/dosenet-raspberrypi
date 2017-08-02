@@ -161,7 +161,7 @@ try: #catches keyboard interrupts
     if config == True:
         results = open("config.txt").readlines()
         sensor_name = [line.split(",") for line in results]
-        print(sensor_name)
+        print(sensor_name[1])
         print(results)
     else:
         if AQ == True:
