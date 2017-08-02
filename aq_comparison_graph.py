@@ -10,6 +10,20 @@ import numpy as np
 import time
 import datetime
 
+def correlation_coefficient(xdata,ydata):
+	xmean = np.mean(xdata)
+	ymean = np.mean(ydata)
+	xsigma = np.sqrt(np.var(xdata))
+	ysigma = np.sqrt(np.var(ydata))
+	xysums = 0
+	for i in range(len(xdata)):
+		xdiff = xdata[i] - xmean
+		ydiff = ydata[i] - ymean
+		xysums = xdiff * ydiff +xysums
+	stnddevs = xsigma * ysigma
+	coeff = xysums/stnddevs/len(xdata)
+	return coeff
+
 user_file1 = input("File Name 1: ")
 resultsa = csv.reader(open(user_file1), delimiter=',')
 
@@ -31,7 +45,7 @@ for r in resultsa:
         #this_time = this_time + datetime.timedelta(hours=30,minutes=43)
         #timesa.append(this_time) #converts str date and time to datetime
         timesa.append(dateutil.parser.parse(r[0]))
-        Val25a.append(int(r[9]))
+        Val25a.append(int(r[8]))
 
 row_counterb= 0
 for r in resultsb:
@@ -39,7 +53,7 @@ for r in resultsb:
     if row_counterb>1:
         #Append each column in CSV to a separate list
         timesb.append(dateutil.parser.parse(r[0]))
-        Val25b.append(int(r[9]))
+        Val25b.append(int(r[8]))
 
 middletimesa = []
 middletimesb = []
@@ -79,6 +93,8 @@ for i in range(nsum_data_b):
 	itime = itimes[int(len(itimes)/2)]
 	merge_times_b.append(itime)
 
+print("Touchpi Ave Data Length:", len(data_ave_a), "Openpi Ave Data Length:", len(data_ave_b))
+
 fig = plt.figure()
 
 plt.figure(1)
@@ -90,6 +106,23 @@ plt.ylabel("Particle Concentration 2.5")
 file_title = "Air Quality Test Results"
 plt.title(file_title)
 fig.autofmt_xdate()
+
+data_arrayA = np.asarray(data_ave_a)
+data_arrayB = np.asarray(data_ave_b)
+index = [0, len(data_arrayB) - 1, len(data_arrayB - 2), len(data_arrayB) - 3, len(data_arrayB) - 4]
+data_arrayB = np.delete(data_arrayB, index)
+
+corr_coeff = correlation_coefficient(data_arrayA, data_arrayB)
+corr_statemnt = ('Correlation coefficient = ', corr_coeff)
+
+plt.figure(2)
+plt.plot(data_arrayA, data_arrayB, "b.")
+plt.xlabel("Touchpi")
+plt.ylabel("Openpi")
+file_title2 = "AQ Sensor Correlation"
+plt.title(file_title2)
+
+print(corr_statemnt)
 
 plt.show()
 
