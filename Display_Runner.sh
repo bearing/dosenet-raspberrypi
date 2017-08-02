@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
