@@ -198,7 +198,7 @@ try:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
 
-        except:
+        except else:
             print("Error: Exiting")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
