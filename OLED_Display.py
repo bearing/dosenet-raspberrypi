@@ -66,7 +66,7 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
-                time.sleep(2.5)
+                time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 return False
                 break
