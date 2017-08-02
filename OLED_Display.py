@@ -160,7 +160,7 @@ try: #catches keyboard interrupts
 
     if config == True:
         results = open("config.txt").readlines()
-        sensor_name = [line.split(",") for line in results]
+        sensor_name = line.split(",") for line in results
         print(sensor_name)
         print(results)
     else:
@@ -183,10 +183,10 @@ try: #catches keyboard interrupts
     print("OLED Display Print: \n")
 
     while True:
-        try:
-            for i in range(len(sensor_name)):
-                OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
+        #try:
+        for i in range(len(sensor_name)):
+            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+        '''
         except:
             print("Error: Exiting")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -194,7 +194,7 @@ try: #catches keyboard interrupts
             time.sleep(3)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
-
+        '''
 except KeyboardInterrupt:
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
