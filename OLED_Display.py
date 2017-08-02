@@ -183,7 +183,7 @@ try: #catches keyboard interrupts
 
     while True:
         try:
-            for i in range(len(sensor_name)):
+            for i in range(len(sensor_name[0])):
                 OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
 
         except:
