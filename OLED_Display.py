@@ -42,36 +42,44 @@ class OLED_Display:
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
-        begin_time = int(time.time())
-        check = open(fname).readlines()[0:2]
-        while check == []:
-            time.sleep(0.5)
+        try:
+            begin_time = int(time.time())
             check = open(fname).readlines()[0:2]
-            nowtime = int(time.time())
-            if nowtime-begin_time > 3:
-                print(sensor+": \n")
-                print("Waiting")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Waiting")
-                time.sleep(2)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                break
+            while check == []:
+                time.sleep(0.5)
+                check = open(fname).readlines()[0:2]
+                nowtime = int(time.time())
+                if nowtime-begin_time > 3:
+                    print(sensor+": \n")
+                    print("Waiting")
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Waiting")
+                    time.sleep(2)
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                    break
 
-        begin_time = int(time.time())
-        while len(check) < 2:
-            time.sleep(0.5)
-            check = open(fname).readlines()[0:2]
-            nowtime = int(time.time())
-            if nowtime-begin_time > 3:
-                print(sensor)
-                print("Error: No Data")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
-                time.sleep(2)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                break
+            begin_time = int(time.time())
+            while len(check) < 2:
+                time.sleep(0.5)
+                check = open(fname).readlines()[0:2]
+                nowtime = int(time.time())
+                if nowtime-begin_time > 3:
+                    print(sensor)
+                    print("Error: No Data")
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
+                    time.sleep(2)
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                    break
+        except:
+            print(sensor_name[i]+"\n")
+            print("Error Opening CSV \n")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
+            time.sleep(3)
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
@@ -162,15 +170,7 @@ if AQ == False and CO == False and AT == False and uv == False and SI == False a
 print("OLED Display Print: \n")
 
 for i in range(len(sensor_name)):
-    try:
-        OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
-    except:
-        print(sensor_name[i]+"\n")
-        print("Error Opening CSV \n")
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
-        time.sleep(3)
+    OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 while True:
     try:
