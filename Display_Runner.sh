@@ -7,7 +7,7 @@ for i in $@
 do
   case $i in
       stop)
-        pyPID=$$
+        pyPID=$$$DOSENET/OLED_Display.py
         echo $pyPID
         echo "Stopping OLED Display"
         kill -s SIGINT $pyPID
