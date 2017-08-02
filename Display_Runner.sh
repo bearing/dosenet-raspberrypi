@@ -7,10 +7,9 @@ for i in $@
 do
   case $i in
       stop)
-        pyPID=$$$DOSENET/OLED_Display.py
-        echo $pyPID
+        pyPID= `pgrep -f <process name> | awk '{print "kill -9 " $1}'`
         echo "Stopping OLED Display"
-        kill -s SIGINT $pyPID
+        pkill SIGINT $pyPID
         exit 0
         ;;
   esac
