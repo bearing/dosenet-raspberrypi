@@ -6,7 +6,6 @@ import argparse
 import sys
 
 sys.stdout.flush()
-time.sleep(3) #to give sensors time to start running
 
 class OLED_Display:
     def _init_(self):
@@ -131,58 +130,64 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-try:
-    OLED = OLED_Display()
-    OLED.Pin_SetUp()
-except:
-    print("Error Initializing")
-    exit()
-
-sensor_name = []
-parser = argparse.ArgumentParser()
-parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_true")
-parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_true")
-parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_true")
-parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_true")
-parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_true")
-parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_true")
-inclusion = parser.parse_args()
-
-AQ = inclusion.AQual
-CO = inclusion.CO2
-AT = inclusion.Atmos
-uv = inclusion.UV
-SI = inclusion.Si
-CSI = inclusion.CsI
-
-
-if AQ == True:
-    sensor_name.append("Air Quality Sensor")
-if CO == True:
-    sensor_name.append("CO2 Sensor")
-if AT == True:
-    sensor_name.append("Atmosphere Sensor")
-if uv == True:
-    sensor_name.append("U.V. Sensor")
-if SI == True:
-    sensor_name.append("Si Sensor")
-if CSI == True:
-    sensor_name.append("CsI Sensor")
-if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
-    parser.print_help()
-    exit()
-
-print("OLED Display Print: \n")
-
-while True:
+try: #catches the kill command from the shell script
+    time.sleep(3) #to give sensors time to start running
     try:
-        for i in range(len(sensor_name)):
-            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
+        OLED = OLED_Display()
+        OLED.Pin_SetUp()
     except:
-        print("Error: Exiting")
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-        time.sleep(3)
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        print("Error Initializing")
         exit()
+
+    sensor_name = []
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_true")
+    parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_true")
+    parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_true")
+    parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_true")
+    parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_true")
+    parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_true")
+    inclusion = parser.parse_args()
+
+    AQ = inclusion.AQual
+    CO = inclusion.CO2
+    AT = inclusion.Atmos
+    uv = inclusion.UV
+    SI = inclusion.Si
+    CSI = inclusion.CsI
+
+
+    if AQ == True:
+        sensor_name.append("Air Quality Sensor")
+    if CO == True:
+        sensor_name.append("CO2 Sensor")
+    if AT == True:
+        sensor_name.append("Atmosphere Sensor")
+    if uv == True:
+        sensor_name.append("U.V. Sensor")
+    if SI == True:
+        sensor_name.append("Si Sensor")
+    if CSI == True:
+        sensor_name.append("CsI Sensor")
+    if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+        parser.print_help()
+        exit()
+
+    print("OLED Display Print: \n")
+
+    while True:
+        try:
+            for i in range(len(sensor_name)):
+                OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+
+        except:
+            print("Error: Exiting")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
+            time.sleep(3)
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            exit()
+
+except KeyboardInterupt:
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    exit()

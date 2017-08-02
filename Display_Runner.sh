@@ -7,8 +7,9 @@ for i in $@
 do
   case $i in
       stop)
+        pyPID=$!
         echo "Stopping OLED Display"
-        sudo pkill -SIGTERM -f OLED_Display.py
+        kill -s SIGINT $pyPID
         exit 0
         ;;
   esac
