@@ -50,7 +50,7 @@ class OLED_Display:
                 check = open(fname).readlines()[0:2]
                 nowtime = int(time.time())
                 if nowtime-begin_time > 3:
-                    print(sensor+":"")
+                    print(sensor+":")
                     print("Waiting+\n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
