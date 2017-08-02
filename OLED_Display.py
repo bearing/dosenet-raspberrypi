@@ -184,3 +184,4 @@ while True:
         time.sleep(3)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         exit()
+'''
