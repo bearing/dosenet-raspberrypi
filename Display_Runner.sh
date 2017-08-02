@@ -7,7 +7,7 @@ for i in $@
 do
   case $i in
       stop)
-        pyPID=`pgrep -f $Dosenet/OLED_Display.py | awk '{print "kill -9 " $1}'`
+        pyPID=`pgrep -f $Dosenet/OLED_Display.py`
         echo "Stopping OLED Display"
         pkill SIGINT $pyPID
         exit 0
