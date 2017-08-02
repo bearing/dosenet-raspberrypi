@@ -161,6 +161,7 @@ try: #catches the kill command from the shell script
     if config == True:
         results = open("config.txt").readlines()
         sensor_name = [line.split(",") for line in results]
+        print(sensor_name)
     else:
         if AQ == True:
             sensor_name.append("Air Quality Sensor")
