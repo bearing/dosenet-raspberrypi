@@ -9,15 +9,14 @@ for i in $@
 do
   case $i in
       start)
-        echo "Starting OLED Display"
-        sudo python $DOSENET/OLED_Display.py -Config & > $LOG
+        echo "Starting OLED Display" > $LOG
+        sudo python $DOSENET/OLED_Display.py -Config & >> $LOG
         export pyPID=$!
         echo $pyPID
         exit 0
         ;;
       stop)
-        echo "Stopping OLED Display"
-        echo $pyPID
+        echo "Stopping OLED Display" >> $LOG
         sudo kill -s SIGINT $pyPID
         exit 0
         ;;
