@@ -83,16 +83,16 @@ class OLED_Display:
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
-        metadata_line = open(fname).readlines()[0:1]
-        metadata = [line.split(",") for line in metadata_line]
-
-        results = open(fname).readlines()[-1:]
-        lastline = [line.split(",") for line in results]
-
-        if "\n" in metadata[0][len(metadata[0])-1]:
-            metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
-
         if self.Check_Any(self.log_files[sensor], sensor) == True:
+            metadata_line = open(fname).readlines()[0:1]
+            metadata = [line.split(",") for line in metadata_line]
+
+            results = open(fname).readlines()[-1:]
+            lastline = [line.split(",") for line in results]
+
+            if "\n" in metadata[0][len(metadata[0])-1]:
+                metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
+
             if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
                 for i in self.display_which(sensor):
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
