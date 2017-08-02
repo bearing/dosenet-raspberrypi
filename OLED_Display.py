@@ -48,10 +48,10 @@ class OLED_Display:
                 time.sleep(0.5)
                 check = open(fname).readlines()[0:2]
                 print(sensor+":")
-                print("Error: No CSV \n")
+                print("Error: Empty CSV \n")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No CSV")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
                 time.sleep(2.5)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 return False
@@ -71,6 +71,11 @@ class OLED_Display:
                 break
 
             return True
+
+        except KeyboardInterrupt:
+            print("Exiting")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            exit()
 
         except:
             print(sensor)
@@ -130,7 +135,7 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-try: #catches keyboard interrupts
+try:
     time.sleep(3) #to give sensors time to start running
     try:
         OLED = OLED_Display()
@@ -182,10 +187,15 @@ try: #catches keyboard interrupts
     print("OLED Display Print: \n")
 
     while True:
-        #try:
-        for i in range(len(sensor_name[0])):
-            OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
-        '''
+        try:
+            for i in range(len(sensor_name[0])):
+                OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
+
+        except KeyboardInterrupt:
+            print("Exiting")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            exit()
+
         except:
             print("Error: Exiting")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -193,7 +203,7 @@ try: #catches keyboard interrupts
             time.sleep(3)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
-        '''
+
 except KeyboardInterrupt:
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
