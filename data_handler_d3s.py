@@ -112,7 +112,7 @@ class Data_Handler_D3S(object):
         """
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
-
+        print(spectra)
         self.vprint(
             1, SPECTRA_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
