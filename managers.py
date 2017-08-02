@@ -496,7 +496,6 @@ class Base_Manager(object):
                 c_data_int = list(map(int, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
-                print(average_data)
             self.data_handler.main(
                 self.datalog, average_data, this_start, this_end)
 
