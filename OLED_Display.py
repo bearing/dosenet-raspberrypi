@@ -187,10 +187,11 @@ try:
     print("OLED Display Print: \n")
 
     while True:
-        try:
-            for i in range(len(sensor_name[0])):
-                OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
+        #try:
+        for i in range(len(sensor_name[0])):
+            OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
 
+        '''
         except KeyboardInterrupt:
             print("Exiting")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -203,7 +204,7 @@ try:
             time.sleep(3)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
-
+        '''
 except KeyboardInterrupt:
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
