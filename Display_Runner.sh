@@ -14,7 +14,7 @@ do
         ;;
       stop)
         echo "Stopping OLED Display"
-        sudo kill -s -SIGINT $pyPID
+        sudo kill -s SIGINT $pyPID
         exit 0
         ;;
       *)
