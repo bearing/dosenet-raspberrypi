@@ -8,7 +8,7 @@ import signal
 
 sys.stdout.flush()
 
-def proper_quit(self):
+def proper_quit():
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
