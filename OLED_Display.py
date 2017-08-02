@@ -6,6 +6,7 @@ import argparse
 import sys
 
 sys.stdout.flush()
+time.sleep(3) #to give sensors time to start running
 
 class OLED_Display:
     def _init_(self):
@@ -49,7 +50,7 @@ class OLED_Display:
                 time.sleep(0.5)
                 check = open(fname).readlines()[0:2]
                 nowtime = int(time.time())
-                if nowtime-begin_time > 3:
+                if nowtime-begin_time > 1:
                     print(sensor+":")
                     print("Waiting \n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -65,7 +66,7 @@ class OLED_Display:
                 time.sleep(0.5)
                 check = open(fname).readlines()[0:2]
                 nowtime = int(time.time())
-                if nowtime-begin_time > 3:
+                if nowtime-begin_time > 1:
                     print(sensor)
                     print("Error: No Data \n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
