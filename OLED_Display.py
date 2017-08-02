@@ -60,10 +60,10 @@ class OLED_Display:
             while len(check) < 2:
                 time.sleep(0.5)
                 check = open(fname).readlines()[0:2]
-                print(sensor)
+                print(sensor+":")
                 print("Error: No Data \n")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -78,10 +78,10 @@ class OLED_Display:
             exit()
 
         except:
-            print(sensor)
+            print(sensor+":")
             print("Error Opening CSV \n")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
             time.sleep(3)
             return False
@@ -117,9 +117,9 @@ class OLED_Display:
                     time.sleep(3.5)
 
             elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
-                print(str(sensor)+"\nCouldn't Recieve Data \n")
+                print(sensor+":\nCouldn't Recieve Data \n")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
                 time.sleep(3)
 
