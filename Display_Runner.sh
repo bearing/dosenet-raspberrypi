@@ -11,13 +11,14 @@ do
       start)
         echo "Starting OLED Display" >| $LOG
         sudo python $DOSENET/OLED_Display.py -Config >> $LOG &
-        export pyPID=$!
-        echo $pyPID
+        pyPID=$!
+        echo $pyPID >| pyPID.txt
         exit 0
         ;;
       stop)
         echo "Stopping OLED Display" >> $LOG
-        sudo kill -s SIGINT $pyPID
+        PIDpy=`grep pyPID.txt`
+        sudo kill -s SIGINT $PIDpy
         exit 0
         ;;
       *)
