@@ -9,7 +9,7 @@ for i in $@
 do
   case $i in
       start)
-        echo "Starting OLED Display" > $LOG
+        echo "Starting OLED Display" >| $LOG
         sudo python $DOSENET/OLED_Display.py -Config >> $LOG &
         export pyPID=$!
         echo $pyPID
