@@ -10,7 +10,7 @@ do
   case $i in
       start)
         echo "Starting OLED Display"
-        sudo python $DOSENET/OLED_Display.py -Config > $LOG
+        sudo python $DOSENET/OLED_Display.py -Config & > $LOG
         export pyPID=$!
         echo $pyPID
         exit 0
