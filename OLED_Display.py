@@ -4,8 +4,14 @@ import time
 from dateutil import parser as theparser
 import argparse
 import sys
+import signal
 
 sys.stdout.flush()
+
+def proper_quit():
+    print("Exiting")
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    exit()
 
 class OLED_Display:
     def _init_(self):
@@ -73,9 +79,7 @@ class OLED_Display:
             return True
 
         except KeyboardInterrupt:
-            print("Exiting")
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            exit()
+            proper_quit()
 
         except:
             print(sensor+":")
@@ -134,6 +138,8 @@ class OLED_Display:
         else:
             self.returned_times[sensor] = returned_time
             return True
+
+signal.signal(signal.SIGINT, proper_quit)
 
 try:
     time.sleep(3) #to give sensors time to start running
@@ -194,9 +200,7 @@ try:
                 OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
 
         except KeyboardInterrupt:
-            print("Exiting")
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            exit()
+            proper_quit()
 
         except:
             print("Error: Exiting")
@@ -207,6 +211,4 @@ try:
             exit()
 
 except KeyboardInterrupt:
-    print("Exiting")
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    exit()
+    proper_quit()
