@@ -50,8 +50,8 @@ class OLED_Display:
                 check = open(fname).readlines()[0:2]
                 nowtime = int(time.time())
                 if nowtime-begin_time > 3:
-                    print(sensor+": \n")
-                    print("Waiting")
+                    print(sensor+":"")
+                    print("Waiting+\n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Waiting")
@@ -66,7 +66,7 @@ class OLED_Display:
                 nowtime = int(time.time())
                 if nowtime-begin_time > 3:
                     print(sensor)
-                    print("Error: No Data")
+                    print("Error: No Data \n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
@@ -74,7 +74,7 @@ class OLED_Display:
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                     break
         except:
-            print(sensor_name[i]+"\n")
+            print(sensor_name[i])
             print("Error Opening CSV \n")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
@@ -111,7 +111,7 @@ class OLED_Display:
                 time.sleep(3.5)
 
         elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
-            print(str(sensor)+": Couldn't Recieve Data \n")
+            print(str(sensor)+"\n: Couldn't Recieve Data \n")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
@@ -173,9 +173,10 @@ for i in range(len(sensor_name)):
     OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
 
 while True:
-    try:
-        for i in range(len(sensor_name)):
-            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+    #try:
+    for i in range(len(sensor_name)):
+        OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+'''
     except:
         print("Error: Exiting")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
