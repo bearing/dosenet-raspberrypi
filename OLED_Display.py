@@ -188,6 +188,6 @@ try: #catches the kill command from the shell script
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
 
-except KeyboardInterupt:
+except KeyboardInterrupt:
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
