@@ -10,6 +10,7 @@ do
         echo "Starting OLED Display"
         sudo python $DOSENET/OLED_Display.py -Config
         export pyPID=$!
+        echo $pyPID
         exit 0
         ;;
       stop)
