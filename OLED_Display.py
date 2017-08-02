@@ -166,6 +166,8 @@ try:
     if config == True:
         results = open("config.txt").readlines()
         sensor_name = [line.split(",") for line in results]
+        if "\n" in sensor_name[0][len(metadata[0])-1]:
+            sensor_name[0][len(metadata[0])-1] = sensor_name[0][len(sensor_name[0])-1].strip("\n")
 
     else:
         if AQ == True:
