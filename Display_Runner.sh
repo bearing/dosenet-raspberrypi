@@ -14,7 +14,7 @@ do
         ;;
       stop)
         echo "Stopping OLED Display"
-        kill -s SIGINT $pyPID
+        kill -SIGINT $pyPID
         exit 0
         ;;
       *)
