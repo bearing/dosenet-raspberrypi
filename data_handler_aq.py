@@ -98,12 +98,9 @@ class Data_Handler_AQ(object):
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
         if self.queue:
             self.vprint(1, "Flushing memory queue to backlog file")
-            temp = []
-            while self.queue:
-                temp.append(self.queue.popleft())
-            with open(path, "ab") as f: # might only work for python 3?
-                writer = csv.writer(f)
-                writer.writerows(temp)
+            with open(path, 'a') as f:
+                while self.queue:
+                    f.write('{0}, '.format(self.queue.popleft()))
 
     def send_to_queue(self, average_data):
         """
