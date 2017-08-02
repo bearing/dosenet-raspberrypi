@@ -130,7 +130,7 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-try: #catches the kill command from the shell script
+try: #catches keyboard interrupts
     time.sleep(3) #to give sensors time to start running
     try:
         OLED = OLED_Display()
@@ -162,6 +162,7 @@ try: #catches the kill command from the shell script
         results = open("config.txt").readlines()
         sensor_name = [line.split(",") for line in results]
         print(sensor_name)
+        print(results)
     else:
         if AQ == True:
             sensor_name.append("Air Quality Sensor")
@@ -195,5 +196,6 @@ try: #catches the kill command from the shell script
             exit()
 
 except KeyboardInterrupt:
+    print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
