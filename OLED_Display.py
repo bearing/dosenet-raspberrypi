@@ -141,12 +141,13 @@ try: #catches the kill command from the shell script
 
     sensor_name = []
     parser = argparse.ArgumentParser()
-    parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_true")
-    parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_true")
-    parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_true")
-    parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_true")
-    parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_true")
-    parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_true")
+    parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor", action = "store_true")
+    parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor", action = "store_true")
+    parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor", action = "store_true")
+    parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor", action = "store_true")
+    parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor", action = "store_true")
+    parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor", action = "store_true")
+    parser.add_argument("-Config", help = "Indicates usage of config.txt to determine list of sensors to run", action = "store_true")
     inclusion = parser.parse_args()
 
     AQ = inclusion.AQual
@@ -155,23 +156,27 @@ try: #catches the kill command from the shell script
     uv = inclusion.UV
     SI = inclusion.Si
     CSI = inclusion.CsI
+    config = inclusion.Config
 
-
-    if AQ == True:
-        sensor_name.append("Air Quality Sensor")
-    if CO == True:
-        sensor_name.append("CO2 Sensor")
-    if AT == True:
-        sensor_name.append("Atmosphere Sensor")
-    if uv == True:
-        sensor_name.append("U.V. Sensor")
-    if SI == True:
-        sensor_name.append("Si Sensor")
-    if CSI == True:
-        sensor_name.append("CsI Sensor")
-    if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
-        parser.print_help()
-        exit()
+    if config == True:
+        results = open("config.txt").readlines()
+        sensor_name = [line.split(",") for line in results]
+    else:
+        if AQ == True:
+            sensor_name.append("Air Quality Sensor")
+        if CO == True:
+            sensor_name.append("CO2 Sensor")
+        if AT == True:
+            sensor_name.append("Atmosphere Sensor")
+        if uv == True:
+            sensor_name.append("U.V. Sensor")
+        if SI == True:
+            sensor_name.append("Si Sensor")
+        if CSI == True:
+            sensor_name.append("CsI Sensor")
+        if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+            parser.print_help()
+            exit()
 
     print("OLED Display Print: \n")
 
