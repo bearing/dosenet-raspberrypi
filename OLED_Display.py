@@ -69,8 +69,8 @@ class OLED_Display:
                     print(sensor)
                     print("Error: No Data \n")
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
+                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
                     time.sleep(2)
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                     return False
@@ -118,7 +118,7 @@ class OLED_Display:
                     time.sleep(3.5)
 
             elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
-                print(str(sensor)+": \n Couldn't Recieve Data \n")
+                print(str(sensor)+": \nCouldn't Recieve Data \n")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
