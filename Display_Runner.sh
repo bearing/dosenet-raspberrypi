@@ -7,7 +7,7 @@ for i in $@
 do
   case $i in
       stop)
-        pyPID=$!
+        pyPID=$$
         echo $pyPID
         echo "Stopping OLED Display"
         kill -s SIGINT $pyPID
