@@ -3,12 +3,14 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
+LOG=/tmp/OLED.log
+
 for i in $@
 do
   case $i in
       start)
         echo "Starting OLED Display"
-        sudo python $DOSENET/OLED_Display.py -Config
+        sudo python $DOSENET/OLED_Display.py -Config > $LOG
         export pyPID=$!
         echo $pyPID
         exit 0
