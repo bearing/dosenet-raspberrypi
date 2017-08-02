@@ -23,6 +23,7 @@ do
       *)
         echo "Usage: /home/pi/dosenet-raspberrypi/Display_Runner.sh {start|stop}"
         exit 1
+        ;;
   esac
 done
 exit 0
