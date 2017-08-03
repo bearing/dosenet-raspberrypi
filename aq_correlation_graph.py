@@ -117,8 +117,6 @@ p_value = ("p Value =", correlation_values[1])
 corr_coeff = correlation_coefficient(np.asarray(data_ave_a),np.asarray(data_ave_b))
 corr_statemnt = "Correlation coefficient = ", corr_coeff
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
 plt.figure(1)
 plt.plot(data_ave_a, data_ave_b, "b.")
 plt.xlabel(Alabel)
