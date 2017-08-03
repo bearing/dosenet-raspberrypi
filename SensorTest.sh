@@ -6,7 +6,7 @@ then
   echo "Error: Incorrect Usage"
   echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|ADC|AT|Si|CsI|all|stopall|stopAQ|stopAT|stopADC|stopAT|stopSi|stopCsI}"
   exit 1
-
+fi
 
 for i in $@
 do
