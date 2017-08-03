@@ -10,12 +10,11 @@ do
   case $i in
       start)
         echo "Starting OLED Display" >| $LOG
-        sudo python $DOSENET/OLED_Display.py -Config >> $LOG &
+        sudo python $DOSENET/OLED_Display.py -Config >> $LOG 2>&1
         exit 0
         ;;
       stop)
         sudo pkill -SIGINT -f OLED_Display.py
-        echo "Stopping OLED Display" >> $LOG
         exit 0
         ;;
       *)
