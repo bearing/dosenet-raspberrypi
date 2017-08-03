@@ -152,7 +152,10 @@ try:
         print("Error Initializing")
         exit()
 
+    print("OLED Display Print: \n")
+
     #To give sensors time to start running
+    print("Starting Up")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Starting Up")
     time.sleep(3)
@@ -202,8 +205,6 @@ try:
             exit()
 
         sensor_name = np.array(sensor_name)
-
-    print("OLED Display Print: \n")
 
     while True:
         try:
