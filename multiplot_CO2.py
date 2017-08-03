@@ -6,6 +6,19 @@ import dateutil
 import time
 import datetime
 import numpy as np
+from scipy.stats.stats import pearsonr
+
+def get_covariance(yfile1, yfile2):
+	yfile1_sigma = np.sqrt(np.var(yfile1))
+	yfile2_sigma = np.sqrt(np.var(yfile2))
+	yfile1_mean = np.mean(yfile1)
+	yfile2_mean = np.mean(yfile2)
+
+	files1and2_sum = 0
+	for i in range(len(yfile1)):
+		files1and2_sum = files1and2_sum + (yfile1[i]-yfile1_mean)*(yfile2[i]-yfile2_mean)
+	correlation_coef = files1and2_sum / ((yfile1_sigma)*(yfile2_sigma)) / len(yfile1)
+	return correlation_coef
 
 user_file = input("File Name 1: ")
 
@@ -71,6 +84,19 @@ for i in range(nsum_data_2):
 	itime_2 = itimes_2[int(len(itimes_2)/2)]
 	merge_times_2.append(itime_2)	
 
+CO2file1_array = np.asarray(data_ave)
+CO2file2_array = np.asarray(data_ave_2)
+correlation_coef = get_covariance(CO2file1_array, CO2file2_array)
+print("Correlation: {}".format(correlation_coef))
+
+print("Length of touch data: {}, Length of open data: {}".format(len(data_ave),len(data_ave_2)))
+
+#index = [len(CO2file2_array) - 1, len(CO2file2_array) - 2, len(CO2file2_array) - 3, len(CO2file2_array) - 4, len(CO2file2_array) - 5]
+#CO2file2_array	 = np.delete(CO2file2_array, index)
+
+correlation_values = pearsonr(CO2file1_array, CO2file2_array)
+print("p value =", correlation_values[1])
+
 fig = plt.figure()
 plt.plot(merge_times, data_ave, "b.", label="File 1")
 plt.plot(merge_times_2, data_ave_2, "g.", label="File 2")
@@ -81,4 +107,16 @@ plt.ylabel("CO2 (ppm)")
 plt.legend()
 plt.grid(True,color='k')
 fig.autofmt_xdate()
+fig = plt.figure()
+plt.plot(CO2file1_array, CO2file2_array, "b.")
+plt.xlabel("CO2 file 1")
+plt.ylabel("CO2 file 2")
+
+ax = fig.add_subplot(111)
+corr_statement = "Correlation Coefficient =", correlation_coef
+p_value = "P Value =", correlation_values[1]
+plt.annotate(corr_statement, xy=(0,1), xytext=(12,-12), va='top',
+	xycoords='axes fraction', textcoords='offset points')
+plt.annotate(p_value, xy=(0,0.94), xytext=(12,-12), va='top',
+	xycoords='axes fraction', textcoords='offset points')
 plt.show()		
