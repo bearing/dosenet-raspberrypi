@@ -139,67 +139,67 @@ class OLED_Display:
 
 signal.signal(signal.SIGINT, proper_quit)
 
+#try:
 try:
-    try:
-        OLED = OLED_Display()
-        OLED.Pin_SetUp()
-    except:
-        print("Error Initializing")
+    OLED = OLED_Display()
+    OLED.Pin_SetUp()
+except:
+    print("Error Initializing")
+    exit()
+
+time.sleep(3) #to give sensors time to start running
+
+sensor_name = []
+parser = argparse.ArgumentParser()
+parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor", action = "store_true")
+parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor", action = "store_true")
+parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor", action = "store_true")
+parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor", action = "store_true")
+parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor", action = "store_true")
+parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor", action = "store_true")
+parser.add_argument("-Config", help = "Indicates usage of config.txt to determine list of sensors to run", action = "store_true")
+inclusion = parser.parse_args()
+
+AQ = inclusion.AQual
+CO = inclusion.CO2
+AT = inclusion.Atmos
+uv = inclusion.UV
+SI = inclusion.Si
+CSI = inclusion.CsI
+config = inclusion.Config
+
+if config == True:
+    results = open("config.txt").readlines()
+    for line in results:
+        sensor_name = line.split(",")
+    if "\n" in sensor_name[len(sensor_name)-1]:
+        sensor_name[len(sensor_name)-1] = sensor_name[len(sensor_name)-1].strip("\n")
+
+else:
+    if AQ == True:
+        sensor_name.append("Air Quality Sensor")
+    if CO == True:
+        sensor_name.append("CO2 Sensor")
+    if AT == True:
+        sensor_name.append("Atmosphere Sensor")
+    if uv == True:
+        sensor_name.append("U.V. Sensor")
+    if SI == True:
+        sensor_name.append("Si Sensor")
+    if CSI == True:
+        sensor_name.append("CsI Sensor")
+    if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+        parser.print_help()
         exit()
 
-    time.sleep(3) #to give sensors time to start running
+    sensor_name = np.array(sensor_name)
 
-    sensor_name = []
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor", action = "store_true")
-    parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor", action = "store_true")
-    parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor", action = "store_true")
-    parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor", action = "store_true")
-    parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor", action = "store_true")
-    parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor", action = "store_true")
-    parser.add_argument("-Config", help = "Indicates usage of config.txt to determine list of sensors to run", action = "store_true")
-    inclusion = parser.parse_args()
+print("OLED Display Print: \n")
 
-    AQ = inclusion.AQual
-    CO = inclusion.CO2
-    AT = inclusion.Atmos
-    uv = inclusion.UV
-    SI = inclusion.Si
-    CSI = inclusion.CsI
-    config = inclusion.Config
-
-    if config == True:
-        results = open("config.txt").readlines()
-        for line in results:
-            sensor_name = line.split(",")
-        if "\n" in sensor_name[len(sensor_name)-1]:
-            sensor_name[len(sensor_name)-1] = sensor_name[len(sensor_name)-1].strip("\n")
-
-    else:
-        if AQ == True:
-            sensor_name.append("Air Quality Sensor")
-        if CO == True:
-            sensor_name.append("CO2 Sensor")
-        if AT == True:
-            sensor_name.append("Atmosphere Sensor")
-        if uv == True:
-            sensor_name.append("U.V. Sensor")
-        if SI == True:
-            sensor_name.append("Si Sensor")
-        if CSI == True:
-            sensor_name.append("CsI Sensor")
-        if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
-            parser.print_help()
-            exit()
-
-        sensor_name = np.array(sensor_name)
-
-    print("OLED Display Print: \n")
-
-    while True:
-        #try:
-        for i in range(len(sensor_name)):
-            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+while True:
+    #try:
+    for i in range(len(sensor_name)):
+        OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
         '''
         except Exception as Error:
             if Error == "KeyboardInterrupt":
@@ -213,5 +213,7 @@ try:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
         '''
+'''
 except:
     proper_quit()
+'''
