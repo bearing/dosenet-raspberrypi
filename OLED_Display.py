@@ -52,10 +52,11 @@ class OLED_Display:
     def Check_Any(self, fname, sensor):
         #try:
         check = open(fname).readlines()[0:2]
-        set_time = time.time.now()
+        set_time = time.time()
         while check == []:
+            check = open(fname).readlines()[0:2]
+            now_time = time.time()
             if now_time > set_time + 0.5:
-                check = open(fname).readlines()[0:2]
                 print(sensor+":")
                 print("Error: Empty CSV \n")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -66,10 +67,10 @@ class OLED_Display:
                 a = 1
                 return a
 
-        set_time = time.time.now()
+        set_time = time.time()
         while len(check) < 2:
             check = open(fname).readlines()[0:2]
-            now_time = time.time.now()
+            now_time = time.time()
             if now_time > set_time + 0.5:
                 print(sensor+":")
                 print("Error: No Data \n")
