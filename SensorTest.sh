@@ -6,7 +6,7 @@ do
   case $i in
     AQ)
       echo "Starting Air Quality Sensor" > /tmp/air_quality.log
-      sudo stdbuf -oL python $dose_net_dir/air_quality_test.py & >> /tmp/air_quality.log 2>&1 &
+      sudo stdbuf -oL python $dose_net_dir/air_quality_test.py >> /tmp/air_quality.log 2>&1 &
       ;;
 
     ADC)
