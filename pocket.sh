@@ -11,15 +11,15 @@ case "$1" in
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo python $DOSENET/manager.py --logfile $LOG >>$LOG 2>&1
     echo "Finished pocket Geiger script" >> $LOG
+    exit 0
     ;;
   stop)
     echo "Stopping pocket Geiger script" >> $LOG
     sudo pkill -SIGTERM -f manager.py
+    exit 0
     ;;
  *)
     echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|stop}"
     exit 1
     ;;
 esac
-
-exit 0
