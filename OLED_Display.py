@@ -52,9 +52,9 @@ class OLED_Display:
     def Check_Any(self, fname, sensor):
         try:
             check = open(fname).readlines()[0:2]
-            if check == []:
-                while check == []:
-                    time.sleep(0.5)
+            set_time = time.time.now()
+            while check == []:
+                if now_time > set_time + 0.5:
                     check = open(fname).readlines()[0:2]
                     print(sensor+":")
                     print("Error: Empty CSV \n")
@@ -66,19 +66,20 @@ class OLED_Display:
                     a = 1
                     return a
 
-            if len(check) < 2:
-                while len(check) < 2:
-                    time.sleep(0.5)
-                    check = open(fname).readlines()[0:2]
-                    print(sensor+":")
-                    print("Error: No Data \n")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
-                    time.sleep(3)
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    a = 1
-                    return a
+            set_time = time.time.now()
+            while len(check) < 2:
+                check = open(fname).readlines()[0:2]
+                now_time = time.time.now()
+                    if now_time > set_time + 0.5:
+                        print(sensor+":")
+                        print("Error: No Data \n")
+                        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+                        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
+                        time.sleep(3)
+                        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                        a = 1
+                        return a
 
             a = 0
             return a
@@ -219,7 +220,6 @@ try:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
-
 
 except:
     proper_quit()
