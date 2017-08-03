@@ -206,7 +206,7 @@ try:
             for i in range(len(sensor_name)):
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
-        except:
+        except KeyboardInterrupt:
             proper_quit()
 
         '''
