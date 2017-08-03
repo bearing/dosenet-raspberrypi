@@ -200,7 +200,7 @@ while True:
     #try:
     for i in range(len(sensor_name)):
         print(sensor_name[i])
-        print(log_files[sensor_name[i]])
+        print(OLED.log_files[sensor_name[i]])
         OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
         '''
         except Exception as Error:
