@@ -1,6 +1,13 @@
 #! /bin/sh
 dose_net_dir=/home/pi/dosenet-raspberrypi
 
+if [-z "$@"]
+then
+  echo "Error: Incorrect Usage"
+  echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI|Stop}"
+  exit 1
+fi
+
 for i in $@
 do
   case $i in
