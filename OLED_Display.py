@@ -12,6 +12,7 @@ sys.stdout.flush()
 def proper_quit(*args):
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    print("Exiting")
     exit()
 
 class OLED_Display:
