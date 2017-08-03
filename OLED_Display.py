@@ -9,7 +9,7 @@ import numpy as np
 
 sys.stdout.flush()
 
-def proper_quit(*args):
+def proper_quit(self,a):
     print("Exiting")
     OLED = OLED_Display()
     OLED.Pin_SetUp()
