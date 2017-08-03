@@ -5,6 +5,7 @@ from dateutil import parser as theparser
 import argparse
 import sys
 import signal
+import numpy as np
 
 sys.stdout.flush()
 
@@ -191,6 +192,8 @@ try:
         if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
             parser.print_help()
             exit()
+            
+        sensor_name = np.array(sensor_name)
 
     print("OLED Display Print: \n")
 
