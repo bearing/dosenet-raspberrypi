@@ -15,7 +15,7 @@ do
         ;;
       stop)
         sudo pkill -SIGINT -f OLED_Display.py
-        echo "Stopped OLED Display" >> $LOG
+        echo "Stopping OLED Display" >> $LOG
         exit 0
         ;;
       *)
