@@ -83,7 +83,8 @@ class OLED_Display:
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
-        if self.Check_Any(self.log_files[sensor], sensor) == 0:
+        check = self.Check_Any(self.log_files[sensor], sensor)
+        if  check == 0:
             metadata_line = open(fname).readlines()[0:1]
             metadata = [line.split(",") for line in metadata_line]
 
@@ -118,7 +119,7 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
                 time.sleep(3)
 
-        if self.Check_Any(self.log_files[sensor], sensor) == 2:
+        if check == 2:
              print(sensor+":")
              print("Error Opening CSV \n")
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
