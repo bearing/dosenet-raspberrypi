@@ -15,6 +15,7 @@ do
         ;;
       stop)
         sudo pkill -SIGINT -f OLED_Display.py
+        echo "Starting OLED Display" >> $LOG &
         exit 0
         ;;
       *)
