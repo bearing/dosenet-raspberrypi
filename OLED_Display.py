@@ -10,9 +10,10 @@ import numpy as np
 sys.stdout.flush()
 
 def proper_quit(*args):
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    print("Exiting")
-    exit()
+    #ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    #print("Exiting")
+    #exit()
+    pass
 
 class OLED_Display:
     def _init_(self):
