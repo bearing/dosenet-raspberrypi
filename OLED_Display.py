@@ -73,7 +73,6 @@ class OLED_Display:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 a = 1
-                print("test")
 
             return a
 
@@ -132,7 +131,7 @@ class OLED_Display:
              time.sleep(3)
 
         else:
-            print("pass")
+            pass
 
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
@@ -205,7 +204,6 @@ try:
     while True:
         try:
             for i in range(len(sensor_name)):
-                print(i)
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
         except Exception as Error:
