@@ -65,6 +65,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             a = 1
             return a
+            break
 
         while len(check) < 2:
             check = open(fname).readlines()[0:2]
@@ -79,6 +80,7 @@ class OLED_Display:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             a = 1
             return a
+            break
 
         a = 0
         return a
