@@ -172,7 +172,9 @@ try:
 
     if config == True:
         results = open("config.txt").readlines()
-        sensor_name = line.split(",") for line in results
+        for line in results:
+            sensor_name = line.split(",")
+        print(sensor_name)
         if "\n" in sensor_name[len(sensor_name)-1]:
             sensor_name[len(sensor_name)-1] = sensor_name[len(sensor_name)-1].strip("\n")
 
