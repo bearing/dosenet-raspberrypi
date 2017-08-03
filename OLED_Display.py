@@ -204,6 +204,7 @@ try:
         except Exception as Error:
             if Error == "KeyboardInterrupt":
                 proper_quit()
+            '''
             else:
                 print("Error: "+Error)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -211,6 +212,7 @@ try:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
+            '''
 
 except:
     proper_quit()
