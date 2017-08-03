@@ -107,12 +107,13 @@ plt.ylabel("CO2 (ppm)")
 plt.legend()
 plt.grid(True,color='k')
 fig.autofmt_xdate()
+x.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
+ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 fig = plt.figure()
 plt.plot(CO2file1_array, CO2file2_array, "b.")
 plt.xlabel("CO2 file 1")
 plt.ylabel("CO2 file 2")
 
-ax = fig.add_subplot(111)
 corr_statement = "Correlation Coefficient =", correlation_coef
 p_value = "P Value =", correlation_values[1]
 plt.annotate(corr_statement, xy=(0,1), xytext=(12,-12), va='top',

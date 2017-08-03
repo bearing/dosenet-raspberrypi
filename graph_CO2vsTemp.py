@@ -6,7 +6,6 @@ import time
 import datetime
 import numpy as np
 from matplotlib.dates import date2num, DateFormatter
-import argparse
 from scipy.stats.stats import spearmanr
 
 def get_covariance(x_data, y_data):
@@ -69,6 +68,7 @@ for i in range(nsum_data2):
 CO2_array = np.asarray(CO2_ave)
 temp_array = np.asarray(temp_ave)
 correlation_coef = get_covariance(CO2_array, temp_array)
+print("Correlation:", correlation_coef)
 
 correlation_values = spearmanr(CO2_array, temp_array)
 print("p value =", correlation_values[1])

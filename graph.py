@@ -7,6 +7,7 @@ import argparse
 import numpy
 import time
 import datetime
+from matplotlib.dates import DateFormatter
 
 #Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
@@ -193,11 +194,6 @@ for i in range(int(len(Val100)/combine_number)):
     new_Val100.append(sum_Val100)
 
 
-#Get rid of last time if unecessary
-if remainder_P25 !=0:
-    for i in range(int(remainder_P25)):
-        times.pop()
-
 #State how many results have been excluded
 if int(remainder_P25) != 1:
     print(str(int(remainder_P25))+" results have been excluded from the graph.")
@@ -205,69 +201,49 @@ if int(remainder_P25) != 1:
 else:
     print("1 result has been excluded from the graph.")
 
-#Convert time into epoch seconds
-seconds_times = [time.mktime(t.timetuple()) for t in times]
-
 #Find middle time
 middletimes = []
-for i in range(int(len(seconds_times)/combine_number)):
+for i in range(int(len(times)/combine_number)):
     numberN = int(i*combine_number)
     numberP = int((i*combine_number) + combine_number)
-    time = numpy.array(seconds_times[numberN:numberP])
-    timelength = numpy.where(time)
+    time = times[numberN:numberP]
 
-    #if length of list is even
-    if len(timelength[0])%2 == 0:
-        middle_item1 = int(len(timelength[0])/2)
-        middle_item2 = middle_item1 - 1
-        middletime_sec = (time[middle_item1] + time[middle_item2])/2
-        middletimes.append(middletime_sec)
+    middletimes.append(time[int(len(time)/2)])
 
-    #if length of list is odd
-    elif len(timelength[0])%2 != 0:
-        middle_item = int(len(timelength[0])/2)
-        middletime_sec = time[middle_item]
-        middletimes.append(middletime_sec)
-
-#Convert epoch seconds back into h:m:s
-middletime_final = []
-for i in range(len(middletimes)):
-    t = datetime.datetime.utcfromtimestamp(middletimes[i]/1000)
-    from_zone = dateutil.tz.tzutc()
-    to_zone = dateutil.tz.tzlocal()
-    t = t.replace(tzinfo=from_zone)
-    loc_zone = t.astimezone(to_zone)
-    middletime_final.append(loc_zone)
-
+print(middletimes)
 #Use plot() method to graph particle count vs. time and add legend
 fig = plt.figure()
 
 plt.figure(1)
-plt.plot(middletime_final, new_P3, "b.", label='P3')
-plt.plot(middletime_final, new_P5, "g.", label = 'P5')
-plt.plot(middletime_final, new_P10, "r.", label = 'P10')
-plt.plot(middletime_final, new_P25, "m.", label = 'P25')
-plt.plot(middletime_final, new_P50, "y.", label = 'P50')
-plt.plot(middletime_final, new_P100, "c.", label = 'P100')
+ax = fig.add_subplot(111)
+plt.plot(middletimes, new_P3, "b.", label='P3')
+plt.plot(middletimes, new_P5, "g.", label = 'P5')
+plt.plot(middletimes, new_P10, "r.", label = 'P10')
+plt.plot(middletimes, new_P25, "m.", label = 'P25')
+plt.plot(middletimes, new_P50, "y.", label = 'P50')
+plt.plot(middletimes, new_P100, "c.", label = 'P100')
 plt.legend(loc="best")
 plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
 fig.autofmt_xdate()
+ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
 
 #Use plot() method to graph particle concentration vs. time and add legend
 fig = plt.figure()
 
 plt.figure(2)
-plt.plot(middletime_final, new_Val10, "b.", label='1.0')
-plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
-plt.plot(middletime_final, new_Val100, "r.", label = '10')
+ax = fig.add_subplot(111)
+plt.plot(middletimes, new_Val10, "b.", label='1.0')
+plt.plot(middletimes, new_Val25, "g.", label = '2.5')
+plt.plot(middletimes, new_Val100, "r.", label = '10')
 plt.legend(loc="best")
 plt.xlabel("Time")
 plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
 plt.title(file_title)
 fig.autofmt_xdate()
-
+ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
+ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 plt.show()
