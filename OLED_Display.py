@@ -152,7 +152,11 @@ try:
         print("Error Initializing")
         exit()
 
-    time.sleep(3) #to give sensors time to start running
+    #To give sensors time to start running
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Starting Up")
+    time.sleep(3)
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
     sensor_name = []
     parser = argparse.ArgumentParser()
