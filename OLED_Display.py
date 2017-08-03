@@ -219,4 +219,5 @@ try:
             exit()
         '''
 except:
-    proper_quit()
+    #proper_quit()
+    pass
