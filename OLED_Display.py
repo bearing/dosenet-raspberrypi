@@ -173,6 +173,7 @@ try:
     if config == True:
         results = open("config.txt").readlines()
         sensor_name = [line.split(",") for line in results]
+        print sensor_name
         if "\n" in sensor_name[0][len(sensor_name[0])-1]:
             sensor_name[0][len(sensor_name[0])-1] = sensor_name[0][len(sensor_name[0])-1].strip("\n")
 
@@ -192,7 +193,7 @@ try:
         if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
             parser.print_help()
             exit()
-            
+
         sensor_name = np.array(sensor_name)
 
     print("OLED Display Print: \n")
