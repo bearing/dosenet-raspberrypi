@@ -97,7 +97,7 @@ class Data_Handler_AQ(object):
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
         if self.queue:
-            self.vprint(1, "Flushing memory queue to backlog file")
+            self.vprint(2, "Flushing memory queue to backlog file")
             with open(path, 'a') as f:
                 while self.queue:
                     f.write('{0}, '.format(self.queue.popleft()))
@@ -115,16 +115,12 @@ class Data_Handler_AQ(object):
         """
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
-
-            with open(path, 'rb') as f:
-                reader = csv.reader(f)
-                lst = list(reader)
-            for i in lst:
-                timestring = i[0]
-                average_data = i[1]
-                timestring = ast.literal_eval(timestring)
-                average_data = ast.literal_eval(average_data)
-                self.queue.append([timestring, average_data])
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                self.queue.append([i[0], i[1], i[2]])
+            print(self.queue)
             os.remove(path)
 
     def main(self, datalog, average_data, this_start, this_end):
