@@ -10,9 +10,9 @@ import numpy as np
 sys.stdout.flush()
 
 def proper_quit(*args):
-    #ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    #print("Exiting")
-    #exit()
+    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+    print("Exiting")
+    exit()
     pass
 
 class OLED_Display:
@@ -197,14 +197,14 @@ try:
     print("OLED Display Print: \n")
 
     while True:
-        try:
-            for i in range(len(sensor_name)):
-                OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
+        #try:
+        for i in range(len(sensor_name)):
+            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+        '''
         except Exception as Error:
             if Error == "KeyboardInterrupt":
                 proper_quit()
-            '''
+
             else:
                 print("Error: "+Error)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -212,7 +212,6 @@ try:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
-            '''
-
+        '''
 except:
     proper_quit()
