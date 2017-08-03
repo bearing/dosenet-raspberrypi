@@ -5,7 +5,6 @@
 import matplotlib.pyplot as plt
 import csv
 import dateutil
-import argparse
 import numpy as np
 import time
 import datetime
@@ -35,7 +34,6 @@ timesb = []
 Val25a = []
 Val25b = []
 
-
 row_countera= 0
 for r in resultsa:
     row_countera += 1
@@ -54,9 +52,6 @@ for r in resultsb:
         #Append each column in CSV to a separate list
         timesb.append(dateutil.parser.parse(r[0]))
         Val25b.append(int(r[8]))
-
-middletimesa = []
-middletimesb = []
 
 n_merge = int(input("n data points to combine:"))
 ndata_a = len(Val25a)
