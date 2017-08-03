@@ -191,16 +191,16 @@ try:
             for i in range(len(sensor_name)):
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
-        except KeyboardInterrupt:
-            proper_quit()
-
-        except:
-            print("Error: Exiting")
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-            time.sleep(3)
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            exit()
+        except SomeException as Error:
+            if Error == "KeyboardInterrupt":
+                proper_quit()
+            else:
+                print("Error: "+Error)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
+                time.sleep(3)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                exit()
 
 except:
     proper_quit()
