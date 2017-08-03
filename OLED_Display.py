@@ -209,7 +209,6 @@ try:
         except KeyboardInterrupt:
             proper_quit()
 
-        '''
         except:
             print("Error: Exiting")
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -217,7 +216,7 @@ try:
             time.sleep(3)
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
-        '''
+
 except:
     #proper_quit()
     pass
