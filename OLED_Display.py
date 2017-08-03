@@ -83,10 +83,11 @@ class OLED_Display:
 
         a = 0
         return a
-
-        #except:
+        '''
+        except:
             a = 2
             return a
+        '''
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
