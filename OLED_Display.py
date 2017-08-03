@@ -9,7 +9,7 @@ import numpy as np
 
 sys.stdout.flush()
 
-def proper_quit():
+def proper_quit(*args):
     print("Exiting")
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     exit()
