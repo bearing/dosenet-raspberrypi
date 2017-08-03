@@ -52,12 +52,6 @@ do
       exit 0
       ;;
 
-    )
-      echo "Error: Incorrect Usage"
-      echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI|Stop}"
-      exit 1
-      ;;
-
     *)
       echo "Error: Incorrect Usage"
       echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI|Stop}"
