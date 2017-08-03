@@ -49,35 +49,34 @@ class OLED_Display:
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
-        try:
+        check = open(fname).readlines()[0:2]
+        while check == []:
+            time.sleep(0.5)
             check = open(fname).readlines()[0:2]
-            while check == []:
-                time.sleep(0.5)
-                check = open(fname).readlines()[0:2]
-                print(sensor+":")
-                print("Error: Empty CSV \n")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
-                time.sleep(2.5)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                return False
-                break
+            print(sensor+":")
+            print("Error: Empty CSV \n")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
+            time.sleep(2.5)
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            return False
+            break
 
-            while len(check) < 2:
-                time.sleep(0.5)
-                check = open(fname).readlines()[0:2]
-                print(sensor+":")
-                print("Error: No Data \n")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
-                time.sleep(3)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                return False
-                break
+        while len(check) < 2:
+            time.sleep(0.5)
+            check = open(fname).readlines()[0:2]
+            print(sensor+":")
+            print("Error: No Data \n")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
+            time.sleep(3)
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            return False
+            break
 
-            return True
+        return True
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
