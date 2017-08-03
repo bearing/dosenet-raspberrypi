@@ -126,7 +126,7 @@ class OLED_Display:
              time.sleep(3)
 
         else:
-            pass
+            print("pass")
 
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
