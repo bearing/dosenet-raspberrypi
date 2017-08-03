@@ -172,10 +172,9 @@ try:
 
     if config == True:
         results = open("config.txt").readlines()
-        sensor_name = [line.split(",") for line in results]
-        print sensor_name
-        if "\n" in sensor_name[0][len(sensor_name[0])-1]:
-            sensor_name[0][len(sensor_name[0])-1] = sensor_name[0][len(sensor_name[0])-1].strip("\n")
+        sensor_name = line.split(",") for line in results
+        if "\n" in sensor_name[len(sensor_name)-1]:
+            sensor_name[len(sensor_name)-1] = sensor_name[len(sensor_name)-1].strip("\n")
 
     else:
         if AQ == True:
@@ -200,8 +199,8 @@ try:
 
     while True:
         try:
-            for i in range(len(sensor_name[0])):
-                OLED.Display_Data(OLED.log_files[sensor_name[0][i]], sensor_name[0][i])
+            for i in range(len(sensor_name)):
+                OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
         except KeyboardInterrupt:
             proper_quit()
