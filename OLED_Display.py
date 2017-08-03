@@ -50,41 +50,41 @@ class OLED_Display:
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
-        try:
-            check = open(fname).readlines()[0:2]
-            set_time = time.time.now()
-            while check == []:
-                if now_time > set_time + 0.5:
-                    check = open(fname).readlines()[0:2]
-                    print(sensor+":")
-                    print("Error: Empty CSV \n")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
-                    time.sleep(2.5)
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    a = 1
-                    return a
-
-            set_time = time.time.now()
-            while len(check) < 2:
+        #try:
+        check = open(fname).readlines()[0:2]
+        set_time = time.time.now()
+        while check == []:
+            if now_time > set_time + 0.5:
                 check = open(fname).readlines()[0:2]
-                now_time = time.time.now()
-                if now_time > set_time + 0.5:
-                    print(sensor+":")
-                    print("Error: No Data \n")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
-                    time.sleep(3)
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    a = 1
-                    return a
+                print(sensor+":")
+                print("Error: Empty CSV \n")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
+                time.sleep(2.5)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                a = 1
+                return a
 
-            a = 0
-            return a
+        set_time = time.time.now()
+        while len(check) < 2:
+            check = open(fname).readlines()[0:2]
+            now_time = time.time.now()
+            if now_time > set_time + 0.5:
+                print(sensor+":")
+                print("Error: No Data \n")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
+                time.sleep(3)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                a = 1
+                return a
 
-        except:
+        a = 0
+        return a
+
+        #except:
             a = 2
             return a
 
@@ -221,5 +221,14 @@ try:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
 
-except:
-    proper_quit()
+except Exception as Error:
+    if Error == "KeyboardInterrupt":
+        proper_quit()
+
+    else:
+        print("Error: "+Error)
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
+        time.sleep(3)
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        exit()
