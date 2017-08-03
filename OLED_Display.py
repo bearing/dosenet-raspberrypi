@@ -63,7 +63,8 @@ class OLED_Display:
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
                     time.sleep(2.5)
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    return True
+                    a = 1
+                    return a
 
             if len(check) < 2:
                 while len(check) < 2:
@@ -76,16 +77,19 @@ class OLED_Display:
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
                     time.sleep(3)
                     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                    return True
+                    a = 1
+                    return a
 
-            return True
+            a = 0
+            return a
 
         except:
-            return False
+            a = 2
+            return a
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
-        if self.Check_Any(self.log_files[sensor], sensor) == True:
+        if self.Check_Any(self.log_files[sensor], sensor) == 0:
             metadata_line = open(fname).readlines()[0:1]
             metadata = [line.split(",") for line in metadata_line]
 
@@ -120,13 +124,16 @@ class OLED_Display:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
                 time.sleep(3)
 
-        else:
+        if self.Check_Any(self.log_files[sensor], sensor) == 2:
              print(sensor+":")
              print("Error Opening CSV \n")
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
              time.sleep(3)
+
+        else:
+            pass
 
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
