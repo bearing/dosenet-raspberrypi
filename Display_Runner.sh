@@ -10,7 +10,7 @@ do
   case $i in
       start)
         echo "Starting OLED Display" >| $LOG
-        sudo python $DOSENET/OLED_Display.py -Config >> $LOG 2>&1
+        sudo stdbuf -oL python $DOSENET/OLED_Display.py -Config >> $LOG 2>&1
         exit 0
         ;;
       stop)
