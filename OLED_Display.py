@@ -211,11 +211,11 @@ try:
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
         except Exception as Error:
-            if Error == "KeyboardInterrupt":
+            if str(Error) == "KeyboardInterrupt":
                 proper_quit()
 
             else:
-                print("Error: "+Error)
+                print("Error: "+str(Error))
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
                 time.sleep(3)
@@ -223,11 +223,11 @@ try:
                 exit()
 
 except Exception as Error:
-    if Error == "KeyboardInterrupt":
+    if str(Error) == "KeyboardInterrupt":
         proper_quit()
 
     else:
-        print("Error: "+Error)
+        print("Error: "+str(Error))
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
         time.sleep(3)
