@@ -17,7 +17,7 @@ do
         ;;
       stop)
         echo "Stopping OLED Display" >> $LOG
-        PIDpy=`grep pyPID.txt`
+        PIDpy=`cat pyPID.txt`
         sudo kill -s SIGINT $PIDpy
         exit 0
         ;;
