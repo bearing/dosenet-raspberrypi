@@ -10,9 +10,6 @@ import numpy as np
 sys.stdout.flush()
 
 def proper_quit(*args):
-    print("Exiting")
-    OLED = OLED_Display()
-    OLED.Pin_SetUp()
     ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
     print("Exiting")
     exit()
@@ -146,13 +143,14 @@ class OLED_Display:
 signal.signal(signal.SIGINT, proper_quit)
 
 try:
-    time.sleep(3) #to give sensors time to start running
     try:
         OLED = OLED_Display()
         OLED.Pin_SetUp()
     except:
         print("Error Initializing")
         exit()
+
+    time.sleep(3) #to give sensors time to start running
 
     sensor_name = []
     parser = argparse.ArgumentParser()
@@ -218,5 +216,4 @@ try:
             exit()
 
 except:
-    #proper_quit()
-    pass
+    proper_quit()
