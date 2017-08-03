@@ -209,6 +209,7 @@ try:
     while True:
         try:
             for i in range(len(sensor_name)):
+                print(i)
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
         except Exception as Error:
