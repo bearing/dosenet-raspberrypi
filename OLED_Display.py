@@ -79,18 +79,6 @@ class OLED_Display:
 
             return True
 
-        except KeyboardInterrupt:
-            proper_quit()
-
-        except:
-            print(sensor+":")
-            print("Error Opening CSV \n")
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
-            time.sleep(3)
-            return False
-
     #Displays data on screen
     def Display_Data(self, fname, sensor):
         if self.Check_Any(self.log_files[sensor], sensor) == True:
