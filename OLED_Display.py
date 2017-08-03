@@ -73,6 +73,7 @@ class OLED_Display:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 a = 1
+                print("test")
 
             return a
 
