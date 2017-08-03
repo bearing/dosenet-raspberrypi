@@ -122,7 +122,6 @@ class OLED_Display:
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
              ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
              time.sleep(3)
-             return False
 
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
