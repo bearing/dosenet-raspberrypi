@@ -200,10 +200,7 @@ try:
             for i in range(len(sensor_name)):
                 OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
 
-        except:
-            pass
-        '''
-        except SomeException as Error:
+        except Exception as Error:
             if Error == "KeyboardInterrupt":
                 proper_quit()
             else:
@@ -213,6 +210,6 @@ try:
                 time.sleep(3)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
                 exit()
-        '''
+
 except:
     proper_quit()
