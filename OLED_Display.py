@@ -143,7 +143,7 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-signal.signal(signal.SIGINT, proper_quit)
+#signal.signal(signal.SIGINT, proper_quit)
 
 try:
     time.sleep(3) #to give sensors time to start running
@@ -217,5 +217,5 @@ try:
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
             exit()
 
-except KeyboardInterrupt:
+except:
     proper_quit()
