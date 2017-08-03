@@ -1,7 +1,7 @@
 #! /bin/sh
 dose_net_dir=/home/pi/dosenet-raspberrypi
 
-if [[ ! $1 ]]
+if [ ! $1 ]
 then
   echo "Error: Incorrect Usage"
   echo "Usage: /home/pi/dosenet-raspberrypi/SensorTest.sh {AQ|AT|ADC|Si|CsI|Stop}"
