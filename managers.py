@@ -846,7 +846,7 @@ if __name__ == '__main__':
         '(default {} for UDP, {} for TCP)'.format(
             DEFAULT_UDP_PORT, DEFAULT_TCP_PORT))
     parser.add_argument(
-        '--test', '-t',action='store_true', default=False,
+        '--test', '-t', action='store_true', default=False,
         help='Start in test mode (no config, 30s intervals)')
     parser.add_argument(
         '--verbosity', '-v', type=int, default=None,

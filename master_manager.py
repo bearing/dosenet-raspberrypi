@@ -25,7 +25,7 @@ def start_AQ(mode):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--test_mode', default=False,
+    parser.add_argument('--test_mode', action='store_true', default=False,
         help="Choose whether the devices will start in test mode or not. (Default False)")
     test_mode = parser.parse_args().test_mode
 
