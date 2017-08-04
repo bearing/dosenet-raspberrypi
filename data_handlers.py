@@ -12,7 +12,7 @@ from globalvalues import DEFAULT_DATA_BACKLOG_FILE_D3S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
 from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 
-from globalvaules import CPM_DISPLAY_TEXT
+from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import SPECTRA_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
 from globalvalues import BREAK_LINE, TIME_DISPLAY_TEXT
