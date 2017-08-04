@@ -12,6 +12,10 @@ case "$1" in
     sudo python $DOSENET/managers.py --sensor 1 --logfile $LOG >>$LOG 2>&1
     echo "Finished pocket Geiger script" >> $LOG
     ;;
+  test)
+    echo "Starting pocket Geiger script in test mode" > $LOG
+    sudo python $DOSENET/managers.py --sensor 1 --test --logfile $LOG >> $LOG 2>&1
+    ;;
   stop)
     echo "Stopping pocket Geiger script" >> $LOG
     sudo pkill -SIGTERM -f manager.py

@@ -12,6 +12,10 @@ case "$1" in
     sudo python $DOSENET/managers.py --sensor 2 --logfile $LOG >> $LOG 2>&1
     echo "Finished D3S script" >> $LOG
     ;;
+  test)
+    echo "Starting D3S script in test mode" > $LOG
+    sudo python $DOSENET/managers.py --sensor 2 --test --logfile $LOG >> $LOG 2>&1
+    ;;
   stop)
     echo "Stopping D3S script" >> $LOG
     sudo pkill -SIGTERM -f manager_D3S.py
