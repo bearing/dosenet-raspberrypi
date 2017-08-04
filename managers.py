@@ -445,7 +445,7 @@ class Base_Manager(object):
             spectra = kwargs.get('spectra')
             if self.datalogflag:
                 with open(file, 'a') as f:
-                    f.write('{0}, '.format(spectrum))
+                    f.write('{0}, '.format(spectra))
                     self.vprint(
                         2, 'Writing spectra to data log at {}'.format(file))
         if self.sensor_type == 3:
