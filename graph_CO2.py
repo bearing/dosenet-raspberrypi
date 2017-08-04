@@ -4,6 +4,7 @@ import csv
 import dateutil
 import time
 import datetime
+from matplotlib.dates import DateFormatter
 import numpy as np
 
 user_file = input("File Name: ")
@@ -38,9 +39,13 @@ for i in range(nsum_data):
 	merge_times.append(itime)	
 
 fig = plt.figure()
+ax = fig.add_subplot(111)
 plt.plot(merge_times, data_ave, "b.")
 plt.errorbar(merge_times, data_ave, yerr = data_unc)
 plt.xlabel("Time")
 plt.ylabel("CO2 (ppm)")
 fig.autofmt_xdate()
+ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
+ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 plt.show()		
+
