@@ -389,7 +389,7 @@ class Data_Handler_D3S(Data_Handler):
     defined in this sub-class.
     """
 
-    def __init__(self
+    def __init__(self,
                  **kwargs):
 
         super(Data_Handler_D3S, self).__init__(**kwargs)
