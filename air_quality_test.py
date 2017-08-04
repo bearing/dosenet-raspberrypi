@@ -3,19 +3,15 @@ import binascii
 import csv
 import datetime
 import time
-import argparse
 import sys
 
-#Initiate timer
-parser = argparse.ArgumentParser()
-parser.add_argument("runtime", type = int, help = "Enter a whole number. This will determine the length of time in seconds for which the test will run.")
-info = parser.parse_args()
-run_time = info.runtime
-counter_time= int(time.time())
-
+sys.stdout.flush()
 
 # Open CSV file to save results
-sys.stdout.flush()
+file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+filename = "air_quality_test_results_"+file_time+".csv"
+pen_results= csv.writer(open(filename, "ab+"), delimiter = ",")
+
 #Open CSV file to log results
 logfilename = "air_quality_test_results.csv"
 log_results = open(logfilename, "wb+", 0)
@@ -32,6 +28,7 @@ metadata.append("10 um")
 metadata.append("PM 1.0")
 metadata.append("PM 2.5")
 metadata.append("PM 10")
+pen_results.writerow(metadata[:])
 log_results.write(metadata[0]+","+metadata[1]+","+metadata[2]+","+metadata[3]+","+metadata[4]+","+metadata[5]+","+metadata[6]+","+metadata[7]+","+metadata[8]+","+metadata[9]+"\n")
 
 print("Results: ")
