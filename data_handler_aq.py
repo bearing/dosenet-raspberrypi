@@ -97,7 +97,7 @@ class Data_Handler_AQ(object):
 
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
         if self.queue:
-            self.vprint(2, "Flushing memory queue to backlog file")
+            self.vprint(1, "Flushing memory queue to backlog file")
             with open(path, 'a') as f:
                 while self.queue:
                     f.write('{0}, '.format(self.queue.popleft()))
@@ -119,7 +119,7 @@ class Data_Handler_AQ(object):
                 data = f.read()
             data = ast.literal_eval(data)
             for i in data:
-                self.queue.append([i[0], i[1], i[2]])
+                self.queue.append([i[0], i[1])
             print(self.queue)
             os.remove(path)
 
