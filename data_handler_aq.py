@@ -119,7 +119,7 @@ class Data_Handler_AQ(object):
                 data = f.read()
             data = ast.literal_eval(data)
             for i in data:
-                self.queue.append([i[0], i[1])
+                self.queue.append([i[0], i[1]])
             print(self.queue)
             os.remove(path)
 
