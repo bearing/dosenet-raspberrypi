@@ -11,7 +11,7 @@ def start_D3S():
     os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh start')
 
 def start_AQ():
-    os.system('sudo bash /home/pi/dosenet-raspbberrypi/AQ.sh start')
+    os.system('sudo bash /home/pi/dosenet-raspberrypi/AQ.sh start')
 
 if __name__ == '__main__':
     print('Waiting for NTP to be synced...')
