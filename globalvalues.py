@@ -16,9 +16,9 @@ except ImportError:
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-D3S_LED_PIN = 19
-NETWORK_LED_PIN = 20
-COUNTS_LED_PIN = 21
+D3S_LED_PIN = 13
+NETWORK_LED_PIN = 16
+COUNTS_LED_PIN = 19
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
 
