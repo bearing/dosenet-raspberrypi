@@ -9,23 +9,24 @@ Created on Thu Jun 29 15:31:03 2017
 import matplotlib.pyplot as plt
 import csv
 import dateutil
-import time
 import datetime
 import numpy as np
-from matplotlib.dates import date2num, DateFormatter
-import argparse
+from matplotlib.dates import DateFormatter
 
 times=[]
 degrees_list=[]
 pressure_list=[]
 humidity_list=[]
 row_counter=0
-
+'''
 parser = argparse.ArgumentParser()
 parser.add_argument("file", help="Enter the file name: ", type=str)
 args = parser.parse_args()
 user_file=args.file
 results = csv.reader(open(user_file), delimiter=',')
+'''
+userfile_Weather = input("Weather File: ")
+results = csv.reader(open(userfile_Weather), delimiter=',')
 
 for r in results:
     if row_counter>0:
@@ -77,8 +78,19 @@ for i in range(nsum_data):
     itime = itimes[int(len(itimes)/2)]
     merge_times.append(itime)
 
-
-    
+def time_sublist(datalist, timelist, start, stop):
+    merge_times2 = np.asarray(merge_times)
+    indices = np.where((merge_times2>start) & (merge_times2<stop))
+    datalist2 = np.asarray(datalist)
+    timelist2 = np.asarray(timelist)
+    datalist2 = datalist2[indices]
+    timelist2 = timelist2[indices]
+        
+start1 = datetime.datetime(2017, 8, 2, 10, 00, 00) 
+stop1 = datetime.datetime(2017, 8, 3, 00, 00, 00)
+time_sublist(temp_ave, merge_times, start1, stop1)
+time_sublist(pressure_ave, merge_times, start1, stop1)
+time_sublist(humidity_ave, merge_times, start1, stop1)
     
 fig=plt.figure()
 ax=fig.add_subplot(111)   
@@ -88,7 +100,8 @@ plt.title("Temperature")
 plt.xlabel("Time(s)")
 plt.ylabel("Temperature(C)")
 fig.autofmt_xdate()
-ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
+
 
 fig=plt.figure()
 ax=fig.add_subplot(111)
@@ -98,8 +111,8 @@ plt.title("Pressure")
 plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
 fig.autofmt_xdate()
-ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-
+ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
+ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 
 
 fig=plt.figure()
@@ -110,6 +123,7 @@ plt.title("Humidity")
 plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
 fig.autofmt_xdate()
-ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
+ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 plt.show()
 
