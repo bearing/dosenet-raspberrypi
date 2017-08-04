@@ -98,12 +98,9 @@ class Data_Handler_AQ(object):
     def send_all_to_backlog(self, path=DEFAULT_DATA_BACKLOG_FILE_AQ):
         if self.queue:
             self.vprint(1, "Flushing memory queue to backlog file")
-            temp = []
-            while self.queue:
-                temp.append(self.queue.popleft())
-            with open(path, "ab") as f: # might only work for python 3?
-                writer = csv.writer(f)
-                writer.writerows(temp)
+            with open(path, 'a') as f:
+                while self.queue:
+                    f.write('{0}, '.format(self.queue.popleft()))
 
     def send_to_queue(self, average_data):
         """
@@ -118,16 +115,12 @@ class Data_Handler_AQ(object):
         """
         if os.path.isfile(path):
             self.vprint(2, "Flushing backlog file to memory queue")
-
-            with open(path, 'rb') as f:
-                reader = csv.reader(f)
-                lst = list(reader)
-            for i in lst:
-                timestring = i[0]
-                average_data = i[1]
-                timestring = ast.literal_eval(timestring)
-                average_data = ast.literal_eval(average_data)
-                self.queue.append([timestring, average_data])
+            with open(path, 'r') as f:
+                data = f.read()
+            data = ast.literal_eval(data)
+            for i in data:
+                self.queue.append([i[0], i[1]])
+            print(self.queue)
             os.remove(path)
 
     def main(self, datalog, average_data, this_start, this_end):
@@ -154,7 +147,7 @@ class Data_Handler_AQ(object):
         self.vprint(
             1, BREAK_LINE)
 
-        self.manager.data_log(datalog, average_data)
+        self.manager.data_log(datalog, average_data=average_data)
 
         if self.manager.test:
             self.send_to_memory(average_data)

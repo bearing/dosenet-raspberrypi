@@ -16,9 +16,9 @@ except ImportError:
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-D3S_LED_PIN = 19
-NETWORK_LED_PIN = 20
-COUNTS_LED_PIN = 21
+D3S_LED_PIN = 13
+NETWORK_LED_PIN = 16
+COUNTS_LED_PIN = 19
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
 
@@ -34,13 +34,14 @@ DEFAULT_UDP_PORT = 5005
 TESTING_UDP_PORT = 5006
 DEFAULT_TCP_PORT = 5100
 TESTING_TCP_PORT = 5101
+BOOT_LOG_CODE = 11
 DEFAULT_SENDER_MODE = 'tcp'
 DEFAULT_DATALOG = '/home/pi/data-log.txt'
 DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
 DEFAULT_DATALOG_AQ = '/home/pi/data-log_AQ.txt'
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
 DEFAULT_DATA_BACKLOG_FILE_D3S = '/home/pi/data_backlog_file_D3S.csv'
-DEFAULT_DATA_BACKLOG_FILE_AQ = 'home/pi/data_backlog_file_AQ.csv'
+DEFAULT_DATA_BACKLOG_FILE_AQ = '/home/pi/data_backlog_file_AQ.txt'
 DEFAULT_CALIBRATIONLOG_D3S = '/home/pi/calibration-log_D3S.txt'
 DEFAULT_CALIBRATIONLOG_TIME = 600
 DEFAULT_PROTOCOL = 'new'
