@@ -23,9 +23,9 @@ from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
-from data_handler import Data_Handler
-from data_handler_d3s import Data_Handler_D3S
-from data_handler_aq import Data_Handler_AQ
+from data_handlers import Data_Handler_Pocket
+from data_handlers import Data_Handler_D3S
+from data_handlers import Data_Handler_AQ
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -45,7 +45,6 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
 from globalvalues import DEFAULT_LOGFILE_AQ
-from globalvalues import DEFAULT_PROTOCOL
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 
 def signal_term_handler(signal, frame):
@@ -465,11 +464,13 @@ class Base_Manager(object):
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
             self.data_handler.main(
-                self.datalog, cpm, cpm_err, this_start, this_end, counts)
+                self.datalog, this_start, this_end,
+                cpm=cpm, cpm_err=cpm_err, counts=counts)
 
         if self.sensor_type == 2:
             self.data_handler.main(
-                self.datalog, self.calibrationlog, spectra, this_start, this_end)
+                self.datalog, this_start, this_end,
+                calibrationlog=self.calibrationlog, spectra=spectra)
 
         if self.sensor_type == 3:
             aq_data_set = []
@@ -497,7 +498,7 @@ class Base_Manager(object):
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
-                self.datalog, average_data, this_start, this_end)
+                self.datalog, this_start, this_end, average_data=average_data)
 
     def takedown(self):
         """
@@ -539,14 +540,11 @@ class Manager_Pocket(Base_Manager):
                  network_LED_pin=NETWORK_LED_PIN,
                  noise_pin=NOISE_PIN,
                  signal_pin=SIGNAL_PIN,
-                 protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
         super(Manager_Pocket, self).__init__(sensor_type=1, **kwargs)
 
         self.quit_after_interval = False
-
-        self.protocol = protocol
 
         if RPI:
             self.counts_LED = LED(counts_LED_pin)
@@ -559,7 +557,7 @@ class Manager_Pocket(Base_Manager):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.data_handler = Data_Handler(
+        self.data_handler = Data_Handler_Pocket(
             manager=self,
             verbosity=self.v,
             logfile=self.logfile,
@@ -885,10 +883,6 @@ if __name__ == '__main__':
             '--signal_pin', '-u', default=SIGNAL_PIN,
             help='Specify which pin the signal is coming in from ' +
             '(default {})'.format(SIGNAL_PIN))
-        parser.add_argument(
-            '--protocol', '-r', default=DEFAULT_PROTOCOL,
-            help='Specify what communication protocol is to be used ' +
-            '(default {})'.format(DEFAULT_PROTOCOL))
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
