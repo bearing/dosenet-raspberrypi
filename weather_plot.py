@@ -13,18 +13,22 @@ import datetime
 import numpy as np
 from matplotlib.dates import DateFormatter
 
+    
+def time_sublist(datalist, timelist, start, stop):
+    timelist2 = np.asarray(timelist)
+    indices = np.where((timelist2>start) & (timelist2<stop))
+    datalist2 = np.asarray(datalist)
+    datalist2 = datalist2[indices]
+    timelist2 = timelist2[indices]
+    return datalist2.tolist(), timelist2.tolist()
+
 times=[]
 degrees_list=[]
 pressure_list=[]
 humidity_list=[]
 row_counter=0
-'''
-parser = argparse.ArgumentParser()
-parser.add_argument("file", help="Enter the file name: ", type=str)
-args = parser.parse_args()
-user_file=args.file
-results = csv.reader(open(user_file), delimiter=',')
-'''
+
+
 userfile_Weather = input("Weather File: ")
 results = csv.reader(open(userfile_Weather), delimiter=',')
 
@@ -36,6 +40,14 @@ for r in results:
         humidity_list.append(float(r[3]))
         
     row_counter+=1
+
+        
+start1 = datetime.datetime(2017, 8, 2, 10, 00, 00) 
+stop1 = datetime.datetime(2017, 8, 3, 00, 00, 00)
+degrees_list, times1 = time_sublist(degrees_list, times, start1, stop1)
+pressure_list, times1 = time_sublist(pressure_list, times, start1, stop1)
+humidity_list, times1 = time_sublist(humidity_list, times, start1, stop1)
+times = times1
     
 temp_ave=[]
 temp_unc = []
@@ -78,19 +90,7 @@ for i in range(nsum_data):
     itime = itimes[int(len(itimes)/2)]
     merge_times.append(itime)
 
-def time_sublist(datalist, timelist, start, stop):
-    merge_times2 = np.asarray(merge_times)
-    indices = np.where((merge_times2>start) & (merge_times2<stop))
-    datalist2 = np.asarray(datalist)
-    timelist2 = np.asarray(timelist)
-    datalist2 = datalist2[indices]
-    timelist2 = timelist2[indices]
-        
-start1 = datetime.datetime(2017, 8, 2, 10, 00, 00) 
-stop1 = datetime.datetime(2017, 8, 3, 00, 00, 00)
-time_sublist(temp_ave, merge_times, start1, stop1)
-time_sublist(pressure_ave, merge_times, start1, stop1)
-time_sublist(humidity_ave, merge_times, start1, stop1)
+
     
 fig=plt.figure()
 ax=fig.add_subplot(111)   
@@ -112,7 +112,6 @@ plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
 fig.autofmt_xdate()
 ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
-ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 
 
 fig=plt.figure()
@@ -124,6 +123,5 @@ plt.xlabel("Time(s)")
 plt.ylabel("Humidity(%)")
 fig.autofmt_xdate()
 ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
-ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 plt.show()
 
