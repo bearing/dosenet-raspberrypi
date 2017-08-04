@@ -16,8 +16,8 @@ from matplotlib.dates import DateFormatter
     
 def time_sublist(datalist, timelist, start, stop):
     timelist2 = np.asarray(timelist)
-    indices = np.where((timelist2>start) & (timelist2<stop))
     datalist2 = np.asarray(datalist)
+    indices = np.where((timelist2>start) & (timelist2<stop))
     datalist2 = datalist2[indices]
     timelist2 = timelist2[indices]
     return datalist2.tolist(), timelist2.tolist()
