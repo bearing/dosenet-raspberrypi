@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import csv
 import dateutil
@@ -19,8 +18,55 @@ for r in results:
 		times.append(dateutil.parser.parse(r[0]))
 		CO2.append(int(r[1]))
 
+times_array = np.asarray(times)
+
+print('Only input "0" to Start Time if you want the whole graph')
+intial_srtT = input('Start Time (month date year hour minute second):')
+
+if intial_srtT == '0':
+	subtime_array = times
+	data_array = CO2
+else:
+	intial_stpT = input('Stop Time (month date year hour minute second):')
+	
+	srtT = intial_srtT.split()
+	stpT = intial_stpT.split()
+
+	srty = int(srtT[2])
+	srtm = int(srtT[0])
+	srtd = int(srtT[1])
+	srtH = int(srtT[3])
+	srtM = int(srtT[4])
+	srtS = int(srtT[5])
+
+	stpy = int(stpT[2])
+	stpm = int(stpT[0])
+	stpd = int(stpT[1])
+	stpH = int(stpT[3])
+	stpM = int(stpT[4])
+	stpS = int(stpT[5])
+
+	start = datetime.datetime(srty, srtm, srtd, srtH, srtM, srtS)
+	stop = datetime.datetime(stpy, stpm, stpd, stpH, stpM, stpS)
+
+	wheretime_array = np.where((times_array>=start)&(times_array<=stop) ) 
+	subtime_array = times_array[wheretime_array]
+
+	bgndffrnce_array = np.where(times_array<start)
+	subbgndffrnce_array = times_array[bgndffrnce_array]
+
+	enddffrnce_array = np.where(times_array>stop)
+	subenddffrnce_array = times_array[enddffrnce_array]
+
+	for i in range(0,len(bgndffrnce_array)):
+	    CO2.pop( )
+
+	for i in range(len(subtime_array),len(CO2)):
+	    CO2.pop( )
+	data_array = np.asarray(CO2)
+
 n_merge = int(input("n data points to combine:"))
-ndata = len(CO2)
+ndata = len(data_array)
 nsum_data = int(ndata/n_merge)
 
 data_ave = []
@@ -28,13 +74,13 @@ data_unc = []
 merge_times = []
 
 for i in range(nsum_data):
-	idata = CO2[i*n_merge:(i+1)*n_merge]
+	idata = data_array[i*n_merge:(i+1)*n_merge]
 	idata_array = np.asarray(idata)
 	CO2mean = np.mean(idata_array)
 	CO2sigma = np.sqrt(np.var(idata_array))
 	data_ave.append(CO2mean)
 	data_unc.append(CO2sigma)
-	itimes = times[i*n_merge:(i+1)*n_merge]
+	itimes = subtime_array[i*n_merge:(i+1)*n_merge]
 	itime = itimes[int(len(itimes)/2)]
 	merge_times.append(itime)	
 
@@ -46,6 +92,4 @@ plt.xlabel("Time")
 plt.ylabel("CO2 (ppm)")
 fig.autofmt_xdate()
 ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
-ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
 plt.show()		
-
