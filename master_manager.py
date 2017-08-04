@@ -42,14 +42,14 @@ if __name__ == '__main__':
         pass
 
     if test_mode:
-        p = multiprocessing.Process(target=start_D3S, args=(1))
-        t = multiprocessing.Process(target=start_dosenet, args=(1))
-        a = multiprocessing.Process(target=start_AQ, args=(1))
+        p = multiprocessing.Process(target=start_D3S, args=(1,))
+        t = multiprocessing.Process(target=start_dosenet, args=(1,))
+        a = multiprocessing.Process(target=start_AQ, args=(1,))
     else:
-        p = multiprocessing.Process(target=start_D3S, args=(0))
-        t = multiprocessing.Process(target=start_dosenet, args=(0))
-        a = multiprocessing.Process(target=start_AQ, args=(0))
-        
+        p = multiprocessing.Process(target=start_D3S, args=(0,))
+        t = multiprocessing.Process(target=start_dosenet, args=(0,))
+        a = multiprocessing.Process(target=start_AQ, args=(0,))
+
     try:
         print('Starting D3S script process')
         p.start()
