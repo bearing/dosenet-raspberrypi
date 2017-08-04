@@ -112,7 +112,6 @@ class Data_Handler_D3S(object):
         """
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
-
         self.vprint(
             1, SPECTRA_DISPLAY_TEXT.format(
                 time=datetime_from_epoch(time.time()),
@@ -120,7 +119,7 @@ class Data_Handler_D3S(object):
                 start_time=start_text,
                 end_time=end_text))
 
-        self.manager.data_log(datalog, spectra)
+        self.manager.data_log(datalog, spectra=spectra)
         self.manager.calibration_log(calibrationlog, spectra)
 
         if self.manager.test:

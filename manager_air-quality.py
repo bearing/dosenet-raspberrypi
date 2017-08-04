@@ -213,17 +213,18 @@ class Manager_AQ(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
-    def data_log(self, file, average_data):
+    def data_log(self, file, **kwargs):
         """
         Writes average_data list to file
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        average_data = kwargs.get('average_data')
         if self.datalogflag:
             with open(file, 'a') as f:
                 f.write('{0}, {1}'.format(time_string, average_data))
                 f.write('\n')
                 self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
-                
+
     def handle_air_counts(self, this_start, this_end):
         """
         Takes air quality data for a given interval and sends
