@@ -48,11 +48,7 @@ class Real_Time_Spectra(object):
         self.first = True
 
         self.colorbar_drawn = True
-
-        '''
-        Start up the plotting windows.
-        '''
-        self.start_up_plotting()
+        
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
