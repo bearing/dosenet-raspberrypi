@@ -5,8 +5,9 @@ import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
+'''
 import plot_manager_D3S
-
+'''
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -31,8 +32,9 @@ def close(index):
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
+'''
 mgrD3S = plot_manager_D3S.Manager_D3S()
-
+'''
 
 top = Tkinter.Tk()
 top.geometry("800x400")
