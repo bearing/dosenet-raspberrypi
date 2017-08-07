@@ -42,12 +42,16 @@ varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 
 def start_D3S():
-    try:
+    if vard3s.get():
         mgrD3S.run()
-    except:
-        global jobd3s
-        print("Error: Failed to start D3S")   
-        jobd3s =None
+
+def run_Sensors():
+    if varWeather.get(): 
+        wdaq.start()
+    if varAir.get():
+        aqdaq.start()
+    if varCO2.get():
+        adcdaq.start()
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -70,16 +74,15 @@ def make_run_gui():
         
         global job1
         global jobd3s
-        if vard3s.get():
-            if jobd3s is None:
-                jobd3s = multiprocessing.Process(target=start_D3S(), args=()) 
+        
+        if jobd3s is None:
+            jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
+            try:
                 jobd3s.start()
-        if varWeather.get(): 
-            wdaq.start()
-        if varAir.get():
-            aqdaq.start()
-        if varCO2.get():
-            adcdaq.start()
+            except:
+                print("Error: Failed to start D3S")
+        run_Sensors()
+                
         job1=top1.after(1000,start)
 
     def stop():
