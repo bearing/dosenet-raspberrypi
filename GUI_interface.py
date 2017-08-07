@@ -146,10 +146,10 @@ def make_run_gui():
         AirButton.grid(row=0, column=6)
        
     if vard3s.get():
-        d3sButton_spectra = TKinter.Button(top1, height=2, width=10, text = "D3S Spectra", command = D3S_spectra )
+        d3sButton_spectra = Tkinter.Button(top1, height=2, width=10, text = "D3S Spectra", command = D3S_spectra )
         d3sButton_spectra.grid(row=0, column=7)
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=10, text = "D3S Waterfall", command = D3S_waterfall)
-        d3sButton_spectra.grid(row=0, column=8)
+        d3sButton_waterfall.grid(row=0, column=8)
 
     
     top1.attributes("-topmost", True)
