@@ -5,9 +5,8 @@ import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
-'''
 import plot_manager_D3S
-'''
+
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
