@@ -193,7 +193,6 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_AQ(self, timestamp, average_data, error_code=0):
-
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
@@ -203,6 +202,21 @@ class ServerSender(object):
                  str(error_code)]
             )
         except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
+
+    def construct_packet_new_CO2(self, timestamp, average_data, error_code=0):
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(average_data),
+                 str(error_code)]
+            )
+        except AttributeError:
             raise MissingFile('Missing or broken Config object')
         else:
             self.vprint(3, 'Constructed packet')
@@ -350,6 +364,15 @@ class ServerSender(object):
         Protocol for sending average air quality data
         """
         packet = self.construct_packet_new_AQ(
+            timestamp, average_data, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
+
+    def send_data_new_CO2(self, timestamp, average_data, error_code=0):
+        """
+        Protocol for sending the average CO2 data
+        """
+        packet = self.construct_packet_new_CO2(
             timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
