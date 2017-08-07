@@ -69,7 +69,7 @@ def make_run_gui():
         global job1
         global jobd3s
         if vard3s.get():
-            if jobd3s is None:
+            if jobd3s is not None:
                 jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
         if varWeather.get(): 
             wdaq.start()
