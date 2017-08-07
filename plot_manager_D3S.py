@@ -111,11 +111,10 @@ class Manager_D3S(object):
 
         self.data_handler.backlog_to_queue()
 
-        if self.plot:
-            print('creating plotter')
-            self.rt_plot = Real_Time_Spectra(
-                manager=self,
-                verbosity=self.v)
+        print('creating plotter')
+        self.rt_plot = Real_Time_Spectra(
+            manager=self,
+            verbosity=self.v)
 
     def z_flag(self):
         """
@@ -310,7 +309,7 @@ class Manager_D3S(object):
 
     def plot_fitter(self):
         """
-        Wrapper around spectrum-fitter data acquisition plotter in
+    g    Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
 
