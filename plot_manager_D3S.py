@@ -221,7 +221,6 @@ class Manager_D3S(object):
         self.interval = interval
 
 
-
     def run(self):
         """
         Main method. Currently also stores and sum the spectra as well.

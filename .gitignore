@@ -2,3 +2,4 @@ config.csv
 *.pyc
 *.pub
 *.log
+*.DS_Store
