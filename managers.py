@@ -45,7 +45,7 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
 from globalvalues import DEFAULT_LOGFILE_AQ
-from globalvaules import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
+from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import DEFAULT_CO2_PORT
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
