@@ -6,9 +6,8 @@ import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
-'''
 import plot_manager_D3S
-'''
+
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -33,9 +32,8 @@ def close(index):
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
-'''
 mgrD3S = plot_manager_D3S.Manager_D3S()
-'''
+
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -43,22 +41,19 @@ varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
-'''
+
 def start_D3S():
     try:
         mgrD3S.run()
     except:
-        print("Error: Failed to start D3S")
-'''    
+        print("Error: Failed to start D3S")    
 
 def make_run_gui():
     top1 = Tkinter.Tk()
     top1.geometry('+0+390')
     global job1
-    '''
     global jobd3s
     jobd3s = None
-    '''
     
     def check_plots(index):
         global plot_jobs
@@ -73,13 +68,10 @@ def make_run_gui():
     def start():
         
         global job1
-        '''
         global jobd3s
-
         if vard3s.get():
             if jobd3s is None:
                 jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
-        '''
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
@@ -121,12 +113,16 @@ def make_run_gui():
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
-    '''
+
     def D3S_spectra():
+        global plot_jobs
+        mgrD3S.plot_spectrum()
+        plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
-        
-    '''
+        global plot_jobs
+        mgrD3S.plot_waterfall()
+        plot_jobs[6]=top1.after(1000,D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
@@ -149,13 +145,13 @@ def make_run_gui():
     if varAir.get():
         AirButton = Tkinter.Button(top1, height=2, width=10, text = "Air Quality", command = airquality)
         AirButton.grid(row=0, column=6)
-    '''        
+       
     if vard3s.get():
         d3sButton_spectra = TKinter.Button(top1, height=2, width=10, text = "D3S Spectra", command = D3S_spectra )
         d3sButton_spectra.grid(row=0, column=7)
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=10, text = "D3S Waterfall", command = D3S_waterfall)
         d3sButton_spectra.grid(row=0, column=8)
-        '''
+
     
     top1.attributes("-topmost", True)
     top1.mainloop()

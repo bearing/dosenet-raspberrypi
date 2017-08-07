@@ -9,7 +9,6 @@ import datetime
 import csv
 from Adafruit_BME280 import *
 import os
-from appJar import gui
 import numpy as np
 import dateutil
 from matplotlib.dates import DateFormatter
