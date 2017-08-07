@@ -9,7 +9,6 @@ import kromek
 import numpy as np
 import signal
 import sys
-import spectra_fitter
 
 from auxiliaries import set_verbosity
 #from sender import ServerSender
