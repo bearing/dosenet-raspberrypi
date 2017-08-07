@@ -19,7 +19,6 @@ from Real_Time_Spectra import Real_Time_Spectra
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_DATALOG_D3S
-from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
