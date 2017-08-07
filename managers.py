@@ -26,6 +26,7 @@ from sender import ServerSender
 from data_handlers import Data_Handler_Pocket
 from data_handlers import Data_Handler_D3S
 from data_handlers import Data_Handler_AQ
+from data_handlers import Data_Handler_CO2
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
