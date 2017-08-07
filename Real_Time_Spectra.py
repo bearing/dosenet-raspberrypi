@@ -27,11 +27,13 @@ class Real_Time_Spectra(object):
     def __init__(self, manager=None, verbosity=1, logfile=None,
                  resolution=256):
         """Initiate class variables."""
+
         self.v = verbosity
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
         else:
             set_verbosity(self, logfile=logfile)
+
 
         self.manager = manager
 
