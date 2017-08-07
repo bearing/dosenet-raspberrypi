@@ -45,7 +45,9 @@ def start_D3S():
     try:
         mgrD3S.run()
     except:
-        print("Error: Failed to start D3S")    
+        global jobd3s
+        print("Error: Failed to start D3S")   
+        jobd3s =None
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -81,7 +83,9 @@ def make_run_gui():
 
     def stop():
         global job1
+        global jobd3s
         top1.after_cancel(job1)
+        jobd3s = None
 
     def press():        
         global plot_jobs
