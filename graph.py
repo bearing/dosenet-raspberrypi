@@ -1,6 +1,9 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
+import matplotlib.figure as fig
+import matplotlib.pylab as pyl
+import matplotlib
 import csv
 import dateutil
 import argparse
@@ -50,6 +53,10 @@ while len(times)< combine_number or combine_number<1:
     if len(times) == 1:
         print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
         combine_number = 1
+
+    elif len(times) == 0:
+        print("There are no results in the document provided.")
+        quit()
 
     else:
         combine_number = input("The number provided was too large or not a natural number. There are "+str(len(times))+" results. Choose a natural number between 1 and "+str(len(times))+" that will determine the amount of results added together before being graphed. Number: ")
@@ -192,7 +199,6 @@ for i in range(int(len(Val100)/combine_number)):
     numberW = int((i*combine_number) + combine_number)
     sum_Val100 = [sum(Val100[numberV:numberW])]
     new_Val100.append(sum_Val100)
-
 
 #State how many results have been excluded
 if int(remainder_P25) != 1:

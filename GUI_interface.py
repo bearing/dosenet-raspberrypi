@@ -30,7 +30,6 @@ def close(index):
         mgrD3S.close()
 '''
 
-
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
@@ -93,8 +92,7 @@ def make_run_gui():
         global job1
         top1.after_cancel(job1)
 
-    def press():
-        
+    def press():        
         global plot_jobs
         check_plots(0)
         wdaq.press()
