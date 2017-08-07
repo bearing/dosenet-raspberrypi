@@ -43,7 +43,7 @@ varWeather = Tkinter.BooleanVar()
 
 def start_D3S():
     try:
-        mgrD3S.run()
+        plot_manager_D3S.run()
     except:
         print("Error: Failed to start D3S")    
 
@@ -115,12 +115,12 @@ def make_run_gui():
 
     def D3S_spectra():
         global plot_jobs
-        mgrD3S.plot_spectrum()
+        plot_manager_D3S.plot_spectrum()
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
         global plot_jobs
-        mgrD3S.plot_waterfall()
+        plot_manager_D3S.plot_waterfall()
         plot_jobs[6]=top1.after(1000,D3S_waterfall)
 
 
