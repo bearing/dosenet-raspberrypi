@@ -45,6 +45,9 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
 from globalvalues import DEFAULT_LOGFILE_AQ
+from globalvaules import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
+from globalvalues import DEFAULT_CO2_PORT
+from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 
 def signal_term_handler(signal, frame):
@@ -115,6 +118,8 @@ class Base_Manager(object):
             self.datalog = DEFAULT_DATALOG_D3S
         if self.datalogflag and self.sensor_type == 3:
             self.datalog = DEFAULT_DATALOG_AQ
+        if self.datalogflag and self.sensor_type == 4:
+            self.datalog = DEFAULT_DATALOG_CO2
 
     def d_flag(self):
         """
@@ -149,6 +154,10 @@ class Base_Manager(object):
             #If the sensor type is an air quality sensor use the air quality log file
             logfile = DEFAULT_LOGFILE_AQ
 
+        if log and self.sensor_type == 4:
+            #If the sensor type is a CO2 sensor, use the CO2 log file
+            logfile = DEFAULT_LOGFILE_CO2
+
         if log:
             self.logfile = logfile
         else:
@@ -182,6 +191,11 @@ class Base_Manager(object):
                 self.vprint(
                     2, "No interval given, using default for AQ TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST_AQ
+        if self.test and self.sensor_type == 4:
+            if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for CO2 TEST MODE")
+                interval = DEFAULT_INTERVAL_TEST_CO2
 
         if interval is None and self.sensor_type == 1:
             self.vprint(
@@ -195,6 +209,10 @@ class Base_Manager(object):
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL_AQ
+        if interval is None and self.sensor_type == 4:
+            self.vprint(
+                2, "No interval given, using interval at 5 minutes")
+            interval = DEFAULT_INTERVAL_NORMAL_CO2
 
         if config is None:
             self.vprint(2, "No config file given, " +
@@ -417,6 +435,22 @@ class Base_Manager(object):
                 self.stop()
                 self.takedown()
 
+        if self.sensor_type == 4:
+            try:
+                while self.running:
+
+                    self.handle_data(this_start, this_end, None)
+
+                    this_start, this_end = self.get_interval(this_end)
+            except KeyboardInterrupt:
+                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                self.stop()
+                self.takedown()
+            except SystemExit:
+                self.vprint(1, '\nSystemExit: taking down Manager')
+                self.stop()
+                self.takedown()
+
     def get_interval(self, start_time):
         """
         Return start and end time for interval, based on given start_time.
@@ -454,6 +488,13 @@ class Base_Manager(object):
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
                     self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+        if self.sensor_type == 4:
+            average_data = kwargs.get('average_data')
+            if self.datalogflag:
+                with open(file, 'a') as f:
+                    f.write('{0}, {1}'.format(time_string, average_data))
+                    f.write('\n')
+                    self.vprint(2, 'Writing average CO2 data to data log at {}'.format(file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -494,6 +535,31 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(aq_data_set)):
                     c_data.append(aq_data_set[i][c+1])
+                c_data_int = list(map(int, c_data))
+                avg_c = sum(c_data_int)/len(c_data_int)
+                average_data.append(avg_c)
+            self.data_handler.main(
+                self.datalog, this_start, this_end, average_data=average_data)
+
+        if self.sensor_type == 4:
+            co2_data_set = []
+            average_data = []
+            while time.time() < this_end:
+                date_time = datetime.datetime.now()
+                this_instant_data = []
+                values = [0]*8
+                for i in range(8):
+                    values[i] = self.CO2_port.read_adc(i)
+                conc = 5000/496*values[0] - 1250
+                uv_index = values[7]
+                this_instant_data.append(date_time)
+                this_instant_data.append(conc)
+                this_instant_data.append(uv_index)
+                co2_data_set.append(this_instant_data)
+            for c in range(len(self.variables)):
+                c_data = []
+                for i in range(len(aq_data_set)):
+                    c_data.append(co2_data_set[i][c+1])
                 c_data_int = list(map(int, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
@@ -799,16 +865,35 @@ class Manager_AQ(Base_Manager):
 
         self.data_handler.backlog_to_queue()
 
-    @classmethod
-    def from_argparse(cls):
-        super_dict = Base_Manager.from_argparse()
-        parser = argparse.ArgumentParser()
-        args = parser.parse_args()
-        arg_dict = vars(args)
-        arg_dict.update(super_dict)
-        mgr = Manager_AQ(**arg_dict)
+class Manager_CO2(Base_Manager):
+    """
+    The subclass that uses the main Manager class and initializes the
+    CO2 sensor.
+    """
+    def __init__(self,
+                 CO2_port=DEFAULT_CO2_PORT,
+                 variables=CO2_VARIABLES,
+                 **kwargs):
 
-        return mgr
+        self.variables = variables
+
+        super(Manager_CO2, self).__init__(sensor_type=4, **kwargs)
+
+        self.CO2_port = CO2_port
+
+        self.data_handler = Data_Handler_CO2(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile,
+            variables=self.variables)
+        self.sender = ServerSender(
+            manager=self,
+            mode=self.sender_mode,
+            port=self.port,
+            verbosity=self.v,
+            logfile=self.logfile)
+
+        self.data_handler.backlog_to_queue()
 
 class SleepError(Exception):
     pass
@@ -818,9 +903,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--sensor', '-s', type=int, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
-        '\n3 = The Air Quality Sensor')
-    sensor_tuple = parser.parse_known_args()
-    sensor = sensor_tuple[0].sensor
+        '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
+    sensor = parser.parse_known_args()[0].sensor
 
     #Generic Manager control variables.
     parser.add_argument(
@@ -984,6 +1068,31 @@ if __name__ == '__main__':
         del arg_dict['sensor']
 
         mgr = Manager_AQ(**arg_dict)
+
+    if sensor == 4:
+        #CO2 Sensor specific variables.
+        parser.add_argument(
+            '--CO2_port', '-a', default=DEFAULT_CO2_PORT,
+            help='Specify which port the CO2 sensor is sending ' +
+            'data through \n[Note this is an Adafruit MCP port so be sure ' +
+            'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
+        #Put these last in each subclass argparse
+        #These specify the default datalog/logfile for which
+        #the help is unique to each sensor
+        parser.add_argument(
+            '--logfile', '-l', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE_CO2))
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG_CO2))
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        del arg_dict['sensor']
+
+        mgr = Manager_CO2(**arg_dict)
 
     try:
         mgr.run()
