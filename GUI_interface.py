@@ -1,7 +1,6 @@
 
 #!/usr/bin/env/python
 import Tkinter
-import os
 import multiprocessing
 import weather_DAQ
 import air_quality_DAQ

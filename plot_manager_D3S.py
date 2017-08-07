@@ -14,15 +14,11 @@ from collections import deque
 import matplotlib.pyplot as plt
 
 from auxiliaries import Config, PublicKey, LED, set_verbosity
-'''
 from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
-'''
 from auxiliaries import datetime_from_epoch, set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
-'''
 from Real_Time_Spectra import Real_Time_Spectra
-'''
 # import spectra_fitter
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
