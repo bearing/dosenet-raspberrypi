@@ -151,7 +151,7 @@ class Real_Time_Spectra(object):
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
 
-    def add_data(self, queue, spectra, maxspectra):
+    def add_data(self, spectra, maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -165,12 +165,12 @@ class Real_Time_Spectra(object):
         '''
         Add the new spectrum to queue.
         '''
-        queue.append(new_spectra)
+        self.queue.append(new_spectra)
 
         '''
         Save the original size of the data queue.
         '''
-        data_length = len(queue)
+        data_length = len(self.queue)
 
         '''
         Pop off the first data point if the total number of counts in the
@@ -180,7 +180,7 @@ class Real_Time_Spectra(object):
         print("Real_Time_Spectra: Data length is {}, spectra sum is {}".format(data_length, sum(new_spectra)))
         if data_length > maxspectra:
 
-            queue.popleft()
+            self.queue.popleft()
 
     def run_avg_data(self, data, maxspectra):
         """
