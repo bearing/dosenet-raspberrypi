@@ -353,7 +353,7 @@ class Data_Handler(object):
                     1, CO2_DISPLAY_TEXT.format(
                         start_time=start_text,
                         end_time=end_text,
-                        variable=self.variables[i]
+                        variable=self.variables[i],
                         info=average_data[i]))
             self.vprint(
                 1, BREAK_LINE)
