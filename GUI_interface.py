@@ -31,7 +31,7 @@ def close(index):
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
-mgrD3S = plot_manager_D3S.Manager_D3S()
+mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
 
 top = Tkinter.Tk()
