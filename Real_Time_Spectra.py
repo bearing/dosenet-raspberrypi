@@ -337,6 +337,7 @@ class Real_Time_Spectra(object):
         """
         Updates the colorbar by removing old colorbar.
         """
+        
         if self.colorbar_drawn:
 
             self.cb = plt.colorbar()
@@ -368,12 +369,15 @@ class Real_Time_Spectra(object):
         '''
         Get the running average
         '''
+        print("Data is {}".format(self.queue))
+         
         run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         '''
         Clear the prior spectrum figure.
         '''
         plt.clf()
+        
 
         '''
         Plot the spectrum figure
