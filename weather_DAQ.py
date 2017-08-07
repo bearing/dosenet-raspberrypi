@@ -70,13 +70,7 @@ class weather_DAQ(object):
         self.add_data(self.press_queue,self.press_list,hectopascals)
         self.add_time(self.time_queue, self.time_list, date_time)
         
-        if self.merge_test==True:
-            self.temp_list=[]
-            self.humid_list=[]
-            self.press_list=[]
-            self.time_list=[]
-            
-            
+        
     def press(self):
         if len(self.time_queue)>0:
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
@@ -99,6 +93,8 @@ class weather_DAQ(object):
             queue.append(timelist[int((self.n_merge)/2)])
             print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
+            for i in range(len(timelist)):
+                timelist.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
         
@@ -108,6 +104,8 @@ class weather_DAQ(object):
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
             temp_list = []
+            for i in range(len(temp_list)):
+                temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
     
@@ -122,6 +120,7 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        fig.subplots_adjust(left = 1)
         fig.show()
         plt.pause(0.0005)
 
