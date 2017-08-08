@@ -88,7 +88,7 @@ def make_run_gui():
         global job1
         global jobd3s
         top1.after_cancel(job1)
-        topq.after_cancel(jobd3s)
+        top1.after_cancel(jobd3s)
         jobd3s = None
 
     def press():        
