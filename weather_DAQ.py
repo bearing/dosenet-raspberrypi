@@ -84,13 +84,13 @@ class weather_DAQ(object):
 
 
     def add_time(self, queue, timelist, data):
-        print('Weather input time: {} Weather queue: {}'.format(data, queue))
+        print('Weather input time: {}'.format(data))
         timelist.append(data)
 
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
-            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
+            print('Weather queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
             for i in range(len(timelist)):
                 timelist.pop()

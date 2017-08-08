@@ -134,12 +134,12 @@ class air_quality_DAQ(object):
             self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue)        
 
     def add_time(self, queue, timelist, data):
-        print('Air quality input time: {} Aiq quality queue: {}'.format(data, queue))
+        print('Air quality input time: {} '.format(data))
         timelist.append(data)
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
-            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
+            print('Air quality queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
