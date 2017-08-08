@@ -23,12 +23,11 @@ def close(index):
         adcdaq.close(1)
     if index == 4:
         aqdaq.close(1)
-'''
     if index == 5:
-        mgrD3S.close()
+        mgrD3S.close(1)
     if index == 6:
-        mgrD3S.close()
-'''
+        mgrD3S.close(2)
+
 
 wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()

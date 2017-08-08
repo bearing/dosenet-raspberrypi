@@ -23,6 +23,8 @@ class Real_Time_Spectra(object):
     """
     Class to control the real time spectra plotting
     """
+    def close(self,plot_id):
+        plt.close(plot_id)
 
     def __init__(self, manager=None, verbosity=1, logfile=None,
                  resolution=256):
@@ -318,8 +320,8 @@ class Real_Time_Spectra(object):
         '''
         plt.pause(0.0005)
 
-    def plot_waterfall(self):
-        plt.figure(1)
+    def plot_waterfall(self,plot_id):
+        plt.figure(plot_id)
         """
         Grabs the data for waterfall plot.
         """
@@ -353,7 +355,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self):
+    def plot_sum(self,plot_id):
         """
         Plot the sum (spectrum) figure.
         """
@@ -363,7 +365,7 @@ class Real_Time_Spectra(object):
         '''
         Point to the figure window for the spectrum plot.
         '''
-        plt.figure(2)
+        plt.figure(plot_id)
 
         '''
         Get the running average
