@@ -84,6 +84,7 @@ def make_run_gui():
         job1=top1.after(1000,start)
 
     def stop():
+        global mgrD3S
         global job1
         global jobd3s
         if jobd3s is not None:
