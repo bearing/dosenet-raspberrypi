@@ -127,7 +127,7 @@ CO2_DISPLAY_TEXT = (
 
 WEATHER_DISPLAY_TEXT = (
     '{cyan} The average {{variable}} was: {reset}' +
-    '{green}{{data}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
+    '{green}{{data:0.1f}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
     green=ANSI_GR, reset=ANSI_RESET)
 
 TIME_DISPLAY_TEXT = (

@@ -580,7 +580,6 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
-                #c_data_int = list(map(int, c_data))
                 avg_c = sum(c_data)/len(c_data)
                 average_data.append(avg_c)
             self.data_handler.main(
