@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 from collections import deque
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
-import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BOARD)
 
 CLK  = 18
 MISO = 23
