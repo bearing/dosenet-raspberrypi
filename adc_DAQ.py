@@ -8,13 +8,12 @@ from collections import deque
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
-CLK  = 18
-MISO = 23
-MOSI = 24
-CS   = 25
-
 class adc_DAQ(object):
     def __init__(self):
+        CLK  = 18
+        MISO = 23
+        MOSI = 24
+        CS   = 25
         self.time_queue=deque()
         self.n_merge=5
         self.CO2_list=[]
