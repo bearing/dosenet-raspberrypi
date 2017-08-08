@@ -93,13 +93,13 @@ Command line output statements used in the data-handlers
 """
 
 CPM_DISPLAY_TEXT = (
-    '{green}{{counts}}{reset}' + '{cyan} total counts with {reset}' +
+    '{green} {{counts}}{reset}' + '{cyan} total counts with {reset}' +
     '{green}{{cpm.2f}}{reset}' + '{cyan} counts per minute\n{reset}' +
     '{cyan}and an error on the cpm of: {reset}' + '{green}{{cpm_err.2f}}{reset}').format(
     green=ANSI_GR, cyan=ANSI_CYAN, reset=ANSI_RESET)
 
 SPECTRA_DISPLAY_TEXT = (
-    '{cyan}Total counts gathered: {reset}' + '{green}{{total_counts}}{reset}').format(
+    '{cyan} Total counts gathered: {reset}' + '{green}{{total_counts}}{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET, cyan=ANSI_CYAN)
 
 AQ_PM_DISPLAY_TEXT = (
