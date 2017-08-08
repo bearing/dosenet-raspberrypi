@@ -33,8 +33,8 @@ wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
-rt_plot = Real_Time_Spectra.Real_Time_Spectra(manager=Real_Time_Spectra.Real_Time_Spectra,
-            verbosity=Real_Time_Spectra.Real_Time_Spectra.v)
+rt_plot = Real_Time_Spectra.Real_Time_Spectra(manager=mgrD3S,
+            verbosity=mgrD3S.v)
 
 
 top = Tkinter.Tk()
