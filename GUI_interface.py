@@ -5,8 +5,7 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-from multiprocessing import Process, Manager
-import Real_Time_Spectra
+from multiprocessing import Process
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -33,8 +32,6 @@ wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
-rt_plot = Real_Time_Spectra.Real_Time_Spectra(manager=mgrD3S,
-            verbosity=mgrD3S.v)
 
 
 top = Tkinter.Tk()
@@ -55,10 +52,6 @@ def run_Sensors():
         aqdaq.start()
     if varCO2.get():
         adcdaq.start()
-        
-def plot_spec(q):
-    q = rt_plot.queue
-    mgrD3S.plot_spectrum(q)
     
 
 def make_run_gui():
@@ -130,10 +123,7 @@ def make_run_gui():
 
     def D3S_spectra():
         global plot_jobs
-        with Manager() as manager:
-            q = manager.Queue()
-            p = Process(target = plot_spec, args = (q))
-            p.start()
+        mgrD3S.plot_spectrum()
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
