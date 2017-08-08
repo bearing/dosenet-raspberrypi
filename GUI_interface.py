@@ -50,10 +50,7 @@ def run_Sensors():
     if varWeather.get(): 
         wdaq.start()
     if varAir.get():
-        aqdaq.start()
-    if varCO2.get():
-        adcdaq.start2()
-    
+        aqdaq.start()    
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -87,7 +84,9 @@ def make_run_gui():
         if jobadc is None:
             if varCO2.get():
                 adcdaq.start()
-                
+        if jobadc is not None:
+            if varCO2.get():
+                adcdaq.start2()                
         run_Sensors()                
         job1 = top1.after(1000,start)
         jobadc = top1.after(1000,start)
