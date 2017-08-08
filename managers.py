@@ -943,7 +943,7 @@ class Manager_Weather(Base_Manager):
             manager=self,
             mode=self.sender_mode,
             port=self.port,
-            verbosity=self.v
+            verbosity=self.v,
             logfile=self.logfile)
 
         self.data_handler.backlog_to_queue()
