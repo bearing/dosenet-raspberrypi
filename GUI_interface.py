@@ -13,6 +13,10 @@ import threading
 plot_jobs = [None, None, None, None, None, None, None]
 
 def close(index):
+    global wdaq
+    global adcdaq
+    global mgrD3S
+    global aqdaq
     if index == 0:
         wdaq.close(3)
     if index == 1:
@@ -28,11 +32,6 @@ def close(index):
     if index == 6:
         mgrD3S.close(2)
 
-
-wdaq = weather_DAQ.weather_DAQ()
-aqdaq = air_quality_DAQ.air_quality_DAQ()
-adcdaq = adc_DAQ.adc_DAQ()
-mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
 
 top = Tkinter.Tk()
@@ -65,7 +64,11 @@ def make_run_gui():
 
     def start():        
         global job1
-        global jobd3s        
+        global jobd3s 
+        global wdaq
+        global adcdaq
+        global mgrD3S
+        global aqdaq
         if jobd3s is None:
             jobd3s = threading.Thread(target=start_D3S, args=()) 
             try:
@@ -88,43 +91,50 @@ def make_run_gui():
         top1.after_cancel(job1)
         jobd3s = None
 
-    def press():        
+    def press(): 
+        global wdaq
         global plot_jobs
         check_plots(0)
         wdaq.press()
         plot_jobs[0]=top1.after(1000,press)
         
     def temp():
+        global wdaq
         global plot_jobs
         check_plots(1)
         wdaq.temp()
         plot_jobs[1]=top1.after(1000,temp)
         
     def humid():
+        global wdaq
         global plot_jobs
         check_plots(2)
         wdaq.humid()
         plot_jobs[2]=top1.after(1000,humid)
         
     def CO2():
+        global adcdaq
         global plot_jobs
         check_plots(3)
         adcdaq.plot_CO2()
         plot_jobs[3]=top1.after(1000,CO2)
         
     def airquality():
+        global aqdaq
         global plot_jobs
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
 
     def D3S_spectra():
+        global mgrD3S
         global plot_jobs
         check_plots(5)
         mgrD3S.plot_spectrum(1)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
+        global mgrD3S
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(2)
@@ -164,14 +174,24 @@ def make_run_gui():
 
 def weather_test():
     if varCO2.get(): 
+        global adcdaq
+        adcdaq = adc_DAQ.adc_DAQ()
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
+        global aqdaq
+        aqdaq = air_quality_DAQ.air_quality_DAQ()
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
+        global wdaq
+        wdaq = weather_DAQ.weather_DAQ()
         print("create weather file")
         wdaq.create_file()
+    if vard3s.get():
+        global mgrD3S
+        print("Create D3S file")
+        mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
     make_run_gui() 
   

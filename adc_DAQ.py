@@ -40,37 +40,41 @@ class adc_DAQ(object):
 
     def start(self):
         global adc_results
-        global values
         date_time = datetime.datetime.now()    
     
         # Read all the ADC channel values in a list.
         values = [0]*8
-        for i in range(8):
-            # The read_adc function will get the value of the specified channel (0-7).
-            values[i] = self.mcp.read_adc(i)
-        # Print the ADC values.
-        # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
-        print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
-        concentration = 5000/496*values[0] - 1250
-        print("|{}|\n".format(concentration))
-        # Pause for half a second.
-        uv_index = values[7]
-        results = []
-        results.append(date_time)
-        results.append(concentration)
-        results.append(uv_index)
+        if self.mcp.read_adc is not None:
+            try:
+                for i in range(8):
+                    # The read_adc function will get the value of the specified channel (0-7).
+                    values[i] = self.mcp.read_adc(i)
+                # Print the ADC values.
+                # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
+                print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
+                concentration = 5000/496*values[0] - 1250
+                print("|{}|\n".format(concentration))
+                # Pause for half a second.
+                uv_index = values[7]
+                results = []
+                results.append(date_time)
+                results.append(concentration)
+                results.append(uv_index)
+                
+                adc_results.writerow(results[:])
+        
+                self.merge_test=False
+                self.add_data(self.CO2_queue,self.CO2_list,concentration)
+                self.add_data(self.UV_queue,self.UV_list,uv_index)
+                self.add_time(self.time_queue, self.time_list, date_time)
 
-        adc_results.writerow(results[:])
-
-        self.merge_test=False
-        self.add_data(self.CO2_queue,self.CO2_list,concentration)
-        self.add_data(self.UV_queue,self.UV_list,uv_index)
-        self.add_time(self.time_queue, self.time_list, date_time)
-
-        if self.merge_test==True:
-            self.CO2_list=[]
-            self.UV_list=[]
-            self.time_list=[]
+                if self.merge_test==True:
+                    self.CO2_list=[]
+                    self.UV_list=[]
+                    self.time_list=[]
+                    
+            except:
+                print("CO2 sensor error")
 
 
     def plot_CO2(self):
