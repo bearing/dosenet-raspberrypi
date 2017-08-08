@@ -19,8 +19,10 @@ from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_AQ
+from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ
 from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
+from globalvalues import DEFAULT_INTERVAL_TEST_AQ
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -61,8 +63,10 @@ class Manager_AQ(object):
         self.d_flag()
         self.make_data_log(self.datalog)
 
+        self.test = test
+
         self.handle_input(
-            log, logfile, verbosity, interval, config, publickey)
+            log, logfile, verbosity, test, interval, config, publickey)
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
@@ -76,9 +80,7 @@ class Manager_AQ(object):
             verbosity=self.v,
             logfile=self.logfile)
 
-        self.test = test
-
-        #self.data_handler.backlog_to_queue()
+        self.data_handler.backlog_to_queue()
 
     def a_flag(self):
         """
@@ -102,7 +104,7 @@ class Manager_AQ(object):
             with open(file, 'a') as f:
                 pass
 
-    def handle_input(self, log, logfile, verbosity, interval,
+    def handle_input(self, log, logfile, verbosity, test, interval,
                      config, publickey):
 
         if log and logfile is None:
@@ -133,7 +135,7 @@ class Manager_AQ(object):
             if interval is None:
                 self.vprint(
                     2, "No interval given, using default for TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST
+                interval = DEFAULT_INTERVAL_TEST_AQ
 
         if interval is None:
             self.vprint(
@@ -211,8 +213,17 @@ class Manager_AQ(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
-    def data_log(self):
-        pass
+    def data_log(self, file, **kwargs):
+        """
+        Writes average_data list to file
+        """
+        time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        average_data = kwargs.get('average_data')
+        if self.datalogflag:
+            with open(file, 'a') as f:
+                f.write('{0}, {1}'.format(time_string, average_data))
+                f.write('\n')
+                self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
 
     def handle_air_counts(self, this_start, this_end):
         """
