@@ -336,6 +336,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 3:
             average_data = kwargs.get('average_data')
             self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
                     end_time=end_text,
@@ -351,7 +353,7 @@ class Data_Handler(object):
                         variable=self.variables[i],
                         avg_data=average_data[i]))
             self.vprint(
-                1, DOUBLE_BREAK_LINE)
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
@@ -365,6 +367,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
             self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
                     end_time=end_text,
@@ -375,7 +379,7 @@ class Data_Handler(object):
                         variable=self.variables[i],
                         data=average_data[i]))
             self.vprint(
-                1, DOUBLE_BREAK_LINE)
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
@@ -389,6 +393,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 5:
             average_data = kwargs.get('average_data')
             self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
                     end_time=end_text,
@@ -400,7 +406,7 @@ class Data_Handler(object):
                         unit=self.variables_units[i],
                         data=average_data[i]))
             self.vprint(
-                1, DOUBLE_BREAK_LINE)
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
