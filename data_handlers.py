@@ -210,7 +210,7 @@ class Data_Handler(object):
             spectra = kwargs.get('spectra')
             self.queue.append([time_string, spectra])
         if self.manager.sensor_type == 3:
-            average_vdata = kwargs.get('average_data')
+            average_data = kwargs.get('average_data')
             self.queue.append([time_string, average_data])
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
