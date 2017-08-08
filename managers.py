@@ -350,7 +350,7 @@ class Base_Manager(object):
             try:
                 while self.signal_test_attempts < 3 and self.signal_test_connection == False:
                     test_time = time.time() + self.signal_test_time + 5
-                    while time.time() < test_time and self.signal_test_loop:
+                    try:
                         with kromek.Controller(devs, self.signal_test_time) as controller:
                             for reading in controller.read():
                                 if sum(reading[4]) != 0:
@@ -360,12 +360,13 @@ class Base_Manager(object):
                                 else:
                                     self.signal_test_loop = False
                                     break
-                    if self.d3s_light_switch:
-                        self.signal_test_connection = True
-                    else:
+                    except time.time() < test_time:
                         self.signal_test_attempts += 1
                         self.signal_test_loop = True
-                        print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
+                        print("Connection to D3S not found, trying another {} times".format(
+                            3 - self.signal_test_attempts))
+                    if self.d3s_light_switch:
+                        self.signal_test_connection = True
                 if not self.signal_test_connection:
                     print("No data from D3S found, restarting now")
                     os.system('sudo reboot')

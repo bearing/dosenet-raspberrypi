@@ -23,6 +23,12 @@ def start_AQ(mode):
     if mode == 1:
         os.system('sudo bash /home/pi/dosenet-raspberrypi/AQ.sh test')
 
+def start_CO2(mode):
+    if mode == 0:
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/CO2.sh start')
+    if mode == 1:
+        os.system('sudo bash /home/pi/dosenet-raspberrypi/CO2.sh test')
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--test_mode', action='store_true', default=False,
@@ -45,10 +51,12 @@ if __name__ == '__main__':
         p = multiprocessing.Process(target=start_D3S, args=(1,))
         t = multiprocessing.Process(target=start_dosenet, args=(1,))
         a = multiprocessing.Process(target=start_AQ, args=(1,))
+        c = multiprocessing.Process(target=start_CO2, args=(1,))
     else:
         p = multiprocessing.Process(target=start_D3S, args=(0,))
         t = multiprocessing.Process(target=start_dosenet, args=(0,))
         a = multiprocessing.Process(target=start_AQ, args=(0,))
+        c = multiprocessing.Process(target=start_CO2, args=(0,))
 
     try:
         print('Starting D3S script process')
@@ -57,10 +65,13 @@ if __name__ == '__main__':
         t.start()
         print('Starting Air Quality Sensor script process')
         a.start()
+        print('Starting CO2 sensor script process')
+        c.start()
         print('started')
         p.join()
         t.join()
         a.join()
+        c.join()
         print('we can reboot here')
     except:
         pass
