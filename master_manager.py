@@ -41,10 +41,11 @@ if __name__ == '__main__':
         help="Choose whether the devices will start in test mode or not. (Default False)")
     test_mode = parser.parse_args().test_mode
 
-    print('Waiting for NTP to be synced...')
-    os.system('sudo service ntp stop')
-    os.system('sudo timeout 60s ntpd -gq')
-    os.system('sudo service ntp start')
+    if not test_mode:
+        print('Waiting for NTP to be synced...')
+        os.system('sudo service ntp stop')
+        os.system('sudo timeout 60s ntpd -gq')
+        os.system('sudo service ntp start')
 
     try:
         ser = serial.Serial('/dev/ttyACM0')
