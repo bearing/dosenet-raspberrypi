@@ -32,7 +32,7 @@ def close(index):
     if index == 6:
         mgrD3S.close(2)
 
-
+mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -87,7 +87,6 @@ def make_run_gui():
         global jobd3s
         global job1
         if jobd3s is not None:
-            global mgrD3S
             mgrD3S.takedown()
         top1.after_cancel(job1)
         jobd3s = None
@@ -189,10 +188,6 @@ def weather_test():
         wdaq = weather_DAQ.weather_DAQ()
         print("create weather file")
         wdaq.create_file()
-    if vard3s.get():
-        global mgrD3S
-        print("Create D3S file")
-        mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
     make_run_gui() 
   
