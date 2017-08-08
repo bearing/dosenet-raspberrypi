@@ -71,8 +71,6 @@ class adc_DAQ(object):
             self.CO2_list=[]
             self.UV_list=[]
             self.time_list=[]
-            
-        GPIO.cleanup()
 
 
     def plot_CO2(self):
