@@ -100,6 +100,7 @@ def make_run_gui():
     def temp():
         global plot_jobs
         check_plots(1)
+        print(wdaq.time_queue)
         wdaq.temp()
         plot_jobs[1]=top1.after(1000,temp)
         
