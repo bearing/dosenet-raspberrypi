@@ -23,14 +23,17 @@ case "$1" in
     echo "Starting all DoseNet scripts" > $LOG
     python $DOSENET/master_manager.py >> $LOG 2>&1
     ;;
+  test)
+    logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts in test mode"
+    echo "Starting all DoseNet scripts in test mode" > $LOG
+    python $DOSENET/master_manager.py --test_mode >> $LOG 2>&1
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
     echo "Stopping all DoseNet scripts" >> $LOG
-    sudo pkill -SIGTERM -f manager_D3S.py
     sudo killall python &
     ;;
   *)
-    echo "Usage: /etc/init.d/dosenet {start|stop}"
+    echo "Usage: /etc/init.d/dosenet {start|test|stop}"
     exit 1
     ;;
 esac
