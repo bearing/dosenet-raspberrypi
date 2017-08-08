@@ -292,7 +292,7 @@ class Data_Handler(object):
                     end_time=end_text,
                     date=date))
             self.vprint(
-                1, CPM_DISPLAY_TEXT.format(,
+                1, CPM_DISPLAY_TEXT.format(
                     counts=counts,
                     cpm=cpm,
                     cpm_err=cpm_err,))
