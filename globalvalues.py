@@ -64,8 +64,8 @@ D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
 DEFAULT_INTERVAL_NORMAL_AQ = 300
 DEFAULT_INTERVAL_TEST_AQ = 30
-AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10', '0.3 um', '0.5 um',
-            '1.0 um', '2.5 um', '5.0 um', '10 um']
+AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10 ', '0.3 um', '0.5 um',
+            '1.0 um', '2.5 um', '5.0 um', '10 um ']
 
 CLK = 18
 MISO = 23
@@ -93,34 +93,38 @@ Command line output statements used in the data-handlers
 """
 
 CPM_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{counts}} cts{reset}' +
-    ' --- {green}{{cpm:.2f}} +/- {{cpm_err:.2f}} cpm{reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
+    '{green}{{counts}}{reset}' + '{cyan} total counts with {reset}' +
+    '{green}{{cpm.2f}}{reset}' + '{cyan} counts per minute\n{reset}' +
+    '{cyan}and an error on the cpm of: {reset}' + '{green}{{cpm_err.2f}}{reset}').format(
+    green=ANSI_GR, cyan=ANSI_CYAN, reset=ANSI_RESET)
 
 SPECTRA_DISPLAY_TEXT = (
-    '{{time}}: {yellow} {{total_counts}} {reset}' +
-    '{green} total counts from {reset}' +
-    ' ({{start_time}} to {{end_time}})').format(
-    yellow=ANSI_YEL, reset=ANSI_RESET, green=ANSI_GR)
+    '{cyan}Total counts gathered: {reset}' + '{green}{{total_counts}}{reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET, cyan=ANSI_CYAN)
 
 AQ_PM_DISPLAY_TEXT = (
-	'{cyan} {{variable}} = {reset}' +
+	'{cyan} {{variable}} ={reset}' +
 	'{green} {{avg_data}} {reset}' +
-    '{cyan} ug/m3 {reset}').format(
+    '{cyan}ug/m3 {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 AQ_P_DISPLAY_TEXT = (
-	'{cyan} # of Particles over {{variable}} = {reset}' +
+	'{cyan} # of Particles over {{variable}} ={reset}' +
 	'{green} {{avg_data}} {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 TIME_DISPLAY_TEXT = (
     '{red} This data was gathered from: {reset}' +
-    '{yellow}{{start_time}} to {{end_time}}{reset}').format(
+    '{yellow}{{start_time}}{reset}' + '{red} to {reset}' +
+    '{yellow}{{end_time}}{reset}' + '{red} on: {reset}'+
+    '{yellow}{{date}}{reset}').format(
     red=ANSI_RED, reset=ANSI_RESET, yellow=ANSI_YEL)
 
-BREAK_LINE = (
+SINGLE_BREAK_LINE = (
+    '\n{blue}-----------------------------------------------------------\n{reset}').format(
+    blue=ANSI_BLUE, reset=ANSI_RESET)
+
+DOUBLE_BREAK_LINE = (
     '\n{blue}-----------------------------------------------------------\n{reset}' +
     '\n{blue}-----------------------------------------------------------\n{reset}').format(
     blue=ANSI_BLUE, reset=ANSI_RESET)

@@ -17,7 +17,8 @@ from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import SPECTRA_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
 from globalvalues import CO2_DISPLAY_TEXT
-from globalvalues import BREAK_LINE, TIME_DISPLAY_TEXT
+from globalvalues import TIME_DISPLAY_TEXT
+from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 
 from globalvalues import strf
 from collections import deque
@@ -279,18 +280,24 @@ class Data_Handler(object):
         """
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
-
+        date = str(datetime.date.today())
         if self.manager.sensor_type == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             counts = kwargs.get('counts')
             self.vprint(
-                1, CPM_DISPLAY_TEXT.format(
-                    time=datetime_from_epoch(time.time()),
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
+                1, TIME_DISPLAY_TEXT.format(
+                    start_time=start_text,
+                    end_time=end_text,
+                    date=date))
+            self.vprint(
+                1, CPM_DISPLAY_TEXT.format(,
                     counts=counts,
                     cpm=cpm,
-                    cpm_err=cpm_err,
-                    start_time=start_text,
-                    end_time=end_text))
+                    cpm_err=cpm_err,))
+            self.vprint(
+                1, SINGLE_BREAK_LINE)
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
             if self.manager.test:
                 self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
@@ -303,11 +310,17 @@ class Data_Handler(object):
             spectra = kwargs.get('spectra')
             calibrationlog = kwargs.get('calibrationlog')
             self.vprint(
-                1, SPECTRA_DISPLAY_TEXT.format(
-                    time=datetime_from_epoch(time.time()),
-                    total_counts=sum(spectra),
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
+                1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
-                    end_time=end_text))
+                    end_time=end_text,
+                    date=date))
+            self.vprint(
+                1, SPECTRA_DISPLAY_TEXT.format(
+                    total_counts=sum(spectra)))
+            self.vprint(
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, spectra=spectra)
             self.manager.calibration_log(calibrationlog, spectra)
@@ -323,7 +336,8 @@ class Data_Handler(object):
             self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
-                    end_time=end_text))
+                    end_time=end_text,
+                    date=date))
             for i in range(3):
             	self.vprint(
                     1, AQ_PM_DISPLAY_TEXT.format(
@@ -335,7 +349,7 @@ class Data_Handler(object):
                         variable=self.variables[i],
                         avg_data=average_data[i]))
             self.vprint(
-                1, BREAK_LINE)
+                1, DOUBLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
@@ -351,14 +365,15 @@ class Data_Handler(object):
             self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
-                    end_time=end_text))
+                    end_time=end_text,
+                    date=date))
             for i in range(len(self.variables)):
                 self.vprint(
                     1, CO2_DISPLAY_TEXT.format(
                         variable=self.variables[i],
                         info=average_data[i]))
             self.vprint(
-                1, BREAK_LINE)
+                1, DOUBLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
