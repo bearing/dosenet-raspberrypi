@@ -27,6 +27,7 @@ case "$1" in
     logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts in test mode"
     echo "Starting all DoseNet scripts in test mode" > $LOG
     python $DOSENET/master_manager.py --test_mode >> $LOG 2>&1
+    ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
     echo "Stopping all DoseNet scripts" >> $LOG
