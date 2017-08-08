@@ -10,6 +10,8 @@ from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from collections import deque
 import serial
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BOARD)
 
 #sensor = entercodehere(morestuff) [Not sure if this is necessary] 
 
