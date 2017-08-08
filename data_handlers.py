@@ -348,11 +348,13 @@ class Data_Handler(object):
 
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
+            self.vprint(
+                1, TIME_DISPLAY_TEXT.format(
+                    start_time=start_text,
+                    end_time=end_text))
             for i in range(len(self.variables)):
                 self.vprint(
                     1, CO2_DISPLAY_TEXT.format(
-                        start_time=start_text,
-                        end_time=end_text,
                         variable=self.variables[i],
                         info=average_data[i]))
             self.vprint(

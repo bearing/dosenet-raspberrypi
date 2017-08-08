@@ -127,8 +127,6 @@ BREAK_LINE = (
 
 CO2_DISPLAY_TEXT = (
     '{cyan} The average {{variable}} {reset}' +
-    '{cyan}from {reset}' + '{yellow}{{start_time}}{reset}' +
-    '{cyan} to {reset}' + '{yellow}{{end_time}}{reset}' +
     '{cyan} was: {reset}' + '{green}{{info}}{reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, yellow=ANSI_YEL, green=ANSI_GR)
 
