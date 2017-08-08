@@ -295,8 +295,8 @@ class Data_Handler(object):
             self.vprint(
                 1, CPM_DISPLAY_TEXT.format(
                     counts=counts,
-                    cpm,
-                    cpm_err))
+                    cpm=cpm,
+                    cpm_err=cpm_err))
             self.vprint(
                 1, SINGLE_BREAK_LINE)
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
