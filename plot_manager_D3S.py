@@ -210,6 +210,9 @@ class Manager_D3S(object):
 
         self.interval = interval
 
+    def close(self, plot_id):
+        self.rt_plot.close(plot_id)
+
 
     def run(self):
         """
