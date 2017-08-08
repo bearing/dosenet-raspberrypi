@@ -131,7 +131,7 @@ def make_run_gui():
     def D3S_spectra():
         global plot_jobs
         with Manager() as manager:
-            q = manager.deque()
+            q = manager.Queue()
             p = Process(targer = plot_spec, args = (q))
             p.start()
         plot_jobs[5]=top1.after(1000,D3S_spectra)
