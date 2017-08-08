@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from collections import deque
 import serial
 import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
 #sensor = entercodehere(morestuff) [Not sure if this is necessary] 
 
@@ -172,6 +172,8 @@ class air_quality_DAQ(object):
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         fig.show()
         plt.pause(0.0005)
+        
+    
 
 
 
