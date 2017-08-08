@@ -18,7 +18,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping D3S script" >> $LOG
-    sudo pkill -SIGTERM -f manager_D3S.py
+    sudo pkill -SIGTERM -f managers.py
     ;;
  *)
     echo "Usage: /home/pi/dosenet-raspberrypi/D3S.sh {start|stop}"

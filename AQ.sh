@@ -3,7 +3,7 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 
-LOG=/tmp/air_quality.log
+LOG=/tmp/AQ_manager.log
 
 case "$1" in
   start)
@@ -21,7 +21,7 @@ case "$1" in
     sudo pkill -SIGTERM -f managers.py
     ;;
  *)
-    echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|stop}"
+    echo "Usage: /home/pi/dosenet-raspberrypi/AQ.sh {start|stop}"
     exit 1
     ;;
 esac
