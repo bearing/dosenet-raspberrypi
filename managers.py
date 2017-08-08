@@ -27,6 +27,7 @@ from data_handlers import Data_Handler_Pocket
 from data_handlers import Data_Handler_D3S
 from data_handlers import Data_Handler_AQ
 from data_handlers import Data_Handler_CO2
+from data_handlers import Data_Handler_Weather
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
@@ -49,6 +50,9 @@ from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
+from globalvalues import DEFAULT_WEATHER_PORT, WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
+from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
+from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 
 def signal_term_handler(signal, frame):
@@ -121,6 +125,8 @@ class Base_Manager(object):
             self.datalog = DEFAULT_DATALOG_AQ
         if self.datalogflag and self.sensor_type == 4:
             self.datalog = DEFAULT_DATALOG_CO2
+        if self.datalogflag and self.sensor_type == 5:
+            self.datalog = DEFAULT_DATALOG_WEATHER
 
     def d_flag(self):
         """
@@ -158,6 +164,10 @@ class Base_Manager(object):
         if log and self.sensor_type == 4:
             #If the sensor type is a CO2 sensor, use the CO2 log file
             logfile = DEFAULT_LOGFILE_CO2
+
+        if log and self.sensor_type == 5:
+            #If the sensor type is a weather sensor, use the weather log file
+            logfile = DEFAULT_LOGFILE_WEATHER
 
         if log:
             self.logfile = logfile
@@ -197,6 +207,11 @@ class Base_Manager(object):
                 self.vprint(
                     2, "No interval given, using default for CO2 TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST_CO2
+        if self.test and self.sensor_type == 5:
+            if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for WEATHER TEST MODE")
+                interval = DEFAULT_INTERVAL_TEST_WEATHER
 
         if interval is None and self.sensor_type == 1:
             self.vprint(
@@ -214,6 +229,10 @@ class Base_Manager(object):
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL_CO2
+        if interval is None and self.sensor_type == 5:
+            self.vprint(
+                2, "No interval given, using interval at 5 minutes")
+            interval = DEFAULT_INTERVAL_NORMAL_WEATHER
 
         if config is None:
             self.vprint(2, "No config file given, " +
@@ -421,28 +440,10 @@ class Base_Manager(object):
                 self.vprint(1, '\nSystemExit: taking down Manager')
                 self.takedown()
 
-        if self.sensor_type == 3:
+        if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             try:
                 while self.running:
-
                     self.handle_data(this_start, this_end, None)
-
-                    this_start, this_end = self.get_interval(this_end)
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.stop()
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.stop()
-                self.takedown()
-
-        if self.sensor_type == 4:
-            try:
-                while self.running:
-
-                    self.handle_data(this_start, this_end, None)
-
                     this_start, this_end = self.get_interval(this_end)
             except KeyboardInterrupt:
                 self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -483,20 +484,13 @@ class Base_Manager(object):
                     f.write('{0}, '.format(spectra))
                     self.vprint(
                         2, 'Writing spectra to data log at {}'.format(file))
-        if self.sensor_type == 3:
+        if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             average_data = kwargs.get('average_data')
             if self.datalogflag:
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
                     self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
-        if self.sensor_type == 4:
-            average_data = kwargs.get('average_data')
-            if self.datalogflag:
-                with open(file, 'a') as f:
-                    f.write('{0}, {1}'.format(time_string, average_data))
-                    f.write('\n')
-                    self.vprint(2, 'Writing average CO2 data to data log at {}'.format(file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -562,6 +556,30 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(co2_data_set)):
                     c_data.append(co2_data_set[i][c+1])
+                c_data_int = list(map(int, c_data))
+                avg_c = sum(c_data_int)/len(c_data_int)
+                average_data.append(avg_c)
+            self.data_handler.main(
+                self.datalog, this_start, this_end, average_data=average_data)
+
+        if self.sensor_type == 5:
+            weather_data_set = []
+            average_data = []
+            while time.time() < this_end:
+                date_time = datetime.datetime.now()
+                this_instant_data = []
+                temp = self.Weather_Port.read_temperature()
+                press = self.Weather_Port.read_temperature() / 100
+                humid = self.Weather_Port.read_humidity()
+                this_instant_data.append(date_time)
+                this_instant_data.append(temp)
+                this_instant_data.append(press)
+                this_instant_data.append(humid)
+                weather_data_set.append(this_instant_data)
+            for c in range(len(self.variables)):
+                c_data = []
+                for i in range(len(weather_data_set)):
+                    c_data.append(weather_data_set[i][c+1])
                 c_data_int = list(map(int, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
@@ -897,6 +915,39 @@ class Manager_CO2(Base_Manager):
 
         self.data_handler.backlog_to_queue()
 
+class Manager_Weather(Base_Manager):
+    """
+    The subclass that uses the main Manager class and initializes the
+    weather sensor.
+    """
+    def __init__(self,
+                 Weather_Port=DEFAULT_WEATHER_PORT,
+                 variables=WEATHER_VARIABLES,
+                 variables_units=WEATHER_VARIABLES_UNITS,
+                 **kwargs):
+
+        self.variables = variables
+        self.variables_units = variables_units
+
+        super(Manager_Weather, self).__init__(sensor_type=5, **kwargs)
+
+        self.Weather_Port = Weather_Port
+
+        self.data_handler = Data_Handler_Weather(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile,
+            variables=self.variables,
+            variables_units=self.variables_units)
+        self.sender = ServerSender(
+            manager=self,
+            mode=self.sender_mode,
+            port=self.port,
+            verbosity=self.v
+            logfile=self.logfile)
+
+        self.data_handler.backlog_to_queue()
+
 class SleepError(Exception):
     pass
 
@@ -1095,6 +1146,31 @@ if __name__ == '__main__':
         del arg_dict['sensor']
 
         mgr = Manager_CO2(**arg_dict)
+
+    if sensor == 5:
+        #CO2 Sensor specific variables.
+        parser.add_argument(
+            '--Weather_Port', '-a', default=DEFAULT_WEATHER_PORT,
+            help='Specify which port the Weather sensor is sending ' +
+            'data through \n[Note this is an I2C port so be sure ' +
+            'to use that notation] (default {})'.format(DEFAULT_WEATHER_PORT))
+        #Put these last in each subclass argparse
+        #These specify the default datalog/logfile for which
+        #the help is unique to each sensor
+        parser.add_argument(
+            '--logfile', '-l', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE_WEATHER))
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG_WEATHER))
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        del arg_dict['sensor']
+
+        mgr = Manager_Weather(**arg_dict)
 
     try:
         mgr.run()

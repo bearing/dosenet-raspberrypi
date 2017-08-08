@@ -222,6 +222,21 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
+    def construct_packet_new_weather(self, timestamp, average_data, error_code=0):
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 str(average_data),
+                 str(error_code)]
+            )
+        except AttributeError:
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
+
     def construct_log_packet(self, msg_code, msg_text):
         """
         Send a message to be recorded in the server log database.
@@ -373,6 +388,15 @@ class ServerSender(object):
         Protocol for sending the average CO2 data
         """
         packet = self.construct_packet_new_CO2(
+            timestamp, average_data, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
+
+    def send_data_new_weather(self, timestamp, average_data, error_code=0):
+        """
+        Protocol for sending the average CO2 data
+        """
+        packet = self.construct_packet_new_weather(
             timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
