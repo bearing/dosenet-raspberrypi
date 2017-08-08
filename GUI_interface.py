@@ -52,7 +52,7 @@ def run_Sensors():
     if varAir.get():
         aqdaq.start()
     if varCO2.get():
-        adcdaq.start()
+        adcdaq.start2()
     
 
 def make_run_gui():
@@ -61,6 +61,7 @@ def make_run_gui():
     global job1
     global jobd3s
     jobd3s = None
+    jobadc = None
     
     def check_plots(index):
         global plot_jobs
@@ -74,16 +75,22 @@ def make_run_gui():
 
     def start():        
         global job1
-        global jobd3s        
+        global jobd3s  
+        global jobadc
         if jobd3s is None:
             jobd3s = threading.Thread(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
             except:
                 print("Error: Failed to start D3S")
+        if jobadc is None:
+            if varCO2.get():
+                adcdaq.start()
+                
         run_Sensors()                
-        job1=top1.after(1000,start)
-
+        job1 = top1.after(1000,start)
+        jobadc = top1.after(1000,start)
+        
     def stop():
         global job1
         global jobd3s
