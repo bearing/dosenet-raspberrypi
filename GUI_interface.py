@@ -1,12 +1,11 @@
 
 #!/usr/bin/env/python
 import Tkinter
-import multiprocessing
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-from multiprocessing import Manager
+from multiprocessing import Process, Manager
 import Real_Time_Spectra
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
@@ -34,7 +33,8 @@ wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
-rt_plot = Real_Time_Spectra.Real_Time_Spectra()
+rt_plot = Real_Time_Spectra.Real_Time_Spectra(manager=Real_Time_Spectra.Real_Time_Spectra,
+            verbosity=Real_Time_Spectra.Real_Time_Spectra.v)
 
 
 top = Tkinter.Tk()
@@ -55,6 +55,11 @@ def run_Sensors():
         aqdaq.start()
     if varCO2.get():
         adcdaq.start()
+        
+def plot_spec(q):
+    q = rt_plot.queue
+    mgrD3S.plot_spectrum(q)
+    
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -79,9 +84,7 @@ def make_run_gui():
         global jobd3s
         
         if jobd3s is None:
-            with Manager() as manager:
-                rt_plot.queue = manager.deque()
-                jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
+            jobd3s = Process(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
             except:
@@ -127,7 +130,10 @@ def make_run_gui():
 
     def D3S_spectra():
         global plot_jobs
-        mgrD3S.plot_spectrum()
+        with Manager() as manager:
+            q = manager.deque()
+            p = Process(targer = plot_spec, args = (q))
+            p.start()
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
