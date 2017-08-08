@@ -6,6 +6,8 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
+from multiprocessing import Manager
+import Real_Time_Spectra
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -32,6 +34,7 @@ wdaq = weather_DAQ.weather_DAQ()
 aqdaq = air_quality_DAQ.air_quality_DAQ()
 adcdaq = adc_DAQ.adc_DAQ()
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
+rt_plot = Real_Time_Spectra.Real_Time_Spectra()
 
 
 top = Tkinter.Tk()
@@ -76,13 +79,14 @@ def make_run_gui():
         global jobd3s
         
         if jobd3s is None:
-            jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
+            with Manager() as manager:
+                rt_plot.queue = manager.deque()
+                jobd3s = multiprocessing.Process(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
             except:
                 print("Error: Failed to start D3S")
-        run_Sensors()
-                
+        run_Sensors()                
         job1=top1.after(1000,start)
 
     def stop():
