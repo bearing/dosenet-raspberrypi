@@ -73,8 +73,7 @@ def make_run_gui():
                     plot_jobs[i] = None
                     close(i)
 
-    def start():
-        
+    def start():        
         global job1
         global jobd3s        
         if jobd3s is None:

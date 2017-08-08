@@ -177,7 +177,6 @@ class Real_Time_Spectra(object):
         spectrum is more than the count window defined by the sum interval
         to create a running average.
         '''
-        print("Real_Time_Spectra: Data length is {}, spectra sum is {}".format(data_length, sum(new_spectra)))
         if data_length > maxspectra:
 
             self.queue.popleft()
@@ -369,7 +368,6 @@ class Real_Time_Spectra(object):
         '''
         Get the running average
         '''
-        print("Data is {}".format(self.queue))
          
         run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
