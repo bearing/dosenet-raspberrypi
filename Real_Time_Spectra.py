@@ -354,7 +354,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self, queue):
+    def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
         """
@@ -369,9 +369,9 @@ class Real_Time_Spectra(object):
         '''
         Get the running average
         '''
-        print("Data is {}".format(queue))
+        print("Data is {}".format(self.queue))
          
-        run_avg, self.sum_data = self.run_avg_data(queue, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         '''
         Clear the prior spectrum figure.
