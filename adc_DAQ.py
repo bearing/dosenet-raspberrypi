@@ -25,7 +25,8 @@ class adc_DAQ(object):
         self.UV_queue=deque()
         self.merge_test=False
         self.mcp= None 
-
+        self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+        
     def create_file(self):
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
@@ -36,7 +37,6 @@ class adc_DAQ(object):
         metadata.append("CO2 (ppm)")
         metadata.append("UV")
         adc_results.writerow(metadata[:])
-        self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
     def start(self):
         global adc_results
@@ -74,7 +74,7 @@ class adc_DAQ(object):
                     self.time_list=[]
                     
             except:
-                print("CO2 sensor error")
+                print("CO2 sensor error\n\n")
 
 
     def plot_CO2(self):
