@@ -144,7 +144,7 @@ def make_run_gui():
         TempButton = Tkinter.Button(top1, height=2, width=10, text = "Temperature", command = temp)
         TempButton.grid(row=0, column=3)
         HumidButton = Tkinter.Button(top1, height=2, width=10, text = "Humidity", command = humid)
-        HumidButton.pack(row=0, column=4)
+        HumidButton.grid(row=0, column=4)
 
     if varCO2.get():
         CO2Button = Tkinter.Button(top1, height=2, width=10, text = "CO2", command = CO2)
