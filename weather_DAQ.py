@@ -119,7 +119,6 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        fig.subplots_adjust(left = 1)
         fig.show()
         plt.pause(0.0005)
 
