@@ -46,15 +46,6 @@ def start_D3S():
     if vard3s.get():
         mgrD3S.run()
 
-def run_Sensors():
-    if varWeather.get(): 
-        wdaq.start()
-    if varAir.get():
-        aqdaq.start()
-    if varCO2.get():
-        adcdaq.start()
-    
-
 def make_run_gui():
     top1 = Tkinter.Tk()
     top1.geometry('+0+390')
@@ -81,7 +72,12 @@ def make_run_gui():
                 jobd3s.start()
             except:
                 print("Error: Failed to start D3S")
-        run_Sensors()                
+        if varWeather.get(): 
+            wdaq.start()
+        if varAir.get():
+            aqdaq.start()
+        if varCO2.get():
+            adcdaq.start()                
         job1=top1.after(1000,start)
 
     def stop():
