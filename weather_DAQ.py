@@ -50,10 +50,6 @@ class weather_DAQ(object):
         pascals = self.sensor.read_pressure()
         hectopascals = pascals / 100
         humidity = self.sensor.read_humidity()
-
-        print ('Temp     = {0:0.3f} deg C'.format(degrees))
-        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %\n'.format(humidity))
     
         data=[]
         data.append(date_time)
@@ -68,7 +64,10 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_list,hectopascals)
         self.add_time(self.time_queue, self.time_list, date_time)
-        
+                
+        print ('Temp     = {0:0.3f} deg C'.format(degrees))
+        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+        print ('Humidity = {0:0.2f} %\n'.format(humidity))
         
     def press(self):
         if len(self.time_queue)>0:
