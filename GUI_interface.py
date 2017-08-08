@@ -87,8 +87,9 @@ def make_run_gui():
     def stop():
         global job1
         global jobd3s
+        if jobd3s is not None:
+            mgrD3S.takedown()
         top1.after_cancel(job1)
-        top1.after_cancel(jobd3s)
         jobd3s = None
 
     def press():        

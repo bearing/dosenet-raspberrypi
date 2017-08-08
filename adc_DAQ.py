@@ -102,7 +102,7 @@ class adc_DAQ(object):
 		plt.pause(0.0005)	
 
 	def add_time(self, queue, timelist, data):
-		print('Input time: {}'.format(data))
+		print('CO2 input time: {} CO2 queue: {}'.format(data, queue))
 		timelist.append(data)
 		if len(timelist)>=self.n_merge:
 			self.merge_test=True

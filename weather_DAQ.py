@@ -84,7 +84,7 @@ class weather_DAQ(object):
 
 
     def add_time(self, queue, timelist, data):
-        print('Input time: {}'.format(data))
+        print('Weather input time: {} Weather queue: {}'.format(data, queue))
         timelist.append(data)
 
         if len(timelist)>=self.n_merge:
