@@ -23,6 +23,7 @@ from globalvalues import WEATHER_DISPLAY_TEXT
 from globalvalues import TIME_DISPLAY_TEXT
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 
+from globalvalues import FLUSH_PAUSE_S
 from globalvalues import strf
 from collections import deque
 
