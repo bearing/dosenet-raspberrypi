@@ -60,6 +60,7 @@ def make_run_gui():
     top1.geometry('+0+390')
     global job1
     global jobd3s
+    global jobadc
     jobd3s = None
     jobadc = None
     
