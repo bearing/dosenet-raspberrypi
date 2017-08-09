@@ -21,7 +21,7 @@ case "$1" in
     sudo pkill -SIGTERM -f managers.py
     ;;
  *)
-    echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|stop}"
+    echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|test|stop}"
     exit 1
     ;;
 esac

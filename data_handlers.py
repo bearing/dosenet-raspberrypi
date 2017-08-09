@@ -12,15 +12,18 @@ from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_D3S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_CO2
+from globalvalues import DEFAULT_DATA_BACKLOG_FILE_WEATHER
 from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import SPECTRA_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
 from globalvalues import CO2_DISPLAY_TEXT
+from globalvalues import WEATHER_DISPLAY_TEXT
 from globalvalues import TIME_DISPLAY_TEXT
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 
+from globalvalues import FLUSH_PAUSE_S
 from globalvalues import strf
 from collections import deque
 
@@ -141,11 +144,9 @@ class Data_Handler(object):
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.manager.sender.send_spectra_new_D3S(this_end, spectra)
-            #print(self.queue)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
-                    #print(len(self.queue))
                     trash = self.queue.popleft()
                     self.manager.sender.send_spectra_new_D3S(
                         trash[0], trash[1])
@@ -156,7 +157,6 @@ class Data_Handler(object):
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
-                    #print(len(self.queue))
                     trash = self.queue.popleft()
                     self.manager.sender.send_data_new_AQ(
                         trash[0], trash[1])
@@ -167,9 +167,18 @@ class Data_Handler(object):
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
-                    #print(len(self.queue))
                     trash = self.queue.popleft()
                     self.manager.sender.send_data_new_CO2(
+                        trash[0], trash[1])
+
+        if self.manager.sensor_type == 5:
+            average_data = kwargs.get('average_data')
+            self.manager.sender.send_data_new_weather(this_end, average_data)
+            if self.queue:
+                self.vprint(1, "Flushing memory queue to server")
+                while self.queue:
+                    trash = self.queue.popleft()
+                    self.manager.sender.send_data_new_weather(
                         trash[0], trash[1])
 
     def send_all_to_backlog(self, path=None):
@@ -181,6 +190,8 @@ class Data_Handler(object):
             path = DEFAULT_DATA_BACKLOG_FILE_AQ
         if path == None and self.manager.sensor_type == 4:
             path = DEFAULT_DATA_BACKLOG_FILE_CO2
+        if path == None and self.manager.sensor_type == 5:
+            path = DEFAULT_DATA_BACKLOG_FILE_WEATHER
 
         if self.manager.sensor_type == 2:
             if self.queue:
@@ -209,10 +220,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.queue.append([time_string, spectra])
-        if self.manager.sensor_type == 3:
-            average_data = kwargs.get('average_data')
-            self.queue.append([time_string, average_data])
-        if self.manager.sensor_type == 4:
+        if self.manager.sensor_type == 3 or \
+            self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
             average_data = kwargs.get('average_data')
             self.queue.append([time_string, average_data])
 
@@ -249,22 +258,14 @@ class Data_Handler(object):
                     self.queue.append([timestring, spectra])
                 os.remove(path)
 
-        if self.manager.sensor_type == 3:
-            if path == None:
+        if self.manager.sensor_type == 3 or \
+            self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+            if path == None and self.manager.sensor_type == 3:
                 path = DEFAULT_DATA_BACKLOG_FILE_AQ
-            if os.path.isfile(path):
-                self.vprint(2, "Flushing backlog file to memory queue")
-                with open(path, 'r') as f:
-                    data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1]])
-                print(self.queue)
-                os.remove(path)
-
-        if self.manager.sensor_type == 4:
-            if path == None:
+            if path == None and self.manager.sensor_type == 4:
                 path = DEFAULT_DATA_BACKLOG_FILE_CO2
+            if path == None and self.manager.sensor_type == 5:
+                path = DEFAULT_DATA_BACKLOG_FILE_WEATHER
             if os.path.isfile(path):
                 self.vprint(2, "Flushing backlog file to memory queue")
                 with open(path, 'r') as f:
@@ -335,6 +336,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 3:
             average_data = kwargs.get('average_data')
             self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
                     end_time=end_text,
@@ -350,7 +353,7 @@ class Data_Handler(object):
                         variable=self.variables[i],
                         avg_data=average_data[i]))
             self.vprint(
-                1, DOUBLE_BREAK_LINE)
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
@@ -364,6 +367,8 @@ class Data_Handler(object):
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
             self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
                 1, TIME_DISPLAY_TEXT.format(
                     start_time=start_text,
                     end_time=end_text,
@@ -372,9 +377,36 @@ class Data_Handler(object):
                 self.vprint(
                     1, CO2_DISPLAY_TEXT.format(
                         variable=self.variables[i],
-                        info=average_data[i]))
+                        data=average_data[i]))
             self.vprint(
-                1, DOUBLE_BREAK_LINE)
+                1, SINGLE_BREAK_LINE)
+
+            self.manager.data_log(datalog, average_data=average_data)
+
+            if self.manager.test:
+                self.send_to_memory(average_data=average_data)
+            elif not self.manager.config:
+                self.no_config_send(average_data=average_data)
+            elif not self.manager.publickey:
+                self.no_publickey_send(average_data=average_data)
+
+        if self.manager.sensor_type == 5:
+            average_data = kwargs.get('average_data')
+            self.vprint(
+                1, SINGLE_BREAK_LINE)
+            self.vprint(
+                1, TIME_DISPLAY_TEXT.format(
+                    start_time=start_text,
+                    end_time=end_text,
+                    date=date))
+            for i in range(len(self.variables)):
+                self.vprint(
+                    1, WEATHER_DISPLAY_TEXT.format(
+                        variable=self.variables[i],
+                        unit=self.variables_units[i],
+                        data=average_data[i]))
+            self.vprint(
+                1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
 
@@ -391,9 +423,8 @@ class Data_Handler(object):
                     self.regular_send(this_end, cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
                     self.regular_send(this_end, spectra=spectra)
-                if self.manager.sensor_type == 3:
-                    self.regular_send(this_end, average_data=average_data)
-                if self.manager.sensor_type == 4:
+                if self.manager.sensor_type == 3 or \
+                    self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
                     self.regular_send(this_end, average_data=average_data)
             except (socket.gaierror, socket.error, socket.timeout) as e:
                 if e == socket.gaierror:
@@ -432,16 +463,15 @@ class Data_Handler(object):
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
                     self.send_to_memory(spectra=spectra)
-                if self.manager.sensor_type == 3:
-                    self.send_to_memory(average_data=average_data)
-                if self.manager.sensor_type == 4:
-                    self.send_to_memory(average_data=average_data)
+                if self.manager.sensor_type == 3 or \
+                    self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+                    self.send_to_memory(this_end, average_data=average_data)
 
 class Data_Handler_Pocket(Data_Handler):
     """
     Sub data handler for the Pocket Geiger sensor.
 
-    Any specific processes to this sensor will be
+    Any specific variables to this sensor will be
     defined in this sub-class.
     """
 
@@ -458,7 +488,7 @@ class Data_Handler_D3S(Data_Handler):
     """
     Sub data handler for the D3S sensor.
 
-    Any specific processes to this sensor will be
+    Any specific variables to this sensor will be
     defined in this sub-class.
     """
 
@@ -471,7 +501,7 @@ class Data_Handler_AQ(Data_Handler):
     """
     Sub data handler for the Air Quality sensor.
 
-    Any specific processes to this sensor will be
+    Any specific variables to this sensor will be
     defined in this sub-class.
     """
 
@@ -487,7 +517,7 @@ class Data_Handler_CO2(Data_Handler):
     """
     Sub data handler for the CO2 sensor.
 
-    Any specific processes to this sensor will be
+    Any specific variables to this sensor will be
     defined in this sub-class.
     """
 
@@ -498,3 +528,21 @@ class Data_Handler_CO2(Data_Handler):
         self.variables = variables
 
         super(Data_Handler_CO2, self).__init__(**kwargs)
+
+class Data_Handler_Weather(Data_Handler):
+    """
+    Sub data handler for the weather sensor.
+
+    Any specific variables to this sensor will be
+    defined in this sub-class.
+    """
+
+    def __init__(self,
+                 variables=None,
+                 variables_units=None,
+                 **kwargs):
+
+        self.variables = variables
+        self.variables_units = variables_units
+
+        super(Data_Handler_Weather, self).__init__(**kwargs)
