@@ -115,7 +115,6 @@ class Manager_D3S(object):
         self.rt_plot = Real_Time_Spectra(
             manager=self,
             verbosity=self.v)
-        self.q = self.rt_plot.queue
         if self.plot:
             self.rt_plot.start_up_plotting()
 
