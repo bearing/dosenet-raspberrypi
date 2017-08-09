@@ -40,9 +40,9 @@ class Real_Time_Spectra(object):
         self.manager = manager
 
         self.interval = manager.interval
-        self.queue = deque()
 
         self.maxspectra = manager.maxspectra
+        self.queue = deque()
 
         self.data = None
         self.resolution = resolution
@@ -355,7 +355,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id,arg):
+    def plot_sum(self,plot_id):
         """
         Plot the sum (spectrum) figure.
         """
@@ -371,7 +371,7 @@ class Real_Time_Spectra(object):
         Get the running average
         '''
          
-        run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         '''
         Clear the prior spectrum figure.

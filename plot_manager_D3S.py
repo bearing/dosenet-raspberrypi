@@ -215,7 +215,7 @@ class Manager_D3S(object):
         self.rt_plot.close(plot_id)
 
 
-    def run(self,arg):
+    def run(self):
         """
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
@@ -259,7 +259,7 @@ class Manager_D3S(object):
                                 time.time() - self.interval)
 
                             self.handle_spectra(
-                                this_start, this_end, reading[4],arg)
+                                this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -308,10 +308,10 @@ class Manager_D3S(object):
 
         self.rt_plot.plot_waterfall(plot_id)
 
-    def plot_spectrum(self,plot_id,arg):
+    def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_sum(plot_id,arg)
+        self.rt_plot.plot_sum(plot_id)
 
     def plot_fitter(self):
         """
@@ -323,7 +323,7 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra, arg):
+    def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
@@ -336,7 +336,7 @@ class Manager_D3S(object):
             Plot the data.
             '''
             self.plot_waterfall()
-            self.plot_spectrum(arg)
+            self.plot_spectrum()
             # self.plot_fitter()
 
             '''
