@@ -5,7 +5,7 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -68,6 +68,8 @@ def make_run_gui():
         global mgrD3S
         global aqdaq
         if jobd3s is None:
+            m = Manager()
+            mgrD3S.q = m
             jobd3s = Process(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
