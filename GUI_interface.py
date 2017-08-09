@@ -61,6 +61,7 @@ def make_run_gui():
         global argq
         if vard3s.get():
             mgrD3S.run(argq)
+            print("The run list is {}".format(argq))
 
 
     def start():        
@@ -131,17 +132,13 @@ def make_run_gui():
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
 
-    def multiprocess(a,b):
-        a
-        b
-
     def D3S_spectra():
         global argq
         global mgrD3S
         global plot_jobs
         check_plots(5)
-        p = Pool(processes = 2)
-        p.map_async(multiprocess, [mgrD3S.plot_spectrum(2,argq), start_D3S()])
+        mgrD3S.plot_spectrum(2,argq)
+        print("The plot list is {}".format(len(argq)))
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
