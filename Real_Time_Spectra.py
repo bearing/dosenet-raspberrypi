@@ -373,7 +373,6 @@ class Real_Time_Spectra(object):
          
         run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
         
-)
 
         '''
         Clear the prior spectrum figure.
