@@ -74,11 +74,11 @@ def make_run_gui():
         if jobd3s is None:
             manager = Manager()
             argq = manager.list()
-            jobd3s = Process(start_D3S,args=()) 
-            #try:
-            jobd3s.start()
-            #except:
-                #print("Error: Failed to start D3S")
+            jobd3s = Process(target=start_D3S, args=()) 
+            try:
+                jobd3s.start()
+            except:
+                print("Error: Failed to start D3S")
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
