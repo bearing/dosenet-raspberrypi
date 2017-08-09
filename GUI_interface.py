@@ -5,10 +5,8 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-'''
 from multiprocessing import Process
-'''
-import threading
+
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -70,7 +68,7 @@ def make_run_gui():
         global mgrD3S
         global aqdaq
         if jobd3s is None:
-            jobd3s = threading.Thread(target=start_D3S, args=()) 
+            jobd3s = Process(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
             except:
@@ -131,7 +129,9 @@ def make_run_gui():
         global mgrD3S
         global plot_jobs
         check_plots(5)
-        mgrD3S.plot_spectrum(2)
+        p = Process(target = mgrD3S.plot_spectrum(), args =(2))
+        p.start()
+        p.join()
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
