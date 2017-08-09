@@ -387,6 +387,8 @@ class Real_Time_Spectra(object):
         Show the updated spectrum figure window.
         '''
         plt.show()
+        
+        print("The pool functin is working")
 
         '''
         Pause before displaying the next figure window.
