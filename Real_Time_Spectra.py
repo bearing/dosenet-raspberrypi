@@ -42,7 +42,6 @@ class Real_Time_Spectra(object):
         self.interval = manager.interval
 
         self.maxspectra = manager.maxspectra
-        self.queue = deque()
 
         self.data = None
         self.resolution = resolution
@@ -153,7 +152,7 @@ class Real_Time_Spectra(object):
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
 
-    def add_data(self, spectra, maxspectra):
+    def add_data(self, spectra, maxspectra, arg):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -167,12 +166,12 @@ class Real_Time_Spectra(object):
         '''
         Add the new spectrum to queue.
         '''
-        self.queue.append(new_spectra)
+        arg.append(new_spectra)
 
         '''
         Save the original size of the data queue.
         '''
-        data_length = len(self.queue)
+        data_length = len(arg)
 
         '''
         Pop off the first data point if the total number of counts in the
@@ -181,7 +180,7 @@ class Real_Time_Spectra(object):
         '''
         if data_length > maxspectra:
 
-            self.queue.popleft()
+            arg.popleft(0)
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -355,7 +354,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id,r):
+    def plot_sum(self,plot_id,arg):
         """
         Plot the sum (spectrum) figure.
         """
@@ -371,7 +370,7 @@ class Real_Time_Spectra(object):
         Get the running average
         '''
          
-        run_avg, self.sum_data = self.run_avg_data(r, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
 
         '''
         Clear the prior spectrum figure.

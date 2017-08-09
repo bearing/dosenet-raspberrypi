@@ -39,9 +39,9 @@ vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 
-def start_D3S(m):
+def start_D3S(argq):
     if vard3s.get():
-        mgrD3S.run(m)
+        mgrD3S.run(argq)
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -67,10 +67,11 @@ def make_run_gui():
         global adcdaq
         global mgrD3S
         global aqdaq
+        global argq
         if jobd3s is None:
-            m = Manager()
-            mgrD3S.q = m
-            jobd3s = Process(target=start_D3S, args=(m)) 
+            manager = Manager()
+            argq = manager.list()
+            jobd3s = Process(target=start_D3S, args=(argq)) 
             try:
                 jobd3s.start()
             except:
@@ -128,10 +129,11 @@ def make_run_gui():
         plot_jobs[4]=top1.after(1000,airquality)
 
     def D3S_spectra():
+        global argq
         global mgrD3S
         global plot_jobs
         check_plots(5)
-        mgrD3S.plot_spectrum(2,mgrD3S.q)
+        mgrD3S.plot_spectrum(2,argq)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
