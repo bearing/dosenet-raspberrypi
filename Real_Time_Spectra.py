@@ -180,7 +180,7 @@ class Real_Time_Spectra(object):
         '''
         if data_length > maxspectra:
 
-            arg.popleft(0)
+            arg.pop(0)
 
     def run_avg_data(self, data, maxspectra):
         """
