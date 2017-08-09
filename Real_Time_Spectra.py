@@ -192,7 +192,7 @@ class Real_Time_Spectra(object):
         '''
         Save the original length of the data queue.
         '''
-        data_length = len(data)
+        #data_length = len(data)
 
         '''
         Create a temporary data queue so the data can be summed.
