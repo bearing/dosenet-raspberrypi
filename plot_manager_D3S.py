@@ -308,10 +308,10 @@ class Manager_D3S(object):
 
         self.rt_plot.plot_waterfall(plot_id)
 
-    def plot_spectrum(self,plot_id):
+    def plot_spectrum(self,plot_id,r):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_sum(plot_id)
+        self.rt_plot.plot_sum(plot_id,r)
 
     def plot_fitter(self):
         """
