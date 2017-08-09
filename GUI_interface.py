@@ -75,7 +75,7 @@ def make_run_gui():
             manager = Manager()
             argq = manager.list()
             p = Pool(processes = 6)
-            jobd3s = p.map_async(start_D3S, args=()) 
+            jobd3s = p.map_async(start_D3S) 
             #try:
             jobd3s.start()
             #except:
