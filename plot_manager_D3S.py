@@ -327,8 +327,7 @@ class Manager_D3S(object):
         Get spectra from sensor, display text, send to server.
         """
         self.rt_plot.add_data(spectra, self.maxspectra)
-        
-        print("Total counts is {}".format(sum(spectra)))
+        #print("Total counts is {}".format(sum(spectra)))
 
         if self.plot:
 
