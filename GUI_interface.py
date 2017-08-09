@@ -5,7 +5,7 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -39,9 +39,9 @@ vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 
-def start_D3S():
+def start_D3S(argq):
     if vard3s.get():
-        mgrD3S.run()
+        mgrD3S.run(arg)
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -68,11 +68,13 @@ def make_run_gui():
         global mgrD3S
         global aqdaq
         if jobd3s is None:
-            jobd3s = Process(target=start_D3S, args=()) 
-            try:
-                jobd3s.start()
-            except:
-                print("Error: Failed to start D3S")
+            with Manager() as manager:
+                argq = manager.mgrD3S.q
+                jobd3s = Process(target=start_D3S, args=(argq)) 
+                try:
+                    jobd3s.start()
+                except:
+                    print("Error: Failed to start D3S")
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
