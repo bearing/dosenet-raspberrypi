@@ -217,6 +217,8 @@ class Real_Time_Spectra(object):
         '''
         Return the running average and summation data.
         '''
+        print("The run_ave_data list is {}".format(arg))
+        
         return running_avg_array, sum_data
 
     def rebin(self, data, n=4):
@@ -371,6 +373,9 @@ class Real_Time_Spectra(object):
         '''
          
         run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
+        
+        
+        print("The plot list is {}".format(len(arg)))
 
         '''
         Clear the prior spectrum figure.
@@ -383,12 +388,12 @@ class Real_Time_Spectra(object):
         '''
         self.sum_graph(run_avg)
 
+
         '''
         Show the updated spectrum figure window.
         '''
         plt.show()
-        
-        print("The plot list is {}".format(len(arg)))
+
 
         '''
         Pause before displaying the next figure window.
