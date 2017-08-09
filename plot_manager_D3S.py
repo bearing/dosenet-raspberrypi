@@ -259,7 +259,7 @@ class Manager_D3S(object):
                                 time.time() - self.interval)
 
                             self.handle_spectra(
-                                this_start, this_end, reading[4])
+                                this_start, this_end, reading[4],r)
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -323,7 +323,7 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra):
+    def handle_spectra(self, this_start, this_end, spectra,r):
         """
         Get spectra from sensor, display text, send to server.
         """
@@ -336,7 +336,7 @@ class Manager_D3S(object):
             Plot the data.
             '''
             self.plot_waterfall()
-            self.plot_spectrum()
+            self.plot_spectrum(r)
             # self.plot_fitter()
 
             '''
