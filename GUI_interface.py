@@ -129,9 +129,7 @@ def make_run_gui():
         global mgrD3S
         global plot_jobs
         check_plots(5)
-        p = Process(target = mgrD3S.plot_spectrum(), args =(2))
-        p.start()
-        p.join()
+        mgrD3S.plot_spectrum(2)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
