@@ -76,10 +76,10 @@ def make_run_gui():
             argq = manager.list()
             p = Pool(processes = 6)
             jobd3s = p.apply_async(start_D3S, args=()) 
-            try:
-                jobd3s.start()
-            except:
-                print("Error: Failed to start D3S")
+            #try:
+            jobd3s.start()
+            #except:
+                #print("Error: Failed to start D3S")
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
