@@ -90,6 +90,7 @@ def make_run_gui():
             mgrD3S.takedown()
         top1.after_cancel(job1)
         jobd3s = None
+        check_plots(-1)
 
     def press(): 
         global wdaq
