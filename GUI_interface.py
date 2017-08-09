@@ -39,9 +39,9 @@ vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 
-def start_D3S():
+def start_D3S(m):
     if vard3s.get():
-        mgrD3S.run()
+        mgrD3S.run(m)
 
 def make_run_gui():
     top1 = Tkinter.Tk()
@@ -70,7 +70,7 @@ def make_run_gui():
         if jobd3s is None:
             m = Manager()
             mgrD3S.q = m
-            jobd3s = Process(target=start_D3S, args=()) 
+            jobd3s = Process(target=start_D3S, args=(m)) 
             try:
                 jobd3s.start()
             except:

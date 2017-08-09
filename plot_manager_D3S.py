@@ -215,7 +215,7 @@ class Manager_D3S(object):
         self.rt_plot.close(plot_id)
 
 
-    def run(self):
+    def run(self,r):
         """
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
