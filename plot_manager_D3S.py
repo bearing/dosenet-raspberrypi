@@ -247,6 +247,7 @@ class Manager_D3S(object):
                             self.total = np.array(reading[4])
                             self.lst = np.array([reading[4]])
                             self.create_structures = False
+                            print("The run list is {}".format(len(arg)))
                         else:
                             self.total += np.array(reading[4])
                             self.lst = np.concatenate(

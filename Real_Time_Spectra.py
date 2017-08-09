@@ -388,7 +388,7 @@ class Real_Time_Spectra(object):
         '''
         plt.show()
         
-        print("The pool functin is working")
+        print("The plot list is {}".format(len(arg)))
 
         '''
         Pause before displaying the next figure window.
