@@ -373,6 +373,8 @@ class Real_Time_Spectra(object):
          
         run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
         
+        
+        print("The plot list is {}".format(len(arg)))
 
         '''
         Clear the prior spectrum figure.
@@ -385,11 +387,12 @@ class Real_Time_Spectra(object):
         '''
         self.sum_graph(run_avg)
 
-        
-        print("The plot list is {}".format(len(arg))
+
         '''
         Show the updated spectrum figure window.
         '''
+        
+        print("The plot list is {}".format(len(arg)))
         plt.show()
 
 
