@@ -182,7 +182,7 @@ class Real_Time_Spectra(object):
 
             arg.pop(0)
 
-    def run_avg_data(self, data, maxspectra, arg):
+    def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
         queue.
@@ -217,7 +217,6 @@ class Real_Time_Spectra(object):
         '''
         Return the running average and summation data.
         '''
-        print("The run_ave_data list is {}".format(arg))
         
         return running_avg_array, sum_data
 
