@@ -308,6 +308,8 @@ class Real_Time_Spectra(object):
         Plot the spectrum plot.
         '''
         plt.plot(x, data, drawstyle='steps-mid')
+        
+        print("The plot updated list is {}".format(len(data)))
 
         '''
         Show the spectrum plot.
@@ -381,7 +383,6 @@ class Real_Time_Spectra(object):
         '''
         plt.clf()
         
-        print("The plot updated list is {}".format(len(run_avg)))
         '''
         Plot the spectrum figure
         '''
