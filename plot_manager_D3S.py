@@ -63,8 +63,8 @@ class Manager_D3S(object):
         self.lst = None
         self.create_structures = True
 
-        self.n_merge = n_merge
-        self.maxdata = maxdata
+        self.n_merge = int(n_merge)
+        self.maxdata = int(maxdata)
         self.count = count
 
         self.config = None

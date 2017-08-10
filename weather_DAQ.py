@@ -23,8 +23,8 @@ class weather_DAQ(object):
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
-        self.maxdata=maxdata
-        self.n_merge=n_merge
+        self.maxdata=int(maxdata)
+        self.n_merge=int(n_merge)
         self.temp_list=[]
         self.humid_list=[]
         self.press_list=[]
@@ -105,9 +105,6 @@ class weather_DAQ(object):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
-        print("The length of the temporary list is {}".format(len(temp_list)))
-        print("The length of the queue is {}".format(len(queue)))
-        print(self.n_merge)
     
     def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
         plt.ion()
