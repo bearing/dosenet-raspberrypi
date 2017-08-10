@@ -218,9 +218,9 @@ nmerge_text = Label(top, text = 'Enter the number of entry points to average:', 
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
   
 maxdata_text.pack()
-maxdata.pack()
+maxdata.pack(fill = 'both')
 nmerge_text.pack()
-n_merge.pack()
+n_merge.pack(fill = 'both')
 AirButton.pack(fill = 'both')  
 WeatherButton.pack(fill = 'both')
 CO2Button.pack(fill ='both')
