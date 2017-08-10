@@ -38,6 +38,8 @@ class Manager_D3S(object):
     """
 
     def __init__(self,
+                 maxdata,
+                 n_merge,
                  interval=5,
                  maxspectra=20,
                  count=0,
@@ -54,9 +56,7 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 plot=True,
-                 maxdata,
-                 n_merge
+                 plot=True
                  ):
 
         self.running = running
