@@ -280,6 +280,8 @@ class Real_Time_Spectra(object):
         '''
         Switch to working on the spectrum figure window.
         '''
+        plt.ion()
+        
         plt.figure(2)
 
         '''
@@ -314,13 +316,13 @@ class Real_Time_Spectra(object):
         '''
         Show the spectrum plot.
         '''
-        #plt.show()
+        plt.show()
 
         '''
         Wait before displaying another plot. Otherwise, wait the specified
         number of seconds before continuing with the code execution.
         '''
-        #plt.pause(0.0005)
+        plt.pause(0.0005)
 
     def plot_waterfall(self,plot_id):
         plt.figure(plot_id)
@@ -376,7 +378,7 @@ class Real_Time_Spectra(object):
         run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
         
         
-        print("The plot list is {}".format(len(run_avg)))
+        print("The length of run avg array is {}".format(len(run_avg)))
 
         '''
         Clear the prior spectrum figure.
@@ -388,13 +390,7 @@ class Real_Time_Spectra(object):
         '''
         self.sum_graph(run_avg)
 
-
-        '''
-        Show the updated spectrum figure window.
-        '''
         
-        
-        plt.show()
 
 
         '''
