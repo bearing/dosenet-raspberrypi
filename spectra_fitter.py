@@ -303,7 +303,7 @@ def get_peak_counts(means,sigmas,amps):
     
 
 def main (rows,times)  : 
-'''
+    '''
     mgr=D3S(interval=5,maxspectra=72)
     try:
         mgr.run()
@@ -315,7 +315,7 @@ def main (rows,times)  :
             # regardless, re-raise the error which will print to stderr
            raise
     mgr.rt_plot
-'''
+    '''
     date = []
     cpm = []
     cpm_error = []
