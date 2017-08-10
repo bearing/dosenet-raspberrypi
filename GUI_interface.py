@@ -224,7 +224,7 @@ n_merge.grid(row=3)
 
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times")  
 
-AirButton.grid(row=4, sticky = "we")  
+AirButton.grid(row=4, columnspan=3)  
 WeatherButton.grid(row=5)
 CO2Button.grid(row=6)
 d3sButton.grid(row=7)
