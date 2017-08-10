@@ -324,6 +324,8 @@ class Real_Time_Spectra(object):
         plt.pause(0.0005)
 
     def plot_waterfall(self,plot_id,queue):
+        plt.ion()
+        
         plt.figure(plot_id)
         """
         Grabs the data for waterfall plot.
