@@ -107,6 +107,7 @@ class weather_DAQ(object):
             queue.popleft()
         print("The length of the temporary list is {}".format(len(temp_list)))
         print("The length of the queue is {}".format(len(queue)))
+        print(self.n_merge)
     
     def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
         plt.ion()
