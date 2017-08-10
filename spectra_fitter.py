@@ -320,7 +320,7 @@ def main (rows,times)  :
     cpm = []
     cpm_error = []
     line = 0 
- \  
+   
     K_peaks, K_sigmas, K_amps = get_peaks(rows,2160,2560)
     Bi_peaks,Bi_sigmas,Bi_amps = get_double_peaks(rows,640,1280)
     Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,656,1296,1)
