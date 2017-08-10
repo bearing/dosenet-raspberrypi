@@ -8,10 +8,8 @@ import adc_DAQ
 import plot_manager_D3S
 from multiprocessing import Process, Manager
 
-global maxdata, n_merge
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
-mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
 
 def close(index):
     global wdaq
@@ -196,6 +194,9 @@ def make_run_gui():
 def weather_test():
     global maxdata
     global n_merge
+    maxdata = maxdata.get()
+    n_merge = n_merge.get()
+
     if varCO2.get(): 
         global adcdaq
         adcdaq = adc_DAQ.adc_DAQ(maxdata, n_merge)
@@ -211,9 +212,10 @@ def weather_test():
         wdaq = weather_DAQ.weather_DAQ(maxdata, n_merge)
         print("create weather file")
         wdaq.create_file()
-    
-    maxdata = maxdata.get()
-    n_merge = n_merge.get()
+    if vard3s.get():
+        global mgrD3S
+        mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
+        print("create D3S file")
 
     make_run_gui() 
   
