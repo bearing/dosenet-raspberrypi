@@ -213,9 +213,9 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
 
 maxdata_text = Label(top, text = "asdf")
-maxdata_text.pack(side = "left")
+maxdata_text.grid(row = 0, column = 0)
 maxdata = Entry(top)
-maxdata.pack(side = "right")
+maxdata.grid(row = 0, column = 1)
 
 n_merge = Entry(top)
 n_merge.pack()
