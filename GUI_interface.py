@@ -1,7 +1,7 @@
 
 #!/usr/bin/env/python
 import Tkinter
-from Tkinter import Entry
+from Tkinter import Entry, StringVar, Label
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
@@ -211,10 +211,20 @@ AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25", height=2, width=2)
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
-maxdata = Entry(top)
-maxdata.pack()
-n_merge = Entry(top)
-n_merge.pack()
+
+maxdata_text = StringVar()
+maxdata_text.set("Enter the maximum number of x entries shown on the plot:" )
+maxdata_dir = Label(top, textvariable = maxdata_text)
+directory1 = StringVar(None)
+maxdata = Entry(top, textvariable = directory1)
+maxdata.pack(side = "left")
+
+nmerge_text = StringVar()
+nmerge_text.set("Enter the nuber of entries you want to merge:" )
+nmerge_dir = Label(top, textvariable = maxdata_text)
+directory2 = StringVar(None)
+n_merge = Entry(top, textvariable = directory2)
+n_merge.pack(side = "left")
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
