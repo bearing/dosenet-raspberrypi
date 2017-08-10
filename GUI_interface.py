@@ -59,6 +59,7 @@ def make_run_gui():
                     
     def start_D3S():
         global argq
+        global mgrD3S
         if vard3s.get():
             mgrD3S.run(argq)
 
@@ -90,6 +91,7 @@ def make_run_gui():
     def stop():
         global jobd3s
         global job1
+        global mgrD3S
         if jobd3s is not None:
             mgrD3S.takedown()
         top1.after_cancel(job1)
@@ -124,8 +126,6 @@ def make_run_gui():
     def CO2():
         global adcdaq
         global plot_jobs
-        global maxdata
-        global n_merge
         check_plots(3)
         adcdaq.plot_CO2()
         plot_jobs[3]=top1.after(1000,CO2)
@@ -192,29 +192,25 @@ def make_run_gui():
     top1.mainloop()
 
 def weather_test():
-    global maxdata
-    global n_merge
-    maxdata = maxdata.get()
-    n_merge = n_merge.get()
 
     if varCO2.get(): 
         global adcdaq
-        adcdaq = adc_DAQ.adc_DAQ(maxdata, n_merge)
+        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), n_merge.get())
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
         global aqdaq
-        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata, n_merge)
+        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), n_merge.get())
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
         global wdaq
-        wdaq = weather_DAQ.weather_DAQ(maxdata, n_merge)
+        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), n_merge.get())
         print("create weather file")
         wdaq.create_file()
     if vard3s.get():
         global mgrD3S
-        mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
+        mgrD3S = plot_manager_D3S.Manager_D3S(maxdata.get(), n_merge.get(), plot = False)
         print("create D3S file")
 
     make_run_gui() 
