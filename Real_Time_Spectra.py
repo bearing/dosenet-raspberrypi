@@ -165,7 +165,7 @@ class Real_Time_Spectra(object):
         # Define the running average as the mean of each element in the
         #   summation of the spectra in the temporary data array.
         running_avg_array = sum(temp_data) / temp_length
-        sum_data= sum(temp_data)
+        sum_data= np.sum(temp_data,1)
         return running_avg_array,sum_data
     
 
