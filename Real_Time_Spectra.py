@@ -392,13 +392,13 @@ class Real_Time_Spectra(object):
         Show the updated spectrum figure window.
         '''
         
-        print("The plot list is {}".format(len(arg)))
-       # plt.show()
+        print("The plot updated list is {}".format(len(arg)))
+        plt.show()
 
 
         '''
         Pause before displaying the next figure window.
         '''
-        #plt.pause(0.0005)
+        plt.pause(0.0005)
 
         # plt.close()
