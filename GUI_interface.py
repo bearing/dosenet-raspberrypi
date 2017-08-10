@@ -31,7 +31,7 @@ def close(index):
     if index == 6:
         mgrD3S.close(2)
 
-mgrD3S = plot_manager_D3S.Manager_D3S(plot = False, maxdata, n_merge)
+mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
 
 top = Tkinter.Tk()
 top.geometry("800x400")
