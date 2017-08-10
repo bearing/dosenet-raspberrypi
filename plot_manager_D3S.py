@@ -39,7 +39,7 @@ class Manager_D3S(object):
 
     def __init__(self,
                  maxdata,
-                 n_merge,
+                 interval,
                  count=0,
                  transport='any',
                  device='all',
@@ -63,8 +63,8 @@ class Manager_D3S(object):
         self.lst = None
         self.create_structures = True
 
-        self.n_merge = int(n_merge)
-        self.maxdata = int(maxdata)
+        self.interval = int(n_merge)
+        self.spectra = int(maxdata)
         self.count = count
 
         self.config = None
@@ -94,7 +94,7 @@ class Manager_D3S(object):
         self.test = test
 
         self.handle_input(
-            log, logfile, verbosity, interval)
+            log, logfile, verbosity, int(n_merge))
         self.plot = plot
 
         self.data_handler = Data_Handler_D3S(
@@ -175,7 +175,7 @@ class Manager_D3S(object):
             with open(file, 'a') as f:
                 pass
 
-    def handle_input(self, log, logfile, verbosity, interval):
+    def handle_input(self, log, logfile, verbosity, n_merge):
         """
         Sets up logging, verbosity, interval, config, and publickey
         """
@@ -203,12 +203,12 @@ class Manager_D3S(object):
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = True
 
-        if interval is None:
+        if int(n_merge) is None:
             self.vprint(
                 2, "No interval given, using interval at 30 seconds")
-            interval = DEFAULT_INTERVAL_NORMAL_D3S
+            int(n_merge) = DEFAULT_INTERVAL_NORMAL_D3S
 
-        self.interval = interval
+        self.interval = int(n_merge)
 
     def close(self, plot_id):
         self.rt_plot.close(plot_id)
