@@ -212,19 +212,14 @@ WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeat
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
 
-maxdata_text = StringVar()
-maxdata_text.set("Enter the maximum number of x entries shown on the plot:" )
-maxdata_dir = Label(top, textvariable = maxdata_text)
-directory1 = StringVar(None)
-maxdata = Entry(top, textvariable = directory1)
-maxdata.pack(side = "left")
-
-nmerge_text = StringVar()
-nmerge_text.set("Enter the nuber of entries you want to merge:" )
-nmerge_dir = Label(top, textvariable = maxdata_text)
-directory2 = StringVar(None)
-n_merge = Entry(top, textvariable = directory2)
-n_merge.pack(side = "left")
+maxdata_text = Label(top, text = "asdf")
+maxdata = Entry(top)
+maxdata.pack()
+maxdata_text.pack()
+maxdata.grid(row = 0, colomn = 1)
+maxdata_text.grid(row = 0, colomn = 0)
+n_merge = Entry(top)
+n_merge.pack()
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
