@@ -54,8 +54,8 @@ class Manager_D3S(object):
                  logfile=None,
                  log=False,
                  running=False,
-                 plot=True
-                 maxdata
+                 plot=True,
+                 maxdata,
                  n_merge
                  ):
 

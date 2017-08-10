@@ -27,7 +27,7 @@ class Real_Time_Spectra(object):
         plt.close(plot_id)
 
     def __init__(self, manager=None, verbosity=1, logfile=None,
-                 resolution=256, maxdata, n_merge):
+                 resolution=256):
         """Initiate class variables."""
 
         self.v = verbosity
