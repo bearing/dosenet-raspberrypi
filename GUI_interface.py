@@ -206,7 +206,7 @@ WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeat
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
 e = Entry(top)
-
+e.pack()
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
@@ -215,6 +215,5 @@ WeatherButton.pack(fill = 'both')
 CO2Button.pack(fill ='both')
 d3sButton.pack(fill = 'both')
 RecordButton.pack(fill = 'both')
-e.pack()
     
 top.mainloop()
