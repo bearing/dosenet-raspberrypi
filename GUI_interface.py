@@ -217,8 +217,8 @@ maxdata_text = Label(top, text = "Enter the number of x entries shown on plot:",
 nmerge_text = Label(top, text = 'Enter the number of entry points to average:', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
   
-maxdata_text.pack(side = 'left')
-maxdata.pack(side = 'left')
+maxdata_text.pack()
+maxdata.pack()
 nmerge_text.pack()
 n_merge.pack()
 AirButton.pack()  
