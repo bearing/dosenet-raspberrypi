@@ -8,8 +8,10 @@ import adc_DAQ
 import plot_manager_D3S
 from multiprocessing import Process, Manager
 
+global maxdata, n_merge
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
+mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
 
 def close(index):
     global wdaq
@@ -31,7 +33,6 @@ def close(index):
     if index == 6:
         mgrD3S.close(2)
 
-mgrD3S = plot_manager_D3S.Manager_D3S(maxdata, n_merge, plot = False)
 
 top = Tkinter.Tk()
 top.geometry("800x400")
