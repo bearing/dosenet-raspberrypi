@@ -393,12 +393,12 @@ class Real_Time_Spectra(object):
         '''
         
         print("The plot list is {}".format(len(arg)))
-        plt.show()
+       # plt.show()
 
 
         '''
         Pause before displaying the next figure window.
         '''
-        plt.pause(0.0005)
+        #plt.pause(0.0005)
 
         # plt.close()
