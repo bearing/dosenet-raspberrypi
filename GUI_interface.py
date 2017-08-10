@@ -217,8 +217,8 @@ maxdata_text.grid(row = 0, column = 0)
 maxdata = Entry(top)
 maxdata.grid(row = 0, column = 1)
 
-n_merge = Entry(top)
-n_merge.pack()
+#n_merge = Entry(top)
+#n_merge.pack()
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
