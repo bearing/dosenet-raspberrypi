@@ -14,7 +14,7 @@ MOSI = 24
 CS   = 25
 
 class adc_DAQ(object):
-    def __init__(self):
+    def __init__(self, maxdata, n_merge):
         self.time_queue=deque()
         self.n_merge=5
         self.CO2_list=[]

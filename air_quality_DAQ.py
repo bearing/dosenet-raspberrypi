@@ -14,7 +14,7 @@ import serial
 #sensor = entercodehere(morestuff) [Not sure if this is necessary] 
 
 class air_quality_DAQ(object):
-    def __init__ (self):
+    def __init__ (self, maxdata, n_merge):
         # self.sensor = sensor [Not sure if this is necessary]
         self.running = False
         self.time_queue = deque()

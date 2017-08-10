@@ -55,6 +55,8 @@ class Manager_D3S(object):
                  log=False,
                  running=False,
                  plot=True
+                 maxdata
+                 n_merge
                  ):
 
         self.running = running
