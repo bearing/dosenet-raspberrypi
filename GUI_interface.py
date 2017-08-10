@@ -222,10 +222,10 @@ maxdata.grid(row = 0, column = 1)
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
-AirButton.pack(fill ='both')   
-WeatherButton.pack(fill = 'both')
-CO2Button.pack(fill ='both')
-d3sButton.pack(fill = 'both')
-RecordButton.pack(fill = 'both')
+AirButton.grid(row = 1, column = 0)   
+WeatherButton.grid(row = 2, column = 0)
+CO2Button.grid(row = 3, column = 0)
+d3sButton.grid(row = 4, column = 0)
+RecordButton.grid(row = 5, column = 0)
     
 top.mainloop()
