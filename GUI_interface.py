@@ -222,7 +222,7 @@ nmerge_text.grid(row = 2, column = 0)
 n_merge = Entry(top)
 n_merge.grid(row=3, column = 0)
 
-RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
+RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times")  
 
 AirButton.grid(row=4, column = 0)  
 WeatherButton.grid(row=5, column = 0)
