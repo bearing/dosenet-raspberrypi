@@ -213,8 +213,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 maxdata = Entry(top)
 n_merge = Entry(top)
-maxdata_text = Label(top, text = "asf", font = "Times 25")
-nmerge_text = Label(top, text = 'asd', font = "Times 25")
+maxdata_text = Label(top, text = "Enter the number of x entries shown on plot:", font = "Times 20")
+nmerge_text = Label(top, text = 'Enter the number of entry points to average:', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
   
 maxdata_text.pack()
