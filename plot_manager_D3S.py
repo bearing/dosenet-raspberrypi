@@ -302,10 +302,10 @@ class Manager_D3S(object):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
-    def plot_waterfall(self, plot_id):
+    def plot_waterfall(self, plot_id, queue):
         """Wrapper around waterfall plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_waterfall(plot_id)
+        self.rt_plot.plot_waterfall(plot_id, queue)
 
     def plot_spectrum(self,plot_id,arg):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
@@ -322,11 +322,11 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra,arg):
+    def handle_spectra(self, this_start, this_end, spectra, queue):
         """
         Get spectra from sensor, display text, send to server.
         """
-        self.rt_plot.add_data(spectra, self.maxspectra, arg)
+        self.rt_plot.add_data(spectra, self.maxspectra, queue)
         #print("Total counts is {}".format(sum(spectra)))
 
         if self.plot:
@@ -335,7 +335,7 @@ class Manager_D3S(object):
             Plot the data.
             '''
             self.plot_waterfall()
-            self.plot_spectrum(arg)
+            self.plot_spectrum(queue)
             # self.plot_fitter()
 
             '''

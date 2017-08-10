@@ -152,7 +152,7 @@ class Real_Time_Spectra(object):
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
 
-    def add_data(self, spectra, maxspectra, arg):
+    def add_data(self, spectra, maxspectra, queue):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -166,13 +166,12 @@ class Real_Time_Spectra(object):
         '''
         Add the new spectrum to queue.
         '''
-        arg.append(new_spectra)
+        queue.append(new_spectra)
 
-        print("add_data: The length of queue of data is {}".format(len(arg)))
         '''
         Save the original size of the data queue.
         '''
-        data_length = len(arg)
+        data_length = len(queue)
 
         '''
         Pop off the first data point if the total number of counts in the
@@ -181,7 +180,7 @@ class Real_Time_Spectra(object):
         '''
         if data_length > maxspectra:
 
-            arg.pop(0)
+            queue.pop(0)
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -246,18 +245,18 @@ class Real_Time_Spectra(object):
 
         return new_data
 
-    def make_image(self):
+    def make_image(self, queue):
         """
         Prepares an array for the waterfall plot
         """
         if self.first:
 
             self.first = False
-            self.data = self.fix_array()
+            self.data = self.fix_array(queue)
 
         else:
 
-            self.data = np.concatenate((self.fix_array(), self.data), axis=0)
+            self.data = np.concatenate((self.fix_array(queue), self.data), axis=0)
 
             '''
             Removes oldest spectra to keep size equal to maxspectra
@@ -266,12 +265,12 @@ class Real_Time_Spectra(object):
 
                 self.data = self.data[:-1]
 
-    def fix_array(self):
+    def fix_array(self, queue):
         """
         Used to format arrays for the waterfall plot.
         """
         new_array = np.zeros((1, self.resolution), dtype = float)
-        new_array[0, :] = np.ndarray.flatten(self.queue[-1])
+        new_array[0, :] = np.ndarray.flatten(queue[-1])
 
         return new_array
 
@@ -311,8 +310,7 @@ class Real_Time_Spectra(object):
         Plot the spectrum plot.
         '''
         plt.plot(x, data, drawstyle='steps-mid')
-        
-        print("The plot updated list is {}".format(len(data)))
+
 
         '''
         Show the spectrum plot.
@@ -325,12 +323,12 @@ class Real_Time_Spectra(object):
         '''
         plt.pause(0.0005)
 
-    def plot_waterfall(self,plot_id):
+    def plot_waterfall(self,plot_id,queue):
         plt.figure(plot_id)
         """
         Grabs the data for waterfall plot.
         """
-        self.make_image()
+        self.make_image(queue)
         """
         Plots the data for the waterfall plot.
         """
@@ -360,7 +358,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id,arg):
+    def plot_sum(self,plot_id,queue):
         """
         Plot the sum (spectrum) figure.
         """
@@ -376,10 +374,8 @@ class Real_Time_Spectra(object):
         Get the running average
         '''
          
-        run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(queue, self.maxspectra)
         
-        
-        print("plot_sum: The length of queue of data is {}".format(len(arg)))
 
         '''
         Clear the prior spectrum figure.

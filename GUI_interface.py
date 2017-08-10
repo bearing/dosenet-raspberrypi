@@ -137,14 +137,14 @@ def make_run_gui():
         global plot_jobs
         check_plots(5)
         mgrD3S.plot_spectrum(2,argq)
-        print("The updating plot list is {}".format(argq))
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
+        global argq
         global mgrD3S
         global plot_jobs
         check_plots(6)
-        mgrD3S.plot_waterfall(1)
+        mgrD3S.plot_waterfall(1,argq)
         plot_jobs[6]=top1.after(1000,D3S_waterfall)
 
 
