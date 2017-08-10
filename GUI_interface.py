@@ -207,27 +207,24 @@ def weather_test():
     make_run_gui() 
   
 
-AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir,font="Times")    
+AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, font="Times")    
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times")
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times")
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times")
-
-maxdata_text = Label(top, text = "asd")
-maxdata_text.grid(row = 0)
 maxdata = Entry(top)
-maxdata.grid(row=1)
-
-nmerge_text = Label(top, text = "asd")
-nmerge_text.grid(row = 2)
 n_merge = Entry(top)
-n_merge.grid(row=3)
-
+maxdata_text = Label(top, text = "asf")
+nmerge_text = Label(top, text = 'asd')
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times")  
 
-AirButton.grid(row=4, columnspan=3)  
-WeatherButton.grid(row=5)
-CO2Button.grid(row=6)
-d3sButton.grid(row=7)
-RecordButton.grid(row=8)
+maxdata.pack()
+maxdata_text.pack()
+n_merge.pack()
+nmerge_text.pack()
+AirButton.pack(fill = 'both')  
+WeatherButton.pack(fill = 'both')
+CO2Button.pack(fill ='both')
+d3sButton.pack(fill = 'both')
+RecordButton.pack(fill = 'both')
     
 top.mainloop()
