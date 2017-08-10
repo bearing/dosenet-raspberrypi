@@ -69,6 +69,7 @@ class weather_DAQ(object):
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
         
+        
     def press(self):
         if len(self.time_queue)>0:
             self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
@@ -104,6 +105,8 @@ class weather_DAQ(object):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
+        print("The length of the temporary list is {}".format(len(temp_list)))
+        print("The length of the queue is {}".format(len(queue)))
     
     def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
         plt.ion()
