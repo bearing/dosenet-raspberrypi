@@ -381,7 +381,7 @@ class Real_Time_Spectra(object):
         '''
         plt.clf()
         
-
+        print("The plot updated list is {}".format(len(run_avg)))
         '''
         Plot the spectrum figure
         '''
@@ -392,7 +392,7 @@ class Real_Time_Spectra(object):
         Show the updated spectrum figure window.
         '''
         
-        print("The plot updated list is {}".format(len(run_avg)))
+        
         plt.show()
 
 
