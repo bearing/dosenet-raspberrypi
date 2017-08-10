@@ -302,7 +302,7 @@ def get_peak_counts(means,sigmas,amps):
     return counts
     
 
-def main ()  : 
+def main (rows,times)  : 
     mgr=D3S(interval=5,maxspectra=72)
     try:
         mgr.run()
