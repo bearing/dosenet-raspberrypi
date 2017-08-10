@@ -212,20 +212,18 @@ WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeat
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
 
-maxdata_text = Label(top, text = "asdf")
-maxdata_text.grid(row = 0, column = 0)
-maxdata = Entry(top)
-maxdata.grid(row = 0, column = 1)
+maxdata = Entry(top, text = "asdf")
+maxdata.pack()
 
 #n_merge = Entry(top)
 #n_merge.pack()
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
-AirButton.grid(row = 1, column = 0)   
-WeatherButton.grid(row = 2, column = 0)
-CO2Button.grid(row = 3, column = 0)
-d3sButton.grid(row = 4, column = 0)
-RecordButton.grid(row = 5, column = 0)
+AirButton.pack(fill ='both')   
+WeatherButton.pack(fill = 'both')
+CO2Button.pack(fill ='both')
+d3sButton.pack(fill = 'both')
+RecordButton.pack(fill = 'both')
     
 top.mainloop()
