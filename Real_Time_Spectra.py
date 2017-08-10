@@ -168,6 +168,7 @@ class Real_Time_Spectra(object):
         '''
         arg.append(new_spectra)
 
+        print("add_data: The length of queue of data is {}".format(len(arg)))
         '''
         Save the original size of the data queue.
         '''
@@ -378,7 +379,7 @@ class Real_Time_Spectra(object):
         run_avg, self.sum_data = self.run_avg_data(arg, self.maxspectra)
         
         
-        print("The length of run avg array is {}".format(len(run_avg)))
+        print("plot_sum: The length of queue of data is {}".format(len(arg)))
 
         '''
         Clear the prior spectrum figure.
