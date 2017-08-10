@@ -16,15 +16,15 @@ import matplotlib.pyplot as plt
 from collections import deque
 
 class weather_DAQ(object):
-    def __init__(self):
+    def __init__(self, maxdata, n_merge):
         self.sensor = None
         self.running=False
         self.time_queue=deque()
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
-        self.maxdata=10
-        self.n_merge=5
+        self.maxdata=maxdata
+        self.n_merge=n_merge
         self.temp_list=[]
         self.humid_list=[]
         self.press_list=[]

@@ -31,7 +31,7 @@ def close(index):
     if index == 6:
         mgrD3S.close(2)
 
-mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
+mgrD3S = plot_manager_D3S.Manager_D3S(plot = False, maxdata, n_merge)
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -107,6 +107,8 @@ def make_run_gui():
     def temp():
         global wdaq
         global plot_jobs
+        global max_data
+        global n_merge
         check_plots(1)
         wdaq.temp()
         plot_jobs[1]=top1.after(1000,temp)
@@ -114,6 +116,8 @@ def make_run_gui():
     def humid():
         global wdaq
         global plot_jobs
+        global maxdata
+        global n_merge
         check_plots(2)
         wdaq.humid()
         plot_jobs[2]=top1.after(1000,humid)
@@ -121,6 +125,8 @@ def make_run_gui():
     def CO2():
         global adcdaq
         global plot_jobs
+        global maxdata
+        global n_merge
         check_plots(3)
         adcdaq.plot_CO2()
         plot_jobs[3]=top1.after(1000,CO2)
@@ -128,6 +134,8 @@ def make_run_gui():
     def airquality():
         global aqdaq
         global plot_jobs
+        global maxdata
+        global n_merge
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
@@ -136,6 +144,8 @@ def make_run_gui():
         global argq
         global mgrD3S
         global plot_jobs
+        global maxdata
+        global n_merge
         check_plots(5)
         mgrD3S.plot_spectrum(2,argq)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
@@ -144,6 +154,8 @@ def make_run_gui():
         global argq
         global mgrD3S
         global plot_jobs
+        global maxdata
+        global n_merge
         check_plots(6)
         mgrD3S.plot_waterfall(1,argq)
         plot_jobs[6]=top1.after(1000,D3S_waterfall)
@@ -181,22 +193,26 @@ def make_run_gui():
     top1.mainloop()
 
 def weather_test():
+    global maxdata
+    global n_merge
     if varCO2.get(): 
         global adcdaq
-        adcdaq = adc_DAQ.adc_DAQ()
+        adcdaq = adc_DAQ.adc_DAQ(maxdata, n_merge)
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
         global aqdaq
-        aqdaq = air_quality_DAQ.air_quality_DAQ()
+        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata, n_merge)
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
         global wdaq
-        wdaq = weather_DAQ.weather_DAQ()
+        wdaq = weather_DAQ.weather_DAQ(maxdata, n_merge)
         print("create weather file")
         wdaq.create_file()
-    print(e.get())
+    
+    maxdata = maxdata.get()
+    n_merge = n_merge.get()
 
     make_run_gui() 
   
@@ -205,8 +221,10 @@ AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25", height=2, width=2)
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
-e = Entry(top)
-e.pack()
+maxdata = Entry(top)
+maxdata.pack()
+n_merge = Entry(top)
+n_merge.pack()
 
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
