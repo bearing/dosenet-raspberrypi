@@ -91,9 +91,10 @@ def make_run_gui():
     def stop():
         global jobd3s
         global job1
-        global mgrD3S
-        if jobd3s is not None:
-            mgrD3S.takedown()
+        if vard3s.get():
+            global mgrD3S
+            if jobd3s is not None:
+                mgrD3S.takedown()
         top1.after_cancel(job1)
         jobd3s = None
         check_plots(-1)
@@ -108,8 +109,6 @@ def make_run_gui():
     def temp():
         global wdaq
         global plot_jobs
-        global max_data
-        global n_merge
         check_plots(1)
         wdaq.temp()
         plot_jobs[1]=top1.after(1000,temp)
@@ -117,8 +116,6 @@ def make_run_gui():
     def humid():
         global wdaq
         global plot_jobs
-        global maxdata
-        global n_merge
         check_plots(2)
         wdaq.humid()
         plot_jobs[2]=top1.after(1000,humid)
@@ -133,8 +130,6 @@ def make_run_gui():
     def airquality():
         global aqdaq
         global plot_jobs
-        global maxdata
-        global n_merge
         check_plots(4)
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(1000,airquality)
@@ -143,8 +138,6 @@ def make_run_gui():
         global argq
         global mgrD3S
         global plot_jobs
-        global maxdata
-        global n_merge
         check_plots(5)
         mgrD3S.plot_spectrum(2,argq)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
@@ -153,8 +146,6 @@ def make_run_gui():
         global argq
         global mgrD3S
         global plot_jobs
-        global maxdata
-        global n_merge
         check_plots(6)
         mgrD3S.plot_waterfall(1,argq)
         plot_jobs[6]=top1.after(1000,D3S_waterfall)

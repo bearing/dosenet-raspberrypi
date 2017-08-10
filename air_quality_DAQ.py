@@ -27,8 +27,8 @@ class air_quality_DAQ(object):
         self.P25_queue = deque()
         self.P50_queue = deque()
         self.P100_queue = deque()
-        self.maxdata = 10
-        self.n_merge = 5
+        self.maxdata = maxdata
+        self.n_merge = n_merge
         self.PM01_list = []
         self.PM25_list = []
         self.PM10_list = []

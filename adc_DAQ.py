@@ -16,11 +16,11 @@ CS   = 25
 class adc_DAQ(object):
     def __init__(self, maxdata, n_merge):
         self.time_queue=deque()
-        self.n_merge=5
+        self.n_merge=n_merge
         self.CO2_list=[]
         self.UV_list=[]
         self.time_list=[]
-        self.maxdata=10
+        self.maxdata=maxdata
         self.CO2_queue=deque()
         self.UV_queue=deque()
         self.merge_test=False

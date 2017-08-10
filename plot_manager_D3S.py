@@ -40,8 +40,6 @@ class Manager_D3S(object):
     def __init__(self,
                  maxdata,
                  n_merge,
-                 interval=5,
-                 maxspectra=20,
                  count=0,
                  transport='any',
                  device='all',
@@ -65,8 +63,8 @@ class Manager_D3S(object):
         self.lst = None
         self.create_structures = True
 
-        self.interval = interval
-        self.maxspectra = maxspectra
+        self.n_merge = n_merge
+        self.maxdata = maxdata
         self.count = count
 
         self.config = None
