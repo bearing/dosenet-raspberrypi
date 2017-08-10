@@ -314,7 +314,7 @@ class Manager_D3S(object):
         """
         Wrapper around waterfall plotter in Real_Time_Spectra class
         """
-        self.rt_plot_waterfall()
+        self.rt_plot.plot_waterfall()
 
     def plot_spectrum(self):
         """
