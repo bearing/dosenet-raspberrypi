@@ -314,13 +314,13 @@ class Real_Time_Spectra(object):
         '''
         Show the spectrum plot.
         '''
-        plt.show()
+        #plt.show()
 
         '''
         Wait before displaying another plot. Otherwise, wait the specified
         number of seconds before continuing with the code execution.
         '''
-        plt.pause(0.0005)
+        #plt.pause(0.0005)
 
     def plot_waterfall(self,plot_id):
         plt.figure(plot_id)
