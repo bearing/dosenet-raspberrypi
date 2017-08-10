@@ -1,11 +1,12 @@
 
 #!/usr/bin/env/python
 import Tkinter
+from Tkinter import Entry
 import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
-from multiprocessing import Process, Manager, Pool
+from multiprocessing import Process, Manager
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -195,6 +196,7 @@ def weather_test():
         wdaq = weather_DAQ.weather_DAQ()
         print("create weather file")
         wdaq.create_file()
+    print(e.get())
 
     make_run_gui() 
   
@@ -203,6 +205,9 @@ AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, height
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25", height=2, width=2)
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25", height=2, width=2)
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25", height=2, width=2)
+e = Entry(top)
+
+
 RecordButton = Tkinter.Button(top, text="Record Data", height=2, width=20, command = weather_test, font="Times 25")  
 
 AirButton.pack(fill ='both')   
@@ -210,5 +215,6 @@ WeatherButton.pack(fill = 'both')
 CO2Button.pack(fill ='both')
 d3sButton.pack(fill = 'both')
 RecordButton.pack(fill = 'both')
+e.pack()
     
 top.mainloop()
