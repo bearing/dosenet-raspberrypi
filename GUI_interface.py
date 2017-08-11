@@ -7,8 +7,6 @@ import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
 import threading 
-import os
-import signal
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
@@ -92,7 +90,7 @@ def make_run_gui():
         if vard3s.get():
             global mgrD3S
             if jobd3s is not None:
-                os.kill(os.getpid(), signal.SIGINT)
+                mgrD3S.takedown()
                 print(mgrD3S.running)
         top1.after_cancel(job1)
         jobd3s = None
