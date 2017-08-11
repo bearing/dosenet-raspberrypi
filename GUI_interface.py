@@ -6,6 +6,7 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
+import threading 
 from multiprocessing import Process, Manager
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
@@ -74,8 +75,8 @@ def make_run_gui():
         global argq
         if jobd3s is None:
             manager = Manager()
-            argq = manager.list()
-            jobd3s = Process(target=start_D3S, args=()) 
+            argq = manager.list()            
+            jobd3s = threading.Thread(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
             except:
