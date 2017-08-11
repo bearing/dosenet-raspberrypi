@@ -92,7 +92,7 @@ def make_run_gui():
         if vard3s.get():
             global mgrD3S
             if jobd3s is not None:
-                os.kill(pgrep, signal.SIGINT)
+                os.kill(os.getpid(), signal.SIGINT)
                 print(mgrD3S.running)
         top1.after_cancel(job1)
         jobd3s = None
