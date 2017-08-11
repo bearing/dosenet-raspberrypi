@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 # import seaborn as sns
 # from ggplot import *
 from mpltools import style
-from mpltools import layout
 
 # import Tkinter
 # from PySide.QtGui import QApplication
