@@ -240,6 +240,7 @@ class Manager_D3S(object):
         done_devices = set()
         try:
             while self.running:
+                print("Plot_manager.run: getting data")
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
                         if self.create_structures:
