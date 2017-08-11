@@ -243,28 +243,28 @@ class Manager_D3S(object):
                 print("Plot_manager.run: getting data")
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
-                        if self.create_structures:
-                            self.total = np.array(reading[4])
-                            self.lst = np.array([reading[4]])
-                            self.create_structures = False
-                        else:
-                            self.total += np.array(reading[4])
-                            self.lst = np.concatenate(
-                                (self.lst, [np.array(reading[4])]))
-                        serial = reading[0]
-                        dev_count = reading[1]
-                        if serial not in done_devices:
-                            this_start, this_end = self.get_interval(
-                                time.time() - self.interval)
-                            self.handle_spectra(
-                                this_start, this_end, reading[4])
-                            self.rt_plot.make_image()
-                        if dev_count >= self.count > 0:
-                            done_devices.add(serial)
-                            controller.stop_collector(serial)
-                        if len(done_devices) >= len(devs):
-                            break
-                        return
+                        while self.running:
+                            if self.create_structures:
+                                self.total = np.array(reading[4])
+                                self.lst = np.array([reading[4]])
+                                self.create_structures = False
+                            else:
+                                self.total += np.array(reading[4])
+                                self.lst = np.concatenate(
+                                        (self.lst, [np.array(reading[4])]))
+                                serial = reading[0]
+                                dev_count = reading[1]
+                            if serial not in done_devices:
+                                this_start, this_end = self.get_interval(
+                                        time.time() - self.interval)
+                                self.handle_spectra(
+                                        this_start, this_end, reading[4])
+                                self.rt_plot.make_image()
+                            if dev_count >= self.count > 0:
+                                done_devices.add(serial)
+                                controller.stop_collector(serial)
+                            if len(done_devices) >= len(devs):
+                                break
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
