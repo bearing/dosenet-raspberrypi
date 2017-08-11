@@ -252,8 +252,8 @@ class Manager_D3S(object):
                                 self.total += np.array(reading[4])
                                 self.lst = np.concatenate(
                                         (self.lst, [np.array(reading[4])]))
-                                serial = reading[0]
-                                dev_count = reading[1]
+                            serial = reading[0]
+                            dev_count = reading[1]
                             if serial not in done_devices:
                                 this_start, this_end = self.get_interval(
                                         time.time() - self.interval)
