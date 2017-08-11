@@ -91,7 +91,7 @@ def make_run_gui():
         if vard3s.get():
             global mgrD3S
             if jobd3s is not None:
-                #os.system("pkill -9 -f GUI_interface.py")
+                os.kill(os.getpid(), signal.SIGKILL)
                 mgrD3S.takedown()
                 print(mgrD3S.running)
         top1.after_cancel(job1)
