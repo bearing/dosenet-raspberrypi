@@ -91,7 +91,7 @@ def make_run_gui():
         if vard3s.get():
             global mgrD3S
             if jobd3s is not None:
-                os.system("Ctrl+C")
+                os.kill(os.getpid())
                 print(mgrD3S.running)
         top1.after_cancel(job1)
         jobd3s = None
