@@ -61,7 +61,7 @@ def make_run_gui():
     def start_D3S():
         global mgrD3S
         if vard3s.get():
-            mgrD3S.run('''argq''')
+            mgrD3S.run()
 
 
     def start():        
