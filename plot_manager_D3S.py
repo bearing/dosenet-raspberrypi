@@ -212,9 +212,9 @@ class Manager_D3S(object):
 
     def close(self, plot_id):
         self.rt_plot.close(plot_id)
-        print("Plot_id in mgrD3S {}".format(plot_id))
 
     def run(self):
+        print("self.running in plot manager d3s is {}".format(self.running))
         """
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
