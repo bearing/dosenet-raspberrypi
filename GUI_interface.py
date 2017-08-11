@@ -59,10 +59,9 @@ def make_run_gui():
                     close(i)
                     
     def start_D3S():
-        global argq
         global mgrD3S
         if vard3s.get():
-            mgrD3S.run(argq)
+            mgrD3S.run('''argq''')
 
 
     def start():        
@@ -72,10 +71,7 @@ def make_run_gui():
         global adcdaq
         global mgrD3S
         global aqdaq
-        global argq
-        if jobd3s is None:
-            manager = Manager()
-            argq = manager.list()            
+        if jobd3s is None:           
             jobd3s = threading.Thread(target=start_D3S, args=()) 
             try:
                 jobd3s.start()
@@ -136,19 +132,17 @@ def make_run_gui():
         plot_jobs[4]=top1.after(1000,airquality)
 
     def D3S_spectra():
-        global argq
         global mgrD3S
         global plot_jobs
         check_plots(5)
-        mgrD3S.plot_spectrum(2,argq)
+        mgrD3S.plot_spectrum(2)
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
-        global argq
         global mgrD3S
         global plot_jobs
         check_plots(6)
-        mgrD3S.plot_waterfall(1,argq)
+        mgrD3S.plot_waterfall(1)
         plot_jobs[6]=top1.after(1000,D3S_waterfall)
 
 

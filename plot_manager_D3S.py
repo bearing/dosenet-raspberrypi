@@ -214,7 +214,7 @@ class Manager_D3S(object):
         self.rt_plot.close(plot_id)
         print("Plot_id in mgrD3S {}".format(plot_id))
 
-    def run(self,arg):
+    def run(self):
         """
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
@@ -258,7 +258,7 @@ class Manager_D3S(object):
                                 time.time() - self.interval)
 
                             self.handle_spectra(
-                                this_start, this_end, reading[4],arg)
+                                this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -307,10 +307,10 @@ class Manager_D3S(object):
 
         self.rt_plot.plot_waterfall(plot_id, queue)
 
-    def plot_spectrum(self,plot_id,arg):
+    def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_sum(plot_id,arg)
+        self.rt_plot.plot_sum(plot_id)
 
     def plot_fitter(self):
         """
