@@ -6,8 +6,10 @@ import weather_DAQ
 import air_quality_DAQ
 import adc_DAQ
 import plot_manager_D3S
+import Real_Time_Spectra
 from multiprocessing import Process, Manager
 
+rt_spec = Real_Time_Spectra.Real_Time_Spectra
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -27,9 +29,9 @@ def close(index):
     if index == 4:
         aqdaq.close(1)
     if index == 5:
-        mgrD3S.close(1)
+        rt_spec.close(1)
     if index == 6:
-        mgrD3S.close(2)
+        rt_spec.close(2)
 
 
 top = Tkinter.Tk()
@@ -213,8 +215,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 maxdata = Entry(top)
 n_merge = Entry(top)
-maxdata_text = Label(top, text = "Number of x entries", font = "Times 18")
-nmerge_text = Label(top, text = 'Nuneber of merged entries', font = "Times 18")
+maxdata_text = Label(top, text = "Data points on plot", font = "Times 18")
+nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 18")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
  
 AirButton.pack(pady = 3)  
