@@ -322,11 +322,11 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra, queue):
+    def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
-        self.rt_plot.add_data(spectra, self.maxspectra, queue)
+        self.rt_plot.add_data(spectra, self.maxspectra)
         #print("Total counts is {}".format(sum(spectra)))
 
         if self.plot:
@@ -335,7 +335,7 @@ class Manager_D3S(object):
             Plot the data.
             '''
             self.plot_waterfall()
-            self.plot_spectrum(queue)
+            self.plot_spectrum()
             # self.plot_fitter()
 
             '''
