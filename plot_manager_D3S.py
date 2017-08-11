@@ -353,9 +353,9 @@ class Manager_D3S(object):
 
         self.running = False
         self.data_handler.send_all_to_backlog()
-
-        del(self)
         self.run()
+        
+        del(self)
         
     @classmethod
     def from_argparse(cls):
