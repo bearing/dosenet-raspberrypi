@@ -214,7 +214,6 @@ class Manager_D3S(object):
         self.rt_plot.close(plot_id)
 
     def run(self):
-        print("self.running in plot manager d3s is {}".format(self.running))
         """
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
@@ -256,7 +255,7 @@ class Manager_D3S(object):
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
-
+                            self.rt_plot.make_image()
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
                         if dev_count >= self.count > 0:
