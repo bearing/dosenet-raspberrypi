@@ -355,8 +355,8 @@ class Manager_D3S(object):
         self.data_handler.send_all_to_backlog()
 
         del(self)
+        self.run()
         
-        quit()
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
