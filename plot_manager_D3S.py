@@ -353,7 +353,6 @@ class Manager_D3S(object):
 
         self.running = False
         self.data_handler.send_all_to_backlog()
-        self.run()
         
         del(self)
         
