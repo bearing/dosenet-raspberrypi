@@ -302,10 +302,10 @@ class Manager_D3S(object):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
-    def plot_waterfall(self, plot_id, queue):
+    def plot_waterfall(self, plot_id):
         """Wrapper around waterfall plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_waterfall(plot_id, queue)
+        self.rt_plot.plot_waterfall(plot_id)
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
@@ -334,8 +334,8 @@ class Manager_D3S(object):
             '''
             Plot the data.
             '''
-            self.plot_waterfall()
-            self.plot_spectrum()
+            self.plot_waterfall(1)
+            self.plot_spectrum(2)
             # self.plot_fitter()
 
             '''
