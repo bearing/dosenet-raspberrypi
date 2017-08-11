@@ -8,7 +8,6 @@ import adc_DAQ
 import plot_manager_D3S
 import threading 
 import os
-import system
 
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
