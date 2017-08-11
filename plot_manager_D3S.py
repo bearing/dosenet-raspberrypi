@@ -264,6 +264,7 @@ class Manager_D3S(object):
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
                             break
+                        return
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
