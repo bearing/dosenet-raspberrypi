@@ -80,6 +80,7 @@ def make_run_gui():
         if varWeather.get(): 
             wdaq.start()
         if varAir.get():
+            
             aqdaq.start()
         if varCO2.get():
             adcdaq.start()                
@@ -88,13 +89,13 @@ def make_run_gui():
     def stop():
         global jobd3s
         global job1
+        top1.after_cancel(job1)
         if vard3s.get():
             global mgrD3S
             if jobd3s is not None:
                 os.kill(os.getpid(), signal.SIGKILL)
                 mgrD3S.takedown()
                 print(mgrD3S.running)
-        top1.after_cancel(job1)
         jobd3s = None
         check_plots(-1)
 
