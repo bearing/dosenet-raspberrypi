@@ -8,7 +8,7 @@ import adc_DAQ
 import plot_manager_D3S
 import threading 
 import os
-import signal
+
 # pressure, temp, humidity, co2, air, spectra, waterfall
 plot_jobs = [None, None, None, None, None, None, None]
 
@@ -43,7 +43,7 @@ varWeather = Tkinter.BooleanVar()
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    top1.geometry('+0+390')
+    top1.geometry('+0+410')
     global job1
     global jobd3s
     jobd3s = None
@@ -211,8 +211,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 maxdata = Entry(top)
 n_merge = Entry(top)
-maxdata_text = Label(top, text = "Data points on plot", font = "Times 18")
-nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 18")
+maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
+nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
  
 AirButton.pack(pady = 3)  
@@ -223,6 +223,6 @@ maxdata_text.pack()
 maxdata.pack()
 nmerge_text.pack()
 n_merge.pack()
-RecordButton.pack(pady = 8)
+RecordButton.pack(pady = 6)
     
 top.mainloop()
