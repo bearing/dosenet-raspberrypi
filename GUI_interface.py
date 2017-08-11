@@ -28,9 +28,9 @@ def close(index):
     if index == 4:
         aqdaq.close(1)
     if index == 5:
-        mgrD3S.close(1)
-    if index == 6:
         mgrD3S.close(2)
+    if index == 6:
+        mgrD3S.close(1)
 
 
 top = Tkinter.Tk()
