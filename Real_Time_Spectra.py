@@ -23,8 +23,6 @@ class Real_Time_Spectra(object):
     """
     Class to control the real time spectra plotting
     """
-    def close(self,plot_id):
-        plt.close(plot_id)
 
     def __init__(self, manager=None, verbosity=1, logfile=None,
                  resolution=256):
@@ -219,6 +217,10 @@ class Real_Time_Spectra(object):
         '''
         
         return running_avg_array, sum_data
+    
+    def close(self,plot_id):
+        plt.close(plot_id)
+        print("Plot_id in real time spectra {}".format(plot_id))
 
     def rebin(self, data, n=4):
         """

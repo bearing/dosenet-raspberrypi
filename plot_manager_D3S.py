@@ -212,7 +212,7 @@ class Manager_D3S(object):
 
     def close(self, plot_id):
         self.rt_plot.close(plot_id)
-        print(plot_id)
+        print("Plot_id in mgrD3S {}".format(plot_id))
 
     def run(self,arg):
         """
