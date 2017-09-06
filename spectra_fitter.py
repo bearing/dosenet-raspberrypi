@@ -185,7 +185,7 @@ def peak_finder(array,lower,upper,count_offset):
     points = ar(range(lower,upper))
     peak = list(array[lower:upper])
     counts = ar(peak)
-    print('Input spectrum array length = {}'.format(len(array)))
+    print('Input spectrum array length = {}'.format(len(array)))  
     print('Truncated counts array from {1} - {2}, length = {3}'.format(lower,upper,len(counts)))
     # Initialize fit parameters based on rough estimates of mean,sigma,amp,etc.
     #  - mean estimated as center of fit window - set window accordingly
