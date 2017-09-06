@@ -18,7 +18,7 @@ class Real_Time_Spectra(object):
     """
 
     def __init__(self, manager=None, verbosity=1, logfile=None,
-                 resolution=256):
+                 resolution=4096):
         """
         Initiate object
         """
@@ -112,9 +112,7 @@ class Real_Time_Spectra(object):
         Applies to waterfall plot.
         """
         # Create a new spectrum by binning the old spectrum.
-        print('input spectra length = {}'.format(len(spectra)))
         new_spectra = self.rebin(spectra)
-        print('new spectrum length = {}'.format(len(new_spectra)))
 
         # Add the new spectrum to queue.
         self.queue.append(new_spectra)
@@ -178,7 +176,7 @@ class Real_Time_Spectra(object):
         """
         a = len(data)/n
 
-        new_data = np.zeros((self.resolution, 1))
+        new_data = np.zeros((int(self.resolution/n), 1))
 
         i = 0
 
