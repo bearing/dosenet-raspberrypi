@@ -112,7 +112,7 @@ class Real_Time_Spectra(object):
         Applies to waterfall plot.
         """
         # Create a new spectrum by binning the old spectrum.
-        new_spectra = self.rebin(spectra)
+        new_spectra = self.rebin(spectra,2)
 
         # Add the new spectrum to queue.
         self.queue.append(new_spectra)
