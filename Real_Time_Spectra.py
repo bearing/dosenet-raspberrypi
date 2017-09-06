@@ -296,7 +296,7 @@ class Real_Time_Spectra(object):
         plt.figure(2)
 
         # Get the running average
-        run_avg,self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
+        self.run_avg,self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
 
         plt.clf()
 
