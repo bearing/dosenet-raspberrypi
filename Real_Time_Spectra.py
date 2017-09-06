@@ -212,11 +212,11 @@ class Real_Time_Spectra(object):
 
                 self.data = self.data[:-1]
 
-    def fix_array(self):
+    def fix_array(self, n=4):
         """
         Used to format arrays for the waterfall plot.
         """
-        new_array = np.zeros((1, self.resolution), dtype = float)
+        new_array = np.zeros((1, self.resolution/n), dtype = float)
         new_array[0, :] = np.ndarray.flatten(self.queue[-1])
 
         return new_array
