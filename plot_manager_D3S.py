@@ -35,7 +35,6 @@ def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
     print 'Got Sigterm!'
-    sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
@@ -330,7 +329,7 @@ class Manager_D3S(object):
 
         total_time=self.interval*self.maxspectra
         times = np.linspace(self.interval,total_time + 1,self.interval)
-        spectra_fitter.main(self.rt_plot.sum_data, times)
+        spectra_fitter.main(self.rt_plot.run_avg, times)
 
     def handle_spectra(self, this_start, this_end, spectra):
         """
