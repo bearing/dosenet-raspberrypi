@@ -118,7 +118,7 @@ class Real_Time_Spectra(object):
         self.queue.append(new_spectra)
 
         # Save the original size of the data queue.
-        da.pya_length = len(self.queue)
+        data_length = len(self.queue)
 
         # Pop off the first data point if the total number of counts in the
         # spectrum is more than the count window defined by the sum interval
