@@ -301,8 +301,36 @@ def get_peak_counts(means,sigmas,amps):
         count,err = quad(gaus,0,1000,args=(amps[i],means[i],sigmas[i]))
         counts.append(count)
     return counts
-    
+ '''   
+def get_isotope_counts(rows):
+    K_peaks, K_sigmas, K_amps = get_peaks(rows,2160,2560)
+    Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,656,1296,1)
+    Tl_peaks, Tl_sigmas, Tl_amps = get_peaks(rows,3600,4000)
+    #-------------------------------------------------------------------------#
+    # Break apart mean,sigma,amp values and uncertainties
+    #-------------------------------------------------------------------------#
+    K_ch = np.asarray([i[0] for i in K_peaks])
+    K_sig = [i[0] for i in K_sigmas]
+    K_A = [i[0] for i in K_amps]
 
+    Bi_ch = np.asarray([i[0] for i in Bi_peaks])
+    Bi_sig = [i[0] for i in Bi_sigmas]
+    Bi_A = [i[0] for i in Bi_amps]
+
+    Tl_ch = np.asarray([i[0] for i in Tl_peaks])
+    Tl_sig = [i[0] for i in Tl_sigmas]
+    Tl_A = [i[0] for i in Tl_amps]
+
+    #-------------------------------------------------------------------------#
+    # Get arrays of counts inside K-40, Bi-214,and Tl-208 peaks using fit results 
+    #-------------------------------------------------------------------------#
+    K_counts = get_peak_counts(K_ch,K_sig,K_A)
+    Bi_counts = get_peak_counts(Bi_ch,Bi_sig,Bi_A)
+    Tl_counts= get_peak_counts(Tl_ch,Tl_sig,Tl_A)
+    #-------------------------------------------------------------------------#
+
+    return K_counts, Bi_counts, Tl_counts    
+'''
 def main (rows,times)  : 
     '''
     mgr=D3S(interval=5,maxspectra=72)
@@ -322,10 +350,10 @@ def main (rows,times)  :
     cpm_error = []
     line = 0 
    
-    K_peaks, K_sigmas, K_amps = get_peaks(rows,2160,2560)
-    Bi_peaks,Bi_sigmas,Bi_amps = get_double_peaks(rows,640,1280)
-    Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,656,1296,1)
-    Tl_peaks, Tl_sigmas, Tl_amps = get_peaks2(rows,3600,4000)
+    K_peaks, K_sigmas, K_amps = get_peaks(rows,540,640) #assume a rebin of 4
+    Bi_peaks,Bi_sigmas,Bi_amps = get_double_peaks(rows,160,320)
+    Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,164,324,1)
+    Tl_peaks, Tl_sigmas, Tl_amps = get_peaks2(rows,900,1000)
     
     #-------------------------------------------------------------------------#
     # Break apart mean,sigma,amp values and uncertainties
