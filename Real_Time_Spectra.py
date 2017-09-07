@@ -240,7 +240,8 @@ class Real_Time_Spectra(object):
         plt.yscale('log')
 
         # Plot the spectrum plot.
-        x = np.linspace(0, 4096, 256)
+        x = range(0,len(data))
+        #x = np.linspace(0, 4096, 256)
         plt.plot(x,
                  data,
                  drawstyle='steps-mid')
