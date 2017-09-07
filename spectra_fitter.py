@@ -301,7 +301,7 @@ def get_peak_counts(means,sigmas,amps):
         count,err = quad(gaus,0,1000,args=(amps[i],means[i],sigmas[i]))
         counts.append(count)
     return counts
- '''   
+'''   
 def get_isotope_counts(rows):
     K_peaks, K_sigmas, K_amps = get_peaks(rows,2160,2560)
     Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,656,1296,1)
