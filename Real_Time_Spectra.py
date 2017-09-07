@@ -216,7 +216,7 @@ class Real_Time_Spectra(object):
         """
         Used to format arrays for the waterfall plot.
         """
-        new_array = np.zeros((1, self.resolution/n), dtype = float)
+        new_array = np.zeros((1, int(self.resolution/n)), dtype = float)
         new_array[0, :] = np.ndarray.flatten(self.queue[-1])
 
         return new_array
