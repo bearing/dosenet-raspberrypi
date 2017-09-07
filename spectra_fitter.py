@@ -331,7 +331,7 @@ def get_isotope_counts(rows):
 
     return K_counts, Bi_counts, Tl_counts    
 '''
-def main (rows,times)  : 
+def main (rows,times): 
     '''
     mgr=D3S(interval=5,maxspectra=72)
     try:
