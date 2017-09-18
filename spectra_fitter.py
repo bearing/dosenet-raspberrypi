@@ -264,6 +264,11 @@ def get_peaks2(rows, lower_limit=3600, upper_limit=4080, count_offset=100):
     amps.append([fit_pars[0],fit_errs[0]])
     
     return means,sigmas,amps
+
+def get_raw_counts (spectrum,low=0,high=4096):
+    counts=sum(spectrum[low:high])
+    return counts
+
 #--------------------------------------------------------------------------#
 # Methods for performing calculations on fit results
 #--------------------------------------------------------------------------#
@@ -300,7 +305,8 @@ def get_peak_counts(means,sigmas,amps):
         counts.append(count)
     return counts
    
-def get_isotope_counts(rows):
+def get_isotope_counts(rows, n=4):
+    # lower/upper: 2160/n, int(2560/n)
     K_peaks, K_sigmas, K_amps = get_peaks(rows,540,640) #assume a rebin of 4
     Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,164,324,1)
     Tl_peaks, Tl_sigmas, Tl_amps = get_peaks2(rows,900,1000)
@@ -318,7 +324,6 @@ def get_isotope_counts(rows):
     Tl_ch = np.asarray([i[0] for i in Tl_peaks])
     Tl_sig = [i[0] for i in Tl_sigmas]
     Tl_A = [i[0] for i in Tl_amps]
-
     #-------------------------------------------------------------------------#
     # Get arrays of counts inside K-40, Bi-214,and Tl-208 peaks using fit results 
     #-------------------------------------------------------------------------#
@@ -328,6 +333,12 @@ def get_isotope_counts(rows):
     #-------------------------------------------------------------------------#
 
     return K_counts, Bi_counts, Tl_counts    
+
+def low_stat_isotope_counts(rows,n=4):
+    k_counts=get_raw_counts(rows,540,640)
+    Bi_counts=get_raw_counts(rows,160,320)
+    Tl_counts=get_raw_counts(rows,900,1000)
+    return k_counts,Bi_counts,Tl_counts
 
 def main (rows,times): 
     '''
