@@ -19,7 +19,7 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
-import spectra_fitter
+#import spectra_fitter
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -226,12 +226,13 @@ class Manager_D3S(object):
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
         """
-
+        print ('Segmentation fault occuring at beganing')
         if self.transport == 'any':
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
         print ('Discovered %s' % devs)
+        print ('Segmentation fault occuring not beganing')
         if len(devs) <= 0:
             return
 
@@ -246,6 +247,7 @@ class Manager_D3S(object):
             return
 
         done_devices = set()
+        print ('Segmentation fault occuring at middle')
         try:
             while self.running:
                 with kromek.Controller(devs, self.interval) as controller:
@@ -258,6 +260,7 @@ class Manager_D3S(object):
                             # self.total += np.array(reading[4])
                             # self.lst = np.concatenate(
                                 # (self.lst, [np.array(reading[4])]))
+                        print ('Segmentation fault occuring inside while loop')
                         serial = reading[0]
                         dev_count = reading[1]
                         if serial not in done_devices:
@@ -271,6 +274,7 @@ class Manager_D3S(object):
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
                             break
+            print ('Segmentation fault occuring outside while loop')
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
@@ -320,19 +324,19 @@ class Manager_D3S(object):
         Wrapper around spectrum plotter in Real_Time_Spectra class
         """
         self.rt_plot.plot_sum()
-
+    '''
     def plot_fitter(self):
         """
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
 
-        total_time=self.interval*self.maxspectra 
-        times = np.linspace(self.interval,total_time + 1,self.interval)
-        K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
-        self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
-        spectra_fitter.main(self.rt_plot.run_avg, times)
-
+        #total_time=self.interval*self.maxspectra 
+        #times = np.linspace(self.interval,total_time + 1,self.interval)
+        #K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
+        #self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,self.maxspectra)
+        #spectra_fitter.main(self.rt_plot.run_avg, times)
+    '''
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
@@ -350,8 +354,8 @@ class Manager_D3S(object):
             '''
             self.plot_waterfall()
             self.plot_spectrum()
-            self.plot_fitter()
-
+            #self.plot_fitter()
+            self.plot_isotopes()
             '''
             Uncomment 3 lines below to plot the spectra fitter plots.
             '''
