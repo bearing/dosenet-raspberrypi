@@ -158,14 +158,14 @@ class Real_Time_Spectra(object):
         
         data_length1=len(self.K_data_counts)
         data_length2=len(self.Bi_data_counts)
-        data_length3=len(self.Tl__data_counts)
-        
+        data_length3=len(self.Tl_data_counts)
+    
         if  data_length1 > maxspectra:
             self.K_data_counts.popleft()
         if  data_length2 > maxspectra:
             self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
-            self.Tl__data_counts.popleft()
+            self.Tl_data_counts.popleft()
 
     def run_avg_data(self, data, maxspectra):
         """
