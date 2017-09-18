@@ -324,19 +324,19 @@ class Manager_D3S(object):
         Wrapper around spectrum plotter in Real_Time_Spectra class
         """
         self.rt_plot.plot_sum()
-    '''
+    
     def plot_fitter(self):
         """
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
-
+        self.rt_plot_isotopes()
         #total_time=self.interval*self.maxspectra 
         #times = np.linspace(self.interval,total_time + 1,self.interval)
         #K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
         #self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,self.maxspectra)
         #spectra_fitter.main(self.rt_plot.run_avg, times)
-    '''
+    
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
@@ -355,7 +355,7 @@ class Manager_D3S(object):
             self.plot_waterfall()
             self.plot_spectrum()
             #self.plot_fitter()
-            self.plot_isotopes()
+            self. plot_isotopes()
             '''
             Uncomment 3 lines below to plot the spectra fitter plots.
             '''
