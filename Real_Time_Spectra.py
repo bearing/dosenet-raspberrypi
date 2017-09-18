@@ -154,7 +154,7 @@ class Real_Time_Spectra(object):
     def add_isotope_counts(self,K_counts,Bi_counts,Tl_counts,maxspectra):
         self.K_data_counts.append(K_counts)
         self.Bi_data_counts.append(Bi_counts)
-        self.Tl__data_counts.append(Tl_counts)
+        self.Tl_data_counts.append(Tl_counts)
         
         data_length1=len(self.K_data_counts)
         data_length2=len(self.Bi_data_counts)
