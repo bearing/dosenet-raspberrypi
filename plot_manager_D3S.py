@@ -325,7 +325,7 @@ class Manager_D3S(object):
         """
         self.rt_plot.plot_sum()
     
-    def plot_fitter(self):
+    def plot_isotopes(self):
         """
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
