@@ -34,7 +34,7 @@ from globalvalues import DEFAULT_INTERVAL_TEST_D3S
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
-    print 'Got Sigterm!'
+    print ('Got Sigterm!')
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
@@ -231,7 +231,7 @@ class Manager_D3S(object):
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
+        print ('Discovered %s' % devs)
         if len(devs) <= 0:
             return
 
@@ -327,8 +327,10 @@ class Manager_D3S(object):
         spectra_fitter class
         """
 
-        total_time=self.interval*self.maxspectra
+        total_time=self.interval*self.maxspectra 
         times = np.linspace(self.interval,total_time + 1,self.interval)
+        K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
+        self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
         spectra_fitter.main(self.rt_plot.run_avg, times)
 
     def handle_spectra(self, this_start, this_end, spectra):
@@ -339,7 +341,7 @@ class Manager_D3S(object):
         '''
         Add the spectra to the queue.
         '''
-        self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
+        self.rt_plot.add_data( spectra, self.maxspectra)
 
         if self.plot:
 
