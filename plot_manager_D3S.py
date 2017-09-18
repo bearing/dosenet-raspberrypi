@@ -355,7 +355,7 @@ class Manager_D3S(object):
             self.plot_waterfall()
             self.plot_spectrum()
             #self.plot_fitter()
-            self. plot_isotopes()
+            self.plot_isotopes()
             '''
             Uncomment 3 lines below to plot the spectra fitter plots.
             '''
