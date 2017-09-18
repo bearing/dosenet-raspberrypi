@@ -182,12 +182,9 @@ def peak_finder(array,lower,upper,count_offset):
     Returns:
       - list of fit parameters and list of parameter errors
     '''
-    points = ar(range(lower,upper))
+    points = ar(range(lower,upper+1))
     peak = list(array[lower:upper])
     counts = ar(peak)
-    print('Input spectrum array length = {}'.format(len(array)))  
-    print('Truncated counts array from {} - {}, length = {}'.format(lower,upper,len(counts)))
-    print('Number of points = {}'.format(points[-1]-points[0]))
     # Initialize fit parameters based on rough estimates of mean,sigma,amp,etc.
     #  - mean estimated as center of fit window - set window accordingly
     #  - gaussian amp and expo shift estimated based on counts at left edge
@@ -302,11 +299,11 @@ def get_peak_counts(means,sigmas,amps):
         count,err = quad(gaus,0,1000,args=(amps[i],means[i],sigmas[i]))
         counts.append(count)
     return counts
-'''   
+   
 def get_isotope_counts(rows):
-    K_peaks, K_sigmas, K_amps = get_peaks(rows,2160,2560)
-    Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,656,1296,1)
-    Tl_peaks, Tl_sigmas, Tl_amps = get_peaks(rows,3600,4000)
+    K_peaks, K_sigmas, K_amps = get_peaks(rows,540,640) #assume a rebin of 4
+    Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,164,324,1)
+    Tl_peaks, Tl_sigmas, Tl_amps = get_peaks2(rows,900,1000)
     #-------------------------------------------------------------------------#
     # Break apart mean,sigma,amp values and uncertainties
     #-------------------------------------------------------------------------#
@@ -331,7 +328,7 @@ def get_isotope_counts(rows):
     #-------------------------------------------------------------------------#
 
     return K_counts, Bi_counts, Tl_counts    
-'''
+
 def main (rows,times): 
     '''
     mgr=D3S(interval=5,maxspectra=72)
@@ -394,7 +391,7 @@ def main (rows,times):
     #-------------------------------------------------------------------------#
     # Plots of everything we are interested in!
     #-------------------------------------------------------------------------#
-    
+    '''
     #Plotting the the three Isotopes on same plot
     fig=plt.figure()
     #plt.plot_date(times,K_counts,'bo',label='k-40')
@@ -415,6 +412,7 @@ def main (rows,times):
     # Show all plots - add autosave?
     plt.show()
     peaksplot= spectrum_peaks_plotter(rows)
+    '''
 if __name__ == '__main__':
 	# import data from weather station for all isotopes
      main ()
