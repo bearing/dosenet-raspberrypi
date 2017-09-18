@@ -9,9 +9,22 @@ import Tkinter
 from auxiliaries import set_verbosity
 # import time
 from collections import deque
+#import spectra_fitter
 # from multiprocessing import Queue as que
-
-
+import matplotlib.patches as patches
+import matplotlib.path as path
+import matplotlib.dates as mdates
+from dateutil.parser import parse
+from datetime import datetime
+from datetime import timedelta
+import pytz
+from matplotlib.backends.backend_pdf import PdfPages
+from scipy import optimize
+from scipy import asarray as ar,exp
+from scipy.integrate import quad
+import pandas as pd
+import spectra_fitter 
+from pandas import DataFrame
 class Real_Time_Spectra(object):
     """
     Class to control the real time spectra plotting
@@ -32,7 +45,10 @@ class Real_Time_Spectra(object):
 
         self.interval = manager.interval
         self.queue = deque()
-
+        self.times = []
+        self.K_data_counts = []
+        self.Bi_data_counts = []
+        self.Tl_data_counts = []
         self.maxspectra = manager.maxspectra
 
         self.data = None
@@ -106,14 +122,16 @@ class Real_Time_Spectra(object):
 
         # plt.ioff()
 
-    def add_data(self, spectra, maxspectra, queue):
+    def add_data(self, spectra, maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
         """
         # Create a new spectrum by binning the old spectrum.
+        global times
         new_spectra = self.rebin(spectra)
-
+        K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(spectra)
+        self.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
         # Add the new spectrum to queue.
         self.queue.append(new_spectra)
 
@@ -126,9 +144,28 @@ class Real_Time_Spectra(object):
         if data_length > maxspectra:
 
             self.queue.popleft()
-
+        self.times.append(datetime.now())
+        
+        if len(self.times) > maxspectra:
+            self.times.popleft()
+            
             # # Save the original size of the data queue.
             # data_length = len(data)
+    def add_isotope_counts(self,K_counts,Bi_counts,Tl_counts,maxspectra):
+        self.K_data_counts.append(K_counts)
+        self.Bi_data_counts.append(Bi_counts)
+        self.Tl__data_counts.append(Tl_counts)
+        
+        data_length1=len(self.K_data_counts)
+        data_length2=len(self.Bi_data_counts)
+        data_length3=len(self.Tl__data_counts)
+        
+        if  data_length1 > maxspectra:
+            self.K_data_counts.popleft()
+        if  data_length2 > maxspectra:
+            self.Bi_data_counts.popleft()
+        if  data_length3 > maxspectra:
+            self.Tl__data_counts.popleft()
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -286,12 +323,28 @@ class Real_Time_Spectra(object):
         # plt.pause(self.interval)
         plt.pause(0.0005)
         # plt.close()
-
+    def plot_isotopes(self):
+        #Plotting the the three Isotopes on same plot
+        fig=plt.figure()
+        #plt.plot_date(times,K_counts,'bo',label='k-40')
+        plt.errorbar(times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
+        plt.errorbar(times,self.Bi_data_counts,yerr=np.sqrt(self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
+        plt.errorbar(times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        plt.ylim(0,1800)
+        plt.xlabel('Time')
+        plt.ylabel('counts')
+        plt.title('K-40,Bi-214,Tl-208 counts vs Time')
+        #plt.legend(bbox_to_anchor=(1.2, 0.05))
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+          ncol=3, fancybox=True, shadow=False,numpoints=1)
+        fig.autofmt_xdate()
+    
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
         """
-
         # plt.figure(figsize=(25,15))
 
         plt.figure(2)
@@ -306,5 +359,6 @@ class Real_Time_Spectra(object):
         self.spectrum_figure.show()
         # plt.pause(self.interval)
         plt.pause(0.0005)
-
+        
+        
         # plt.close()
