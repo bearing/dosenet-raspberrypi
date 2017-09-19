@@ -330,7 +330,7 @@ class Manager_D3S(object):
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
-        self.rt_plot_isotopes()
+        self.rt_plot.plot_isotopes()
         #total_time=self.interval*self.maxspectra 
         #times = np.linspace(self.interval,total_time + 1,self.interval)
         #K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
