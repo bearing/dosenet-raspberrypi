@@ -103,7 +103,7 @@ class Real_Time_Spectra(object):
         plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         self.isotope_figure=plt.figure(3)
-        
+        fig=plt.figure(3)
         plot_manager = plt.get_current_fig_manager()
         
         plt.ylim(0,1800)
@@ -113,7 +113,7 @@ class Real_Time_Spectra(object):
         #plt.legend(bbox_to_anchor=(1.2, 0.05))
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
           ncol=3, fancybox=True, shadow=False,numpoints=1)
-        self.figure(3).autofmt_xdate()
+        fig.autofmt_xdate()
         
         plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
