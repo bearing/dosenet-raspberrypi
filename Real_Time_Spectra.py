@@ -115,7 +115,7 @@ class Real_Time_Spectra(object):
           ncol=3, fancybox=True, shadow=False,numpoints=1)
         fig.autofmt_xdate()
         
-        plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
+        #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
         self.spectrum_figure = plt.figure(2)
