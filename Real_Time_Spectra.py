@@ -128,7 +128,7 @@ class Real_Time_Spectra(object):
         Applies to waterfall plot.
         """
         # Create a new spectrum by binning the old spectrum.
-        global times
+        
         new_spectra = self.rebin(spectra)
         K_counts, Bi_counts, Tl_counts = spectra_fitter.low_stat_isotope_counts(spectra)#should be get_isotope counts
         self.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
@@ -328,11 +328,11 @@ class Real_Time_Spectra(object):
         #Plotting the the three Isotopes on same plot
         fig=plt.figure()
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        plt.errorbar(self.times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(times,self.Bi_data_counts,yerr=np.sqrt(self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        plt.errorbar(self.times,self.Bi_data_counts,yerr=np.sqrt(self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         plt.ylim(0,1800)
         plt.xlabel('Time')
         plt.ylabel('counts')
