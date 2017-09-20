@@ -179,11 +179,13 @@ class Real_Time_Spectra(object):
     
         if  data_length1 > maxspectra:
             self.K_data_counts.popleft()
+            self.K_data_counts.legend.popleft()
         if  data_length2 > maxspectra:
             self.Bi_data_counts.popleft()
+            self.Bi_data_counts.legend.popleft()
         if  data_length3 > maxspectra:
             self.Tl_data_counts.popleft()
-
+            self.Tl_data_counts.legend.popleft()
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
