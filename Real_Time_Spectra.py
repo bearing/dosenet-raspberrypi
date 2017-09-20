@@ -111,10 +111,12 @@ class Real_Time_Spectra(object):
         plt.ylabel('counts')
         plt.title('K-40,Bi-214,Tl-208 counts vs Time')
         #plt.legend(bbox_to_anchor=(1.2, 0.05))
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+        plt.fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
           ncol=3, fancybox=True, shadow=False) #numpoints=1
+                   
         fig.autofmt_xdate()
         
+        plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
