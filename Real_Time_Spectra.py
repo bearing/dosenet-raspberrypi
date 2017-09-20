@@ -349,8 +349,8 @@ class Real_Time_Spectra(object):
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
         plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-          ncol=3, fancybox=True, shadow=False)#,numpoints=1,scatterpoints=1
+        plt.figure(3).legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+          ncol=3, fancybox=True, shadow=False,scatterpoints=1)
     
     def plot_sum(self):
         """
