@@ -38,8 +38,8 @@ class Manager_D3S(object):
     """
 
     def __init__(self,
-                 maxspectra,
-                 interval,
+                 interval=5,
+                 maxspectra=20,
                  count=0,
                  transport='any',
                  device='all',
@@ -63,8 +63,8 @@ class Manager_D3S(object):
         self.lst = None
         self.create_structures = True
 
-        self.interval = int(interval)
-        self.maxspectra = int(maxspectra)
+        self.interval = interval
+        self.maxspectra = maxspectra
         self.count = count
 
         self.config = None
@@ -115,8 +115,6 @@ class Manager_D3S(object):
         self.rt_plot = Real_Time_Spectra(
             manager=self,
             verbosity=self.v)
-        if self.plot:
-            self.rt_plot.start_up_plotting()
 
     def z_flag(self):
         """
@@ -314,7 +312,7 @@ class Manager_D3S(object):
 
     def plot_fitter(self):
         """
-    g    Wrapper around spectrum-fitter data acquisition plotter in
+        Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
 
@@ -326,8 +324,7 @@ class Manager_D3S(object):
         """
         Get spectra from sensor, display text, send to server.
         """
-        self.rt_plot.add_data(spectra, self.maxspectra)
-        #print("Total counts is {}".format(sum(spectra)))
+        self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
 
         if self.plot:
 

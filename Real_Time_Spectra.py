@@ -34,11 +34,12 @@ class Real_Time_Spectra(object):
         else:
             set_verbosity(self, logfile=logfile)
 
-        self.queue = deque()
-        
         self.manager = manager
 
         self.interval = manager.interval
+        self.queue = deque()
+
+        self.maxspectra = manager.maxspectra
 
         self.maxspectra = manager.maxspectra
 
@@ -48,7 +49,11 @@ class Real_Time_Spectra(object):
         self.first = True
 
         self.colorbar_drawn = True
-        
+
+        '''
+        Start up the plotting windows.
+        '''
+        self.start_up_plotting()
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
@@ -151,7 +156,7 @@ class Real_Time_Spectra(object):
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
 
-    def add_data(self, spectra, maxspectra):
+    def add_data(self, queue, spectra, maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -165,12 +170,12 @@ class Real_Time_Spectra(object):
         '''
         Add the new spectrum to queue.
         '''
-        self.queue.append(new_spectra)
+        queue.append(new_spectra)
 
         '''
         Save the original size of the data queue.
         '''
-        data_length = len(self.queue)
+        data_length = len(queue)
 
         '''
         Pop off the first data point if the total number of counts in the
@@ -179,7 +184,7 @@ class Real_Time_Spectra(object):
         '''
         if data_length > maxspectra:
 
-            self.queue.popleft()
+            queue.popleft()
 
     def run_avg_data(self, data, maxspectra):
         """
@@ -190,7 +195,7 @@ class Real_Time_Spectra(object):
         '''
         Save the original length of the data queue.
         '''
-        #data_length = len(data)
+        data_length = len(data)
 
         '''
         Create a temporary data queue so the data can be summed.
@@ -265,7 +270,6 @@ class Real_Time_Spectra(object):
             Removes oldest spectra to keep size equal to maxspectra
             '''
             if len(self.data) > self.maxspectra:
-
                 self.data = self.data[:-1]
 
     def fix_array(self):
@@ -283,8 +287,6 @@ class Real_Time_Spectra(object):
         '''
         Switch to working on the spectrum figure window.
         '''
-        plt.ion()
-        
         plt.figure(2)
 
         '''
@@ -314,7 +316,6 @@ class Real_Time_Spectra(object):
         '''
         plt.plot(x, data, drawstyle='steps-mid')
 
-
         '''
         Show the spectrum plot.
         '''
@@ -327,8 +328,6 @@ class Real_Time_Spectra(object):
         plt.pause(0.0005)
 
     def plot_waterfall(self,plot_id):
-        plt.ion()
-        
         plt.figure(plot_id)
         """
         Grabs the data for waterfall plot.
@@ -346,7 +345,6 @@ class Real_Time_Spectra(object):
         """
         Updates the colorbar by removing old colorbar.
         """
-        
         if self.colorbar_drawn:
 
             self.cb = plt.colorbar()
@@ -386,14 +384,15 @@ class Real_Time_Spectra(object):
         Clear the prior spectrum figure.
         '''
         plt.clf()
-        
         '''
         Plot the spectrum figure
         '''
         self.sum_graph(run_avg)
 
-        
-
+        '''
+        Show the updated spectrum figure window.
+        '''
+        plt.show()
 
         '''
         Pause before displaying the next figure window.
