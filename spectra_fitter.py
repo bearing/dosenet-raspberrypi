@@ -72,7 +72,7 @@ def make_array(lst,low=10,high=1032):
     '''
     z = np.asarray(make_int(lst[low:high]))
     return z
-'''
+
 def get_times(rows, number, n=1):
     '''
     Get list of times for data: determines time as the midpoint between the upper and lower bounds in the integration window
@@ -104,7 +104,7 @@ def get_times(rows, number, n=1):
     print('finished', i)
     counter = 0
     return times
-'''
+
 def double_peak_finder(array,lower,upper):
     '''
     Fits double gaussian + exponential to data within some window
@@ -506,7 +506,7 @@ def spectrum_peaks_plotter(rows):
 
 def main(rows, times):
 
-	# import data from weather station for all isotopes
+    # import data from weather station for all isotopes
     date = []
     cpm = []
     cpm_error = []

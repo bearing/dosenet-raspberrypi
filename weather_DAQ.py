@@ -9,7 +9,6 @@ import datetime
 import csv
 from Adafruit_BME280 import *
 import os
-from appJar import gui
 import numpy as np
 import dateutil
 from matplotlib.dates import DateFormatter
@@ -17,15 +16,15 @@ import matplotlib.pyplot as plt
 from collections import deque
 
 class weather_DAQ(object):
-    def __init__(self):
+    def __init__(self, maxdata, n_merge):
         self.sensor = None
         self.running=False
         self.time_queue=deque()
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
-        self.maxdata=10
-        self.n_merge=5
+        self.maxdata=int(maxdata)
+        self.n_merge=int(n_merge)
         self.temp_list=[]
         self.humid_list=[]
         self.press_list=[]
@@ -51,10 +50,6 @@ class weather_DAQ(object):
         pascals = self.sensor.read_pressure()
         hectopascals = pascals / 100
         humidity = self.sensor.read_humidity()
-
-        print ('Temp     = {0:0.3f} deg C'.format(degrees))
-        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
-        print ('Humidity = {0:0.2f} %\n'.format(humidity))
     
         data=[]
         data.append(date_time)
@@ -69,6 +64,10 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_list,hectopascals)
         self.add_time(self.time_queue, self.time_list, date_time)
+                
+        print ('Temp     = {0:0.3f} deg C'.format(degrees))
+        print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
+        print ('Humidity = {0:0.2f} %\n'.format(humidity))
         
         
     def press(self):
@@ -85,14 +84,13 @@ class weather_DAQ(object):
 
 
     def add_time(self, queue, timelist, data):
-        print('Input time: {}'.format(data))
+        print('Input time: {}\n'.format(data))
         timelist.append(data)
 
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
-            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
-            timelist=[]
+            print('Queue time: {}\n'.format(timelist[int((self.n_merge)/2)]))
             for i in range(len(timelist)):
                 timelist.pop()
         if len(queue)>self.maxdata:
@@ -103,7 +101,6 @@ class weather_DAQ(object):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
-            temp_list = []
             for i in range(len(temp_list)):
                 temp_list.pop()
         if len(queue)>self.maxdata:
@@ -120,7 +117,6 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        fig.subplots_adjust(left = 1)
         fig.show()
         plt.pause(0.0005)
 

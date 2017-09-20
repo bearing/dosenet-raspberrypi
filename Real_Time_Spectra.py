@@ -8,12 +8,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 # import seaborn as sns
 # from ggplot import *
-from mpltools import style
-from mpltools import layout
+#from mpltools import style
+#from mpltools import layout
 
 # import Tkinter
 # from PySide.QtGui import QApplication
-from PyQt5.QtWidgets import QApplication
+#from PyQt5.QtWidgets import QApplication
 
 from auxiliaries import set_verbosity
 from collections import deque
@@ -34,11 +34,12 @@ class Real_Time_Spectra(object):
         else:
             set_verbosity(self, logfile=logfile)
 
-
         self.manager = manager
 
         self.interval = manager.interval
         self.queue = deque()
+
+        self.maxspectra = manager.maxspectra
 
         self.maxspectra = manager.maxspectra
 
@@ -220,7 +221,12 @@ class Real_Time_Spectra(object):
         '''
         Return the running average and summation data.
         '''
+        
         return running_avg_array, sum_data
+    
+    def close(self,plot_id):
+        plt.close(plot_id)
+        print("Plot_id in real time spectra {}".format(plot_id))
 
     def rebin(self, data, n=4):
         """
@@ -264,7 +270,6 @@ class Real_Time_Spectra(object):
             Removes oldest spectra to keep size equal to maxspectra
             '''
             if len(self.data) > self.maxspectra:
-
                 self.data = self.data[:-1]
 
     def fix_array(self):
@@ -322,8 +327,8 @@ class Real_Time_Spectra(object):
         '''
         plt.pause(0.0005)
 
-    def plot_waterfall(self):
-        plt.figure(1)
+    def plot_waterfall(self,plot_id):
+        plt.figure(plot_id)
         """
         Grabs the data for waterfall plot.
         """
@@ -356,7 +361,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self):
+    def plot_sum(self,plot_id):
         """
         Plot the sum (spectrum) figure.
         """
@@ -366,18 +371,19 @@ class Real_Time_Spectra(object):
         '''
         Point to the figure window for the spectrum plot.
         '''
-        plt.figure(2)
+        plt.figure(plot_id)
 
         '''
         Get the running average
         '''
+         
         run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
+        
 
         '''
         Clear the prior spectrum figure.
         '''
         plt.clf()
-
         '''
         Plot the spectrum figure
         '''

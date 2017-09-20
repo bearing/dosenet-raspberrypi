@@ -47,7 +47,7 @@ for r in results_aq:
         timesaq.append(dateutil.parser.parse(r[0]))
 
 start1 = datetime.datetime(2017, 7, 27, 16, 00, 00) 
-stop1 = datetime.datetime(2017, 7, 28, 2, 00, 00)
+stop1 = datetime.datetime(2017, 7, 28, 8, 00, 00)
 CO2, timesCO2 = sublist(CO2, timesCO2, start1, stop1)
 aq, timesaq = sublist(aq, timesaq, start1, stop1)
 
