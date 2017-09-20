@@ -168,6 +168,7 @@ class Real_Time_Spectra(object):
             
             # # Save the original size of the data queue.
             # data_length = len(data)
+            
     def add_isotope_counts(self,K_counts,Bi_counts,Tl_counts,maxspectra):
         self.K_data_counts.append(K_counts)
         self.Bi_data_counts.append(Bi_counts)
@@ -179,13 +180,11 @@ class Real_Time_Spectra(object):
     
         if  data_length1 > maxspectra:
             self.K_data_counts.popleft()
-            self.K_data_counts.legend.popleft()
         if  data_length2 > maxspectra:
             self.Bi_data_counts.popleft()
-            self.Bi_data_counts.legend.popleft()
         if  data_length3 > maxspectra:
             self.Tl_data_counts.popleft()
-            self.Tl_data_counts.legend.popleft()
+        
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
@@ -353,6 +352,10 @@ class Real_Time_Spectra(object):
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
         plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
+        plt.plot([], label="susceptible", color="blue", alpha=0.02)  
+        plt.plot([], label="recovered", color="red", alpha=0.02)
+        plt.plot([], label="infected", color="black", alpha=0.02)
+
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
          ncol=3, fancybox=True, shadow=False,numpoints=1)
     
