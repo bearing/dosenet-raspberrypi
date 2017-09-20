@@ -99,6 +99,18 @@ GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
 Command line output statements used in the data-handlers
 """
 
+SENSOR_NAMES = ['Pocket Geiger Counter', 'D3S', 'Air Quality Sensor',
+    'CO2 Sensor', 'Weather Sensor']
+
+SENSOR_DISPLAY_TEXT = (
+    '{green}Starting the {{sensor_name}} {reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
+RUNNING_DISPLAY_TEXT = (
+    '{green}Manager is starting to run at {{start_time}}' +
+    ' with intervals of {{interval}}{reset}.').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
 CPM_DISPLAY_TEXT = (
     '{green} {{counts}}{reset}' + '{cyan} total counts with {reset}' +
     '{green}{{cpm:.2f}}{reset}' + '{cyan} counts per minute\n{reset}' +

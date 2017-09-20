@@ -34,6 +34,7 @@ from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
+from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -297,9 +298,9 @@ class Base_Manager(object):
         this_start, this_end = self.get_interval(time.time())
         if self.sensor_type != 2:
             self.vprint(
-                1, ('Manager is starting to run at {}' +
-                    ' with intervals of {}s').format(
-                    datetime_from_epoch(this_start), self.interval))
+                1, RUNNING_DISPLAY_TEXT.format(
+                    start_time=datetime_from_epoch(this_start),
+                    interval=self.interval))
         self.running = True
 
         if self.sensor_type == 1:
@@ -402,9 +403,9 @@ class Base_Manager(object):
                 self.d3s_LED.on()
 
             self.vprint(
-                1, ('Manager is starting to run at {}' +
-                    ' with intervals of {}s').format(
-                    datetime_from_epoch(this_start), self.interval))
+                1, RUNNING_DISPLAY_TEXT.format(
+                    start_time=datetime_from_epoch(this_start),
+                    interval=self.interval))
 
             done_devices = set()
             try:
@@ -580,7 +581,8 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
-                avg_c = sum(c_data)/len(c_data)
+                #c_data_int = list(map(int, c_data))
+                avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
                 self.datalog, this_start, this_end, average_data=average_data)
@@ -1172,7 +1174,12 @@ if __name__ == '__main__':
         mgr = Manager_Weather(**arg_dict)
 
     try:
+        for i in range(len(SENSOR_NAMES)):
+            if sensor == (1 + i):
+                print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
+
         mgr.run()
+
     except:
         if mgr.logfile:
             # print exception info to logfile
