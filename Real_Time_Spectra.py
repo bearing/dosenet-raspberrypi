@@ -112,7 +112,7 @@ class Real_Time_Spectra(object):
         plt.title('K-40,Bi-214,Tl-208 counts vs Time')
         #plt.legend(bbox_to_anchor=(1.2, 0.05))
         
-        plt.figure(3).legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
           ncol=3, fancybox=True, shadow=False,scatterpoints=1)
                    
         fig.autofmt_xdate()
