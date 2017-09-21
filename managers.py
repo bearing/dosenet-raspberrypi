@@ -51,7 +51,11 @@ from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
-from globalvalues import DEFAULT_WEATHER_PORT, WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
+try:
+    from globalvalues import DEFAULT_WEATHER_PORT
+except ImportError:
+    pass
+from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
 from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
