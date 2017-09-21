@@ -111,7 +111,7 @@ SENSOR_DISPLAY_TEXT = (
 
 RUNNING_DISPLAY_TEXT = (
     '{green}Manager is starting to run at {{start_time}}' +
-    ' on {{date}}' + '\n and is running with intervals ' +
+    ' on {{date}}' + '\nand is running with intervals ' +
     'of {{interval}} seconds.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
