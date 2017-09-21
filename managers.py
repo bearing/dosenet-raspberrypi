@@ -59,6 +59,7 @@ from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
 from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
+from globalvalues import strf
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -303,7 +304,7 @@ class Base_Manager(object):
         if self.sensor_type != 2:
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start),
+                    start_time=datetime_from_epoch(this_start).strftime(strf),
                     interval=self.interval))
         self.running = True
 
@@ -408,7 +409,7 @@ class Base_Manager(object):
 
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start),
+                    start_time=datetime_from_epoch(this_start).strftime(strf),
                     interval=self.interval))
 
             done_devices = set()
