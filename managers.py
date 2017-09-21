@@ -926,7 +926,7 @@ class Manager_Weather(Base_Manager):
     weather sensor.
     """
     def __init__(self,
-                 Weather_Port=DEFAULT_WEATHER_PORT,
+                 Weather_Port=None,
                  variables=WEATHER_VARIABLES,
                  variables_units=WEATHER_VARIABLES_UNITS,
                  **kwargs):
@@ -936,7 +936,10 @@ class Manager_Weather(Base_Manager):
 
         super(Manager_Weather, self).__init__(sensor_type=5, **kwargs)
 
-        self.Weather_Port = Weather_Port
+        if not Weather_Port:
+            self.Weather_Port = DEFAULT_WEATHER_PORT
+        else:
+            self.Weather_Port = Weather_Port
 
         self.data_handler = Data_Handler_Weather(
             manager=self,
