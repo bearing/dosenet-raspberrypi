@@ -305,6 +305,7 @@ class Base_Manager(object):
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
                     start_time=datetime_from_epoch(this_start).strftime(strf),
+                    date=str(datetime.date.today()),
                     interval=self.interval))
         self.running = True
 
@@ -410,6 +411,7 @@ class Base_Manager(object):
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
                     start_time=datetime_from_epoch(this_start).strftime(strf),
+                    date=str(datetime.date.today()),
                     interval=self.interval))
 
             done_devices = set()
