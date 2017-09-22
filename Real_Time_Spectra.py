@@ -356,7 +356,7 @@ class Real_Time_Spectra(object):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
         if not self.plot_isotopes_drawn:
-                plot_isotopes_drawn=False
+                self.plot_isotopes_drawn=False
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
