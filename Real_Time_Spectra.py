@@ -57,7 +57,7 @@ class Real_Time_Spectra(object):
         self.first = True
 
         self.waterfall_drawn = True
-
+        self.plot_isotopes_drawn=True
         # Create a Tkinter window object.
         window_object = Tkinter.Tk()
 
