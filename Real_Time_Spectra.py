@@ -57,7 +57,7 @@ class Real_Time_Spectra(object):
         self.first = True
 
         self.waterfall_drawn = True
-        self.plot_isotopes_drawn=True
+        self.isotopes_drawn=True
         # Create a Tkinter window object.
         window_object = Tkinter.Tk()
 
@@ -352,13 +352,13 @@ class Real_Time_Spectra(object):
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
         plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
-        self.plot_isotopes_graph()
+        self.isotopes_graph()
         
-        if self.plot_isotopes_drawn:
+        if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
-        if not self.plot_isotopes_drawn:
-                self.plot_isotopes_drawn=False
+        if not self.isotopes_drawn:
+                self.isotopes_drawn=False
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
