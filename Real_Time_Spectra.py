@@ -355,9 +355,8 @@ class Real_Time_Spectra(object):
         if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
+            self.isotopes_drawn = False
         
-        elif self.isotopes_drawn == True:
-              self.isotopes_drawn=False
                 
     def plot_sum(self):
         """
