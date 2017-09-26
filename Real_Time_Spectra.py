@@ -164,7 +164,7 @@ class Real_Time_Spectra(object):
         self.times.append(datetime.now())
         
         if len(self.times) > maxspectra:
-            self.times.popleft()
+            self.times.pop()
             
             # # Save the original size of the data queue.
             # data_length = len(data)
@@ -179,11 +179,11 @@ class Real_Time_Spectra(object):
         data_length3=len(self.Tl_data_counts)
     
         if  data_length1 > maxspectra:
-            self.K_data_counts.queue.popleft()
+            self.K_data_counts.pop()
         if  data_length2 > maxspectra:
-            self.Bi_data_counts.queue.popleft()
+            self.Bi_data_counts.pop()
         if  data_length3 > maxspectra:
-            self.Tl_data_counts.queue.popleft()
+            self.Tl_data_counts.pop()
         
     def run_avg_data(self, data, maxspectra):
         """
