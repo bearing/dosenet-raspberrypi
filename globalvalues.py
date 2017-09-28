@@ -77,7 +77,10 @@ DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
-DEFAULT_WEATHER_PORT = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+try:
+    DEFAULT_WEATHER_PORT = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+except IOError:
+    print("No Weather Sensor detected, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
 DEFAULT_INTERVAL_TEST_WEATHER = 30
 WEATHER_VARIABLES = ['temperature', 'pressure', 'humidity']
@@ -103,12 +106,13 @@ SENSOR_NAMES = ['Pocket Geiger Counter', 'D3S', 'Air Quality Sensor',
     'CO2 Sensor', 'Weather Sensor']
 
 SENSOR_DISPLAY_TEXT = (
-    '{green}Starting the {{sensor_name}} {reset}').format(
+    '{green}Starting the {{sensor_name}}.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
 RUNNING_DISPLAY_TEXT = (
     '{green}Manager is starting to run at {{start_time}}' +
-    ' with intervals of {{interval}}{reset}.').format(
+    ' on {{date}}' + '\nand is running with intervals ' +
+    'of {{interval}} seconds.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
 CPM_DISPLAY_TEXT = (

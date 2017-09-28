@@ -51,10 +51,15 @@ from globalvalues import DEFAULT_LOGFILE_AQ
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
-from globalvalues import DEFAULT_WEATHER_PORT, WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
+try:
+    from globalvalues import DEFAULT_WEATHER_PORT
+except ImportError:
+    pass
+from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
 from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
+from globalvalues import strf
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -299,7 +304,8 @@ class Base_Manager(object):
         if self.sensor_type != 2:
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start),
+                    start_time=datetime_from_epoch(this_start).strftime(strf),
+                    date=str(datetime.date.today()),
                     interval=self.interval))
         self.running = True
 
@@ -404,7 +410,8 @@ class Base_Manager(object):
 
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start),
+                    start_time=datetime_from_epoch(this_start).strftime(strf),
+                    date=str(datetime.date.today()),
                     interval=self.interval))
 
             done_devices = set()
@@ -581,7 +588,7 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
-                #c_data_int = list(map(int, c_data))
+                c_data_int = list(map(int, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -922,7 +929,7 @@ class Manager_Weather(Base_Manager):
     weather sensor.
     """
     def __init__(self,
-                 Weather_Port=DEFAULT_WEATHER_PORT,
+                 Weather_Port=None,
                  variables=WEATHER_VARIABLES,
                  variables_units=WEATHER_VARIABLES_UNITS,
                  **kwargs):
@@ -932,7 +939,10 @@ class Manager_Weather(Base_Manager):
 
         super(Manager_Weather, self).__init__(sensor_type=5, **kwargs)
 
-        self.Weather_Port = Weather_Port
+        if not Weather_Port:
+            self.Weather_Port = DEFAULT_WEATHER_PORT
+        else:
+            self.Weather_Port = Weather_Port
 
         self.data_handler = Data_Handler_Weather(
             manager=self,
