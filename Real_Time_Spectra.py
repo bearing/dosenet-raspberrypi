@@ -164,7 +164,7 @@ class Real_Time_Spectra(object):
         self.times.append(datetime.now())
         
         if len(self.times) > maxspectra:
-            self.times.popleft()
+            self.times.pop()
             
             # # Save the original size of the data queue.
             # data_length = len(data)
