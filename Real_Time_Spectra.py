@@ -46,9 +46,9 @@ class Real_Time_Spectra(object):
         self.interval = manager.interval
         self.queue = deque()
         self.times = {}
-        self.K_data_counts = {}
-        self.Bi_data_counts = {}
-        self.Tl_data_counts = {}
+        self.K_data_counts = deque()
+        self.Bi_data_counts = deque()
+        self.Tl_data_counts = deque()
         self.maxspectra = manager.maxspectra
 
         self.data = None
@@ -164,7 +164,7 @@ class Real_Time_Spectra(object):
         self.times.append(datetime.now())
         
         if len(self.times) > maxspectra:
-            self.times.pop(0)
+            self.times.popleft()
             
             # # Save the original size of the data queue.
             # data_length = len(data)
@@ -179,11 +179,11 @@ class Real_Time_Spectra(object):
         data_length3=len(self.Tl_data_counts)
     
         if  data_length1 > maxspectra:
-            self.K_data_counts.pop(0)
+            self.K_data_counts.popleft()
         if  data_length2 > maxspectra:
-            self.Bi_data_counts.pop(0)
+            self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
-            self.Tl_data_counts.pop(0)
+            self.Tl_data_counts.popleft()
         
     def run_avg_data(self, data, maxspectra):
         """
