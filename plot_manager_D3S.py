@@ -226,13 +226,13 @@ class Manager_D3S(object):
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
         """
-        print ('Segmentation fault occuring at beganing')
+       
         if self.transport == 'any':
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
         print ('Discovered %s' % devs)
-        print ('Segmentation fault occuring not beganing')
+        
         if len(devs) <= 0:
             return
 
@@ -247,7 +247,7 @@ class Manager_D3S(object):
             return
 
         done_devices = set()
-        print ('Segmentation fault occuring at middle')
+        
         try:
             while self.running:
                 with kromek.Controller(devs, self.interval) as controller:
@@ -260,7 +260,7 @@ class Manager_D3S(object):
                             # self.total += np.array(reading[4])
                             # self.lst = np.concatenate(
                                 # (self.lst, [np.array(reading[4])]))
-                        print ('Segmentation fault occuring inside while loop')
+                        
                         serial = reading[0]
                         dev_count = reading[1]
                         if serial not in done_devices:
@@ -274,7 +274,7 @@ class Manager_D3S(object):
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
                             break
-            print ('Segmentation fault occuring outside while loop')
+            
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
