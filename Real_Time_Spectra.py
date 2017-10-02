@@ -45,7 +45,7 @@ class Real_Time_Spectra(object):
 
         self.interval = manager.interval
         self.queue = deque()
-        self.times = {}
+        self.times = deque()
         self.K_data_counts = deque()
         self.Bi_data_counts = deque()
         self.Tl_data_counts = deque()
