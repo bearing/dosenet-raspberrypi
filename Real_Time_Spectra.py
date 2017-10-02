@@ -45,10 +45,10 @@ class Real_Time_Spectra(object):
 
         self.interval = manager.interval
         self.queue = deque()
-        self.times = []
-        self.K_data_counts = []
-        self.Bi_data_counts = []
-        self.Tl_data_counts = []
+        self.times = {}
+        self.K_data_counts = {}
+        self.Bi_data_counts = {}
+        self.Tl_data_counts = {}
         self.maxspectra = manager.maxspectra
 
         self.data = None
