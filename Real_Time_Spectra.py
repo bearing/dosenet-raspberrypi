@@ -345,17 +345,17 @@ class Real_Time_Spectra(object):
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
-        self.K_data_counts=list(self.K_data_counts)
-        self.Bi_data_counts=list(self.Bi_data_counts)
-        self.Tl_data_counts =list(self.Tl_data_counts)
-        self.times=list(self.times)
+        K_data_counts=list(self.K_data_counts)
+        Bi_data_counts=list(self.Bi_data_counts)
+        Tl_data_counts =list(self.Tl_data_counts)
+        times=list(self.times)
     
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(self.times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        plt.errorbar(times, K_data_counts,yerr=np.sqrt(K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(self.times,self.Bi_data_counts,yerr=np.sqrt(self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        plt.errorbar(times,Bi_data_counts,yerr=np.sqrt(Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        plt.errorbar(times,Tl_data_counts,yerr=np.sqrt(Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
         if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
