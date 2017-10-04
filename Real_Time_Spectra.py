@@ -184,7 +184,10 @@ class Real_Time_Spectra(object):
             self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
             self.Tl_data_counts.popleft()
-        
+            
+        self.K_data_counts=list( self.K_data_counts)
+        self.Bi_data_counts=list(self.Bi_data_counts)
+        self.Tl_data_counts=list(self.Tl_data_counts)
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
@@ -345,14 +348,14 @@ class Real_Time_Spectra(object):
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
-        
+        '''
         if self.K_data_counts is not None:
            self.K_data_counts=int(self.K_data_counts)
         if self.Bi_data_counts is not None:
            self.Bi_data_counts=int(self.Bi_data_counts)
         if self.Tl_data_counts is not None:
            self.Tl_data_counts =int(self.Tl_data_counts)
-           
+        '''   
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         plt.errorbar(self.times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
