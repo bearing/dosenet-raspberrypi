@@ -139,7 +139,7 @@ class Real_Time_Spectra(object):
 
         # plt.ioff()
 
-    def add_data(self, spectra, maxspectra):
+    def add_data(self, spectra,maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
         Applies to waterfall plot.
@@ -345,9 +345,12 @@ class Real_Time_Spectra(object):
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
-        self.K_data_counts=int(deque(self.K_data_counts))
-        self.Bi_data_counts=int(deque(self.Bi_data_counts))
-        self.Tl_data_counts =int(deque(self.Tl_data_counts))
+        for i in range (self.K_data_counts):
+            self.K_data_counts=list(self.K_data_counts)
+        for i in range (self.Bi_data_counts):
+            self.Bi_data_counts=list(self.Bi_data_counts)
+        for i in range (self.Tl_data_counts):
+            self.Tl_data_counts =list(self.Tl_data_counts)
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         plt.errorbar(self.times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
