@@ -346,9 +346,11 @@ class Real_Time_Spectra(object):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
         
-        self.K_data_counts=list(deque(self.K_data_counts))
-        self.Bi_data_counts=list(deque(self.Bi_data_counts))
-        self.Tl_data_counts =list(deque(self.Tl_data_counts))
+        if self.isotopes_drawn:
+           self.K_data_counts=list(deque(self.K_data_counts))
+           self.Bi_data_counts=list(deque(self.Bi_data_counts))
+           self.Tl_data_counts =list(deque(self.Tl_data_counts))
+           
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         plt.errorbar(self.times, self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
