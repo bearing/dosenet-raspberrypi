@@ -165,7 +165,8 @@ class Real_Time_Spectra(object):
         
         if len(self.times) > maxspectra:
             self.times.popleft()
-            
+        print(maxspectra)   
+        print(type(self.times))
             # # Save the original size of the data queue.
             # data_length = len(data)
             
@@ -362,7 +363,7 @@ class Real_Time_Spectra(object):
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
         
-                
+        print(type(self.K_data_counts1))      
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
