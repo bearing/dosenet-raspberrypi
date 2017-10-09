@@ -346,11 +346,11 @@ class Real_Time_Spectra(object):
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
-        while self.isotopes_drawn:
-          self.K_data_counts=list(self.K_data_counts)
-          self.Bi_data_counts=list(self.Bi_data_counts)
-          self.Tl_data_counts =list(self.Tl_data_counts)
-          self.times=list(self.times)
+        
+        self.K_data_counts=list(self.K_data_counts)
+        self.Bi_data_counts=list(self.Bi_data_counts)
+        self.Tl_data_counts =list(self.Tl_data_counts)
+        self.times=list(self.times)
           
     
         #plt.plot_date(times,K_counts,'bo',label='k-40')
@@ -364,6 +364,11 @@ class Real_Time_Spectra(object):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
+            
+        self.K_data_counts=deque(self.K_data_counts)
+        self.Bi_data_counts=deque(self.Bi_data_counts)
+        self.Tl_data_counts=deque(self.Tl_data_counts)
+        self.times=deque(self.times)
         
         print('this is inside the plot function for K-data', type(self.K_data_counts1))      
     def plot_sum(self):
