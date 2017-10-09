@@ -158,12 +158,12 @@ class Real_Time_Spectra(object):
         # Pop off the first data point if the total number of counts in the
         # spectrum is more than the count window defined by the sum interval
         # to create a running average.
-        if data_length >= maxspectra:
+        if data_length > maxspectra:
 
             self.queue.popleft()
         self.times.append(datetime.now())
         
-        if len(self.times) >= maxspectra:
+        if len(self.times) > maxspectra:
             self.times.popleft()
         print('this is inside add_data, to know max number',maxspectra)   
         print('this is inside add_data for time',type(self.times))
@@ -179,11 +179,11 @@ class Real_Time_Spectra(object):
         data_length2=len(self.Bi_data_counts)
         data_length3=len(self.Tl_data_counts)
     
-        if  data_length1 >= maxspectra:
+        if  data_length1 > maxspectra:
             self.K_data_counts.popleft()
-        if  data_length2 >= maxspectra:
+        if  data_length2 > maxspectra:
             self.Bi_data_counts.popleft()
-        if  data_length3 >= maxspectra:
+        if  data_length3 > maxspectra:
             self.Tl_data_counts.popleft()
         print('this is inside add_istopes',type(self.K_data_counts))
     def run_avg_data(self, data, maxspectra):
@@ -346,17 +346,19 @@ class Real_Time_Spectra(object):
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
-        self.K_data_counts1=list(self.K_data_counts)
-        self.Bi_data_counts1=list(self.Bi_data_counts)
-        self.Tl_data_counts1 =list(self.Tl_data_counts)
-        self.times1=list(self.times)
+        while self.isotopes_drawn:
+          self.K_data_counts=list(self.K_data_counts)
+          self.Bi_data_counts=list(self.Bi_data_counts)
+          self.Tl_data_counts =list(self.Tl_data_counts)
+          self.times=list(self.times)
+          
     
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(self.times1,self.K_data_counts1,yerr=np.sqrt(self.K_data_counts1),fmt='bo',ecolor='b',label='K-40')
+        plt.errorbar(self.times,self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(self.times1, self.Bi_data_counts1,yerr=np.sqrt( self.Bi_data_counts1),fmt='ro',ecolor='r',label='Bi-214')
+        plt.errorbar(self.times, self.Bi_data_counts,yerr=np.sqrt( self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(self.times1,self.Tl_data_counts1,yerr=np.sqrt(self.Tl_data_counts1),fmt='ko',ecolor='y',label='Tl-208')
+        plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
         if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
