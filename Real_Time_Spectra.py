@@ -158,12 +158,12 @@ class Real_Time_Spectra(object):
         # Pop off the first data point if the total number of counts in the
         # spectrum is more than the count window defined by the sum interval
         # to create a running average.
-        if data_length > maxspectra:
+        if data_length >= maxspectra:
 
             self.queue.popleft()
         self.times.append(datetime.now())
         
-        if len(self.times) > maxspectra:
+        if len(self.times) >= maxspectra:
             self.times.popleft()
         print('this is inside add_data, to know max number',maxspectra)   
         print('this is inside add_data for time',type(self.times))
@@ -179,11 +179,11 @@ class Real_Time_Spectra(object):
         data_length2=len(self.Bi_data_counts)
         data_length3=len(self.Tl_data_counts)
     
-        if  data_length1 > maxspectra:
+        if  data_length1 >= maxspectra:
             self.K_data_counts.popleft()
-        if  data_length2 > maxspectra:
+        if  data_length2 >= maxspectra:
             self.Bi_data_counts.popleft()
-        if  data_length3 > maxspectra:
+        if  data_length3 >= maxspectra:
             self.Tl_data_counts.popleft()
         print('this is inside add_istopes',type(self.K_data_counts))
     def run_avg_data(self, data, maxspectra):
