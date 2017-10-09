@@ -185,7 +185,7 @@ class Real_Time_Spectra(object):
             self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
             self.Tl_data_counts.popleft()
-
+        print('this is inside add_istopes',type(self.K_data_counts))
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
