@@ -370,7 +370,7 @@ class Real_Time_Spectra(object):
         self.Tl_data_counts=deque(self.Tl_data_counts)
         self.times=deque(self.times)
         
-        print('this is inside the plot function for K-data', type(self.K_data_counts1))      
+        print('this is inside the plot function for K-data', type(self.K_data_counts))      
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
