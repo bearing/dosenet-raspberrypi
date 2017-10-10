@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 #from mpltools import layout
 
 import Tkinter
-from PySide.QtGui import QApplication
-#from PyQt5.QtWidgets import QApplication
+# from PySide.QtGui import QApplication
+from PyQt5.QtWidgets import QApplication
 
 from auxiliaries import set_verbosity
 from collections import deque
