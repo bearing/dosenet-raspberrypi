@@ -46,9 +46,9 @@ class Real_Time_Spectra(object):
         self.interval = manager.interval
         self.queue = deque()
         self.times = deque()
-        self.K_data_counts = deque(maxlen=20)
-        self.Bi_data_counts = deque(maxlen=20)
-        self.Tl_data_counts = deque(maxlen=20)
+        self.K_data_counts = deque()
+        self.Bi_data_counts = deque()
+        self.Tl_data_counts = deque()
         self.maxspectra = manager.maxspectra
 
         self.data = None
@@ -142,7 +142,7 @@ class Real_Time_Spectra(object):
     def add_data(self, spectra,maxspectra):
         """
         Takes data from datalog and places it in a queue. Rebin data here.
-        Applies to waterfall plot.
+        Applies to waterfall plot/isotope plot 
         """
         # Create a new spectrum by binning the old spectrum.
         
@@ -164,9 +164,8 @@ class Real_Time_Spectra(object):
         self.times.append(datetime.now())
         
         if len(self.times) > maxspectra:
-            self.times.popleft()
-        print('this is inside add_data, to know max number',maxspectra)   
-        print('this is inside add_data for time',type(self.times))
+            print(len(self.times))
+            self.times.popleft()   
             # # Save the original size of the data queue.
             # data_length = len(data)
             
@@ -180,12 +179,14 @@ class Real_Time_Spectra(object):
         data_length3=len(self.Tl_data_counts)
     
         if  data_length1 > maxspectra:
+            print(len(self.K_data_counts))
             self.K_data_counts.popleft()
         if  data_length2 > maxspectra:
+            print(len(self.Bi_data_counts))
             self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
+            print(len(self.Tl_data_counts))
             self.Tl_data_counts.popleft()
-        print('this is inside add_istopes',type(self.K_data_counts))
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
@@ -347,29 +348,24 @@ class Real_Time_Spectra(object):
         #Plotting the the three Isotopes on same plot
         plt.figure(3)
         
-        self.K_data_counts=list(self.K_data_counts)
-        self.Bi_data_counts=list(self.Bi_data_counts)
-        self.Tl_data_counts =list(self.Tl_data_counts)
-        self.times=list(self.times)
+        temp_K_data_counts=list(self.K_data_counts)
+        temp_Bi_data_counts=list(self.Bi_data_counts)
+        temp_Tl_data_counts =list(self.Tl_data_counts)
+        temp_times=list(self.times)
           
     
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(self.times,self.K_data_counts,yerr=np.sqrt(self.K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(self.times, self.Bi_data_counts,yerr=np.sqrt( self.Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(self.times,self.Tl_data_counts,yerr=np.sqrt(self.Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
         if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
-            
-        self.K_data_counts=deque(self.K_data_counts)
-        self.Bi_data_counts=deque(self.Bi_data_counts)
-        self.Tl_data_counts=deque(self.Tl_data_counts)
-        self.times=deque(self.times)
-        
+
         print('this is inside the plot function for K-data', type(self.K_data_counts))      
     def plot_sum(self):
         """
