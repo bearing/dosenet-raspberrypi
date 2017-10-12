@@ -164,7 +164,7 @@ class Real_Time_Spectra(object):
         self.times.append(datetime.now())
         
         if len(self.times) > maxspectra:
-            print(len(self.times))
+            print('this is inside add_Data',len(self.times))
             self.times.popleft()   
             # # Save the original size of the data queue.
             # data_length = len(data)
@@ -179,13 +179,13 @@ class Real_Time_Spectra(object):
         data_length3=len(self.Tl_data_counts)
     
         if  data_length1 > maxspectra:
-            print(len(self.K_data_counts))
+            print('this is inside add_isotope_counts',len(self.K_data_counts))
             self.K_data_counts.popleft()
         if  data_length2 > maxspectra:
-            print(len(self.Bi_data_counts))
+            print('this is inside add_isotope_counts',len(self.Bi_data_counts))
             self.Bi_data_counts.popleft()
         if  data_length3 > maxspectra:
-            print(len(self.Tl_data_counts))
+            print('this is inside add_isotope_counts',len(self.Tl_data_counts))
             self.Tl_data_counts.popleft()
     def run_avg_data(self, data, maxspectra):
         """
@@ -365,8 +365,7 @@ class Real_Time_Spectra(object):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
-
-        print('this is inside the plot function for K-data', type(self.K_data_counts))      
+            
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
