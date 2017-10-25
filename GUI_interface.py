@@ -216,8 +216,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 # maxdata = Entry(top)
 # n_merge = Entry(top)
-maxdata = tk.OptionMenu(top, varOption, *options)
-n_merge = tk.OptionMenu(top, varOption, *options)
+maxdata = Tkinter.OptionMenu(top, varOption, *options)
+n_merge = Tkinter.OptionMenu(top, varOption, *options)
 
 maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
 nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
