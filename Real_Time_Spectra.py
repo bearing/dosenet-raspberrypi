@@ -371,7 +371,7 @@ class Real_Time_Spectra(object):
             self.isotopes_drawn = False
         plt.clf()
         plt.cla()
-        plt.close()
+       
             
     def plot_sum(self):
         """
