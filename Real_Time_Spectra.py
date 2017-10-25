@@ -117,6 +117,8 @@ class Real_Time_Spectra(object):
                    
         fig.autofmt_xdate()
         plt.show()
+        plt.clf()
+        plt.cla()
         #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
@@ -354,7 +356,7 @@ class Real_Time_Spectra(object):
         temp_times=list(self.times)
           
         plt.ion()
-        for phase in temp_times:
+        
             
            
         #plt.plot_date(times,K_counts,'bo',label='k-40')
