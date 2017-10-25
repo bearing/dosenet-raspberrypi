@@ -358,16 +358,11 @@ class Real_Time_Spectra(object):
 
         axes.set_autoscale_on(True) # enable autoscale
         axes.autoscale_view(True,True,True)
-        l , = plt.plot([], [])
         while True:
             temp_K_data_counts=list(self.K_data_counts)
             temp_Bi_data_counts=list(self.Bi_data_counts)
             temp_Tl_data_counts =list(self.Tl_data_counts)
             temp_times=list(self.times)
-            
-            l.set_data(temp_K_data_counts,temp_times) # update data
-            l.set_data(temp_Bi_data_counts,temp_times)
-            l.set_data(temp_Tl_data_counts,temp_times)
             axes.relim()        # Recalculate limits
             axes.autoscale_view(True,True,True) #Autoscale
             plt.draw()      # Redraw
