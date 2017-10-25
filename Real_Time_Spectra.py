@@ -347,6 +347,8 @@ class Real_Time_Spectra(object):
         
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
+        plt.clf()
+        plt.cla()
         plt.figure(3)
         
         temp_K_data_counts=list(self.K_data_counts)
@@ -369,8 +371,7 @@ class Real_Time_Spectra(object):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
-        plt.clf()
-        plt.cla()
+        
        
             
     def plot_sum(self):
