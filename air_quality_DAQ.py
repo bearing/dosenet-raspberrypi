@@ -14,7 +14,7 @@ import serial
 #sensor = entercodehere(morestuff) [Not sure if this is necessary] 
 
 class air_quality_DAQ(object):
-    def __init__ (self):
+    def __init__ (self, maxdata, n_merge):
         # self.sensor = sensor [Not sure if this is necessary]
         self.running = False
         self.time_queue = deque()
@@ -27,8 +27,8 @@ class air_quality_DAQ(object):
         self.P25_queue = deque()
         self.P50_queue = deque()
         self.P100_queue = deque()
-        self.maxdata = 10
-        self.n_merge = 5
+        self.maxdata = int(maxdata)
+        self.n_merge = int(n_merge)
         self.PM01_list = []
         self.PM25_list = []
         self.PM10_list = []
@@ -134,12 +134,10 @@ class air_quality_DAQ(object):
             self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue)        
 
     def add_time(self, queue, timelist, data):
-        print('Input time: {}'.format(data))
         timelist.append(data)
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
-            print('Queue time: {}'.format(timelist[int((self.n_merge)/2)]))
             timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
@@ -153,10 +151,10 @@ class air_quality_DAQ(object):
             queue.popleft()
 
     def update_plot(self,plot_id,xdata,xlabel,ylable,title,ydata1,ydata2=None,ydata3=None):
-        print("\n\n\n")
-        print("Number of time entries = {}".format(len(xdata)))
-        print("Number of PM1 entries = {}".format(len(ydata1)))
-        print("\n\n\n")
+        #print("\n\n\n")
+        #print("Number of time entries = {}".format(len(xdata)))
+        #print("Number of PM1 entries = {}".format(len(ydata1)))
+        #print("\n\n\n")
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
@@ -172,6 +170,8 @@ class air_quality_DAQ(object):
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         fig.show()
         plt.pause(0.0005)
+        
+    
 
 
 
