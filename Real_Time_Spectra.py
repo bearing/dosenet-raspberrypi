@@ -347,30 +347,42 @@ class Real_Time_Spectra(object):
         
     def plot_isotopes(self):
         #Plotting the the three Isotopes on same plot
-        plt.clf()
-        plt.cla()
+        
         plt.figure(3)
         
-        temp_K_data_counts=list(self.K_data_counts)
-        temp_Bi_data_counts=list(self.Bi_data_counts)
-        temp_Tl_data_counts =list(self.Tl_data_counts)
-        temp_times=list(self.times)
-          
-        plt.ion()
         
-            
-           
-        #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
-        #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
-        #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
           
-        if self.isotopes_drawn:
-            plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-              ncol=3, fancybox=True, shadow=False,numpoints=1)
-            self.isotopes_drawn = False
+        plt.ion()       # Enable interactive mode
+        fig = plt.figure(3)  # Create figure
+        axes = fig.add_subplot(111) # Add subplot (dont worry only one plot appears)
+
+        axes.set_autoscale_on(True) # enable autoscale
+        axes.autoscale_view(True,True,True)
+        l , = plt.plot([], [])
+        while True:
+            temp_K_data_counts=list(self.K_data_counts)
+            temp_Bi_data_counts=list(self.Bi_data_counts)
+            temp_Tl_data_counts =list(self.Tl_data_counts)
+            temp_times=list(self.times)
+            
+            l.set_data(temp_K_data_counts,temp_times) # update data
+            l.set_data(temp_Bi_data_counts,temp_times)
+            l.set_data(temp_Tl_data_counts,temp_times)
+            axes.relim()        # Recalculate limits
+            axes.autoscale_view(True,True,True) #Autoscale
+            plt.draw()      # Redraw
+               
+            #plt.plot_date(times,K_counts,'bo',label='k-40')
+            plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
+            #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
+            plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+            #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
+            plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+          
+            if self.isotopes_drawn:
+                plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+                           ncol=3, fancybox=True, shadow=False,numpoints=1)
+                self.isotopes_drawn = False
         
        
             
