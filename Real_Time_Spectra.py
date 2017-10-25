@@ -3,15 +3,15 @@ from __future__ import division, print_function
 # from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
 # from pandas import DataFrame
-# import matplotlib
-# matplotlib.use('Qt4Agg')
+#import matplotlib
+#matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 # import seaborn as sns
 # from ggplot import *
 #from mpltools import style
 #from mpltools import layout
 
-# import Tkinter
+import Tkinter
 # from PySide.QtGui import QApplication
 #from PyQt5.QtWidgets import QApplication
 
@@ -50,10 +50,6 @@ class Real_Time_Spectra(object):
 
         self.colorbar_drawn = True
 
-        '''
-        Start up the plotting windows.
-        '''
-        self.start_up_plotting()
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
