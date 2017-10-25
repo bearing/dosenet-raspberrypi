@@ -117,9 +117,7 @@ class Real_Time_Spectra(object):
                    
         fig.autofmt_xdate()
         plt.show()
-        plt.clf()
-        plt.cla()
-        plt.close()
+        
         #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
@@ -371,6 +369,9 @@ class Real_Time_Spectra(object):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
               ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
+        plt.clf()
+        plt.cla()
+        plt.close()
             
     def plot_sum(self):
         """
