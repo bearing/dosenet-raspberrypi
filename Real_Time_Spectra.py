@@ -119,6 +119,7 @@ class Real_Time_Spectra(object):
         plt.show()
         plt.clf()
         plt.cla()
+        plt.close()
         #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
