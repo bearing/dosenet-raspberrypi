@@ -373,7 +373,7 @@ class Manager_D3S(object):
             '--datalogflag', '-a', action='store_true', default=False)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
         parser.add_argument('--test', '-t', action='store_true', default=None)
-        parser.add_argument('--transport', '-n', default='any')
+        parser.add_argument('--transport', '-n', default= 'usb')
         parser.add_argument('--interval', '-i', type=int, default=5)
         parser.add_argument('--maxspectra', '-s', default=20)
         parser.add_argument('--count', '-o', dest='count', default=0)
