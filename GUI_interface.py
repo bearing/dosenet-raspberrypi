@@ -32,6 +32,7 @@ def close(index):
     if index == 6:
         mgrD3S.close(1)
 
+options = list(range(1, 100))  
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -39,6 +40,10 @@ varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
+varOption = Tkinter.StringVar()
+varOption.set(options[0])
+
+
 
 
 def make_run_gui():
@@ -203,14 +208,17 @@ def weather_test():
         print("create D3S file")
 
     make_run_gui() 
-  
+
 
 AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, font="Times 25")    
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25")
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25")
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
-maxdata = Entry(top)
-n_merge = Entry(top)
+# maxdata = Entry(top)
+# n_merge = Entry(top)
+maxdata = tk.OptionMenu(top, varOption, *options)
+n_merge = tk.OptionMenu(top, varOption, *options)
+
 maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
 nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
