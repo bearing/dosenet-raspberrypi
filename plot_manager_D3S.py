@@ -9,32 +9,24 @@ import kromek
 import numpy as np
 import signal
 import sys
-from Crypto.Cipher import AES
-from collections import deque
-import matplotlib.pyplot as plt
 
-from auxiliaries import Config, PublicKey, LED, set_verbosity
-from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
-from auxiliaries import datetime_from_epoch, set_verbosity
+
+from auxiliaries import set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
 # import spectra_fitter
 
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
-from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
-from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
-from globalvalues import DEFAULT_INTERVAL_TEST_D3S
-
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
-    print 'Got Sigterm!'
+
+    print('Got Sigterm!')
+
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
@@ -122,11 +114,11 @@ class Manager_D3S(object):
 
         self.data_handler.backlog_to_queue()
 
-        if self.plot:
-            print('creating plotter')
-            self.rt_plot = Real_Time_Spectra(
-                manager=self,
-                verbosity=self.v)
+        print('creating plotter')
+        self.rt_plot = Real_Time_Spectra(
+            manager=self,
+            verbosity=self.v)
+
 
     def z_flag(self):
         """
@@ -218,9 +210,10 @@ class Manager_D3S(object):
                 2, "No interval given, using interval at 30 seconds")
             interval = DEFAULT_INTERVAL_NORMAL_D3S
 
-        self.interval = interval
+        self.interval = int(interval)
 
-
+    def close(self, plot_id):
+        self.rt_plot.close(plot_id)
 
     def run(self):
         """
@@ -232,7 +225,9 @@ class Manager_D3S(object):
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
+
+        print('Discovered %s' % devs)
+
         if len(devs) <= 0:
             return
 
@@ -249,6 +244,8 @@ class Manager_D3S(object):
         done_devices = set()
         try:
             while self.running:
+
+                print("Plot_manager.run: getting data")
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
                         if self.create_structures:
@@ -267,6 +264,8 @@ class Manager_D3S(object):
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
+                            self.rt_plot.make_image()
+
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
@@ -310,15 +309,16 @@ class Manager_D3S(object):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
-    def plot_waterfall(self):
+    def plot_waterfall(self, plot_id):
         """Wrapper around waterfall plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_waterfall()
+        self.rt_plot.plot_waterfall(plot_id)
 
-    def plot_spectrum(self):
+    def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_sum()
+        self.rt_plot.plot_sum(plot_id)
+
 
     def plot_fitter(self):
         """
@@ -334,14 +334,16 @@ class Manager_D3S(object):
         """
         Get spectra from sensor, display text, send to server.
         """
+
+        self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
+
         if self.plot:
-            self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
 
             '''
             Plot the data.
             '''
-            self.plot_waterfall()
-            self.plot_spectrum()
+            self.plot_waterfall(1)
+            self.plot_spectrum(2)
             # self.plot_fitter()
 
             '''
@@ -360,8 +362,9 @@ class Manager_D3S(object):
         self.running = False
         self.data_handler.send_all_to_backlog()
 
+        
         del(self)
-
+        
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()

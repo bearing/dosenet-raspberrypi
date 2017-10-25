@@ -3,20 +3,18 @@ from __future__ import division, print_function
 # from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
 # from pandas import DataFrame
-import matplotlib
-matplotlib.use('GTKAgg')
-# matplotlib.use('TkAgg')
-# matplotlib.use('Qt4Agg')
+#import matplotlib
+#matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+# import seaborn as sns
+# from ggplot import *
+#from mpltools import style
+#from mpltools import layout
 
-import gc
-
-from mpltools import style
-# from mpltools import layout
-
-# import Tkinter
+import Tkinter
 # from PySide.QtGui import QApplication
-from PyQt5.QtWidgets import QApplication
+#from PyQt5.QtWidgets import QApplication
+
 
 from auxiliaries import set_verbosity
 from collections import deque
@@ -31,72 +29,27 @@ class Real_Time_Spectra(object):
                  resolution=256):
         """Initiate class variables."""
 
-        '''
-        Initialize the verbosity.
-        '''
         self.v = verbosity
-
-        '''
-        Set the verbosity if there is no manager or logfile.
-        '''
         if manager and logfile is None:
             set_verbosity(self, logfile=manager.logfile)
         else:
             set_verbosity(self, logfile=logfile)
 
-        '''
-        Set the class manager equal to the manager using this class.
-        '''
         self.manager = manager
 
-        '''
-        Set the interval equal to the interval value from the manager.
-        '''
         self.interval = manager.interval
-
-        '''
-        Initialize a queue to hold the spectra.
-        '''
         self.queue = deque()
 
-        '''
-        Set the maximum number of spectra equal to the value from the manager.
-        '''
         self.maxspectra = manager.maxspectra
 
-        '''
-        Initialize the waterfall data.
-        '''
-        self.data = None
+        self.maxspectra = manager.maxspectra
 
-        '''
-        Initialize the resolution (number of lines in each horizontal 'strip'
-        of the waterfall).
-        '''
+        self.data = None
         self.resolution = resolution
 
-        '''
-        Initialize the variable used to check if the first waterfall needs to
-        be drawn.
-        '''
-        self.first_waterfall = True
+        self.first = True
 
-        # self.first_colorbar = True
-
-        '''
-        Initialize the variable to check if the waterfall has been drawn.
-        '''
-        self.waterfall_drawn = False
-
-        '''
-        Initialize the variable to check if the spectrum has been drawn.
-        '''
-        self.spectrum_drawn = False
-
-        '''
-        Start up the plotting windows.
-        '''
-        self.start_up_plotting()
+        self.colorbar_drawn = True
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
@@ -122,7 +75,16 @@ class Real_Time_Spectra(object):
         height = int(height_scaling * self.screen_height)
 
         '''
-        Apply the changes to the window geometry.
+        Apply the changes to the window geometry.if self.colorbar_drawn:
+
+            self.cb = plt.colorbar()
+            self.colorbar_drawn = False
+
+        if not self.colorbar_drawn:
+
+            self.cb.remove()
+            self.cb = plt.colorbar()
+
         '''
         plot_manager.window.setGeometry(x_pos, y_pos, width, height)
 
@@ -179,31 +141,11 @@ class Real_Time_Spectra(object):
         self.setup_window_geo(0.08, 0.32, 0.36, 0.36)
 
         '''
-        Show the blank plot without blocking further changes to the figure
-        window. Allows for fast updating of the figure later.
-        '''
-        plt.show(block=False)
 
-        # '''
-        # Draw the blank canvas figure for the spectrum plot and store it as the
-        # second figure window.
-        # '''
-        # plt.figure(2), \
-        #     (self.spectrum_plot_axis, \
-        #      self.spectrum_sumplot_axis) = plt.subplots(2, 1,
-        #                                 gridspec_kw={'nrows': 2,
-        #                                              'ncols': 1,
-        #                                              'height_ratios': [4, 1]})
-
-        '''
-        Setup the figure window for the spectrum graph.
+        Draw the blank canvas figure for the spectrum plot and store it as the
+        second figure window.
         '''
         plt.figure(2)
-
-        '''
-        Add a subplot to the figure window so we can add artists to it.
-        '''
-        self.spectrum_axis = plt.figure(2).add_subplot(1, 1, 1)
 
         '''
         Change the window geometry (position and size) using the proper scaling
@@ -211,11 +153,6 @@ class Real_Time_Spectra(object):
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
 
-        '''
-        Show the blank plot without blocking further changes to the figure
-        window. Allows for fast updating of the figure later.
-        '''
-        plt.show(block=False)
 
     def add_data(self, queue, spectra, maxspectra):
         """
@@ -263,8 +200,6 @@ class Real_Time_Spectra(object):
         '''
         temp_data = np.array(data)
 
-        print(temp_data.shape)
-
         '''
         Save the original length of the temporary data queue.
         '''
@@ -276,19 +211,21 @@ class Real_Time_Spectra(object):
         '''
         running_avg_array = sum(temp_data) / temp_length
 
-        print(running_avg_array.shape)
-
         '''
         Calculate the sum of the spectra.
         '''
-        sum_data = np.sum(temp_data, 1)
-
-        print(sum_data.shape)
+        sum_data = sum(temp_data)
 
         '''
         Return the running average and summation data.
         '''
+        
         return running_avg_array, sum_data
+    
+    def close(self,plot_id):
+        plt.close(plot_id)
+        print("Plot_id in real time spectra {}".format(plot_id))
+
 
     def rebin(self, data, n=4):
         """
@@ -319,9 +256,9 @@ class Real_Time_Spectra(object):
         """
         Prepares an array for the waterfall plot
         """
-        if self.first_waterfall:
+        if self.first:
 
-            self.first_waterfall = False
+            self.first = False
             self.data = self.fix_array()
 
         else:
@@ -332,7 +269,6 @@ class Real_Time_Spectra(object):
             Removes oldest spectra to keep size equal to maxspectra
             '''
             if len(self.data) > self.maxspectra:
-
                 self.data = self.data[:-1]
 
     def fix_array(self):
@@ -344,7 +280,7 @@ class Real_Time_Spectra(object):
 
         return new_array
 
-    def sum_graph(self, avg_data, sum_data):
+    def sum_graph(self, data):
         """Prepares plot for sum graph."""
 
         '''
@@ -372,24 +308,26 @@ class Real_Time_Spectra(object):
         '''
         Create the x-axis data for the spectrum plot.
         '''
-        self.spectrum_bins = np.linspace(0, 4096, 256)
+        x = np.linspace(0, 4096, 256)
 
         '''
         Plot the spectrum plot.
         '''
-        plt.plot(self.spectrum_bins, avg_data, drawstyle='steps-mid')
-
-    def plot_waterfall(self):
+        plt.plot(x, data, drawstyle='steps-mid')
 
         '''
-        Switch to the waterfall figure window.
+        Show the spectrum plot.
         '''
-        plt.figure(1)
+        plt.show()
 
         '''
-        Clear the prior spectrum figure.
+        Wait before displaying another plot. Otherwise, wait the specified
+        number of seconds before continuing with the code execution.
         '''
-        plt.clf()
+        plt.pause(0.0005)
+
+    def plot_waterfall(self,plot_id):
+        plt.figure(plot_id)
 
         """
         Grabs the data for waterfall plot.
@@ -405,131 +343,63 @@ class Real_Time_Spectra(object):
                                          extent=[1, 4096, 0,
                                          np.shape(self.data)[0]
                                          * self.interval])
-        # """
-        # Updates the colorbar by removing old colorbar.
-        # """
-        # if self.first_colorbar:
-        #
-        #     self.cb = plt.colorbar()
-        #     self.first_colorbar = False
-        #
-        # if not self.first_colorbar:
-        #
-        #     self.cb.remove()
-        #     self.cb = plt.colorbar()
 
-        '''
-        Add a colorbar.
-        '''
-        plt.colorbar()
+        """
+        Updates the colorbar by removing old colorbar.
+        """
+        if self.colorbar_drawn:
 
-        '''
-        Resize the plot so the figure window can fit both it and the axes to
-        the plot.
-        '''
+            self.cb = plt.colorbar()
+            self.colorbar_drawn = False
+
+        if not self.colorbar_drawn:
+
+            self.cb.remove()
+            self.cb = plt.colorbar()
+
         plt.tight_layout()
 
-        '''
-        Update the figure window with the new waterfall plot.
-        '''
-        plt.figure(1).canvas.update()
+        plt.show()
+        
+        plt.pause(0.0005)
 
-        '''
-        Refresh the Qt events used to create the canvas.
-        '''
-        plt.figure(1).canvas.flush_events()
-
-        '''
-        Collect and remove the figure window cache.
-        '''
-        gc.collect()
-
-    def plot_sum(self):
+    def plot_sum(self,plot_id):
         """
         Plot the sum (spectrum) figure.
         """
-        '''
-        Get the running average
-        '''
-        avg_data, sum_data = self.run_avg_data(self.queue, self.maxspectra)
+
+        # plt.figure(figsize=(25,15))
 
         '''
         Point to the figure window for the spectrum plot.
         '''
-        plt.figure(2)
+        plt.figure(plot_id)
+
+        '''
+        Get the running average
+        '''
+         
+        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
+        
 
         '''
         Clear the prior spectrum figure.
         '''
         plt.clf()
-
-        # '''
-        # Plot the spectrum figure fresh if it hasn't been plotted before.
-        #
-        # Otherwise, just update the x and y data, restore the background to the
-        # plot, redraw the plot contents and fill the plot window.
-        # '''
-        # if self.spectrum_drawn == False:
-        #
-        #     '''
-        #     Plot the spectrum graph.
-        #     '''
-        #     self.sum_graph(avg_data, sum_data)
-        #
-        #     '''
-        #     Show the spectrum graph.
-        #     '''
-        #     plt.show(block=False)
-        #
-        #     '''
-        #     Draw the figure canvas.
-        #     '''
-        #     plt.figure(2).canvas.draw()
-        #
-        #     '''
-        #     Store the background to the spectrum plot.
-        #     '''
-        #     self.spectrum_background = plt.figure(2).canvas.copy_from_bbox(self.spectrum_axis.bbox)
-        #
-        #     '''
-        #     Ensure the entire plot isn't replotted again.
-        #     '''
-        #     self.spectrum_drawn = True
-        #
-        # else:
-        #
-        #     '''
-        #     Set new plot data.
-        #     '''
-        #     self.spectrum_plot.set_data(self.spectrum_bins, avg_data)
-        #
-        #     '''
-        #     Restore the background region of the spectrum plot.
-        #     '''
-        #     plt.figure(2).canvas.restore_region(self.spectrum_background)
-        #
-        #     '''
-        #     Redraw the artist corresponding to the spectrum shape only.
-        #     '''
-        #     self.spectrum_axis.draw_artist(self.spectrum_plot)
-        #
-        #     '''
-        #     Copy over the new figure from the old one and only change what has
-        #     been changed.
-        #     '''
-        #     plt.figure(2).canvas.blit(self.spectrum_axis.bbox)
+        '''
+        Plot the spectrum figure
+        '''
+        self.sum_graph(run_avg)
 
         '''
-        Update the plot with the new spectrum.
+        Show the updated spectrum figure window.
         '''
-        plt.figure(2).canvas.update()
+        plt.show()
 
         '''
-        Refresh the Qt events used to create the canvas.
+        Pause before displaying the next figure window.
         '''
-        plt.figure(2).canvas.flush_events()
+        plt.pause(0.0005)
 
-        '''
-        Collect and remove the figure window cache.
-        '''
-        gc.collect()
+        # plt.close()
+
