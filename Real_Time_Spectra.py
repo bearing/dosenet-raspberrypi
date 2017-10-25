@@ -349,8 +349,6 @@ class Real_Time_Spectra(object):
         #Plotting the the three Isotopes on same plot
         
         plt.figure(3)
-        fig = plt.figure(3)
-        ax = fig.add_subplot(111)
         temp_K_data_counts=list(self.K_data_counts)
         temp_Bi_data_counts=list(self.Bi_data_counts)
         temp_Tl_data_counts =list(self.Tl_data_counts)
@@ -360,29 +358,17 @@ class Real_Time_Spectra(object):
         plt.ion()       # Enable interactive mode
              
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        l1, = ax.plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        l2, = ax.plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        l3, = ax.plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
 
         if self.isotopes_drawn:
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
-        # draw and show it
-        ax.relim() 
-        ax.autoscale_view(True,True,True)
-        fig.canvas.draw()
-        plt.show(block=False)
-        
-        # loop to update the data
-        while True:
-           l1.set_ydata(temp_K_data_counts) 
-           l2.set_ydata(temp_Bi_data_counts)
-           l3.set_ydata(temp_Tl_data_counts)
-           fig.canvas.draw()
-           time.sleep(0.01)
+       
     
         
        
