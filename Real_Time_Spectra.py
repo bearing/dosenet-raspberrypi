@@ -353,7 +353,7 @@ class Real_Time_Spectra(object):
         temp_Tl_data_counts =list(self.Tl_data_counts)
         temp_times=list(self.times)
           
-    
+        plt.ion()
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
