@@ -40,9 +40,10 @@ varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
-varOption = Tkinter.StringVar()
-varOption.set(options[0])
-
+maxdata = Tkinter.StringVar()
+varOption1.set(options[0])
+n_merge = Tkinter.StringVar()
+varOption2.set(options[0])
 
 
 
@@ -216,8 +217,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 # maxdata = Entry(top)
 # n_merge = Entry(top)
-maxdata = Tkinter.OptionMenu(top, varOption, *options)
-n_merge = Tkinter.OptionMenu(top, varOption, *options)
+maxdata_option = Tkinter.OptionMenu(top, maxdata, *options)
+n_merge_option = Tkinter.OptionMenu(top, n_merge, *options)
 
 maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
 nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
@@ -228,9 +229,9 @@ WeatherButton.pack(pady = 3)
 CO2Button.pack(pady = 3)
 d3sButton.pack(pady = 3) 
 maxdata_text.pack()
-maxdata.pack()
+maxdata_option.pack()
 nmerge_text.pack()
-n_merge.pack()
+n_merge_option.pack()
 RecordButton.pack(pady = 6)
     
 top.mainloop()
