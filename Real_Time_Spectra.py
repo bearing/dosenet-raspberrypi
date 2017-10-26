@@ -280,19 +280,26 @@ class Real_Time_Spectra(object):
 
         return new_array
 
-    def sum_graph(self, data):
+    def sum_graph(self, data, count, time):
         """Prepares plot for sum graph."""
 
         '''
         Switch to working on the spectrum figure window.
         '''
         plt.figure(2)
+        fig = plt.figure(2)
+
+        ax1 = fig.add_subplot(311)
+        ax2 = fig.add_subplot(312)
 
         '''
         Set the labels for the spectrum plot.
         '''
-        plt.xlabel('Channel')
-        plt.ylabel('Counts')
+        ax1.xlabel('Channel')
+        ax1.ylabel('Counts')
+
+        ax2.xlabel('Time')
+        ax2.ylabel('Counts')
 
         '''
         Resize the plot to make room for the axes labels without resizing the
@@ -303,7 +310,7 @@ class Real_Time_Spectra(object):
         '''
         Set a logarithmic y-scale.
         '''
-        plt.yscale('log')
+        ax1.yscale('log')
 
         '''
         Create the x-axis data for the spectrum plot.
@@ -313,7 +320,9 @@ class Real_Time_Spectra(object):
         '''
         Plot the spectrum plot.
         '''
-        plt.plot(x, data, drawstyle='steps-mid')
+        ax1.plot(x, data, drawstyle='steps-mid')
+
+        ax2.plot(time, count)
 
         '''
         Show the spectrum plot.
@@ -363,7 +372,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id):
+    def plot_sum(self,plot_id,count, time):
         """
         Plot the sum (spectrum) figure.
         """
@@ -389,7 +398,7 @@ class Real_Time_Spectra(object):
         '''
         Plot the spectrum figure
         '''
-        self.sum_graph(run_avg)
+        self.sum_graph(run_avg,count,time)
 
         '''
         Show the updated spectrum figure window.

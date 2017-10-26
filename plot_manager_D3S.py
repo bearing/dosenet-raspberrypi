@@ -263,7 +263,7 @@ class Manager_D3S(object):
                                 time.time() - self.interval)
 
                             self.handle_spectra(
-                                this_start, this_end, reading[4])
+                                this_start, this_end, reading[4], dev_count,serial)
                             self.rt_plot.make_image()
 
                         if dev_count >= self.count > 0:
@@ -314,10 +314,10 @@ class Manager_D3S(object):
 
         self.rt_plot.plot_waterfall(plot_id)
 
-    def plot_spectrum(self,plot_id):
+    def plot_spectrum(self,plot_id,count,time):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
 
-        self.rt_plot.plot_sum(plot_id)
+        self.rt_plot.plot_sum(plot_id,count,time)
 
 
     def plot_fitter(self):
@@ -330,7 +330,7 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra):
+    def handle_spectra(self, this_start, this_end, spectra, count, time):
         """
         Get spectra from sensor, display text, send to server.
         """
@@ -370,7 +370,7 @@ class Manager_D3S(object):
         parser = argparse.ArgumentParser()
         parser.add_argument('--datalog', '-d', default=None)
         parser.add_argument(
-            '--datalogflag', '-a', action='store_true', default=False)
+            '--datalogflag', '-a', action='store_true', default=True)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
         parser.add_argument('--test', '-t', action='store_true', default=None)
         parser.add_argument('--transport', '-n', default= 'usb')
