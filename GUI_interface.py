@@ -32,7 +32,8 @@ def close(index):
     if index == 6:
         mgrD3S.close(1)
 
-options = list(range(1, 100))  
+option1 = [5,10,15,20,25]  
+option2 = [1,2,3,4,5,10,20,30,40,50,60,120,180,240,300]
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -41,9 +42,9 @@ vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 maxdata = Tkinter.StringVar()
-maxdata.set(options[0])
+maxdata.set(option1[0])
 n_merge = Tkinter.StringVar()
-n_merge.set(options[0])
+n_merge.set(option2[0])
 
 
 
@@ -217,8 +218,8 @@ CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="T
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
 # maxdata = Entry(top)
 # n_merge = Entry(top)
-maxdata_option = Tkinter.OptionMenu(top, maxdata, *options)
-n_merge_option = Tkinter.OptionMenu(top, n_merge, *options)
+maxdata_option = Tkinter.OptionMenu(top, maxdata, *option1)
+n_merge_option = Tkinter.OptionMenu(top, n_merge, *option2)
 
 maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
 nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
