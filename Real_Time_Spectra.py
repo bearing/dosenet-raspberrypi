@@ -370,11 +370,11 @@ class Real_Time_Spectra(object):
                 self.isotopes_drawn = False
         while self.data_length1 > maxspectra:
           if  self.data_length1 > maxspectra:
-            del self.K_data_counts[0]
+            del plt.self.K_data_counts[0]
           if  self.data_length2 > maxspectra:
-            del self.Bi_data_counts[0]
+            del plt.self.Bi_data_counts[0]
           if self.data_length3 > maxspectra:
-            del self.Tl_data_counts[0]
+            del plt.self.Tl_data_counts[0]
         plt.show()
             
     def plot_sum(self):
