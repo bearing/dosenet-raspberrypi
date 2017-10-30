@@ -175,17 +175,17 @@ class Real_Time_Spectra(object):
         self.Bi_data_counts.append(Bi_counts)
         self.Tl_data_counts.append(Tl_counts)
         
-        data_length1=len(self.K_data_counts)
-        data_length2=len(self.Bi_data_counts)
-        data_length3=len(self.Tl_data_counts)
+        self.data_length1=len(self.K_data_counts)
+        self.data_length2=len(self.Bi_data_counts)
+        self.data_length3=len(self.Tl_data_counts)
     
-        if  data_length1 > maxspectra:
+        if  self.data_length1 > maxspectra:
             print('this is inside add_isotope_counts',len(self.K_data_counts))
             self.K_data_counts.popleft()
-        if  data_length2 > maxspectra:
+        if  self.data_length2 > maxspectra:
             print('this is inside add_isotope_counts',len(self.Bi_data_counts))
             self.Bi_data_counts.popleft()
-        if  data_length3 > maxspectra:
+        if self.data_length3 > maxspectra:
             print('this is inside add_isotope_counts',len(self.Tl_data_counts))
             self.Tl_data_counts.popleft()
     def run_avg_data(self, data, maxspectra):
@@ -345,7 +345,7 @@ class Real_Time_Spectra(object):
         plt.pause(0.0005)
         # plt.close()
         
-    def plot_isotopes(self):
+    def plot_isotopes(self,maxspectra):
         #Plotting the the three Isotopes on same plot
         
         plt.figure(3)
@@ -368,10 +368,14 @@ class Real_Time_Spectra(object):
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
-       
-    
-        
-       
+        while self.data_length1 > maxspectra:
+          if  self.data_length1 > maxspectra:
+            del self.K_data_counts[0]
+          if  self.data_length2 > maxspectra:
+            del self.Bi_data_counts[0]
+          if self.data_length3 > maxspectra:
+            del self.Tl_data_counts[0]
+        plt.show()
             
     def plot_sum(self):
         """
