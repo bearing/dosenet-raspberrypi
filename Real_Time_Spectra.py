@@ -345,7 +345,7 @@ class Real_Time_Spectra(object):
         plt.pause(0.0005)
         # plt.close()
         
-    def plot_isotopes(self,maxspectra):
+    def plot_isotopes(self,maxspectra=20):
         #Plotting the the three Isotopes on same plot
         
         plt.figure(3)
