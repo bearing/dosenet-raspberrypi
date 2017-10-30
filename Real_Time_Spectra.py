@@ -358,11 +358,11 @@ class Real_Time_Spectra(object):
         plt.ion()       # Enable interactive mode
              
         #plt.plot_date(times,K_counts,'bo',label='k-40')
-        plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
+        ax1=plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+        ax2=plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        ax3=plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
 
         if self.isotopes_drawn:
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
@@ -370,11 +370,11 @@ class Real_Time_Spectra(object):
                 self.isotopes_drawn = False
         while self.data_length1 > maxspectra:
           if  self.data_length1 > maxspectra:
-            del plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')[0]
+            del ax1[0]
           if  self.data_length2 > maxspectra:
-            del  plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')[0]
+            del ax2[0]
           if self.data_length3 > maxspectra:
-            del plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')[0]
+            del ax3[0]
         plt.show()
             
     def plot_sum(self):
