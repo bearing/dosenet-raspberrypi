@@ -69,6 +69,10 @@ class ServerSender(object):
         try:
             if mode is None:
                 self.mode = DEFAULT_SENDER_MODE
+            elif mode == 'udp_test':
+                self.mode = 'udp_test'
+            elif mode == 'tcp_test':
+                self.mode = 'tcp_test'
             elif mode.lower() == 'udp':
                 self.mode = 'udp'
             elif mode.lower() == 'tcp':
