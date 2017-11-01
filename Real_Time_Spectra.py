@@ -370,7 +370,7 @@ class Real_Time_Spectra(object):
         Get the running average
         '''
          
-        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
+        run_avg, self.sum_data = self.run_avg_data(self.queue)
         
 
         '''
