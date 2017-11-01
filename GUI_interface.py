@@ -146,6 +146,7 @@ def make_run_gui():
         global plot_jobs
         check_plots(5)
         mgrD3S.plot_spectrum(2)
+        print("Updating spectra")
         plot_jobs[5]=top1.after(1000,D3S_spectra)
         
     def D3S_waterfall():
@@ -206,6 +207,7 @@ def weather_test():
         wdaq.create_file()
     if vard3s.get():
         global mgrD3S
+        print("N Merge: ",n_merge.get(), "Max_data: ", maxdata.get() )
         mgrD3S = plot_manager_D3S.Manager_D3S(maxdata.get(), n_merge.get(), plot = False)
         print("create D3S file")
 
