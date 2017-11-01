@@ -69,6 +69,7 @@ class Manager_D3S(object):
 
         self.interval = interval
         self.maxspectra = maxspectra
+
         self.count = count
         self.disp_count = list()
 
@@ -345,6 +346,7 @@ class Manager_D3S(object):
         """
 
         self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
+        print("length of queue:", len(self.rt_plot.queue))
 
         if self.plot:
 

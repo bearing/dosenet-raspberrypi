@@ -180,9 +180,11 @@ class Real_Time_Spectra(object):
         spectrum is more than the count window defined by the sum interval
         to create a running average.
         '''
+        print("maxspectra:", maxspectra)
         if data_length > maxspectra:
 
             queue.popleft()
+        print("len of quene in add data:", len(queue))
 
     def run_avg_data(self, data):
         """
@@ -195,7 +197,7 @@ class Real_Time_Spectra(object):
         summation of the spectra in the temporary data array.
         '''
         print("data",np.array(data))
-        running_avg_array = np.array(data).sum()/ len(data)
+        running_avg_array = np.array(data).sum(axis = 0)/ len(data)
         print("Integrated spectrum:", running_avg_array)
 
         '''
