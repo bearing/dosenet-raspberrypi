@@ -271,7 +271,7 @@ class Manager_D3S(object):
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
-                            self.rt_plot.make_image()
+                            
 
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
@@ -318,12 +318,13 @@ class Manager_D3S(object):
 
     def plot_waterfall(self, plot_id):
         """Wrapper around waterfall plotter in Real_Time_Spectra class"""
-
+        self.rt_plot.make_image()
         self.rt_plot.plot_waterfall(plot_id)
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
         count = np.array(self.disp_count)
+        print("Total count:", count)
         time = np.array(self.time_stamp)
         self.rt_plot.plot_sum(plot_id,count,time)
 
