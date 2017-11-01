@@ -184,32 +184,17 @@ class Real_Time_Spectra(object):
 
             queue.popleft()
 
-    def run_avg_data(self, data, maxspectra):
+    def run_avg_data(self, data):
         """
         Calculates a running average of all the count data for each bin in the
         queue.
         """
 
         '''
-        Save the original length of the data queue.
-        '''
-        data_length = len(data)
-
-        '''
-        Create a temporary data queue so the data can be summed.
-        '''
-        temp_data = np.array(data)
-
-        '''
-        Save the original length of the temporary data queue.
-        '''
-        temp_length = len(temp_data)
-
-        '''
         Calculate the running average as the mean of each element in the
         summation of the spectra in the temporary data array.
         '''
-        running_avg_array = sum(temp_data) / temp_length
+        running_avg_array = np.sum(np.array(data)) / len(data)
 
         '''
         Calculate the sum of the spectra.
