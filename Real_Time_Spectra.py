@@ -184,7 +184,7 @@ class Real_Time_Spectra(object):
         if data_length > maxspectra:
 
             queue.popleft()
-        print("len of quene in add data:", len(queue))
+            print("len of queue in add data:", len(queue))
 
     def run_avg_data(self, data):
         """
@@ -196,9 +196,7 @@ class Real_Time_Spectra(object):
         Calculate the running average as the mean of each element in the
         summation of the spectra in the temporary data array.
         '''
-        print("data",np.array(data))
         running_avg_array = np.array(data).sum(axis = 0)/ len(data)
-        print("Integrated spectrum:", running_avg_array)
 
         '''
         Calculate the sum of the spectra.
