@@ -208,7 +208,7 @@ def weather_test():
     if vard3s.get():
         global mgrD3S
         print("N Merge: ",n_merge.get(), "Max_data: ", maxdata.get() )
-        mgrD3S = plot_manager_D3S.Manager_D3S(maxdata.get(), n_merge.get(), plot = False)
+        mgrD3S = plot_manager_D3S.Manager_D3S(n_merge.get(), maxdata.get(), plot = False)
         print("create D3S file")
 
     make_run_gui() 
@@ -223,8 +223,8 @@ d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25
 maxdata_option = Tkinter.OptionMenu(top, maxdata, *option1)
 n_merge_option = Tkinter.OptionMenu(top, n_merge, *option2)
 
-nmerge_text = Label(top, text = "Data points on plot", font = "Times 20")
-maxdata_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
+maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
+nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
  
 AirButton.pack(pady = 3)  
