@@ -64,13 +64,14 @@ class Manager_D3S(object):
 
         self.total = None
         self.lst = None
+        self.time_stamp = list()
         self.create_structures = True
 
         self.interval = interval
         self.maxspectra = maxspectra
         self.count = count
-        self.dev_count = 0
-        self.serial = 0
+
+
 
         self.config = None
         self.publickey = None
@@ -258,11 +259,11 @@ class Manager_D3S(object):
                             self.total += np.array(reading[4])
                             self.lst = np.concatenate(
                                 (self.lst, [np.array(reading[4])]))
-                        self.serial = reading[0]
-                        print("Serial and its type:", self.serial)
-                        self.dev_count = reading[1]
-                        print("Count and its type:", self.dev_count)
-                        if self.serial not in done_devices:
+                        serial = reading[0]
+                        dev_count = reading[1]
+                        self.time_stamp.append(time.time())
+
+                        if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
@@ -270,7 +271,7 @@ class Manager_D3S(object):
                                 this_start, this_end, reading[4])
                             self.rt_plot.make_image()
 
-                        if self.dev_count >= self.count > 0:
+                        if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
@@ -320,8 +321,8 @@ class Manager_D3S(object):
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-        count = self.dev_count
-        time = self.serial
+        count = self.total
+        time = np.array(self.time_stamp)
         self.rt_plot.plot_sum(plot_id,count,time)
 
 
