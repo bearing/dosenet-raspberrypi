@@ -18,6 +18,7 @@ from Crypto.Cipher import AES
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
+from globalvalues import TESTING_UDP_PORT, TESTING_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 
 TCP_TIMEOUT = 5
@@ -68,6 +69,10 @@ class ServerSender(object):
         try:
             if mode is None:
                 self.mode = DEFAULT_SENDER_MODE
+            elif mode == 'udp_test':
+                self.mode = 'udp_test'
+            elif mode == 'tcp_test':
+                self.mode = 'tcp_test'
             elif mode.lower() == 'udp':
                 self.mode = 'udp'
             elif mode.lower() == 'tcp':
@@ -89,6 +94,20 @@ class ServerSender(object):
         elif self.mode == 'tcp':
             if port is None:
                 self.port = DEFAULT_TCP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
+                self.address, self.port))
+        elif self.mode == 'udp_test':
+            if port is None:
+                self.port = TESTING_UDP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using UDP for {}:{}'.format(
+                self.address, self.port))
+        elif self.mode == 'tcp_test':
+            if port is None:
+                self.port = TESTING_TCP_PORT
             else:
                 self.port = port
             self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
@@ -193,12 +212,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_AQ(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 str(average_data),
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:      # on self.config.hash
@@ -208,12 +228,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_CO2(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 str(average_data),
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:
@@ -223,12 +244,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_weather(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 str(average_data),
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:
@@ -297,9 +319,9 @@ class ServerSender(object):
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
-        if self.mode == 'udp':
+        if self.mode == 'udp' or self.mode == 'udp_test':
             self.send_udp(encrypted)
-        elif self.mode == 'tcp':
+        elif self.mode == 'tcp' or self.mode == 'tcp_test':
             self.send_tcp(encrypted)
 
     def send_udp(self, encrypted):
@@ -577,7 +599,7 @@ if __name__ == '__main__':
         description='Sender for UDP/TCP data packets. ' +
         'Normally called from manager.py. ' +
         'Called directly, it will send a log message to the server.')
-    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP'],
+    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP', 'udp_test', 'tcp_test', 'UDP_test', 'TCP_test'],
                         default=DEFAULT_SENDER_MODE,
                         help='Network protocol to use')
     parser.add_argument('--config', '-g', type=str, default=DEFAULT_CONFIG,

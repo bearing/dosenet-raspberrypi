@@ -14,7 +14,7 @@ case "$1" in
     ;;
   test)
     echo "Starting weather sensor script in test mode" > $LOG
-    sudo python $DOSENET/managers.py --sensor 5 --test --datalogflag --logfile $LOG >> $LOG 2>&1
+    sudo python $DOSENET/managers.py --sensor 5 --sender-mode tcp_test --interval 30 --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping weather sensor script" >> $LOG

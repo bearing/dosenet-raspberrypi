@@ -1005,7 +1005,7 @@ if __name__ == '__main__':
         help='Enable logging local data (default off)')
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
-        choices=['udp', 'tcp', 'UDP', 'TCP'],
+        choices=['udp', 'tcp', 'UDP', 'TCP', 'udp_test', 'tcp_test'],
         help='The network protocol used in sending data ' +
         '(default {})'.format(DEFAULT_SENDER_MODE))
     parser.add_argument(

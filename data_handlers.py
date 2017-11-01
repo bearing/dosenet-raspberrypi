@@ -465,7 +465,7 @@ class Data_Handler(object):
                     self.send_to_memory(spectra=spectra)
                 if self.manager.sensor_type == 3 or \
                     self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
-                    self.send_to_memory(this_end, average_data=average_data)
+                    self.send_to_memory(average_data=average_data)
 
 class Data_Handler_Pocket(Data_Handler):
     """
