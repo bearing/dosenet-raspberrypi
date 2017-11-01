@@ -195,6 +195,7 @@ class Real_Time_Spectra(object):
         summation of the spectra in the temporary data array.
         '''
         running_avg_array = np.sum(np.array(data)) / len(data)
+        print("Integrated spectrum:", running_avg_array)
 
         '''
         Calculate the sum of the spectra.
