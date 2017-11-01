@@ -199,7 +199,7 @@ class Real_Time_Spectra(object):
         '''
         Calculate the sum of the spectra.
         '''
-        sum_data = sum(temp_data)
+        sum_data = sum(data)
 
         '''
         Return the running average and summation data.
