@@ -10,7 +10,7 @@ import numpy as np
 import signal
 import sys
 
-
+from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
@@ -70,6 +70,7 @@ class Manager_D3S(object):
         self.interval = interval
         self.maxspectra = maxspectra
         self.count = count
+        self.disp_count = list()
 
 
 
@@ -261,7 +262,8 @@ class Manager_D3S(object):
                                 (self.lst, [np.array(reading[4])]))
                         serial = reading[0]
                         dev_count = reading[1]
-                        self.time_stamp.append(time.time())
+                        self.disp_count.append(sum(reading[4]))
+                        self.time_stamp.append(datetime_from_epoch(time.time()))
 
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
@@ -321,7 +323,7 @@ class Manager_D3S(object):
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-        count = self.total
+        count = np.array(self.disp_count)
         time = np.array(self.time_stamp)
         self.rt_plot.plot_sum(plot_id,count,time)
 
