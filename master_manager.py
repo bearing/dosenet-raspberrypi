@@ -55,8 +55,6 @@ if __name__ == '__main__':
         pass
 
     if test_mode:
-        p = multiprocessing.Process(target=start_D3S, args=(1,))
-        t = multiprocessing.Process(target=start_dosenet, args=(1,))
         a = multiprocessing.Process(target=start_AQ, args=(1,))
         c = multiprocessing.Process(target=start_CO2, args=(1,))
         w = multiprocessing.Process(target=start_Weather, args=(1,))
