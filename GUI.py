@@ -23,13 +23,21 @@ sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_
 file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
 filename = "weather_test_results_"+file_time+".csv"
 
+options = list(range(1, 100))
+
 def weather_test(btn):
     app=gui("Weather Test","800x400")
     app.addLabel("instructions","Enter the numer of seconds to record:")
-    app.setLabelFont("20","Heletica")
-    app.addNumericEntry("seconds")
-    app.setFocus("seconds")
-    app.setNumericEntryHeight("seconds","4")
+    # app.setLabelFont("20","Heletica")
+    # app.addNumericEntry("seconds")
+    # app.setFocus("seconds")
+    # app.setNumericEntryHeight("seconds","4")
+    app.setFont("20","Heletica")
+    app.addLabelOptionBox("seconds", options)
+    app.setLabelOptionBoxHeight("seconds","4")
+
+
+
     def n(btn):
         time_of_program=app.getEntry("seconds")
         results=csv.writer(open(filename, "ab+"), delimiter = ",")

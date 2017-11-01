@@ -260,7 +260,7 @@ class Manager_D3S(object):
                                 (self.lst, [np.array(reading[4])]))
                         self.serial = reading[0]
                         self.dev_count = reading[1]
-                        if serial not in done_devices:
+                        if self.serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
