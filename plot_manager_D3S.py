@@ -259,9 +259,9 @@ class Manager_D3S(object):
                             self.lst = np.concatenate(
                                 (self.lst, [np.array(reading[4])]))
                         self.serial = reading[0]
-                        print("Serial and its type:"+ self.serial + type(self.serial))
+                        print("Serial and its type:", self.serial)
                         self.dev_count = reading[1]
-                        print("Count and its type:"+ self.dev_count + type(self.dev_count))
+                        print("Count and its type:", self.dev_count)
                         if self.serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
