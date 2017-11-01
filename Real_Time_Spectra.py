@@ -181,10 +181,11 @@ class Real_Time_Spectra(object):
         to create a running average.
         '''
         print("maxspectra:", maxspectra)
+        print("len of queue in add data before if:", len(queue))
         if data_length > maxspectra:
 
             queue.popleft()
-            print("len of queue in add data:", len(queue))
+
 
     def run_avg_data(self, data):
         """
