@@ -55,6 +55,8 @@ if __name__ == '__main__':
         pass
 
     if test_mode:
+        p = multiprocessing.Process(target=start_D3S, args=(1,))
+        t = multiprocessing.Process(target=start_dosenet, args=(1,))
         a = multiprocessing.Process(target=start_AQ, args=(1,))
         c = multiprocessing.Process(target=start_CO2, args=(1,))
         w = multiprocessing.Process(target=start_Weather, args=(1,))
@@ -66,12 +68,10 @@ if __name__ == '__main__':
         w = multiprocessing.Process(target=start_Weather, args=(0,))
 
     try:
-        """
         print('Starting D3S script process')
         p.start()
         print('Starting Pocket Geiger script process')
         t.start()
-        """
         print('Starting Air Quality Sensor script process')
         a.start()
         print('Starting CO2 sensor script process')
@@ -79,8 +79,8 @@ if __name__ == '__main__':
         print('Starting Weather sensor script process')
         w.start()
         print('started')
-        #p.join()
-        #t.join()
+        p.join()
+        t.join()
         a.join()
         c.join()
         w.join()
