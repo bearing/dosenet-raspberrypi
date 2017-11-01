@@ -295,11 +295,8 @@ class Real_Time_Spectra(object):
         '''
         Set the labels for the spectrum plot.
         '''
-        ax1.xlabel('Channel')
-        ax1.ylabel('Counts')
-
-        ax2.xlabel('Time')
-        ax2.ylabel('Counts')
+        ax1.set(xlabel = 'Channel', ylabel = 'Counts')
+        ax2.set(xlabel = 'Time', ylabel = 'Counts')
 
         '''
         Resize the plot to make room for the axes labels without resizing the
