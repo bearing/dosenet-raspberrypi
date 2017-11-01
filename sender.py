@@ -212,13 +212,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_AQ(self, timestamp, average_data, error_code=0):
-        avg-data_str = str(average_data).replace(',', ';')
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 avg-data_str,
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:      # on self.config.hash
@@ -228,13 +228,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_CO2(self, timestamp, average_data, error_code=0):
-        avg-data_str = str(average_data).replace(',', ';')
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 avg-data_str,
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:
@@ -244,13 +244,13 @@ class ServerSender(object):
             return raw_packet
 
     def construct_packet_new_weather(self, timestamp, average_data, error_code=0):
-        avg-data_str = str(average_data).replace(',', ';')
+        avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
                  str(timestamp),
-                 avg-data_str,
+                 avgdata_str,
                  str(error_code)]
             )
         except AttributeError:
