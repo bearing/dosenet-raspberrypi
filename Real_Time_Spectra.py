@@ -307,7 +307,7 @@ class Real_Time_Spectra(object):
         '''
         Set a logarithmic y-scale.
         '''
-        ax1.yscale('log')
+        ax1.set_yscale('log')
 
         '''
         Create the x-axis data for the spectrum plot.
