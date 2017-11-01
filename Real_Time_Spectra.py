@@ -180,8 +180,8 @@ class Real_Time_Spectra(object):
         spectrum is more than the count window defined by the sum interval
         to create a running average.
         '''
-        print("maxspectra:", maxspectra)
-        print("len of queue in add data before if:", len(queue))
+        print("maxspectra:", maxspectra,"of type", type(maxspectra))
+        print("len of queue in add data before if:", data_length)
         if data_length > maxspectra:
 
             queue.popleft()
