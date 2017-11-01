@@ -69,6 +69,8 @@ class Manager_D3S(object):
         self.interval = interval
         self.maxspectra = maxspectra
         self.count = count
+        self.dev_count = 0
+        self.serial = 0
 
         self.config = None
         self.publickey = None
@@ -256,17 +258,17 @@ class Manager_D3S(object):
                             self.total += np.array(reading[4])
                             self.lst = np.concatenate(
                                 (self.lst, [np.array(reading[4])]))
-                        serial = reading[0]
-                        dev_count = reading[1]
+                        self.serial = reading[0]
+                        self.dev_count = reading[1]
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
                             self.handle_spectra(
-                                this_start, this_end, reading[4], dev_count,serial)
+                                this_start, this_end, reading[4])
                             self.rt_plot.make_image()
 
-                        if dev_count >= self.count > 0:
+                        if self.dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
@@ -314,9 +316,10 @@ class Manager_D3S(object):
 
         self.rt_plot.plot_waterfall(plot_id)
 
-    def plot_spectrum(self,plot_id,count,time):
+    def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-
+        count = self.dev_count
+        time = self.serial
         self.rt_plot.plot_sum(plot_id,count,time)
 
 
@@ -330,7 +333,7 @@ class Manager_D3S(object):
         times = np.linspace(self.interval,total_time + 1,self.interval)
         spectra_fitter.main(self.rt_plot.sum_data, times)
 
-    def handle_spectra(self, this_start, this_end, spectra, count, time):
+    def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
