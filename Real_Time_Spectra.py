@@ -51,6 +51,9 @@ class Real_Time_Spectra(object):
 
         self.colorbar_drawn = True
 
+        self.disp_count = list()
+        self.time_stamp = list()
+
         plt.ion()
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
@@ -171,6 +174,8 @@ class Real_Time_Spectra(object):
         Add the new spectrum to queue.
         '''
         queue.append(new_spectra)
+        self.time_stamp.append(datetime_from_epoch(time.time()))
+        self.disp_count.append(sum(new_spectra))
 
         '''
         Save the original size of the data queue.
@@ -182,11 +187,11 @@ class Real_Time_Spectra(object):
         spectrum is more than the count window defined by the sum interval
         to create a running average.
         '''
-        print("maxspectra:", maxspectra,"of type", type(maxspectra))
-        print("len of queue in add data before if:", data_length)
         if data_length > maxspectra:
-
             queue.popleft()
+        if len(self.time_stamp) > maxspectra:
+            self.time_stamp = self.time_stamp[:-1]
+            self.disp_count = self.disp_count[:-1]
 
 
     def run_avg_data(self, data):
@@ -270,7 +275,7 @@ class Real_Time_Spectra(object):
 
         return new_array
 
-    def sum_graph(self, data, count, time):
+    def sum_graph(self, data):
         """Prepares plot for sum graph."""
 
         '''
@@ -281,6 +286,7 @@ class Real_Time_Spectra(object):
 
         ax1 = fig.add_subplot(311)
         ax2 = fig.add_subplot(312)
+
 
         '''
         Set the labels for the spectrum plot.
@@ -303,13 +309,14 @@ class Real_Time_Spectra(object):
         Create the x-axis data for the spectrum plot.
         '''
         x = np.linspace(0, 4096, 256)
+        
 
         '''
         Plot the spectrum plot.
         '''
         ax1.plot(x, data, drawstyle='steps-mid')
 
-        ax2.plot(time, count)
+        ax2.plot(self.time_stamp, self.disp_count)
 
 
     def plot_waterfall(self,plot_id):
@@ -349,7 +356,7 @@ class Real_Time_Spectra(object):
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id,count, time):
+    def plot_sum(self,plot_id,):
         """
         Plot the sum (spectrum) figure.
         """
@@ -372,7 +379,7 @@ class Real_Time_Spectra(object):
         '''
         Plot the spectrum figure
         '''
-        self.sum_graph(run_avg,count,time)
+        self.sum_graph(run_avg)
 
         '''
         Show the updated spectrum figure window.

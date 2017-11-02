@@ -64,16 +64,12 @@ class Manager_D3S(object):
 
         self.total = None
         self.lst = None
-        self.time_stamp = list()
         self.create_structures = True
 
         self.interval = interval
         self.maxspectra = maxspectra
 
         self.count = count
-        self.disp_count = list()
-
-
 
         self.config = None
         self.publickey = None
@@ -263,8 +259,6 @@ class Manager_D3S(object):
                                 (self.lst, [np.array(reading[4])]))
                         serial = reading[0]
                         dev_count = reading[1]
-                        self.disp_count.append(sum(reading[4]))
-                        self.time_stamp.append(datetime_from_epoch(time.time()))
 
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
@@ -324,10 +318,7 @@ class Manager_D3S(object):
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-        count = np.array(self.disp_count)
-        print("Total count:", count)
-        time = np.array(self.time_stamp)
-        self.rt_plot.plot_sum(plot_id,count,time)
+        self.rt_plot.plot_sum(plot_id)
 
 
     def plot_fitter(self):
