@@ -336,7 +336,6 @@ class Manager_D3S(object):
         """
 
         self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
-        print("length of queue:", len(self.rt_plot.queue))
 
         if self.plot:
 

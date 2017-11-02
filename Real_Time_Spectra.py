@@ -286,6 +286,7 @@ class Real_Time_Spectra(object):
 
         ax1 = fig.add_subplot(311)
         ax2 = fig.add_subplot(312)
+        ax3 = fig.add_subplot(313)
 
 
         '''
@@ -317,6 +318,8 @@ class Real_Time_Spectra(object):
         ax1.plot(x, data, drawstyle='steps-mid')
 
         ax2.plot(self.time_stamp, self.disp_count)
+
+        ax3.text("Counts: {}".format(disp_count[-1]), siza = 12, ha = "center")
 
 
     def plot_waterfall(self,plot_id):

@@ -207,7 +207,6 @@ def weather_test():
         wdaq.create_file()
     if vard3s.get():
         global mgrD3S
-        print("N Merge: ",n_merge.get(), "Max_data: ", maxdata.get() )
         mgrD3S = plot_manager_D3S.Manager_D3S(int(n_merge.get()), int(maxdata.get()), plot = False)
         print("create D3S file")
 
