@@ -51,6 +51,8 @@ class Real_Time_Spectra(object):
 
         self.colorbar_drawn = True
 
+        plt.ion()
+
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
         '''
@@ -309,16 +311,6 @@ class Real_Time_Spectra(object):
 
         ax2.plot(time, count)
 
-        '''
-        Show the spectrum plot.
-        '''
-        plt.show()
-
-        '''
-        Wait before displaying another plot. Otherwise, wait the specified
-        number of seconds before continuing with the code execution.
-        '''
-        plt.pause(0.0005)
 
     def plot_waterfall(self,plot_id):
         plt.figure(plot_id)
