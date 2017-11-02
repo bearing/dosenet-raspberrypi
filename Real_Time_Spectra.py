@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # from ggplot import *
 #from mpltools import style
 #from mpltools import layout
-
+import time
 import Tkinter
 # from PySide.QtGui import QApplication
 #from PyQt5.QtWidgets import QApplication

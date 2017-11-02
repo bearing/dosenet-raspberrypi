@@ -10,7 +10,6 @@ import numpy as np
 import signal
 import sys
 
-from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
