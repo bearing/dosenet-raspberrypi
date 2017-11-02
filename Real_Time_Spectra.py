@@ -362,8 +362,6 @@ class Real_Time_Spectra(object):
         Plot the sum (spectrum) figure.
         """
 
-        # plt.figure(figsize=(25,15))
-
         '''
         Point to the figure window for the spectrum plot.
         '''
@@ -374,7 +372,6 @@ class Real_Time_Spectra(object):
         '''
          
         run_avg, self.sum_data = self.run_avg_data(self.queue)
-        
 
         '''
         Clear the prior spectrum figure.
