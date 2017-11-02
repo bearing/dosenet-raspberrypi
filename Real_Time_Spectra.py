@@ -190,8 +190,8 @@ class Real_Time_Spectra(object):
         if data_length > maxspectra:
             queue.popleft()
         if len(self.time_stamp) > maxspectra:
-            self.time_stamp = self.time_stamp[:-1]
-            self.disp_count = self.disp_count[:-1]
+            self.time_stamp = self.time_stamp[1:]
+            self.disp_count = self.disp_count[1:]
 
 
     def run_avg_data(self, data):
