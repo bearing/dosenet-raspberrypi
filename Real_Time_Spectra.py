@@ -319,7 +319,7 @@ class Real_Time_Spectra(object):
 
         ax2.plot(self.time_stamp, self.disp_count)
 
-        ax3.text("Counts: {}".format(disp_count[-1]), siza = 12, ha = "center")
+        ax3.text("Counts: {}".format(self.disp_count[-1]), siza = 12, ha = "center")
 
 
     def plot_waterfall(self,plot_id):
