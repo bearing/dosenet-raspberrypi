@@ -325,7 +325,10 @@ class Real_Time_Spectra(object):
         top = 0.3
         ha = 'horizontalalignment'
 
-        ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts: {}".format(self.disp_count[-1]), fontsize = 20, ha = "center")
+        display = self.disp_count[-1]
+
+        ax3.set_axis_off()
+        ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts: {}".format(display), fontsize = 20, ha = "center")
 
 
     def plot_waterfall(self,plot_id):
