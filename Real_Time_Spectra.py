@@ -363,7 +363,7 @@ class Real_Time_Spectra(object):
            del temp_Tl_data_counts[0]
            del temp_times[0]
            plt.clf()
-           plt.tight_layout()
+           #plt.tight_layout()
            plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
         #plt.plot_date(times,K_counts,'bo',label='k-40')
