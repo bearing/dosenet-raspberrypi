@@ -50,7 +50,7 @@ n_merge.set(option2[0])
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    top1.geometry('+0+410')
+    top1.geometry('+0+610')
     global job1
     global jobd3s
     jobd3s = None
