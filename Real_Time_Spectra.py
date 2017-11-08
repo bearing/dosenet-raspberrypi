@@ -319,10 +319,6 @@ class Real_Time_Spectra(object):
 
         ax2.plot(self.time_stamp, self.disp_count)
 
-        # left = 0.25
-        # right = 0.3
-        # bottom = 0.25
-        # top = 0.3
         ha = 'horizontalalignment'
 
         display = int(self.disp_count[-1])
@@ -331,26 +327,22 @@ class Real_Time_Spectra(object):
 
         ax3.set_axis_off()
         if display <= 100:
-            ax3.text(0.2, 0.5,"Counts: "+ str(display), fontsize = 18 , ha = "center")
-            ax3.text(0.6, 0.5,"Dose: "+ dose_display, fontsize = 18, ha = "center")
-            ax3.set_facecolor("lightgreen")
+            ax3.text(0.1, 0.5,"Counts: "+ str(display), fontsize = 18 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 0.5,"Dose: "+ dose_display, fontsize = 18, ha = "center", backgroundcolor = "lightgreen")
 
         elif display > 100 and display <= 500:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
-            ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
-            ax3.set_facecolor("yellow")
+            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center" , backgroundcolor = "yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
-            ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
-            ax3.set_facecolor("orange")
+            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center", , backgroundcolor = "orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
-            ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
-            ax3.set_facecolor("red")
+            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center", backgroundcolor = "red")
 
 
 
