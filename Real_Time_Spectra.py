@@ -328,7 +328,18 @@ class Real_Time_Spectra(object):
         display = self.disp_count[-1]
 
         ax3.set_axis_off()
-        ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts: {}".format(display), fontsize = 20, ha = "center")
+        if display <= 100:
+            ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts", fontsize = 20, ha = "center")
+            ax3.text(0.6*(left+right), 0.5*(bottom+top),display, color ="lightgreen", fontsize = 20, ha = "center")
+        elif display > 100 and display <= 500:
+            ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts", fontsize = 20, ha = "center")
+            ax3.text(0.6*(left+right), 0.5*(bottom+top),display, color ="yellow", fontsize = 20, ha = "center")
+        elif display > 500 and display <= 2000:
+            ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts", fontsize = 20, ha = "center")
+            ax3.text(0.6*(left+right), 0.5*(bottom+top),display, color ="orange", fontsize = 20, ha = "center")
+        elif display > 2000:
+            ax3.text(0.5*(left+right), 0.5*(bottom+top),"Counts", fontsize = 20, ha = "center")
+            ax3.text(0.6*(left+right), 0.5*(bottom+top),display, color ="red", fontsize = 20, ha = "center")
 
 
     def plot_waterfall(self,plot_id):
