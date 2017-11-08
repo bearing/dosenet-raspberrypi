@@ -319,39 +319,41 @@ class Real_Time_Spectra(object):
 
         ax2.plot(self.time_stamp, self.disp_count)
 
-        left = 0.25
-        right = 0.3
-        bottom = 0.25
-        top = 0.3
+        # left = 0.25
+        # right = 0.3
+        # bottom = 0.25
+        # top = 0.3
         ha = 'horizontalalignment'
 
         display = int(self.disp_count[-1])
         print(display)
-        dose = '{:0.3e}'.format(display * 0.0000427/60)
+        dose = '{:0.3e}'.format(display * 0.0000427*60)
         dose_display = str(dose) + " $\mu$Sv/hr"
 
         ax3.set_axis_off()
         if display <= 100:
-            ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts:", fontsize = 18 , ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="lightgreen", fontsize = 18, ha = "center")
-            ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
-            ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="lightgreen", fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts:"display, fontsize = 18 , ha = "center")
+            ax3.text(0.6, 0.5,"Dose:"dose_display, fontsize = 18, ha = "center")
+            ax3.set_facecolor("lightgreen")
 
         elif display > 100 and display <= 500:
-            ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="yellow", fontsize = 18, ha = "center")
-            ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
-            ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="yellow", fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts"display, fontsize = 18, ha = "center")
+            ax3.text(0.6, 0.5,"Dose:"dose_display, fontsize = 18, ha = "center")
+            ax3.set_facecolor("yellow")
+
+
         elif display > 500 and display <= 2000:
-            ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="orange", fontsize = 18, ha = "center")
-            ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
-            ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="orange", fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts"display, fontsize = 18, ha = "center")
+            ax3.text(0.6, 0.5,"Dose:"dose_display, fontsize = 18, ha = "center")
+            ax3.set_facecolor("orange")
+
+
         elif display > 2000:
-            ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="red", fontsize = 18, ha = "center")
-            ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
-            ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="red", fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts"display, fontsize = 18, ha = "center")
+            ax3.text(0.6, 0.5,"Dose:"dose_display, fontsize = 18, ha = "center")
+            ax3.set_facecolor("red")
+
+
 
 
     def plot_waterfall(self,plot_id):
