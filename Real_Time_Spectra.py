@@ -325,7 +325,7 @@ class Real_Time_Spectra(object):
         top = 0.3
         ha = 'horizontalalignment'
 
-        display = self.disp_count[-1]
+        display = int(self.disp_count[-1])
         print(display)
         dose = '{:0.3e}'.format(display * 0.0000427/60)
         dose_display = str(dose) + " $\mu$Sv/hr"
@@ -333,23 +333,23 @@ class Real_Time_Spectra(object):
         ax3.set_axis_off()
         if display <= 100:
             ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts:", fontsize = 18 , ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),str(display), color ="lightgreen", fontsize = 18, ha = "center")
+            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="lightgreen", fontsize = 18, ha = "center")
             ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
             ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="lightgreen", fontsize = 18, ha = "center")
 
         elif display > 100 and display <= 500:
             ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),str(display), color ="yellow", fontsize = 18, ha = "center")
+            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="yellow", fontsize = 18, ha = "center")
             ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
             ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="yellow", fontsize = 18, ha = "center")
         elif display > 500 and display <= 2000:
             ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),str(display), color ="orange", fontsize = 18, ha = "center")
+            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="orange", fontsize = 18, ha = "center")
             ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
             ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="orange", fontsize = 18, ha = "center")
         elif display > 2000:
             ax3.text(0.1*(left+right), 0.5*(bottom+top),"Counts", fontsize = 18, ha = "center")
-            ax3.text(0.3*(left+right), 0.5*(bottom+top),str(display), color ="red", fontsize = 18, ha = "center")
+            ax3.text(0.3*(left+right), 0.5*(bottom+top),display, color ="red", fontsize = 18, ha = "center")
             ax3.text(0.8*(left+right), 0.5*(bottom+top),"Dose:", fontsize = 18, ha = "center")
             ax3.text(1.0*(left+right), 0.5*(bottom+top),dose_display, color ="red", fontsize = 18, ha = "center")
 
