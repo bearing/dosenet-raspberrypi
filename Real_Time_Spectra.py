@@ -337,7 +337,7 @@ class Real_Time_Spectra(object):
 
         elif display > 500 and display <= 2000:
             ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center", backgroundcolor = "orange")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center", , backgroundcolor = "orange")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center",  backgroundcolor = "orange")
 
 
         elif display > 2000:
