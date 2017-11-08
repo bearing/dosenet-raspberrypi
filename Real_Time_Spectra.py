@@ -362,6 +362,7 @@ class Real_Time_Spectra(object):
            del temp_Bi_data_counts[0]
            del temp_Tl_data_counts[0]
            del temp_times[0]
+           plt.clf()
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
@@ -373,8 +374,9 @@ class Real_Time_Spectra(object):
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
-        plt.clf()
-    ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=10)
+       
+    ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=1000)
+    
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
