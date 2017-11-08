@@ -25,6 +25,7 @@ from scipy.integrate import quad
 import pandas as pd
 import spectra_fitter 
 from pandas import DataFrame
+import matplotlib.animation as animation
 class Real_Time_Spectra(object):
     """
     Class to control the real time spectra plotting
@@ -372,7 +373,7 @@ class Real_Time_Spectra(object):
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
-        
+    ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=10)
     def plot_sum(self):
         """
         Plot the sum (spectrum) figure.
