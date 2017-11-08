@@ -326,30 +326,29 @@ class Real_Time_Spectra(object):
         ha = 'horizontalalignment'
 
         display = int(self.disp_count[-1])
-        print(display)
         dose = '{:0.3e}'.format(display * 0.0000427*60)
         dose_display = str(dose) + " $\mu$Sv/hr"
 
         ax3.set_axis_off()
         if display <= 100:
-            ax3.text(0.2, 0.5,"Counts: "+display, fontsize = 18 , ha = "center")
-            ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts: "+ str(display), fontsize = 18 , ha = "center")
+            ax3.text(0.6, 0.5,"Dose: "+ dose_display, fontsize = 18, ha = "center")
             ax3.set_facecolor("lightgreen")
 
         elif display > 100 and display <= 500:
-            ax3.text(0.2, 0.5,"Counts: "+display, fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
             ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
             ax3.set_facecolor("yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.2, 0.5,"Counts: "+display, fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
             ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
             ax3.set_facecolor("orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.5,"Counts: "+display, fontsize = 18, ha = "center")
+            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center")
             ax3.text(0.6, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center")
             ax3.set_facecolor("red")
 

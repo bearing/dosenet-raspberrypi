@@ -50,7 +50,7 @@ n_merge.set(option2[0])
 
 def make_run_gui():
     top1 = Tkinter.Tk()
-    top1.geometry('+0+610')
+    top1.geometry('+0+410')
     global job1
     global jobd3s
     jobd3s = None
@@ -147,7 +147,7 @@ def make_run_gui():
         check_plots(5)
         mgrD3S.plot_spectrum(2)
         print("Updating spectra")
-        plot_jobs[5]=top1.after(int(n_merge.get())*1000,D3S_spectra)
+        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
