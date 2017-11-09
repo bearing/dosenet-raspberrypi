@@ -322,7 +322,7 @@ class Real_Time_Spectra(object):
         ha = 'horizontalalignment'
 
         display = int(self.disp_count[-1])
-        dose = '{:0.3e}'.format(display * 0.0000427*60)
+        dose = round(display * 0.0000427*60,4)
         dose_display = str(dose) + " $\mu$Sv/hr"
 
         ax3.set_axis_off()
