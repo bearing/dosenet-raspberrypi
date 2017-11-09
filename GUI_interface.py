@@ -42,9 +42,9 @@ vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
 maxdata = Tkinter.StringVar()
-maxdata.set(option1[0])
+maxdata.set(option1[3])
 n_merge = Tkinter.StringVar()
-n_merge.set(option2[0])
+n_merge.set(option2[2])
 
 
 
