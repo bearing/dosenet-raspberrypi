@@ -46,13 +46,16 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S, DEFAULT_INTERVAL_TEST_D3S, DEFAULT_D3STEST_TIME
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
-from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
-from globalvalues import DEFAULT_LOGFILE_AQ
+from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
+except ImportError:
+    pass
+try:
+    from globalvalues import DEFAULT_AQ_PORT
 except ImportError:
     pass
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
@@ -529,17 +532,18 @@ class Base_Manager(object):
                     if summation == checkbyte:
                         current_second_data = []
                         buf = buffer[1:32]
-                        current_second_data.append(datetime.datetime.now())
                         for n in range(1,4):
                             current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
                         for n in range(1,7):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                        current_second_data = ['%.2f' % i for i in list(map(float, current_second_data))]
+                        current_second_data.insert(0,datetime.datetime.now())
                         aq_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(aq_data_set)):
                     c_data.append(aq_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -557,14 +561,14 @@ class Base_Manager(object):
                 conc = 5000/496*values[0] - 1250
                 uv_index = values[7]
                 this_instant_data.append(date_time)
-                this_instant_data.append(conc)
-                this_instant_data.append(uv_index)
+                this_instant_data.append(float('%.2f'%conc))
+                this_instant_data.append(float('%.2f'%uv_index))
                 co2_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(co2_data_set)):
                     c_data.append(co2_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -580,15 +584,15 @@ class Base_Manager(object):
                 press = self.Weather_Port.read_pressure() / 100
                 humid = self.Weather_Port.read_humidity()
                 this_instant_data.append(date_time)
-                this_instant_data.append(temp)
-                this_instant_data.append(press)
-                this_instant_data.append(humid)
+                this_instant_data.append(float('%.2f'%temp))
+                this_instant_data.append(float('%.2f'%press))
+                this_instant_data.append(float('%.2f'%humid))
                 weather_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -757,7 +761,7 @@ class Manager_D3S(Base_Manager):
                  signal_test_connection=False,
                  signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
-                 transport='any',
+                 transport='usb',
                  **kwargs):
 
         super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
@@ -869,7 +873,7 @@ class Manager_AQ(Base_Manager):
     Air Quality sensor.
     """
     def __init__(self,
-                 AQ_port=DEFAULT_AQ_PORT,
+                 AQ_port=None,
                  variables=AQ_VARIABLES,
                  **kwargs):
 
@@ -877,7 +881,10 @@ class Manager_AQ(Base_Manager):
 
         super(Manager_AQ, self).__init__(sensor_type=3, **kwargs)
 
-        self.AQ_port = AQ_port
+        if not AQ_port:
+            self.AQ_port = DEFAULT_AQ_PORT
+        else:
+            self.AQ_port = AQ_port
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
@@ -1089,7 +1096,7 @@ if __name__ == '__main__':
         parser.add_argument(
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
-        parser.add_argument('--transport', '-n', default='any')
+        parser.add_argument('--transport', '-n', default='usb')
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor

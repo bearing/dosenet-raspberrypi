@@ -65,7 +65,10 @@ DEFAULT_D3STEST_TIME = 5
 D3S_LED_BLINK_PERIOD_INITIAL = 0.75
 D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
-DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
+try:
+    DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
+except:
+    print("No AQ Sensor detected, proceeding without initializing AQ Port.")
 DEFAULT_INTERVAL_NORMAL_AQ = 300
 DEFAULT_INTERVAL_TEST_AQ = 30
 AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10 ', '0.3 um', '0.5 um',
@@ -127,23 +130,23 @@ SPECTRA_DISPLAY_TEXT = (
 
 AQ_PM_DISPLAY_TEXT = (
 	'{cyan} {{variable}} ={reset}' +
-	'{green} {{avg_data}} {reset}' +
+	'{green} {{avg_data:0.2f}} {reset}' +
     '{cyan}ug/m3 {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 AQ_P_DISPLAY_TEXT = (
 	'{cyan} # of Particles over {{variable}} ={reset}' +
-	'{green} {{avg_data}} {reset}').format(
+	'{green} {{avg_data:0.2f}} {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 CO2_DISPLAY_TEXT = (
     '{cyan} The average {{variable}}{reset}' +
-    '{cyan} was: {reset}' + '{green}{{data}}{reset}').format(
+    '{cyan} was: {reset}' + '{green}{{data:0.2f}}{reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, yellow=ANSI_YEL, green=ANSI_GR)
 
 WEATHER_DISPLAY_TEXT = (
     '{cyan} The average {{variable}} was: {reset}' +
-    '{green}{{data:0.1f}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
+    '{green}{{data:0.2f}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
     green=ANSI_GR, reset=ANSI_RESET)
 
 TIME_DISPLAY_TEXT = (
