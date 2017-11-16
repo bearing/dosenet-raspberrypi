@@ -130,23 +130,23 @@ SPECTRA_DISPLAY_TEXT = (
 
 AQ_PM_DISPLAY_TEXT = (
 	'{cyan} {{variable}} ={reset}' +
-	'{green} {{avg_data}} {reset}' +
+	'{green} {{avg_data:0.2f}} {reset}' +
     '{cyan}ug/m3 {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 AQ_P_DISPLAY_TEXT = (
 	'{cyan} # of Particles over {{variable}} ={reset}' +
-	'{green} {{avg_data}} {reset}').format(
+	'{green} {{avg_data:0.2f}} {reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, green=ANSI_GR)
 
 CO2_DISPLAY_TEXT = (
     '{cyan} The average {{variable}}{reset}' +
-    '{cyan} was: {reset}' + '{green}{{data}}{reset}').format(
+    '{cyan} was: {reset}' + '{green}{{data:0.2f}}{reset}').format(
     cyan=ANSI_CYAN, reset=ANSI_RESET, yellow=ANSI_YEL, green=ANSI_GR)
 
 WEATHER_DISPLAY_TEXT = (
     '{cyan} The average {{variable}} was: {reset}' +
-    '{green}{{data:0.1f}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
+    '{green}{{data:0.2f}} {{unit}}{reset}').format(cyan=ANSI_CYAN,
     green=ANSI_GR, reset=ANSI_RESET)
 
 TIME_DISPLAY_TEXT = (
