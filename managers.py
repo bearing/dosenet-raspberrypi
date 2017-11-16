@@ -535,7 +535,7 @@ class Base_Manager(object):
                         for n in range(1,4):
                             current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
                         for n in range(1,7):
-                x2            current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                        current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                         current_second_data = ['%.2f' % i for i in list(map(float, current_second_data))]
                         current_second_data.insert(0,datetime.datetime.now())
                         aq_data_set.append(current_second_data)
