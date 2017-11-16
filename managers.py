@@ -539,7 +539,7 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(aq_data_set)):
                     c_data.append(aq_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -564,7 +564,7 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(co2_data_set)):
                     c_data.append(co2_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
@@ -588,7 +588,7 @@ class Base_Manager(object):
                 c_data = []
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
+                c_data_int = list(map(float, c_data))
                 avg_c = sum(c_data_int)/len(c_data_int)
                 average_data.append(avg_c)
             self.data_handler.main(
