@@ -158,23 +158,23 @@ class Base_Manager(object):
             self.vprint(1,
                 "No sensor running, try executing one of the subclasses to get a proper setup.")
             self.takedown()
-        if log and self.sensor_type == 1:
+        if log and self.sensor_type == 1 and logfile == None:
             #If the sensor type is a pocket geiger use the pocket geiger log file
             logfile = DEFAULT_LOGFILE
 
-        if log and self.sensor_type == 2:
+        if log and self.sensor_type == 2 and logfile == None:
             #If the sensor type is a D3S use the D3S log file
             logfile = DEFAULT_LOGFILE_D3S
 
-        if log and self.sensor_type == 3:
+        if log and self.sensor_type == 3 and logfile == None:
             #If the sensor type is an air quality sensor use the air quality log file
             logfile = DEFAULT_LOGFILE_AQ
 
-        if log and self.sensor_type == 4:
+        if log and self.sensor_type == 4 and logfile == None:
             #If the sensor type is a CO2 sensor, use the CO2 log file
             logfile = DEFAULT_LOGFILE_CO2
 
-        if log and self.sensor_type == 5:
+        if log and self.sensor_type == 5 and logfile == None:
             #If the sensor type is a weather sensor, use the weather log file
             logfile = DEFAULT_LOGFILE_WEATHER
 
