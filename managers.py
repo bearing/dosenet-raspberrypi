@@ -757,7 +757,7 @@ class Manager_D3S(Base_Manager):
                  signal_test_connection=False,
                  signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
-                 transport='any',
+                 transport='usb',
                  **kwargs):
 
         super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
@@ -1089,7 +1089,7 @@ if __name__ == '__main__':
         parser.add_argument(
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
-        parser.add_argument('--transport', '-n', default='any')
+        parser.add_argument('--transport', '-n', default='usb')
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
