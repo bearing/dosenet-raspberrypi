@@ -535,7 +535,9 @@ class Base_Manager(object):
                         current_second_data.append(datetime.datetime.now())
                         for n in range(1,4):
                             current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
+                            print("First part")
                             print(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
+                            print("Second part")
                         for n in range(1,7):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                             print(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
