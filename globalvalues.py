@@ -67,7 +67,7 @@ D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
 try:
     DEFAULT_AQ_PORT = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=1.5)
-except IOError:
+except:
     print("No AQ Sensor detected, proceeding without initializing AQ Port.")
 DEFAULT_INTERVAL_NORMAL_AQ = 300
 DEFAULT_INTERVAL_TEST_AQ = 30
