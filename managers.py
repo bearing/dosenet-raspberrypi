@@ -868,7 +868,7 @@ class Manager_AQ(Base_Manager):
     Air Quality sensor.
     """
     def __init__(self,
-                 AQ_port=DEFAULT_AQ_PORT,
+                 AQ_port=None,
                  variables=AQ_VARIABLES,
                  **kwargs):
 
@@ -876,7 +876,10 @@ class Manager_AQ(Base_Manager):
 
         super(Manager_AQ, self).__init__(sensor_type=3, **kwargs)
 
-        self.AQ_port = AQ_port
+        if not AQ_port:
+            self.AQ_port = DEFAULT_AQ_PORT
+        else:
+            self.AQ_port = AQ_port
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
