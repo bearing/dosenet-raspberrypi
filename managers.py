@@ -531,8 +531,10 @@ class Base_Manager(object):
                         current_second_data.append(datetime.datetime.now())
                         for n in range(1,4):
                             current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
+                            print(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
                         for n in range(1,7):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                            print(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                         aq_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
@@ -555,9 +557,9 @@ class Base_Manager(object):
                     values[i] = self.CO2_port.read_adc(i)
                 conc = 5000/496*values[0] - 1250
                 uv_index = values[7]
-                this_instant_data.append(date_time)
-                this_instant_data.append(conc)
-                this_instant_data.append(uv_index)
+                this_instant_data.append(date_time:.2f)
+                this_instant_data.append(conc:.2f)
+                this_instant_data.append(uv_index:.2f)
                 co2_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
@@ -579,9 +581,9 @@ class Base_Manager(object):
                 press = self.Weather_Port.read_pressure() / 100
                 humid = self.Weather_Port.read_humidity()
                 this_instant_data.append(date_time)
-                this_instant_data.append(temp)
-                this_instant_data.append(press)
-                this_instant_data.append(humid)
+                this_instant_data.append(temp:.2f)
+                this_instant_data.append(press:.2f)
+                this_instant_data.append(humid:.2f)
                 weather_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
