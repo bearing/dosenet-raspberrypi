@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import serial
+from serial import serial
 import Adafruit_MCP3008
 from Adafruit_BME280 import *
 
