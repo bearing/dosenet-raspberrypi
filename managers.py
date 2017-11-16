@@ -557,9 +557,9 @@ class Base_Manager(object):
                     values[i] = self.CO2_port.read_adc(i)
                 conc = 5000/496*values[0] - 1250
                 uv_index = values[7]
-                this_instant_data.append(date_time:.2f)
-                this_instant_data.append(conc:.2f)
-                this_instant_data.append(uv_index:.2f)
+                this_instant_data.append(date_time%.2f)
+                this_instant_data.append(conc%.2f)
+                this_instant_data.append(uv_index%.2f)
                 co2_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
