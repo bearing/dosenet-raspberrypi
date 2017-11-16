@@ -534,9 +534,11 @@ class Base_Manager(object):
                         buf = buffer[1:32]
                         current_second_data.append(datetime.datetime.now())
                         for n in range(1,4):
-                            current_second_data.append(float('%.2f'%repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2]))))
+                            current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
+                            print(type(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2]))))
                         for n in range(1,7):
-                            current_second_data.append(float('%.2f'%repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14]))))
+                            current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                            print(type(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14]))))
                         aq_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
