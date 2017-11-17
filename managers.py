@@ -1196,7 +1196,8 @@ if __name__ == '__main__':
     try:
         for i in range(len(SENSOR_NAMES)):
             if sensor == (1 + i):
-                print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]),flush=True)
+                print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
+                sys.stdout.flush()
 
         mgr.run()
 
