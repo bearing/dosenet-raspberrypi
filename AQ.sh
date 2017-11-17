@@ -9,6 +9,7 @@ case "$1" in
   start)
     echo "Starting Air Quality Sensor script" > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
+    sleep 30
     sudo python $DOSENET/managers.py --sensor 3 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished Air Quality Sensor script" >> $LOG
     ;;
