@@ -119,10 +119,10 @@ class Real_Time_Spectra(object):
         fig.autofmt_xdate()
         plt.show()
         # Set the position and size of the waterfall plot.
-        x_pos = int(0.08 * self.screen_width)
+        x_pos = int(0.12 * self.screen_width) #originally .08
         y_pos = int(0.32 * self.screen_height)
-        window_width = int(0.36 * self.screen_width)
-        window_height = int(0.36 * self.screen_height)
+        window_width = int(0.4 * self.screen_width) #originally .36
+        window_height = int(0.4 * self.screen_height)
 
         # Apply the changes to the window geometry.
         plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
@@ -386,6 +386,7 @@ class Real_Time_Spectra(object):
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
+        return plt.legend
     # Updating the data point by erasing oldest data from data set on plot using FuncAnimation
     ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=1000)
     
