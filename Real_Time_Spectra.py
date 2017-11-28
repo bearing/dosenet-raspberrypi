@@ -97,7 +97,7 @@ class Real_Time_Spectra(object):
         # Set the position and size of the waterfall plot.
         x_pos = int(0.08 * self.screen_width)
         y_pos = int(0.32 * self.screen_height)
-        window_width = int(0.36 * self.screen_width)#.36 intially 
+        window_width = int(0.36 * self.screen_width)
         window_height = int(0.36 * self.screen_height)
 
         # Apply the changes to the window geometry.
@@ -118,8 +118,15 @@ class Real_Time_Spectra(object):
                    
         fig.autofmt_xdate()
         plt.show()
+        # Set the position and size of the waterfall plot.
+        x_pos = int(0.08 * self.screen_width)
+        y_pos = int(0.32 * self.screen_height)
+        window_width = int(0.36 * self.screen_width)
+        window_height = int(0.36 * self.screen_height)
+
+        # Apply the changes to the window geometry.
+        plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
-        #plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
         # Setup the plot for the spectrum (sum graph).
         self.spectrum_figure = plt.figure(2)
