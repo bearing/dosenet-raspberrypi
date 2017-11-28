@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 # from globalvalues import DEFAULT_DATALOG_D3S
 
 from __future__ import division, print_function
@@ -97,8 +97,8 @@ class Real_Time_Spectra(object):
         # Set the position and size of the waterfall plot.
         x_pos = int(0.08 * self.screen_width)
         y_pos = int(0.32 * self.screen_height)
-        window_width = int(0.7 * self.screen_width)#.36 intially 
-        window_height = int(0.7 * self.screen_height)
+        window_width = int(0.36 * self.screen_width)#.36 intially 
+        window_height = int(0.36 * self.screen_height)
 
         # Apply the changes to the window geometry.
         plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
@@ -357,13 +357,15 @@ class Real_Time_Spectra(object):
         
           
         #plt.ion()       # Enable interactive mode
-        if self.data_length1 >= maxspectra:
+        while self.data_length1 >= maxspectra:
            del temp_K_data_counts[0]
            del temp_Bi_data_counts[0]
            del temp_Tl_data_counts[0]
            del temp_times[0]
            plt.clf()
            #plt.tight_layout()
+           plt.xlabel('Time')
+           plt.ylabel('counts')
            plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
         #plt.plot_date(times,K_counts,'bo',label='k-40')
@@ -377,7 +379,7 @@ class Real_Time_Spectra(object):
                 plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                 self.isotopes_drawn = False
-       
+    # Updating the data point by erasing oldest data from data set on plot using FuncAnimation
     ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=1000)
     
     def plot_sum(self):
