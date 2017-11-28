@@ -364,7 +364,7 @@ class Real_Time_Spectra(object):
         
           
         #plt.ion()       # Enable interactive mode
-        while self.data_length1 >= maxspectra:
+        if self.data_length1 >= maxspectra:
            del temp_K_data_counts[0]
            del temp_Bi_data_counts[0]
            del temp_Tl_data_counts[0]
