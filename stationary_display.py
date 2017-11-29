@@ -44,6 +44,8 @@ def make_run_gui():
 	    mgrD3S.plot_waterfall(1)
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
+	top1.mainloop()
+
 
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 print("create D3S file")
