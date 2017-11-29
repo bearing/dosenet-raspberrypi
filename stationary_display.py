@@ -62,7 +62,6 @@ def make_run_gui():
 		D3S_waterfall()
 	except:
 		print('No enough data yet.')
-		continue
 	top.mainloop()
 
 
