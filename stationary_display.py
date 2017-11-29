@@ -13,6 +13,7 @@ top = Tkinter.Tk()
 jobd3s = None
 
 def make_run_gui():
+
 	def start():        
 	    if jobd3s is None:           
 	        jobd3s = threading.Thread(target=start_D3S, args=()) 
@@ -25,7 +26,7 @@ def make_run_gui():
 	def stop():
 	    global jobd3s
 	    global job1
-	    top1.after_cancel(job1)
+	    top.after_cancel(job1)
 	    jobd3s = None
 	    mgrD3S.takedown()
 	    print(mgrD3S.running)
@@ -44,7 +45,7 @@ def make_run_gui():
 	    mgrD3S.plot_waterfall(1)
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
-	top1.mainloop()
+	top.mainloop()
 
 
 mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
