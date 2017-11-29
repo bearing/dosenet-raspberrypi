@@ -16,7 +16,8 @@ global jobd3s
 jobd3s = None
 
 def make_run_gui():
-
+	global jobd3s
+	global mgrD3S
 	def start():        
 	    if jobd3s is None:           
 	        jobd3s = threading.Thread(target=start_D3S, args=()) 
