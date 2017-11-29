@@ -19,6 +19,7 @@ def make_run_gui():
 	    if jobd3s is None:           
 	        jobd3s = threading.Thread(target=start_D3S, args=()) 
 	        try:
+	        	print("Starting mamanger")
 				mgrD3S.start()
 				jobd3s.start()
 	        except:
@@ -47,10 +48,11 @@ def make_run_gui():
 	    mgrD3S.plot_waterfall(1)
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
-	top.mainloop()
+	
 	start()
 	D3S_spectra()
 	D3S_waterfall()
+	top.mainloop()
 
 
 
