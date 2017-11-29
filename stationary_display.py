@@ -58,7 +58,11 @@ def make_run_gui():
 	
 	start()
 	#D3S_spectra()
-	D3S_waterfall()
+	try:
+		D3S_waterfall()
+	except:
+		print('No enough data yet.')
+		continue
 	top.mainloop()
 
 
