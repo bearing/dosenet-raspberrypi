@@ -21,7 +21,7 @@ def make_run_gui():
 		global jobd3s
 		global mgrD3S        
 		if jobd3s is None:           
-	        jobd3s = threading.Thread(target=start_D3S, args=()) 
+			jobd3s = threading.Thread(target=start_D3S, args=()) 
 	        try:
 				print("Starting mamanger")
 				mgrD3S.start()
