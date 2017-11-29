@@ -11,6 +11,8 @@ mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
 
 top = Tkinter.Tk()
+
+global jobd3s
 jobd3s = None
 
 def make_run_gui():
