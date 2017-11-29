@@ -19,7 +19,7 @@ def make_run_gui():
 	    if jobd3s is None:           
 	        jobd3s = threading.Thread(target=start_D3S, args=()) 
 	        try:
-	        	print("Starting mamanger")
+				print("Starting mamanger")
 				mgrD3S.start()
 				jobd3s.start()
 	        except:
