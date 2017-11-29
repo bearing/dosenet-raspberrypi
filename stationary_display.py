@@ -61,8 +61,14 @@ def make_run_gui():
 	
 
 	#D3S_spectra()
-	D3S_waterfall()
-	D3S_spectra()
+	try:
+		D3S_waterfall()
+	except Exception as e:
+		print (e)
+	try:
+		D3S_spectra()
+	except Exception as e:
+		print (e)
 	top.mainloop()
 
 
