@@ -15,23 +15,25 @@ top = Tkinter.Tk()
 global jobd3s
 jobd3s = None
 
+def start_D3S():
+	global mgrD3S
+	mgrD3S.run()
+
+def start():
+	global jobd3s
+	global mgrD3S        
+	if jobd3s is None:           
+		jobd3s = threading.Thread(target=start_D3S, args=()) 
+		try:
+			jobd3s.start()
+			print("Starting plotting job")
+		except:
+			print("Error: Failed to start D3S")
+
+start()
+
+
 def make_run_gui():
-
-	def start_D3S():
-		global mgrD3S
-		mgrD3S.run()
-
-	def start():
-		global jobd3s
-		global mgrD3S        
-		if jobd3s is None:           
-			jobd3s = threading.Thread(target=start_D3S, args=()) 
-	        try:
-				print("Starting plotting job")
-				jobd3s.start()
-	        except:
-	            print("Error: Failed to start D3S")
-	           
 
 	def stop():
 	    global jobd3s
@@ -64,5 +66,4 @@ def make_run_gui():
 
 
 print("create D3S file")
-make_run_gui.start()
 make_run_gui() 
