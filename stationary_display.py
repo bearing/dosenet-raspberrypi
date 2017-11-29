@@ -7,6 +7,7 @@ import threading
 plot_jobs = [None, None]
 
 global mgrD3S
+mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
 
 
 top = Tkinter.Tk()
@@ -47,10 +48,11 @@ def make_run_gui():
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
 	top.mainloop()
+	start()
 	D3S_spectra()
 	D3S_waterfall()
 
 
-mgrD3S = plot_manager_D3S.Manager_D3S(plot = False)
+
 print("create D3S file")
 make_run_gui() 
