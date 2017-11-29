@@ -56,15 +56,13 @@ def make_run_gui():
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
 	
-	start()
+
 	#D3S_spectra()
-	try:
-		D3S_waterfall()
-	except:
-		print('No enough data yet.')
+	D3S_waterfall()
 	top.mainloop()
 
 
 
 print("create D3S file")
+make_run_gui.start()
 make_run_gui() 
