@@ -1,6 +1,7 @@
 import Tkinter
 import plot_manager_D3S
 import threading 
+import time
 
 
 # spectra, waterfall
@@ -64,6 +65,6 @@ def make_run_gui():
 	top.mainloop()
 
 
-
+time.sleep(40)
 print("create D3S file")
 make_run_gui() 
