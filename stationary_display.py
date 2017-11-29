@@ -18,6 +18,7 @@ def make_run_gui():
 	    if jobd3s is None:           
 	        jobd3s = threading.Thread(target=start_D3S, args=()) 
 	        try:
+	      		mgrD3S.start()
 	            jobd3s.start()
 	        except:
 	            print("Error: Failed to start D3S")
