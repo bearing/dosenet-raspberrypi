@@ -57,7 +57,7 @@ def make_run_gui():
 
 	
 	start()
-	D3S_spectra()
+	#D3S_spectra()
 	D3S_waterfall()
 	top.mainloop()
 
