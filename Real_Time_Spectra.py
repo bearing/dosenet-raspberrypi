@@ -6,6 +6,7 @@ import numpy as np
 #import matplotlib
 #matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 # import seaborn as sns
 # from ggplot import *
 #from mpltools import style
@@ -283,10 +284,11 @@ class Real_Time_Spectra(object):
         '''
         plt.figure(2)
         fig = plt.figure(2)
+        gs = GridSpec(6,1)
 
-        ax1 = fig.add_subplot(311)
-        ax2 = fig.add_subplot(312)
-        ax3 = fig.add_subplot(313)
+        ax1 = fig.add_subplot(gs[1:3,:])
+        ax2 = fig.add_subplot(gs[4:5,:])
+        ax3 = fig.add_subplot(gs[0,:])
 
 
         '''
@@ -326,23 +328,23 @@ class Real_Time_Spectra(object):
         dose_display = str(dose) + " $\mu$Sv/hr"
 
         ax3.set_axis_off()
-        if display <= 100:
-            ax3.text(0.1, 0.5,"Counts: "+ str(display), fontsize = 18 , ha = "center", backgroundcolor = "lightgreen")
-            ax3.text(0.7, 0.5,"Dose: "+ dose_display, fontsize = 18, ha = "center", backgroundcolor = "lightgreen")
+        if display <= 150:
+            ax3.text(0.1, 0.5,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 0.5,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
 
-        elif display > 100 and display <= 500:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center", backgroundcolor = "yellow")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center" , backgroundcolor = "yellow")
+        elif display > 150 and display <= 500:
+            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center", backgroundcolor = "orange")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center",  backgroundcolor = "orange")
+            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 18, ha = "center" , backgroundcolor = "red")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 18, ha = "center", backgroundcolor = "red")
+            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
 
 
