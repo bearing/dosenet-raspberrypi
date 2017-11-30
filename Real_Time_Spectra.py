@@ -394,6 +394,7 @@ class Real_Time_Spectra(object):
         '''
         Point to the figure window for the spectrum plot.
         '''
+        print("Test SegFault: just called plot_sum")
         plt.figure(plot_id)
         print("Test SegFault: after plt.figure")
 
