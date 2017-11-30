@@ -380,6 +380,8 @@ class Real_Time_Spectra(object):
             self.cb.remove()
             self.cb = plt.colorbar()
 
+        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
+
         plt.tight_layout()
 
         plt.show()
