@@ -345,6 +345,8 @@ class Real_Time_Spectra(object):
         Resize the plot to make room for the axes labels without resizing the
         figure window.
         '''
+        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.05)
+
         plt.tight_layout()
 
 
@@ -381,7 +383,7 @@ class Real_Time_Spectra(object):
             self.cb.remove()
             self.cb = plt.colorbar()
 
-        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.05)
+        
 
         plt.tight_layout()
 
