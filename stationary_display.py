@@ -48,6 +48,7 @@ def make_run_gui():
 	def D3S_spectra():
 	    global mgrD3S
 	    global plot_jobs
+	    print("Test SegFault: Before plotting")
 	    mgrD3S.plot_spectrum(2)
 	    print("Updating spectra")
 	    plot_jobs[0]=top.after(1,D3S_spectra)
@@ -61,10 +62,10 @@ def make_run_gui():
 	
 
 	#D3S_spectra()
-	try:
-		D3S_waterfall()
-	except Exception as e:
-		print (e)
+	# try:
+	# 	D3S_waterfall()
+	# except Exception as e:
+	# 	print (e)
 	try:
 		D3S_spectra()
 	except Exception as e:

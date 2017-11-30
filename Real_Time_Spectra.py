@@ -393,12 +393,15 @@ class Real_Time_Spectra(object):
         Point to the figure window for the spectrum plot.
         '''
         plt.figure(plot_id)
+        print("Test SegFault: after plt.figure")
 
         '''
         Get the running average
         '''
          
         run_avg, self.sum_data = self.run_avg_data(self.queue)
+        print("Test SegFault: after running average")
+
 
         '''
         Clear the prior spectrum figure.
@@ -408,11 +411,13 @@ class Real_Time_Spectra(object):
         Plot the spectrum figure
         '''
         self.sum_graph(run_avg)
+        print("Test SegFault: after sum_graph")
 
         '''
         Show the updated spectrum figure window.
         '''
         plt.show()
+        print("Test SegFault: successfully show")
 
         '''
         Pause before displaying the next figure window.
