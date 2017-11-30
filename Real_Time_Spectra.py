@@ -284,10 +284,10 @@ class Real_Time_Spectra(object):
         '''
         plt.figure(2)
         fig = plt.figure(2)
-        gs = GridSpec(6,1)
+        gs = GridSpec(9,1)
 
-        ax1 = fig.add_subplot(gs[1:3,:])
-        ax2 = fig.add_subplot(gs[4:5,:])
+        ax1 = fig.add_subplot(gs[1:4,:])
+        ax2 = fig.add_subplot(gs[5:8,:])
         ax3 = fig.add_subplot(gs[0,:])
 
 
