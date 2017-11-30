@@ -314,6 +314,7 @@ class Real_Time_Spectra(object):
         ax1.plot(x, data, drawstyle='steps-mid')
 
         ax2.plot(self.time_stamp, self.disp_count)
+        ax2.set_xticklabels(np.linspace(time_stamp[0],time_stamp[-1],4))
 
         ha = 'horizontalalignment'
 
@@ -380,7 +381,7 @@ class Real_Time_Spectra(object):
             self.cb.remove()
             self.cb = plt.colorbar()
 
-        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
+        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.05)
 
         plt.tight_layout()
 
