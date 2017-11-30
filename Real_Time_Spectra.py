@@ -286,8 +286,8 @@ class Real_Time_Spectra(object):
         fig = plt.figure(2)
         gs = GridSpec(9,1)
 
-        ax1 = fig.add_subplot(gs[1:4,:])
-        ax2 = fig.add_subplot(gs[5:8,:])
+        ax1 = fig.add_subplot(gs[1:5,:])
+        ax2 = fig.add_subplot(gs[6:8,:])
         ax3 = fig.add_subplot(gs[0,:])
 
 
@@ -296,12 +296,6 @@ class Real_Time_Spectra(object):
         '''
         ax1.set(xlabel = 'Channel', ylabel = 'Counts')
         ax2.set(xlabel = 'Time', ylabel = 'Counts')
-
-        '''
-        Resize the plot to make room for the axes labels without resizing the
-        figure window.
-        '''
-        plt.tight_layout()
 
         '''
         Set a logarithmic y-scale.
@@ -345,6 +339,12 @@ class Real_Time_Spectra(object):
         elif display > 2000:
             ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
             ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
+
+                '''
+        Resize the plot to make room for the axes labels without resizing the
+        figure window.
+        '''
+        plt.tight_layout()
 
 
 
