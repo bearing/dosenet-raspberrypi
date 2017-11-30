@@ -8,6 +8,7 @@ from time import sleep
 import os
 import traceback
 import time
+import sys
 
 from globalvalues import RPI
 if RPI:
@@ -67,7 +68,6 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
         """
 
         if verbosity >= level:
-            print(*args, **kwargs)
             if logging:
                 # first, have to handle the print function
                 # there could be multiple string arguments which need
@@ -81,6 +81,9 @@ def set_verbosity(class_instance, verbosity=None, logfile=None):
                         lf.write(full_string)
                 except IOError:
                     print(' * Logging failed - IOError')
+            else:
+                print(*args, **kwargs)
+                sys.stdout.flush()
 
     class_instance.vprint = vprint
 

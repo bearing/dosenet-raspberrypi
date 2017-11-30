@@ -9,12 +9,12 @@ case "$1" in
   start)
     echo "Starting weather sensor script"  > $LOG
     # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo python $DOSENET/managers.py --sensor 5 --logfile $LOG >>$LOG 2>&1
+    sudo python $DOSENET/managers.py --sensor 5 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished weather sensor script"  >> $LOG
     ;;
   test)
     echo "Starting weather sensor script in test mode" > $LOG
-    sudo python $DOSENET/managers.py --sensor 5 --sender-mode tcp_test --interval 30 --logfile $LOG >> $LOG 2>&1
+    sudo python $DOSENET/managers.py --sensor 5 --sender-mode tcp_test --interval 30 --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping weather sensor script" >> $LOG

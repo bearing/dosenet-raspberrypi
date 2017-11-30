@@ -544,7 +544,8 @@ class Base_Manager(object):
                 for i in range(len(aq_data_set)):
                     c_data.append(aq_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
-                avg_c = sum(c_data_int)/len(c_data_int)
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
             self.data_handler.main(
                 self.datalog, this_start, this_end, average_data=average_data)
@@ -569,7 +570,8 @@ class Base_Manager(object):
                 for i in range(len(co2_data_set)):
                     c_data.append(co2_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
-                avg_c = sum(c_data_int)/len(c_data_int)
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
             self.data_handler.main(
                 self.datalog, this_start, this_end, average_data=average_data)
@@ -593,7 +595,8 @@ class Base_Manager(object):
                 for i in range(len(weather_data_set)):
                     c_data.append(weather_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
-                avg_c = sum(c_data_int)/len(c_data_int)
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
             self.data_handler.main(
                 self.datalog, this_start, this_end, average_data=average_data)
@@ -1194,6 +1197,7 @@ if __name__ == '__main__':
         for i in range(len(SENSOR_NAMES)):
             if sensor == (1 + i):
                 print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
+                sys.stdout.flush()
 
         mgr.run()
 
