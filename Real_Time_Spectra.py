@@ -340,7 +340,7 @@ class Real_Time_Spectra(object):
             ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
             ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
-                '''
+        '''
         Resize the plot to make room for the axes labels without resizing the
         figure window.
         '''
