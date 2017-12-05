@@ -7,6 +7,7 @@ import numpy as np
 #matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+matplotlib.rcParams['toolbar'] = 'None'
 # import seaborn as sns
 # from ggplot import *
 #from mpltools import style
@@ -315,7 +316,7 @@ class Real_Time_Spectra(object):
         ax1.plot(x, data, drawstyle='steps-mid')
 
         ax2.plot(self.time_stamp, self.disp_count)
-        ax2.xaxis.set_major_locator(plt.MaxNLocator(4))
+        plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
 
         ha = 'horizontalalignment'
 
@@ -325,30 +326,29 @@ class Real_Time_Spectra(object):
 
         ax3.set_axis_off()
         if display <= 150:
-            ax3.text(0.1, 0.5,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            ax3.text(0.7, 0.5,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.1, 0.8,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 0.8,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
 
         elif display > 150 and display <= 500:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
+            ax3.text(0.1, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
+            ax3.text(0.1, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
+            ax3.text(0.2, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
         '''
         Resize the plot to make room for the axes labels without resizing the
         figure window.
         '''
-        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.05)
 
-        plt.tight_layout(pad = 0.5, h_pad= 0.5, w_pad= 0.5)
+        plt.tight_layout(pad = 0.5, h_pad= 0.3, w_pad= 0.5)
 
 
 
