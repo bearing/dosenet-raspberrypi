@@ -290,7 +290,7 @@ class Real_Time_Spectra(object):
         gs = GridSpec(9,1)
 
         ax1 = fig.add_subplot(gs[1:5,:])
-        ax2 = fig.add_subplot(gs[6:8,:])
+        ax2 = fig.add_subplot(gs[5:8,:])
         ax3 = fig.add_subplot(gs[0,:])
 
 
@@ -327,22 +327,22 @@ class Real_Time_Spectra(object):
 
         ax3.set_axis_off()
         if display <= 150:
-            ax3.text(0.1, 0.8,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            ax3.text(0.7, 0.8,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.1, 0.2,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 0.2,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
 
         elif display > 150 and display <= 500:
-            ax3.text(0.1, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
+            ax3.text(0.1, 0.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 0.2,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.1, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
-            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
+            ax3.text(0.1, 0.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 0.2,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.8,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax3.text(0.7, 0.8,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
+            ax3.text(0.2, 0.2,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 0.2,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
         '''
         Resize the plot to make room for the axes labels without resizing the
