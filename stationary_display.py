@@ -2,6 +2,7 @@ import Tkinter
 import plot_manager_D3S
 import threading 
 import time
+from multiprocessing import Process
 
 
 # spectra, waterfall
@@ -60,16 +61,18 @@ def make_run_gui():
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
 	
-
-	#D3S_spectra()
-	# try:
-	# 	D3S_waterfall()
-	# except Exception as e:
-	# 	print (e)
 	try:
-		D3S_spectra()
+		p1 = D3S_waterfall()
+		p1.start()
 	except Exception as e:
 		print (e)
+	try:
+		p2 = D3S_spectra()
+		p2.start()
+	except Exception as e:
+		print (e)
+	p1.join()
+	p2.join()
 	top.mainloop()
 
 

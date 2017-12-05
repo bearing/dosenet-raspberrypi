@@ -347,7 +347,7 @@ class Real_Time_Spectra(object):
         '''
         plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.05)
 
-        plt.tight_layout()
+        plt.tight_layout(pad = 0.9)
 
 
 
