@@ -74,6 +74,6 @@ def make_run_gui():
 	top.mainloop()
 
 
-time.sleep(45)
+time.sleep(40)
 print("create D3S file")
 make_run_gui() 
