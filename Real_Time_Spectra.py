@@ -314,7 +314,7 @@ class Real_Time_Spectra(object):
         ax1.plot(x, data, drawstyle='steps-mid')
 
         ax2.plot(self.time_stamp, self.disp_count)
-        ax2.set_xticklabels(np.linspace(self.time_stamp[0],self.time_stamp[-1],4))
+        ax2.set_xticklabels(np.arange(self.time_stamp[0],self.time_stamp[-1],4))
 
         ha = 'horizontalalignment'
 
