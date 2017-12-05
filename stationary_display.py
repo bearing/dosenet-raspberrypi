@@ -61,21 +61,19 @@ def make_run_gui():
 	    plot_jobs[1]=top.after(1,D3S_waterfall)
 
 	
-	try:
-		p1 = D3S_waterfall()
-		p1.start()
-	except Exception as e:
-		print (e)
-	try:
-		p2 = D3S_spectra()
-		p2.start()
-	except Exception as e:
-		print (e)
-	p1.join()
-	p2.join()
+	# p1 = D3S_waterfall()
+	# p1.start()
+
+	# p2 = D3S_spectra()
+	# p2.start()
+
+	# p1.join()
+	# p2.join()
+	D3S_waterfall()
+	D3S_spectra()
 	top.mainloop()
 
 
-time.sleep(60)
+time.sleep(45)
 print("create D3S file")
 make_run_gui() 

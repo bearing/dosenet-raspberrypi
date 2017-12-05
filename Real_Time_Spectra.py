@@ -284,6 +284,7 @@ class Real_Time_Spectra(object):
         '''
         plt.figure(2)
         fig = plt.figure(2)
+        fig.canvas.set_window_title('Spectrum')
         gs = GridSpec(9,1)
 
         ax1 = fig.add_subplot(gs[1:5,:])
@@ -314,7 +315,7 @@ class Real_Time_Spectra(object):
         ax1.plot(x, data, drawstyle='steps-mid')
 
         ax2.plot(self.time_stamp, self.disp_count)
-        ax2.set_xticklabels(np.arange(self.time_stamp[0],self.time_stamp[-1],4))
+        ax2.xaxis.set_major_locator(plt.MaxNLocator(4))
 
         ha = 'horizontalalignment'
 
@@ -354,6 +355,8 @@ class Real_Time_Spectra(object):
 
     def plot_waterfall(self,plot_id):
         plt.figure(plot_id)
+        fig = plt.figure(plot_id)
+        fig.canvas.set_window_title('Waterfall')
 
         """
         Grabs the data for waterfall plot.
@@ -399,16 +402,13 @@ class Real_Time_Spectra(object):
         '''
         Point to the figure window for the spectrum plot.
         '''
-        print("Test SegFault: just called plot_sum")
         plt.figure(plot_id)
-        print("Test SegFault: after plt.figure")
 
         '''
         Get the running average
         '''
          
         run_avg, self.sum_data = self.run_avg_data(self.queue)
-        print("Test SegFault: after running average")
 
 
         '''
@@ -419,14 +419,11 @@ class Real_Time_Spectra(object):
         Plot the spectrum figure
         '''
         self.sum_graph(run_avg)
-        print("Test SegFault: after sum_graph")
 
         '''
         Show the updated spectrum figure window.
         '''
         plt.show()
-        print("Test SegFault: successfully show")
-
         '''
         Pause before displaying the next figure window.
         '''
