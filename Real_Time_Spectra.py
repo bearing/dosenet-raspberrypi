@@ -7,6 +7,7 @@ import numpy as np
 #matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+import matplotlib
 matplotlib.rcParams['toolbar'] = 'None'
 # import seaborn as sns
 # from ggplot import *
