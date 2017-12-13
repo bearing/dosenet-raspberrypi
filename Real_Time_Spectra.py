@@ -349,7 +349,7 @@ class Real_Time_Spectra(object):
         figure window.
         '''
 
-        plt.tight_layout()
+        plt.tight_layout(h_pad = 1.5)
 
 
 
