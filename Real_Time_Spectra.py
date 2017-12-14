@@ -355,7 +355,8 @@ class Real_Time_Spectra(object):
         
     def plot_isotopes(self,maxspectra=20):
         #Plotting the the three Isotopes on same plot
-        
+        legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+                           ncol=3, fancybox=True, shadow=False,numpoints=1)
         plt.figure(3)
         temp_K_data_counts=list(self.K_data_counts)
         temp_Bi_data_counts=list(self.Bi_data_counts)
@@ -383,9 +384,13 @@ class Real_Time_Spectra(object):
         plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
 
         if self.isotopes_drawn:
-                plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+               legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
-                self.isotopes_drawn = False
+               self.isotopes_drawn = False
+        legend.remove()
+        legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+                           ncol=3, fancybox=True, shadow=False,numpoints=1)
+        return legend
         #return plt.legend
     # Updating the data point by erasing oldest data from data set on plot using FuncAnimation
     ani = animation.FuncAnimation(plt.figure(3), plot_isotopes, repeat=True, interval=1000)
