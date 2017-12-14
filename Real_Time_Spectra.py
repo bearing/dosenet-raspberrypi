@@ -363,7 +363,17 @@ class Real_Time_Spectra(object):
         temp_Tl_data_counts =list(self.Tl_data_counts)
         temp_times=list(self.times)
         
-          
+        if self.data_length1 >= maxspectra:
+           del temp_K_data_counts[0]
+           del temp_Bi_data_counts[0]
+           del temp_Tl_data_counts[0]
+           del temp_times[0]
+           plt.clf()
+           #plt.tight_layout()
+           plt.xlabel('Time')
+           plt.ylabel('counts')
+           plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+                           ncol=3, fancybox=True, shadow=False,numpoints=1) 
         #plt.ion()       # Enable interactive mode
         
         #plt.plot_date(times,K_counts,'bo',label='k-40')
@@ -375,17 +385,7 @@ class Real_Time_Spectra(object):
         #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
         plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
-        if self.data_length1 >= maxspectra:
-           del temp_K_data_counts[0]
-           del temp_Bi_data_counts[0]
-           del temp_Tl_data_counts[0]
-           del temp_times[0]
-           plt.clf()
-           #plt.tight_layout()
-           plt.xlabel('Time')
-           plt.ylabel('counts')
-           plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-                           ncol=3, fancybox=True, shadow=False,numpoints=1)
+       
         if self.isotopes_drawn:
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
