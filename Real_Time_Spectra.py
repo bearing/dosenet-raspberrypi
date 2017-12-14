@@ -357,6 +357,7 @@ class Real_Time_Spectra(object):
         #Plotting the the three Isotopes on same plot
         
         plt.figure(3)
+        
         temp_K_data_counts=list(self.K_data_counts)
         temp_Bi_data_counts=list(self.Bi_data_counts)
         temp_Tl_data_counts =list(self.Tl_data_counts)
