@@ -383,11 +383,10 @@ class Real_Time_Spectra(object):
         plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
 
         if self.isotopes_drawn:
-               legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+            plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
-               self.isotopes_drawn = False
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-                           ncol=3, fancybox=True, shadow=False,numpoints=1)
+            self.isotopes_drawn = False
+        
         return plt.legend
         #return plt.legend
     # Updating the data point by erasing oldest data from data set on plot using FuncAnimation
