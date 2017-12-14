@@ -355,8 +355,7 @@ class Real_Time_Spectra(object):
         
     def plot_isotopes(self,maxspectra=20):
         #Plotting the the three Isotopes on same plot
-        legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-                           ncol=3, fancybox=True, shadow=False,numpoints=1)
+        
         plt.figure(3)
         temp_K_data_counts=list(self.K_data_counts)
         temp_Bi_data_counts=list(self.Bi_data_counts)
@@ -387,8 +386,7 @@ class Real_Time_Spectra(object):
                legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
                self.isotopes_drawn = False
-        legend.remove()
-        legend = plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
         return legend
         #return plt.legend
