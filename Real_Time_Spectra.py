@@ -222,7 +222,7 @@ class Real_Time_Spectra(object):
     
     def close(self,plot_id):
         plt.close(plot_id)
-        print("Plot_id in real time spectra {}".format(plot_id))
+
 
 
     def rebin(self, data, n=4):

@@ -317,7 +317,6 @@ class Manager_D3S(object):
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-        print("Test SegFault: Currently within manager")
         self.rt_plot.plot_sum(plot_id)
 
 
