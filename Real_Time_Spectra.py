@@ -327,22 +327,22 @@ class Real_Time_Spectra(object):
 
         ax3.set_axis_off()
         if display <= 150:
-            ax3.text(0.1, 0.5,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            ax3.text(0.7, 0.5,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.1, 1,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 1,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
 
         elif display > 150 and display <= 500:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
+            ax3.text(0.1, 1,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 1,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
 
 
         elif display > 500 and display <= 2000:
-            ax3.text(0.1, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
+            ax3.text(0.1, 1,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 1,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
 
 
         elif display > 2000:
-            ax3.text(0.2, 0.5,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax3.text(0.7, 0.5,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
+            ax3.text(0.2, 1,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 1,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
         '''
         Resize the plot to make room for the axes labels without resizing the
