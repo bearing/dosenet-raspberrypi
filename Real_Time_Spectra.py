@@ -367,12 +367,16 @@ class Real_Time_Spectra(object):
         """
         Plots the data for the waterfall plot.
         """
-        self.waterfall_plot = plt.imshow(self.data,
-                                         interpolation='nearest',
-                                         aspect='auto',
-                                         extent=[1, 4096, 0,
-                                         np.shape(self.data)[0]
-                                         * self.interval])
+        if self.first:
+            self.waterfall_plot = plt.imshow(self.data,
+                                             interpolation='nearest',
+                                             aspect='auto',
+                                             extent=[1, 4096, 0,
+                                             np.shape(self.data)[0]
+                                             * self.interval])
+            self.first = False
+        else:
+            self.waterfall_plot.set_data(self.data)
 
         """
         Updates the colorbar by removing old colorbar.
