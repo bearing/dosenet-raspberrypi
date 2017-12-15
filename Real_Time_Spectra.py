@@ -377,6 +377,7 @@ class Real_Time_Spectra(object):
                                              * self.interval])
             self.waterfall_drawn = True
         else:
+            self.waterfall_plot.autoscale()
             self.waterfall_plot.set_data(self.data)
 
         """
