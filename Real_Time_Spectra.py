@@ -52,6 +52,7 @@ class Real_Time_Spectra(object):
 
         self.first = True
 
+        self.waterfall_drawn = False
         self.colorbar_drawn = True
 
         self.disp_count = list()
@@ -367,14 +368,14 @@ class Real_Time_Spectra(object):
         """
         Plots the data for the waterfall plot.
         """
-        if self.first:
+        if not self.waterfall_drawn:
             self.waterfall_plot = plt.imshow(self.data,
                                              interpolation='nearest',
                                              aspect='auto',
                                              extent=[1, 4096, 0,
                                              np.shape(self.data)[0]
                                              * self.interval])
-            self.first = False
+            self.waterfall_drawn = True
         else:
             self.waterfall_plot.set_data(self.data)
 
