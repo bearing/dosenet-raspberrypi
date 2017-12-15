@@ -289,8 +289,8 @@ class Real_Time_Spectra(object):
         fig.canvas.set_window_title('Spectrum')
         gs = GridSpec(12,1)
 
-        ax1 = fig.add_subplot(gs[2:8,:])
-        ax2 = fig.add_subplot(gs[8:11,:])
+        ax1 = fig.add_subplot(gs[1:7,:])
+        ax2 = fig.add_subplot(gs[6:10,:])
         ax3 = fig.add_subplot(gs[0,:])
 
 
