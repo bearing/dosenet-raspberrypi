@@ -178,7 +178,7 @@ class Real_Time_Spectra(object):
         '''
         queue.append(new_spectra)
         self.time_stamp.append(datetime_from_epoch(time.time()))
-        self.disp_count.append(sum(new_spectra))
+        self.disp_count.append(sum(spectra))
 
         '''
         Save the original size of the data queue.
