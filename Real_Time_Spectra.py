@@ -376,7 +376,7 @@ class Real_Time_Spectra(object):
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         #plt.xlabel('Time')
         #plt.ylabel('counts')
-        
+        print('data counts array = ',temp_K_data_counts)
         plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
         #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
         plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
