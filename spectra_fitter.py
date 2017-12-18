@@ -266,7 +266,7 @@ def get_peaks2(rows, lower_limit=3600, upper_limit=4080, count_offset=100):
     return means,sigmas,amps
 
 def get_raw_counts (spectrum,low=0,high=4096):
-    counts=sum(spectrum[low:high])
+    counts=np.sum(spectrum[low:high])
     print('get_raw_counts: counts = ', counts)
     return counts
 
