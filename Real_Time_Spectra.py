@@ -155,7 +155,7 @@ class Real_Time_Spectra(object):
         """
         # Create a new spectrum by binning the old spectrum.
         print("length of input spectrum = {}".format(len(spectra)))
-        new_spectra = self.rebin(spectra)
+        new_spectra = self.rebin(spectra,1)
         print("length of rebinned spectrum = {}".format(len(new_spectra)))
         K_counts, Bi_counts, Tl_counts = spectra_fitter.low_stat_isotope_counts(spectra)#should be get_isotope counts
         self.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
