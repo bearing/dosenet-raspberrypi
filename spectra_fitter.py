@@ -336,6 +336,7 @@ def get_isotope_counts(rows, n=4):
 
 def low_stat_isotope_counts(rows,n=4):
     k_counts=get_raw_counts(rows,540,640)
+    print ('k counts = ' ,k_counts )
     Bi_counts=get_raw_counts(rows,160,320)
     Tl_counts=get_raw_counts(rows,900,1000)
     return k_counts,Bi_counts,Tl_counts
