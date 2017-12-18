@@ -180,7 +180,6 @@ class Real_Time_Spectra(object):
             # data_length = len(data)
             
     def add_isotope_counts(self,K_counts,Bi_counts,Tl_counts,maxspectra):
-        print ('k counts = ' ,K_counts )
         self.K_data_counts.append(K_counts)
         self.Bi_data_counts.append(Bi_counts)
         self.Tl_data_counts.append(Tl_counts)
