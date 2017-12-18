@@ -363,9 +363,6 @@ class Real_Time_Spectra(object):
         temp_Tl_data_counts =list(self.Tl_data_counts)
         temp_times=list(self.times)
         
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-                           ncol=3, fancybox=True, shadow=False,numpoints=1)
-        
         if self.data_length1 >= maxspectra:
            del temp_K_data_counts[0]
            del temp_Bi_data_counts[0]
