@@ -156,6 +156,7 @@ class Real_Time_Spectra(object):
         # Create a new spectrum by binning the old spectrum.
         print("length of input spectrum = {}".format(len(spectra)))
         new_spectra = self.rebin(spectra)
+        print("length of rebinned spectrum = {}".format(len(new_spectra)))
         K_counts, Bi_counts, Tl_counts = spectra_fitter.low_stat_isotope_counts(spectra)#should be get_isotope counts
         self.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
         # Add the new spectrum to queue.
@@ -289,6 +290,7 @@ class Real_Time_Spectra(object):
         # Switch to working on the spectrum figure window.
         plt.figure(2)
 
+        print("length of data array to be plotted = {}".format(len(data)))
         # Set the labels for the spectrum plot.
         plt.xlabel('Channel')
         plt.ylabel('Counts')
