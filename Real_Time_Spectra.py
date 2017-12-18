@@ -154,7 +154,7 @@ class Real_Time_Spectra(object):
         Applies to waterfall plot/isotope plot 
         """
         # Create a new spectrum by binning the old spectrum.
-        
+        print("length of input spectrum = {}".format(len(spectra)))
         new_spectra = self.rebin(spectra)
         K_counts, Bi_counts, Tl_counts = spectra_fitter.low_stat_isotope_counts(spectra)#should be get_isotope counts
         self.add_isotope_counts(K_counts,Bi_counts,Tl_counts,maxspectra)
@@ -188,14 +188,14 @@ class Real_Time_Spectra(object):
         self.data_length3=len(self.Tl_data_counts)
     
         if  self.data_length1 > maxspectra:
-            print('this is inside add_isotope_counts',len(self.K_data_counts))
             self.K_data_counts.popleft()
+            print('add_isotope_counts: K_data_counts = ',len(self.K_data_counts))
         if  self.data_length2 > maxspectra:
-            print('this is inside add_isotope_counts',len(self.Bi_data_counts))
             self.Bi_data_counts.popleft()
+            print('add_isotope_counts: Bi_data_counts = ',len(self.Bi_data_counts))
         if self.data_length3 > maxspectra:
-            print('this is inside add_isotope_counts',len(self.Tl_data_counts))
             self.Tl_data_counts.popleft()
+            print('add_isotope_counts: Tl_data_counts = ',len(self.Tl_data_counts))
     def run_avg_data(self, data, maxspectra):
         """
         Calculates a running average of all the count data for each bin in the
@@ -205,7 +205,7 @@ class Real_Time_Spectra(object):
         data_length = len(data)
 
         # Print outs for debugging.
-        print('\n\n\tThe data queue length is {}'.format(data_length) + '.\n\n')
+        print('\n\tThe data queue length is {}'.format(data_length) + '.\n')
         # print('\n\n\tThe data queue: {}'.format(data) + '\n\n')
 
         # Create a temporary data queue so the data can be summed.
@@ -213,12 +213,6 @@ class Real_Time_Spectra(object):
 
         # Save the original length of the temporary data queue.
         temp_length = len(temp_data)
-
-        # Print outs for debugging.
-        print('\n\n\tThe temporary data array length is {}'.format(temp_length) + '.\n\n')
-        # print('\n\n\tThe temporary data array: {}'.format(temp_data) + '\n\n')
-
-        # print(data.shape)
 
         # Total all the counts in the spectrum.
         # spectrum_sum = np.sum(data)
