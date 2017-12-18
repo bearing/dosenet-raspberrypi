@@ -103,8 +103,8 @@ class Real_Time_Spectra(object):
         # Apply the changes to the window geometry.
         plot_manager.window.setGeometry(x_pos, y_pos, window_width, window_height)
         
-        self.isotope_figure=plt.figure(3)
-        fig=plt.figure(3)
+        self.isotope_figure = plt.figure(3)
+        self.isotopes_ax =self.isotope_figure.add_subplot(111)
         plot_manager = plt.get_current_fig_manager()
         
         plt.ylim(0,1800)
@@ -116,7 +116,7 @@ class Real_Time_Spectra(object):
         #plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02,.3,1),
         #  ncol=3, fancybox=True, shadow=False,scatterpoints=1)
                    
-        fig.autofmt_xdate()
+        self.isotope_figure.autofmt_xdate()
         plt.show()
         # Set the position and size of the waterfall plot.
         x_pos = int(0.12 * self.screen_width) #originally .08
@@ -362,34 +362,40 @@ class Real_Time_Spectra(object):
         temp_Bi_data_counts=list(self.Bi_data_counts)
         temp_Tl_data_counts =list(self.Tl_data_counts)
         temp_times=list(self.times)
-        
+        '''
         if self.data_length1 >= maxspectra:
            del temp_K_data_counts[0]
            del temp_Bi_data_counts[0]
            del temp_Tl_data_counts[0]
            del temp_times[0]
-           plt.clf()
-           #plt.tight_layout()
-           plt.xlabel('Time')
-           plt.ylabel('counts')
-           plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
-                           ncol=3, fancybox=True, shadow=False,numpoints=1) 
+         '''
+           
+         #plt.clf()
+         #plt.tight_layout()
+         #plt.xlabel('Time')
+         #plt.ylabel('counts')
+         #plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
+                         #  ncol=3, fancybox=True, shadow=False,numpoints=1) 
         #plt.ion()       # Enable interactive mode
         
         #plt.plot_date(times,K_counts,'bo',label='k-40')
         #plt.xlabel('Time')
         #plt.ylabel('counts')
-        plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
-        #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
-        plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
-        #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
-        plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
         
-       
         if self.isotopes_drawn:
+            plt.errorbar(temp_times,temp_K_data_counts,yerr=np.sqrt(temp_K_data_counts),fmt='bo',ecolor='b',label='K-40')
+            #plt.plot_date(times,Bi_counts,'ro',label='Bi-214')
+            plt.errorbar(temp_times, temp_Bi_data_counts,yerr=np.sqrt(temp_Bi_data_counts),fmt='ro',ecolor='r',label='Bi-214')
+            #plt.plot_date(times,Tl_counts,'ko',label='Tl-208')
+            plt.errorbar(temp_times,temp_Tl_data_counts,yerr=np.sqrt(temp_Tl_data_counts),fmt='ko',ecolor='y',label='Tl-208')
+        
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
                            ncol=3, fancybox=True, shadow=False,numpoints=1)
             self.isotopes_drawn = False
+        else:
+            self.isotopes_ax.set_data([temp_times,temp_K_data_counts,0,np.sqrt(temp_K_data_counts)],[temp_times, temp_Bi_data_counts,0,np.sqrt(temp_Bi_data_counts)],
+                                       [temp_times,temp_Tl_data_counts,0,np.sqrt(temp_Tl_data_counts)])
+                                       
         
         #return plt.legend
     # Updating the data point by erasing oldest data from data set on plot using FuncAnimation
