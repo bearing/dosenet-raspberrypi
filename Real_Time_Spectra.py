@@ -370,7 +370,7 @@ class Real_Time_Spectra(object):
            #del temp_times[0]
         
         plt.clf()
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.xlabel('Time')
         plt.ylabel('counts')
          #plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.02),
