@@ -19,7 +19,6 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
-# import spectra_fitter
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -34,8 +33,7 @@ from globalvalues import DEFAULT_INTERVAL_TEST_D3S
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
-    print 'Got Sigterm!'
-    sys.exit(0)
+    print ('Got Sigterm!')
 
 signal.signal(signal.SIGTERM, signal_term_handler)
 
@@ -70,9 +68,9 @@ class Manager_D3S(object):
 
         self.running = running
 
-        self.total = None
-        self.lst = None
-        self.create_structures = True
+        # self.total = None
+        # self.lst = None
+        # self.create_structures = True
 
         self.interval = interval
         self.maxspectra = maxspectra
@@ -226,12 +224,13 @@ class Manager_D3S(object):
         Main method. Currently also stores and sum the spectra as well.
         Current way to stop is only using a keyboard interrupt.
         """
-
+       
         if self.transport == 'any':
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
+        print ('Discovered %s' % devs)
+        
         if len(devs) <= 0:
             return
 
@@ -246,18 +245,20 @@ class Manager_D3S(object):
             return
 
         done_devices = set()
+        
         try:
             while self.running:
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
-                        if self.create_structures:
-                            self.total = np.array(reading[4])
-                            self.lst = np.array([reading[4]])
-                            self.create_structures = False
-                        else:
-                            self.total += np.array(reading[4])
-                            self.lst = np.concatenate(
-                                (self.lst, [np.array(reading[4])]))
+                        # if self.create_structures:
+                            # self.total = np.array(reading[4])
+                            # self.lst = np.array([reading[4]])
+                            # self.create_structures = False
+                        # else:
+                            # self.total += np.array(reading[4])
+                            # self.lst = np.concatenate(
+                                # (self.lst, [np.array(reading[4])]))
+                        
                         serial = reading[0]
                         dev_count = reading[1]
                         if serial not in done_devices:
@@ -271,6 +272,7 @@ class Manager_D3S(object):
                             controller.stop_collector(serial)
                         if len(done_devices) >= len(devs):
                             break
+            
         except KeyboardInterrupt:
             self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
@@ -310,42 +312,48 @@ class Manager_D3S(object):
                 self.takedown()
 
     def plot_waterfall(self):
-        """Wrapper around waterfall plotter in Real_Time_Spectra class"""
-
+        """
+        Wrapper around waterfall plotter in Real_Time_Spectra class
+        """
         self.rt_plot.plot_waterfall()
 
     def plot_spectrum(self):
-        """Wrapper around spectrum plotter in Real_Time_Spectra class"""
-
+        """
+        Wrapper around spectrum plotter in Real_Time_Spectra class
+        """
         self.rt_plot.plot_sum()
+    
+    def plot_isotopes(self):
 
-    def plot_fitter(self):
         """
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
         """
-
-        total_time=self.interval*self.maxspectra
-        times = np.linspace(self.interval,total_time + 1,self.interval)
-        spectra_fitter.main(self.rt_plot.sum_data, times)
+        self.rt_plot.plot_isotopes()
+        #total_time=self.interval*self.maxspectra 
+        #times = np.linspace(self.interval,total_time + 1,self.interval)
+        #K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
+        #self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,self.maxspectra)
+        #spectra_fitter.main(self.rt_plot.run_avg, times)
 
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
-        if self.plot:
-            self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
 
+        '''
+        Add the spectra to the queue.
+        '''
+        self.rt_plot.add_data( spectra, self.maxspectra)
+
+        if self.plot:
             '''
             Plot the data.
             '''
             self.plot_waterfall()
             self.plot_spectrum()
-            # self.plot_fitter()
-
-            '''
-            Uncomment 3 lines below to plot the spectra fitter plots.
-            '''
+            #self.plot_fitter()
+            self.plot_isotopes()
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
@@ -406,7 +414,6 @@ def main():
         raise
 
 if __name__ == '__main__':
-
     '''
     Execute the main method with argument parsing enabled.
     '''
