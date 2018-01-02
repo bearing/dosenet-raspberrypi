@@ -26,6 +26,7 @@ case "$1" in
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
     echo "Stopping all DoseNet scripts" >> $LOG
+    sudo pkill -SIGTERM -f manager_D3S.py
     sudo killall python &
     ;;
   *)

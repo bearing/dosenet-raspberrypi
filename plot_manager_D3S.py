@@ -19,7 +19,6 @@ from auxiliaries import datetime_from_epoch, set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
-#import spectra_fitter
 
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
@@ -220,7 +219,6 @@ class Manager_D3S(object):
         self.interval = interval
 
 
-
     def run(self):
         """
         Main method. Currently also stores and sum the spectra as well.
@@ -326,6 +324,7 @@ class Manager_D3S(object):
         self.rt_plot.plot_sum()
     
     def plot_isotopes(self):
+
         """
         Wrapper around spectrum-fitter data acquisition plotter in
         spectra_fitter class
@@ -336,7 +335,7 @@ class Manager_D3S(object):
         #K_counts, Bi_counts, Tl_counts = spectra_fitter.get_isotope_counts(rows)
         #self.rt_plot.add_isotope_counts(K_counts,Bi_counts,Tl_counts,self.maxspectra)
         #spectra_fitter.main(self.rt_plot.run_avg, times)
-    
+
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
@@ -348,7 +347,6 @@ class Manager_D3S(object):
         self.rt_plot.add_data( spectra, self.maxspectra)
 
         if self.plot:
-
             '''
             Plot the data.
             '''
@@ -356,9 +354,6 @@ class Manager_D3S(object):
             self.plot_spectrum()
             #self.plot_fitter()
             self.plot_isotopes()
-            '''
-            Uncomment 3 lines below to plot the spectra fitter plots.
-            '''
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
@@ -419,7 +414,6 @@ def main():
         raise
 
 if __name__ == '__main__':
-
     '''
     Execute the main method with argument parsing enabled.
     '''

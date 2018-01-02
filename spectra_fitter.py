@@ -202,7 +202,6 @@ def peak_finder(array,lower,upper,count_offset):
         optimize.leastsq(errfunc, pinit, args=(points,counts), \
             full_output=1, epsfcn=0.0001)
     #print('after parameters: amp= {0}, mean ={1}, sigma = {2}, amp2  = {3}'.format(pfit[0],pfit[1],pfit[2],pfit[3]))
-    
     # Calculate fit parameter uncertainties using the covariance matrix
     #  and the (fit - data) variance
     if (len(counts) > len(pinit)) and pcov is not None:
@@ -269,6 +268,7 @@ def get_raw_counts (spectrum,low=0,high=4096):
     counts=np.sum(spectrum[low:high])
     print('get_raw_counts: counts = ', counts)
     return counts
+
 
 #--------------------------------------------------------------------------#
 # Methods for performing calculations on fit results
@@ -366,6 +366,7 @@ def main (rows,times):
     Bi_peaks,Bi_sigmas,Bi_amps = get_peaks(rows,164,324,1)
     Tl_peaks, Tl_sigmas, Tl_amps = get_peaks2(rows,900,1000)
     
+
     #-------------------------------------------------------------------------#
     # Break apart mean,sigma,amp values and uncertainties
     #-------------------------------------------------------------------------#
@@ -388,9 +389,6 @@ def main (rows,times):
     B_ch_var = np.sqrt(np.var(Bi_ch))
     Tl_ch_ave = np.mean(Tl_ch)
     Tl_ch_var = np.sqrt(np.var(Tl_ch))
-    
-
-    
 
     #-------------------------------------------------------------------------#
     # Get arrays of counts inside K-40, Bi-214,and Tl-208 peaks using fit results 
@@ -399,7 +397,6 @@ def main (rows,times):
     Bi_counts = get_peak_counts(Bi_ch,Bi_sig,Bi_A)
     Tl_counts= get_peak_counts(Tl_ch,Tl_sig,Tl_A)
     #-------------------------------------------------------------------------#
-   
 
     #-------------------------------------------------------------------------#
     # Plots of everything we are interested in!
