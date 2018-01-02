@@ -32,6 +32,8 @@ def close(index):
     if index == 6:
         mgrD3S.close(1)
 
+option1 = [5,10,15,20,25]  
+option2 = [1,2,3,4,5,10,20,30,40,50,60,120,180,240,300]
 
 top = Tkinter.Tk()
 top.geometry("800x400")
@@ -39,6 +41,11 @@ varAir = Tkinter.BooleanVar()
 vard3s = Tkinter.BooleanVar()
 varCO2 = Tkinter.BooleanVar()
 varWeather = Tkinter.BooleanVar()
+maxdata = Tkinter.StringVar()
+maxdata.set(option1[3])
+n_merge = Tkinter.StringVar()
+n_merge.set(option2[2])
+
 
 
 def make_run_gui():
@@ -83,7 +90,7 @@ def make_run_gui():
             aqdaq.start()
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(1000,start)
+        job1=top1.after(int(n_merge.get())*1000,start)
 
     def stop():
         global jobd3s
@@ -104,49 +111,50 @@ def make_run_gui():
         global plot_jobs
         check_plots(0)
         wdaq.press()
-        plot_jobs[0]=top1.after(1000,press)
+        plot_jobs[0]=top1.after(int(n_merge.get())*1000,press)
         
     def temp():
         global wdaq
         global plot_jobs
         check_plots(1)
         wdaq.temp()
-        plot_jobs[1]=top1.after(1000,temp)
+        plot_jobs[1]=top1.after(int(n_merge.get())*1000,temp)
         
     def humid():
         global wdaq
         global plot_jobs
         check_plots(2)
         wdaq.humid()
-        plot_jobs[2]=top1.after(1000,humid)
+        plot_jobs[2]=top1.after(int(n_merge.get())*1000,humid)
         
     def CO2():
         global adcdaq
         global plot_jobs
         check_plots(3)
         adcdaq.plot_CO2()
-        plot_jobs[3]=top1.after(1000,CO2)
+        plot_jobs[3]=top1.after(int(n_merge.get())*1000,CO2)
         
     def airquality():
         global aqdaq
         global plot_jobs
         check_plots(4)
         aqdaq.pmplot()
-        plot_jobs[4]=top1.after(1000,airquality)
+        plot_jobs[4]=top1.after(int(n_merge.get())*1000,airquality)
 
     def D3S_spectra():
         global mgrD3S
         global plot_jobs
         check_plots(5)
         mgrD3S.plot_spectrum(2)
-        plot_jobs[5]=top1.after(1000,D3S_spectra)
+        print("Updating spectra")
+        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(1)
-        plot_jobs[6]=top1.after(1000,D3S_waterfall)
+        plot_jobs[6]=top1.after(int(n_merge.get()),D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
@@ -199,18 +207,21 @@ def weather_test():
         wdaq.create_file()
     if vard3s.get():
         global mgrD3S
-        mgrD3S = plot_manager_D3S.Manager_D3S(maxdata.get(), n_merge.get(), plot = False)
+        mgrD3S = plot_manager_D3S.Manager_D3S(int(n_merge.get()), int(maxdata.get()), plot = False)
         print("create D3S file")
 
     make_run_gui() 
-  
+
 
 AirButton = Tkinter.Checkbutton(top, text="Air Quality", variable=varAir, font="Times 25")    
 WeatherButton = Tkinter.Checkbutton(top, text='Weather Sensor', variable=varWeather, font="Times 25")
 CO2Button = Tkinter.Checkbutton(top, text="CO2 Sensor", variable=varCO2, font="Times 25")
 d3sButton = Tkinter.Checkbutton(top, text="D3S", variable=vard3s, font="Times 25")
-maxdata = Entry(top)
-n_merge = Entry(top)
+# maxdata = Entry(top)
+# n_merge = Entry(top)
+maxdata_option = Tkinter.OptionMenu(top, maxdata, *option1)
+n_merge_option = Tkinter.OptionMenu(top, n_merge, *option2)
+
 maxdata_text = Label(top, text = "Data points on plot", font = "Times 20")
 nmerge_text = Label(top, text = 'Integration seconds (s)', font = "Times 20")
 RecordButton = Tkinter.Button(top, text="Record Data", command = weather_test, font="Times 25")
@@ -220,9 +231,9 @@ WeatherButton.pack(pady = 3)
 CO2Button.pack(pady = 3)
 d3sButton.pack(pady = 3) 
 maxdata_text.pack()
-maxdata.pack()
+maxdata_option.pack()
 nmerge_text.pack()
-n_merge.pack()
+n_merge_option.pack()
 RecordButton.pack(pady = 6)
     
 top.mainloop()

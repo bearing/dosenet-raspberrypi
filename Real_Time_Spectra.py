@@ -6,15 +6,19 @@ import numpy as np
 #import matplotlib
 #matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+import matplotlib
+matplotlib.rcParams['toolbar'] = 'None'
 # import seaborn as sns
 # from ggplot import *
 #from mpltools import style
 #from mpltools import layout
-
+import time
 import Tkinter
 # from PySide.QtGui import QApplication
 #from PyQt5.QtWidgets import QApplication
 
+from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
 from collections import deque
 
@@ -48,8 +52,13 @@ class Real_Time_Spectra(object):
 
         self.first = True
 
+        self.waterfall_drawn = False
         self.colorbar_drawn = True
 
+        self.disp_count = list()
+        self.time_stamp = list()
+
+        plt.ion()
 
     def setup_window_geo(self, x_pos_scaling=0.0, y_pos_scaling=0.0, \
                          width_scaling=1.0, height_scaling=1.0):
@@ -141,6 +150,7 @@ class Real_Time_Spectra(object):
         self.setup_window_geo(0.08, 0.32, 0.36, 0.36)
 
         '''
+
         Draw the blank canvas figure for the spectrum plot and store it as the
         second figure window.
         '''
@@ -151,6 +161,7 @@ class Real_Time_Spectra(object):
         factors.
         '''
         self.setup_window_geo(0.56, 0.32, 0.36, 0.36)
+
 
     def add_data(self, queue, spectra, maxspectra):
         """
@@ -167,6 +178,8 @@ class Real_Time_Spectra(object):
         Add the new spectrum to queue.
         '''
         queue.append(new_spectra)
+        self.time_stamp.append(datetime_from_epoch(time.time()))
+        self.disp_count.append(sum(spectra))
 
         '''
         Save the original size of the data queue.
@@ -179,40 +192,28 @@ class Real_Time_Spectra(object):
         to create a running average.
         '''
         if data_length > maxspectra:
-
             queue.popleft()
+        if len(self.time_stamp) > maxspectra:
+            self.time_stamp = self.time_stamp[1:]
+            self.disp_count = self.disp_count[1:]
 
-    def run_avg_data(self, data, maxspectra):
+
+    def run_avg_data(self, data):
         """
         Calculates a running average of all the count data for each bin in the
         queue.
         """
 
         '''
-        Save the original length of the data queue.
-        '''
-        data_length = len(data)
-
-        '''
-        Create a temporary data queue so the data can be summed.
-        '''
-        temp_data = np.array(data)
-
-        '''
-        Save the original length of the temporary data queue.
-        '''
-        temp_length = len(temp_data)
-
-        '''
         Calculate the running average as the mean of each element in the
         summation of the spectra in the temporary data array.
         '''
-        running_avg_array = sum(temp_data) / temp_length
+        running_avg_array = np.array(data).sum(axis = 0)/ len(data)
 
         '''
         Calculate the sum of the spectra.
         '''
-        sum_data = sum(temp_data)
+        sum_data = sum(data)
 
         '''
         Return the running average and summation data.
@@ -222,7 +223,8 @@ class Real_Time_Spectra(object):
     
     def close(self,plot_id):
         plt.close(plot_id)
-        print("Plot_id in real time spectra {}".format(plot_id))
+
+
 
     def rebin(self, data, n=4):
         """
@@ -284,60 +286,100 @@ class Real_Time_Spectra(object):
         Switch to working on the spectrum figure window.
         '''
         plt.figure(2)
+        fig = plt.figure(2)
+        fig.canvas.set_window_title('Spectrum')
+        gs = GridSpec(12,1)
+
+        ax1 = fig.add_subplot(gs[1:7,:])
+        ax2 = fig.add_subplot(gs[6:10,:])
+        ax3 = fig.add_subplot(gs[0,:])
+
 
         '''
         Set the labels for the spectrum plot.
         '''
-        plt.xlabel('Channel')
-        plt.ylabel('Counts')
-
-        '''
-        Resize the plot to make room for the axes labels without resizing the
-        figure window.
-        '''
-        plt.tight_layout()
+        ax1.set(xlabel = 'Channel', ylabel = 'Counts')
+        ax2.set(xlabel = 'Time', ylabel = 'Counts')
 
         '''
         Set a logarithmic y-scale.
         '''
-        plt.yscale('log')
+        ax1.set_yscale('log')
 
         '''
         Create the x-axis data for the spectrum plot.
         '''
         x = np.linspace(0, 4096, 256)
+        
 
         '''
         Plot the spectrum plot.
         '''
-        plt.plot(x, data, drawstyle='steps-mid')
+        ax1.plot(x, data, drawstyle='steps-mid')
+
+        ax2.plot(self.time_stamp, self.disp_count)
+        plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
+
+        ha = 'horizontalalignment'
+
+        display = int(self.disp_count[-1])
+        dose = round(display * 0.0000427*60,4)
+        dose_display = str(dose) + " $\mu$Sv/hr"
+
+        ax3.set_axis_off()
+        if display <= 150:
+            ax3.text(0.1, 1.2,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax3.text(0.7, 1.2,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
+
+        elif display > 150 and display <= 500:
+            ax3.text(0.1, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax3.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
+
+
+        elif display > 500 and display <= 2000:
+            ax3.text(0.1, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax3.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
+
+
+        elif display > 2000:
+            ax3.text(0.2, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax3.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
         '''
-        Show the spectrum plot.
+        Resize the plot to make room for the axes labels without resizing the
+        figure window.
         '''
-        plt.show()
 
-        '''
-        Wait before displaying another plot. Otherwise, wait the specified
-        number of seconds before continuing with the code execution.
-        '''
-        plt.pause(0.0005)
+        plt.tight_layout(h_pad = 1.5)
+
+
+
 
     def plot_waterfall(self,plot_id):
         plt.figure(plot_id)
+        fig = plt.figure(plot_id)
+        fig.canvas.set_window_title('Waterfall')
+
         """
         Grabs the data for waterfall plot.
         """
         self.make_image()
+
         """
         Plots the data for the waterfall plot.
         """
-        self.waterfall_plot = plt.imshow(self.data,
-                                         interpolation='nearest',
-                                         aspect='auto',
-                                         extent=[1, 4096, 0,
-                                         np.shape(self.data)[0]
-                                         * self.interval])
+        if not self.waterfall_drawn:
+            self.waterfall_plot = plt.imshow(self.data,
+                                             interpolation='nearest',
+                                             aspect='auto',
+                                             extent=[1, 4096, 0,
+                                             np.shape(self.data)[0]
+                                             * self.interval])
+            self.waterfall_drawn = True
+        else:
+            self.waterfall_plot.autoscale()
+            self.waterfall_plot.set_data(self.data)
+
         """
         Updates the colorbar by removing old colorbar.
         """
@@ -351,18 +393,18 @@ class Real_Time_Spectra(object):
             self.cb.remove()
             self.cb = plt.colorbar()
 
+        
+
         plt.tight_layout()
 
         plt.show()
         
         plt.pause(0.0005)
 
-    def plot_sum(self,plot_id):
+    def plot_sum(self,plot_id,):
         """
         Plot the sum (spectrum) figure.
         """
-
-        # plt.figure(figsize=(25,15))
 
         '''
         Point to the figure window for the spectrum plot.
@@ -373,8 +415,8 @@ class Real_Time_Spectra(object):
         Get the running average
         '''
          
-        run_avg, self.sum_data = self.run_avg_data(self.queue, self.maxspectra)
-        
+        run_avg, self.sum_data = self.run_avg_data(self.queue)
+
 
         '''
         Clear the prior spectrum figure.
@@ -389,10 +431,10 @@ class Real_Time_Spectra(object):
         Show the updated spectrum figure window.
         '''
         plt.show()
-
         '''
         Pause before displaying the next figure window.
         '''
         plt.pause(0.0005)
 
         # plt.close()
+
