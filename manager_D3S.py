@@ -54,7 +54,7 @@ class Manager_D3S(object):
     def __init__(self,
                  interval=None,
                  count=0,
-                 transport='any',
+                 transport='usb',
                  device='all',
                  log_bytes=False,
                  verbosity=None,
