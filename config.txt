@@ -1,1 +1,0 @@
-Air Quality Sensor,CO2 Sensor,Atmosphere Sensor,U.V. Sensor,Si Radiation Sensor,CsI Radiation Sensor
