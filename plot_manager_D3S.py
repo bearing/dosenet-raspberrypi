@@ -43,7 +43,7 @@ class Manager_D3S(object):
                  interval=5,
                  maxspectra=20,
                  count=0,
-                 transport='any',
+                 transport='usb',
                  device='all',
                  log_bytes=False,
                  verbosity=None,
