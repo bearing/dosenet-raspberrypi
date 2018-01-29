@@ -376,28 +376,14 @@ class Real_Time_Spectra(object):
                                              np.shape(self.data)[0]
                                              * self.interval])
             self.waterfall_drawn = True
-            if self.colorbar_drawn:
-
-                self.cb = plt.colorbar()
-                self.colorbar_drawn = False
-            else:
-
-                self.cb.remove()
-                self.cb = plt.colorbar()
+            self.cb = plt.colorbar()
 
         else:
             self.waterfall_plot.autoscale()
             self.waterfall_plot.set_data(self.data)
-            if self.colorbar_drawn:
+            self.cb.remove()
+            self.cb = plt.colorbar()
 
-                self.cb = plt.colorbar()
-                self.colorbar_drawn = False
-            else:
-                try:
-                	self.cb.remove()
-                	self.cb = plt.colorbar()
-                except:
-                	pass
 
         """
         Updates the colorbar by removing old colorbar.
@@ -410,9 +396,7 @@ class Real_Time_Spectra(object):
         # else:
 
         #     self.cb.remove()
-        #     self.cb = plt.colorbar()
-
-        
+        #     self.cb = plt.colorbar()        
 
         plt.tight_layout()
 
