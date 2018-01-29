@@ -393,9 +393,11 @@ class Real_Time_Spectra(object):
                 self.cb = plt.colorbar()
                 self.colorbar_drawn = False
             else:
-
-                self.cb.remove()
-                self.cb = plt.colorbar()
+                try:
+                	self.cb.remove()
+                	self.cb = plt.colorbar()
+                except:
+                	pass
 
         """
         Updates the colorbar by removing old colorbar.
