@@ -147,14 +147,14 @@ def make_run_gui():
         check_plots(5)
         mgrD3S.plot_spectrum(2)
         print("Updating spectra")
-        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
+        plot_jobs[5]=top1.after(int(n_merge.get())*1000,D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(1)
-        plot_jobs[6]=top1.after(int(n_merge.get()),D3S_waterfall)
+        plot_jobs[6]=top1.after(int(n_merge.get())*1000,D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
