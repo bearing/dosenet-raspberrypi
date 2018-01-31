@@ -365,7 +365,6 @@ class Real_Time_Spectra(object):
         Grabs the data for waterfall plot.
         """
         self.make_image()
-        print(len(self.data))
 
         """
         Plots the data for the waterfall plot.
