@@ -197,6 +197,8 @@ class Real_Time_Spectra(object):
             self.time_stamp = self.time_stamp[1:]
             self.disp_count = self.disp_count[1:]
 
+        self.run_avg, self.sum_data = self.run_avg_data(self.queue)    
+
         self.make_image()
 
 
@@ -364,12 +366,6 @@ class Real_Time_Spectra(object):
         fig.canvas.set_window_title('Waterfall')
 
         """
-        Grabs the data for waterfall plot.
-        """
-        
-        print(np.sum(self.data, axis = 1))
-
-        """
         Plots the data for the waterfall plot.
         """
         if not self.waterfall_drawn:
@@ -418,12 +414,6 @@ class Real_Time_Spectra(object):
         '''
         plt.figure(plot_id)
 
-        '''
-        Get the running average
-        '''
-         
-        run_avg, self.sum_data = self.run_avg_data(self.queue)
-
 
         '''
         Clear the prior spectrum figure.
@@ -432,7 +422,7 @@ class Real_Time_Spectra(object):
         '''
         Plot the spectrum figure
         '''
-        self.sum_graph(run_avg)
+        self.sum_graph(self.run_avg)
 
         '''
         Show the updated spectrum figure window.
