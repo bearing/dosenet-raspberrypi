@@ -32,7 +32,7 @@ def close(index):
     if index == 6:
         mgrD3S.close(1)
 
-option1 = [5,10,15,20,25]  
+option1 = [5,10,15,20,25,30,35,40,45,50]  
 option2 = [1,2,3,4,5,10,20,30,40,50,60,120,180,240,300]
 
 top = Tkinter.Tk()
@@ -147,7 +147,7 @@ def make_run_gui():
         check_plots(5)
         mgrD3S.plot_spectrum(2)
         print("Updating spectra")
-        plot_jobs[5]=top1.after(int(n_merge.get())*1000,D3S_spectra)
+        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
