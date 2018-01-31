@@ -61,7 +61,7 @@ def make_run_gui():
             if plot_jobs[i] is not None:
                 if i != index:
                     #cancel job, close graph
-                    #top1.after_cancel(plot_jobs[i])
+                    top1.after_cancel(plot_jobs[i])
                     plot_jobs[i] = None
                     close(i)
                     
