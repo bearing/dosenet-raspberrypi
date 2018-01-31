@@ -313,6 +313,7 @@ class Manager_D3S(object):
     def plot_waterfall(self, plot_id):
         """Wrapper around waterfall plotter in Real_Time_Spectra class"""
         self.rt_plot.plot_waterfall(plot_id)
+        self.rt_plot.waterfall_drawn = False
 
     def plot_spectrum(self,plot_id):
         """Wrapper around spectrum plotter in Real_Time_Spectra class"""
