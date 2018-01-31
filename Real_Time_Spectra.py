@@ -197,6 +197,8 @@ class Real_Time_Spectra(object):
             self.time_stamp = self.time_stamp[1:]
             self.disp_count = self.disp_count[1:]
 
+        self.make_image()
+
 
     def run_avg_data(self, data):
         """
@@ -364,7 +366,7 @@ class Real_Time_Spectra(object):
         """
         Grabs the data for waterfall plot.
         """
-        self.make_image()
+        
         print(np.sum(self.data, axis = 1))
 
         """
