@@ -197,6 +197,10 @@ class Real_Time_Spectra(object):
             self.time_stamp = self.time_stamp[1:]
             self.disp_count = self.disp_count[1:]
 
+        self.run_avg, self.sum_data = self.run_avg_data(self.queue)    
+
+        self.make_image()
+
 
     def run_avg_data(self, data):
         """
@@ -269,6 +273,7 @@ class Real_Time_Spectra(object):
             '''
             if len(self.data) > self.maxspectra:
                 self.data = self.data[:-1]
+
 
     def fix_array(self):
         """
@@ -361,11 +366,6 @@ class Real_Time_Spectra(object):
         fig.canvas.set_window_title('Waterfall')
 
         """
-        Grabs the data for waterfall plot.
-        """
-        self.make_image()
-
-        """
         Plots the data for the waterfall plot.
         """
         if not self.waterfall_drawn:
@@ -376,24 +376,27 @@ class Real_Time_Spectra(object):
                                              np.shape(self.data)[0]
                                              * self.interval])
             self.waterfall_drawn = True
+            self.cb = plt.colorbar()
+
         else:
             self.waterfall_plot.autoscale()
             self.waterfall_plot.set_data(self.data)
+            self.cb.remove()
+            self.cb = plt.colorbar()
+
 
         """
         Updates the colorbar by removing old colorbar.
         """
-        if self.colorbar_drawn:
+        # if self.colorbar_drawn:
 
-            self.cb = plt.colorbar()
-            self.colorbar_drawn = False
+        #     self.cb = plt.colorbar()
+        #     self.colorbar_drawn = False
 
-        if not self.colorbar_drawn:
+        # else:
 
-            self.cb.remove()
-            self.cb = plt.colorbar()
-
-        
+        #     self.cb.remove()
+        #     self.cb = plt.colorbar()        
 
         plt.tight_layout()
 
@@ -411,12 +414,6 @@ class Real_Time_Spectra(object):
         '''
         plt.figure(plot_id)
 
-        '''
-        Get the running average
-        '''
-         
-        run_avg, self.sum_data = self.run_avg_data(self.queue)
-
 
         '''
         Clear the prior spectrum figure.
@@ -425,7 +422,7 @@ class Real_Time_Spectra(object):
         '''
         Plot the spectrum figure
         '''
-        self.sum_graph(run_avg)
+        self.sum_graph(self.run_avg)
 
         '''
         Show the updated spectrum figure window.
