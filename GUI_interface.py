@@ -154,7 +154,7 @@ def make_run_gui():
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(1)
-        plot_jobs[6]=top1.after(int(n_merge.get())*1000,D3S_waterfall)
+        plot_jobs[6]=top1.after(int(n_merge.get())*500,D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
