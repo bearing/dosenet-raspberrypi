@@ -138,9 +138,6 @@ class Data_Handler(object):
                     self.send_to_memory(cpm=trash[1], cpm_err=trash[2])
                     no_error_yet = False
 
-            else:
-                self.manager.sender.send_cpm(cpm, cpm_err)
-
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.manager.sender.send_spectra_new_D3S(this_end, spectra)
