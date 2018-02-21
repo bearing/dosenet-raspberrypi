@@ -5,6 +5,7 @@ from __future__ import print_function
 import serial
 import Adafruit_MCP3008
 from Adafruit_BME280 import *
+import os
 
 try:
     import RPi.GPIO as GPIO
@@ -18,9 +19,14 @@ except ImportError:
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-D3S_LED_PIN = 13
-NETWORK_LED_PIN = 16
-COUNTS_LED_PIN = 19
+if "NEW_SENSOR_LIGHT_SETUP" in os.environ:
+    D3S_LED_PIN = 13
+    NETWORK_LED_PIN = 16
+    COUNTS_LED_PIN = 19
+else:
+    D3S_LED_PIN = 19
+    NETWORK_LED_PIN = 20
+    COUNTS_LED_PIN = 21
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
 
