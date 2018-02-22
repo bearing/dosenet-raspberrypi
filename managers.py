@@ -379,7 +379,7 @@ class Base_Manager(object):
             try:
                 test_time_outer = time.time() + self.signal_test_time + 30
                 while time.time() < test_time_outer:
-                    test_time_inner = time.time() + self.signal_test_time + 5
+                    test_time_inner = time.time() + self.signal_test_time + 10
                     while time.time() < test_time_inner:
                         try:
                             with kromek.Controller(devs, self.signal_test_time) as controller:
