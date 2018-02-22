@@ -377,28 +377,24 @@ class Base_Manager(object):
             # the red LED if it is. If a D3S is connected but no data is being recieved,
             # it tries a couple times then reboots the RaspberryPi.
             try:
-                while self.signal_test_attempts < 3 and self.signal_test_connection == False:
-                    test_time = time.time() + self.signal_test_time + 5
-                    try:
-                        with kromek.Controller(devs, self.signal_test_time) as controller:
-                            for reading in controller.read():
-                                if sum(reading[4]) != 0:
-                                    self.d3s_light_switch = True
-                                    self.signal_test_loop = False
-                                    break
-                                else:
-                                    self.signal_test_loop = False
-                                    break
-                    except time.time() < test_time:
-                        self.signal_test_attempts += 1
-                        self.signal_test_loop = True
-                        print("Connection to D3S not found, trying another {} times".format(
-                            3 - self.signal_test_attempts))
-                    if self.d3s_light_switch:
-                        self.signal_test_connection = True
-                if not self.signal_test_connection:
-                    print("No data from D3S found, restarting now")
-                    os.system('sudo reboot')
+                test_time_outer = time.time() + self.signal_test_time + 30
+                while time.time() < test_time_outer:
+                    test_time_inner = time.time() + self.signal_test_time + 5
+                    while time.time() < test_time_inner:
+                        try:
+                            with kromek.Controller(devs, self.signal_test_time) as controller:
+                                for reading in controller.read():
+                                    if sum(reading[4]) != 0:
+                                        self.d3s_light_switch = True
+                                        break
+                                    else:
+                                        break
+                        except time.time() < test_time_inner:
+                            print("Data from D3S not found")
+                    if not self.d3s_light_switch:
+                        print("Search for data from D3S failed, trying again")
+                    else:
+                        break
             except KeyboardInterrupt:
                 self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
                 self.takedown()
@@ -410,6 +406,10 @@ class Base_Manager(object):
                 self.d3s_LED.stop_blink()
                 print("D3S data connection found, continuing with normal data collection")
                 self.d3s_LED.on()
+            else:
+                self.d3s_LED.stop_blink()
+                print("D3S data connection not found, turning off light and will try again at reboot")
+                self.d3s_LED.off()
 
             self.vprint(
                 1, RUNNING_DISPLAY_TEXT.format(
@@ -760,9 +760,6 @@ class Manager_D3S(Base_Manager):
                  device='all',
                  log_bytes=False,
                  running=False,
-                 signal_test_attempts=0,
-                 signal_test_connection=False,
-                 signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  transport='usb',
                  **kwargs):
@@ -792,9 +789,6 @@ class Manager_D3S(Base_Manager):
         self.make_calibration_log(self.calibrationlog)
 
         self.signal_test_time = signal_test_time
-        self.signal_test_loop = signal_test_loop
-        self.signal_test_connection = signal_test_connection
-        self.signal_test_attempts = signal_test_attempts
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
