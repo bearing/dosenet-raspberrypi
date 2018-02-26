@@ -405,14 +405,13 @@ class Base_Manager(object):
                                 print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
                                 if self.d3s_data_attempts != self.d3s_data_lim:
                                     signal.alarm(10)
-                                self.d3s_data_attempts += 1
+                                    self.d3s_data_attempts += 1
                         if self.d3s_light_switch:
                             print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
                             break
                         if self.d3s_data_attempts > self.d3s_data_lim:
                             print("Failed to find data from D3S {} times".format(self.d3s_data_attempts))
                             print("The D3S is either having data collection issues or is currently off")
-                            print("Will try to gather data again at reboot")
                             self.d3s_presence = False
                             break
                 except KeyboardInterrupt:
@@ -428,8 +427,9 @@ class Base_Manager(object):
                 self.d3s_LED.on()
             else:
                 self.d3s_LED.stop_blink()
-                print("D3S data connection not found, turning off light and will try again at reboot")
+                print("Turning off light and will try to gather data again at reboot")
                 self.d3s_LED.off()
+                GPIO.cleanup()
 
             if self.d3s_presence:
                 self.vprint(
