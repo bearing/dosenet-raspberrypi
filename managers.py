@@ -397,6 +397,7 @@ class Base_Manager(object):
                                     for reading in controller.read():
                                         if sum(reading[4]) != 0:
                                             self.d3s_light_switch = True
+                                            signal.alarm(0)
                                             break
                                         else:
                                             break
