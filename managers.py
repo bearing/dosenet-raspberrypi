@@ -812,6 +812,7 @@ class Manager_D3S(Base_Manager):
         self.signal_test_time = signal_test_time
         self.d3s_presence = d3s_presence
         self.d3s_data_attempts = d3s_data_attempts
+        self.d3s_data_lim = d3s_data_lim
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
