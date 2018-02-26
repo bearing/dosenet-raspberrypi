@@ -4,6 +4,7 @@ import csv
 import numpy as np
 from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 from collections import deque
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
@@ -97,6 +98,7 @@ class adc_DAQ(object):
         plt.clf()
         #ax=fig.add_subplot(111)
 
+        gs = GridSpec(6,1)
         ax1 = fig.add_subplot(gs[0,:])
         ax2 = fig.add_subplot(gs[1:5,:])
 
