@@ -403,8 +403,9 @@ class Base_Manager(object):
                             except Exception as e:
                                 print(e)
                                 print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
+                                if self.d3s_data_attempts != self.d3s_data_lim:
+                                    signal.alarm(10)
                                 self.d3s_data_attempts += 1
-                                signal.alarm(10)
                         if self.d3s_light_switch:
                             print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
                             break
@@ -412,6 +413,7 @@ class Base_Manager(object):
                             print("Failed to find data from D3S {} times".format(self.d3s_data_attempts))
                             print("The D3S is either having data collection issues or is currently off")
                             print("Will try to gather data again at reboot")
+                            self.d3s_presence = False
                             break
                 except KeyboardInterrupt:
                     self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -429,45 +431,46 @@ class Base_Manager(object):
                 print("D3S data connection not found, turning off light and will try again at reboot")
                 self.d3s_LED.off()
 
-            self.vprint(
-                1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start).strftime(strf),
-                    date=str(datetime.date.today()),
-                    interval=self.interval))
+            if self.d3s_presence:
+                self.vprint(
+                    1, RUNNING_DISPLAY_TEXT.format(
+                        start_time=datetime_from_epoch(this_start).strftime(strf),
+                        date=str(datetime.date.today()),
+                        interval=self.interval))
 
-            done_devices = set()
-            try:
-                while self.running:
-                    with kromek.Controller(devs, self.interval) as controller:
-                        for reading in controller.read():
-                            if self.create_structures:
-                                self.total = np.array(reading[4])
-                                self.lst = np.array([reading[4]])
-                                self.create_structures = False
-                            else:
-                                self.total += np.array(reading[4])
-                                self.lst = np.concatenate(
-                                    (self.lst, [np.array(reading[4])]))
-                            serial = reading[0]
-                            dev_count = reading[1]
-                            if serial not in done_devices:
-                                this_start, this_end = self.get_interval(
-                                    time.time() - self.interval)
+                done_devices = set()
+                try:
+                    while self.running:
+                        with kromek.Controller(devs, self.interval) as controller:
+                            for reading in controller.read():
+                                if self.create_structures:
+                                    self.total = np.array(reading[4])
+                                    self.lst = np.array([reading[4]])
+                                    self.create_structures = False
+                                else:
+                                    self.total += np.array(reading[4])
+                                    self.lst = np.concatenate(
+                                        (self.lst, [np.array(reading[4])]))
+                                serial = reading[0]
+                                dev_count = reading[1]
+                                if serial not in done_devices:
+                                    this_start, this_end = self.get_interval(
+                                        time.time() - self.interval)
 
-                                self.handle_data(
-                                    this_start, this_end, reading[4])
+                                    self.handle_data(
+                                        this_start, this_end, reading[4])
 
-                            if dev_count >= self.count > 0:
-                                done_devices.add(serial)
-                                controller.stop_collector(serial)
-                            if len(done_devices) >= len(devs):
-                                break
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.takedown()
+                                if dev_count >= self.count > 0:
+                                    done_devices.add(serial)
+                                    controller.stop_collector(serial)
+                                if len(done_devices) >= len(devs):
+                                    break
+                except KeyboardInterrupt:
+                    self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                    self.takedown()
+                except SystemExit:
+                    self.vprint(1, '\nSystemExit: taking down Manager')
+                    self.takedown()
 
         if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             try:
