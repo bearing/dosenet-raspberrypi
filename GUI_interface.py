@@ -90,7 +90,7 @@ def make_run_gui():
             aqdaq.start()
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(int(n_merge.get())*1000,start)
+        job1=top1.after(int(n_merge.get()),start)
 
     def stop():
         global jobd3s

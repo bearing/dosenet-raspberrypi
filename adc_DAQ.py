@@ -95,14 +95,31 @@ class adc_DAQ(object):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
-        ax=fig.add_subplot(111)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylable) 
-        plt.title(title)
-        plt.plot(xdata,ydata,"r.-")
-        fig.autofmt_xdate()
-        ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        ax.autoscale(tight = False)
+        #ax=fig.add_subplot(111)
+
+        ax1 = fig.add_subplot(gs[0,:])
+        ax2 = fig.add_subplot(gs[1:5,:])
+
+
+        ax1.set_axis_off()
+        display = ydata[-1]
+        if display <= 400:
+            ax1.text(0.3, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+
+        elif display > 400 and display <= 1000:
+            ax1.text(0.3, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+
+        elif display > 1000:
+            ax1.text(0.3, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+
+
+
+        ax2.set(xlabel = xlabel, ylabel = ylable, title = title)
+
+        ax2.plot(xdata,ydata,"r.-")
+        #fig.autofmt_xdate()
+        ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
         fig.show()
         plt.pause(0.0005)    
 
