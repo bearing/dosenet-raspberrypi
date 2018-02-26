@@ -409,7 +409,7 @@ class Base_Manager(object):
                         if self.d3s_light_switch:
                             print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
                             break
-                        if self.d3s_data_attempts > self.d3s_data_lim:
+                        if self.d3s_data_attempts >= self.d3s_data_lim:
                             print("Failed to find data from D3S {} times".format(self.d3s_data_attempts))
                             print("The D3S is either having data collection issues or is currently off")
                             self.d3s_presence = False
@@ -430,6 +430,7 @@ class Base_Manager(object):
                 print("Turning off light and will try to gather data again at reboot")
                 self.d3s_LED.off()
                 GPIO.cleanup()
+                return
 
             if self.d3s_presence:
                 self.vprint(
