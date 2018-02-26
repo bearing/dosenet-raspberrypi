@@ -405,12 +405,12 @@ class Base_Manager(object):
                                 print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
                                 if self.d3s_data_attempts != self.d3s_data_lim:
                                     signal.alarm(10)
-                                    self.d3s_data_attempts += 1
+                                self.d3s_data_attempts += 1
                         if self.d3s_light_switch:
                             print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
                             break
-                        if self.d3s_data_attempts >= self.d3s_data_lim:
-                            print("Failed to find data from D3S {} times".format(self.d3s_data_attempts))
+                        if self.d3s_data_attempts > self.d3s_data_lim:
+                            print("Failed to find data from D3S {} times".format(self.d3s_data_attempts-1))
                             print("The D3S is either having data collection issues or is currently off")
                             self.d3s_presence = False
                             break
