@@ -79,7 +79,7 @@ def signal_quit_handler(signal, frame):
 def timeout_handler(num, stack):
     raise Exception("TIMEOUT")
 
-signal.signal(signal.SIGALARM, timeout_handler)
+signal.signal(signal.SIGALRM, timeout_handler)
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
 
