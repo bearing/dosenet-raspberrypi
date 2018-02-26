@@ -403,7 +403,7 @@ class Base_Manager(object):
                             except Exception as e:
                                 print(e)
                                 print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
-                                attempts += 1
+                                self.d3s_data_attempts += 1
                                 signal.alarm(10)
                         if self.d3s_light_switch:
                             print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
