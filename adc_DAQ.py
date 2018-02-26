@@ -77,8 +77,6 @@ class adc_DAQ(object):
 
 
     def plot_CO2(self):
-        print(self.time_queue)
-        print(self.CO2_queue)
         if len(self.time_queue)>0:
             self.update_plot(1,self.time_queue,self.CO2_queue,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
 
@@ -101,9 +99,10 @@ class adc_DAQ(object):
         plt.xlabel(xlabel)
         plt.ylabel(ylable) 
         plt.title(title)
-        plt.plot(xdata,ydata,"r.")
+        plt.plot(xdata,ydata,"r.-")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        ax.autoscale(tight = False)
         fig.show()
         plt.pause(0.0005)    
 
