@@ -111,35 +111,35 @@ def make_run_gui():
         global plot_jobs
         check_plots(0)
         wdaq.press()
-        plot_jobs[0]=top1.after(int(n_merge.get())*1000,press)
+        plot_jobs[0]=top1.after(int(n_merge.get()),press)
         
     def temp():
         global wdaq
         global plot_jobs
         check_plots(1)
         wdaq.temp()
-        plot_jobs[1]=top1.after(int(n_merge.get())*1000,temp)
+        plot_jobs[1]=top1.after(int(n_merge.get()),temp)
         
     def humid():
         global wdaq
         global plot_jobs
         check_plots(2)
         wdaq.humid()
-        plot_jobs[2]=top1.after(int(n_merge.get())*1000,humid)
+        plot_jobs[2]=top1.after(int(n_merge.get()),humid)
         
     def CO2():
         global adcdaq
         global plot_jobs
         check_plots(3)
         adcdaq.plot_CO2()
-        plot_jobs[3]=top1.after(int(n_merge.get())*1000,CO2)
+        plot_jobs[3]=top1.after(int(n_merge.get()),CO2)
         
     def airquality():
         global aqdaq
         global plot_jobs
         check_plots(4)
         aqdaq.pmplot()
-        plot_jobs[4]=top1.after(int(n_merge.get())*1000,airquality)
+        plot_jobs[4]=top1.after(int(n_merge.get()),airquality)
 
     def D3S_spectra():
         global mgrD3S

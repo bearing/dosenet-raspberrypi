@@ -77,6 +77,8 @@ class adc_DAQ(object):
 
 
     def plot_CO2(self):
+        print(self.time_queue)
+        print(self.CO2_queue)
         if len(self.time_queue)>0:
             self.update_plot(1,self.time_queue,self.CO2_queue,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
 
