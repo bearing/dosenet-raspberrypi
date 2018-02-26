@@ -352,6 +352,8 @@ class Base_Manager(object):
                 self.takedown()
 
         if self.sensor_type == 2:
+            print("Attempting to connect to D3S now")
+            
             if self.transport == 'any':
                 devs = kromek.discover()
             else:
@@ -826,7 +828,6 @@ class Manager_D3S(Base_Manager):
         self.d3s_LED_blink = d3s_LED_blink
 
         if d3s_LED_blink:
-            print("Attempting to connect to D3S now")
             self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
         if d3s_light_switch:
             self.d3s_LED.on()
