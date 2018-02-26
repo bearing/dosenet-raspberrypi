@@ -106,13 +106,16 @@ class adc_DAQ(object):
         ax1.set_axis_off()
         display = ydata[-1]
         if display <= 400:
-            ax1.text(0.3, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax2.set_ylim(250,1000)
 
         elif display > 400 and display <= 1000:
-            ax1.text(0.3, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax2.set_ylim(250,1000)
 
         elif display > 1000:
-            ax1.text(0.3, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax2.set_ylim(250, display+500)
 
 
 
