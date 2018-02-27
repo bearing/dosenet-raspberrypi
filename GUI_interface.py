@@ -192,7 +192,7 @@ def weather_test():
 
     if varCO2.get(): 
         global adcdaq
-        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), n_merge.get()*2)
+        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), int(n_merge.get())*2)
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
