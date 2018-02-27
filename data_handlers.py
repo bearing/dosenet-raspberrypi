@@ -41,6 +41,7 @@ class Data_Handler(object):
                  verbosity=1,
                  logfile=None,
                  ):
+        self.send_fail = False
 
         self.v = verbosity
         if manager and logfile is None:
@@ -96,6 +97,8 @@ class Data_Handler(object):
                 time.sleep(FLUSH_PAUSE_S)
                 trash = self.queue.popleft()
                 try:
+                    if not self.send_fail:
+                        self.manager.network_LED.on()
                     self.manager.sender.send_cpm_new(
                         trash[0], trash[1], trash[2])
                 except (socket.gaierror, socket.error, socket.timeout) as e:
@@ -137,7 +140,8 @@ class Data_Handler(object):
                         self.vprint(1, 'Failed to send packet! Socket timeout')
                     self.send_to_memory(cpm=trash[1], cpm_err=trash[2])
                     no_error_yet = False
-
+                if self.send_fail and no_error_yet:
+                    self.send_fail = False
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.manager.sender.send_spectra_new_D3S(this_end, spectra)
@@ -456,6 +460,12 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
+                if self.send_fail:
+                    self.manager.network_LED.stop_blink()
+                    self.manager.network_LED.off()
+                if not self.send_fail:
+                    self.send_fail = True
+                    self.manager.network_LED.start_blink(interval=NETWORK_LED_BLINK_PERIOD_S)
                 if self.manager.sensor_type == 1:
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
