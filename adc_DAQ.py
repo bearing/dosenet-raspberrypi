@@ -26,6 +26,7 @@ class adc_DAQ(object):
         self.UV_queue=deque()
         self.merge_test=False
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+        print('N MERGE: {}'.format(n_merge) )
         
     def create_file(self):
         global adc_results
@@ -86,11 +87,11 @@ class adc_DAQ(object):
             self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")        
 
     def add_data(self, queue, temp_list, data):
-    	print('adding data')
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
             print(temp_list)
+            print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
             queue.popleft()    
 
