@@ -462,18 +462,17 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
-                print("THIS IS FAILING")
-                if self.send_fail:
-                    print("Failed again")
-                    self.led.stop_blink()
-                    self.led.off()
-                    print("Light is now off")
-                if not self.send_fail:
-                    self.send_fail = True
-                    print("Send fail is now true")
-                    self.led.start_blink(interval=self.blink_period_s)
-                    print("Blinking light")
                 if self.manager.sensor_type == 1:
+                    if self.send_fail:
+                        print("Failed again")
+                        self.led.stop_blink()
+                        self.led.off()
+                        print("Light is now off")
+                    if not self.send_fail:
+                        self.send_fail = True
+                        print("Send fail is now true")
+                        self.led.start_blink(interval=self.blink_period_s)
+                        print("Blinking light")
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
                     self.send_to_memory(spectra=spectra)
