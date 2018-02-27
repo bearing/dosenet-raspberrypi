@@ -51,7 +51,7 @@ class adc_DAQ(object):
                 values[i] = self.mcp.read_adc(i)
             # Print the ADC values.
             # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
-            print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
+            #print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
             concentration = 5000/496*values[0] - 1250
             print("|{}|\n".format(concentration))
             # Pause for half a second.
@@ -65,12 +65,12 @@ class adc_DAQ(object):
             
             self.merge_test=False
             self.add_data(self.CO2_queue,self.CO2_list,concentration)
-            self.add_data(self.UV_queue,self.UV_list,uv_index)
+            #self.add_data(self.UV_queue,self.UV_list,uv_index)
             self.add_time(self.time_queue, self.time_list, date_time)
                           
             if self.merge_test==True:
                 self.CO2_list=[]
-                self.UV_list=[]
+                #self.UV_list=[]
                 self.time_list=[]
                     
         except:
@@ -86,6 +86,7 @@ class adc_DAQ(object):
             self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")        
 
     def add_data(self, queue, temp_list, data):
+    	print('adding data')
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
