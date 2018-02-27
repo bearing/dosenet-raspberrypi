@@ -20,6 +20,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import TESTING_UDP_PORT, TESTING_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
+from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 
 TCP_TIMEOUT = 5
 D3S_PREPEND_STR = '{:05d}'
@@ -41,6 +42,7 @@ class ServerSender(object):
                  verbosity=1,
                  logfile=None,
                  mode=None,
+                 tcp_fail=False,
                  ):
         """
         network_status, config, publickey, aes loaded from manager
@@ -54,6 +56,7 @@ class ServerSender(object):
         else:
             set_verbosity(self, logfile=logfile)
 
+        self.tcp_fail = tcp_fail
         self.address = address
         self.handle_input(
             manager, mode, port, config, publickey, aes)
@@ -353,6 +356,8 @@ class ServerSender(object):
             if branch is not None:
                 self.vprint(3, 'Branch: {}'.format(branch))
                 self.vprint(3, 'Update flag: {}'.format(flag))
+                if self.tcp_fail:
+                    self.tcp_fail = False
                 if self.manager:
                     self.manager.branch = branch
                     self.manager.quit_after_interval = flag
@@ -361,8 +366,15 @@ class ServerSender(object):
                         1, 'No manager, not saving branch and updateflag')
             else:
                 self.vprint(2, 'Bad or missing return packet!')
+                if self.tcp_fail:
+                    self.manager.network_LED.stop_blink()
+                    self.manager.network_LED.off()
+                if not self.tcp_fail:
+                    self.tcp_fail = True
+                    self.manager.network_LED.start_blink(interval=NETWORK_LED_BLINK_PERIOD_S)
             self.vprint(3, 'TCP packet sent successfully')
-
+            if not self.tcp_fail:
+                self.manager.network_LED.on()
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
 

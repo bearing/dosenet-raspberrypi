@@ -34,7 +34,7 @@ from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
-from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES
+from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -106,6 +106,7 @@ class Base_Manager(object):
                  aeskey=None,
                  sensor_type=None,
                  sensor=None,
+                 data_names=DATA_NAMES,
                  ):
         self.sensor_type = sensor_type
 
@@ -115,6 +116,7 @@ class Base_Manager(object):
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
+        self.data_names = data_names
 
         self.test = test
 
@@ -353,7 +355,7 @@ class Base_Manager(object):
 
         if self.sensor_type == 2:
             print("Attempting to connect to D3S now")
-            
+
             if self.transport == 'any':
                 devs = kromek.discover()
             else:
@@ -526,7 +528,7 @@ class Base_Manager(object):
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
-                    self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type+1],file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -1222,7 +1224,6 @@ if __name__ == '__main__':
             if sensor == (1 + i):
                 print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
                 sys.stdout.flush()
-
         mgr.run()
 
     except:

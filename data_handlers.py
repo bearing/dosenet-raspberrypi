@@ -275,7 +275,7 @@ class Data_Handler(object):
 
     def main(self, datalog, this_start, this_end, **kwargs):
         """
-        Determines how to handle the cpm data.
+        Determines how to handle the sensor data.
         """
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
