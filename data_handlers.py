@@ -471,7 +471,7 @@ class Data_Handler(object):
                 if not self.send_fail:
                     self.send_fail = True
                     print("Send fail is now true")
-                    self.led.start_blink(interval=blink_period_s)
+                    self.led.start_blink(interval=self.blink_period_s)
                     print("Blinking light")
                 if self.manager.sensor_type == 1:
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
