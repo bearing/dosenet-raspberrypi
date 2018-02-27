@@ -90,7 +90,7 @@ def make_run_gui():
             aqdaq.start()
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(1000,start)
+        job1=top1.after(500,start)
 
     def stop():
         global jobd3s

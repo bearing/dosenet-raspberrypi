@@ -89,6 +89,7 @@ class adc_DAQ(object):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
+            print(temp_list)
         if len(queue)>self.maxdata:
             queue.popleft()    
 
