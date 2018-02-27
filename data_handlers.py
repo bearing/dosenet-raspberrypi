@@ -97,8 +97,9 @@ class Data_Handler(object):
                 time.sleep(FLUSH_PAUSE_S)
                 trash = self.queue.popleft()
                 try:
-                    if not self.send_fail:
-                        self.manager.network_LED.on()
+                    if not self.send_fail and not self.led.blinker:
+                        self.led.on()
+                        print("Turning light on")
                     self.manager.sender.send_cpm_new(
                         trash[0], trash[1], trash[2])
                 except (socket.gaierror, socket.error, socket.timeout) as e:
@@ -142,6 +143,7 @@ class Data_Handler(object):
                     no_error_yet = False
                 if self.send_fail and no_error_yet:
                     self.send_fail = False
+                    print("send fail is false")
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.manager.sender.send_spectra_new_D3S(this_end, spectra)
@@ -460,12 +462,17 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
+                print("THIS IS FAILING")
                 if self.send_fail:
-                    self.manager.network_LED.stop_blink()
-                    self.manager.network_LED.off()
+                    print("Failed again")
+                    self.led.stop_blink()
+                    self.led.off()
+                    print("Light is now off")
                 if not self.send_fail:
                     self.send_fail = True
-                    self.manager.network_LED.start_blink(interval=NETWORK_LED_BLINK_PERIOD_S)
+                    print("Send fail is now true")
+                    self.led.start_blink(interval=blink_period_s)
+                    print("Blinking light")
                 if self.manager.sensor_type == 1:
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
