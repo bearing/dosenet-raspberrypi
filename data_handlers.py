@@ -495,7 +495,7 @@ class Data_Handler_Pocket(Data_Handler):
 
         super(Data_Handler_Pocket, self).__init__(**kwargs)
 
-        self.blink_period_s = NETWORK_LED_BLINK_PERIOD_S
+        self.blink_period_s = 0.1
         self.led = network_led
 
 class Data_Handler_D3S(Data_Handler):
