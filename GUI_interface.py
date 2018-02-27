@@ -90,7 +90,7 @@ def make_run_gui():
             aqdaq.start()
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(500,start)
+        job1=top1.after(1000,start)
 
     def stop():
         global jobd3s
@@ -192,7 +192,7 @@ def weather_test():
 
     if varCO2.get(): 
         global adcdaq
-        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), int(n_merge.get())*2)
+        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), int(n_merge.get()))
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
