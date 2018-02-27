@@ -97,7 +97,7 @@ class Data_Handler(object):
                 time.sleep(FLUSH_PAUSE_S)
                 trash = self.queue.popleft()
                 try:
-                    if not self.send_fail and not self.led.blinker:
+                    if not self.send_fail:
                         self.led.on()
                         print("Turning light on")
                     self.manager.sender.send_cpm_new(
