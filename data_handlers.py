@@ -89,6 +89,7 @@ class Data_Handler(object):
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
+                print("init, led pin is:", self.led.pin)
             self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
@@ -470,6 +471,7 @@ class Data_Handler(object):
                         print("Light is now off")
                     if not self.send_fail:
                         self.send_fail = True
+                        print("failed, led pin is:", self.led.pin)
                         print("Send fail is now true")
                         self.led.start_blink(interval=self.blink_period_s)
                         print("Blinking light")
