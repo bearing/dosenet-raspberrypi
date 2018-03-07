@@ -18,7 +18,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping CO2 sensor script" >> $LOG
-    sudo pkill -SIGTERM -f managers.py
+    sudo pkill -SIGQUIT -f managers.py
     ;;
  *)
     echo "Usage: /home/pi/dosenet-raspberrypi/CO2.sh {start|test|stop}"

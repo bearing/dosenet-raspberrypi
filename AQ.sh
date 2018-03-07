@@ -19,7 +19,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping Air Quality Sensor script" >> $LOG
-    sudo pkill -SIGTERM -f managers.py
+    sudo pkill -SIGQUIT -f managers.py
     ;;
  *)
     echo "Usage: /home/pi/dosenet-raspberrypi/AQ.sh {start|test|stop}"

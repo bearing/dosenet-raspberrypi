@@ -18,7 +18,7 @@ case "$1" in
     ;;
   stop)
     echo "Stopping pocket Geiger script" >> $LOG
-    sudo pkill -SIGTERM -f managers.py
+    sudo pkill -SIGQUIT -f managers.py
     ;;
  *)
     echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|test|stop}"
