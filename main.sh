@@ -31,7 +31,7 @@ case "$1" in
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
     echo "Stopping all DoseNet scripts" >> $LOG
-    sudo killall python &
+    sudo killall -s SIGQUIT python &
     ;;
   *)
     echo "Usage: /etc/init.d/dosenet {start|test|stop}"
