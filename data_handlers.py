@@ -13,7 +13,7 @@ from globalvalues import DEFAULT_DATA_BACKLOG_FILE_D3S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_CO2
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_WEATHER
-from globalvalues import NETWORK_LED_BLINK_PERIOD_S
+from globalvalues import NETWORK_LED_BLINK_PERIOD_S, NETWORK_LED_BLINK_LOST_CONNECTION
 
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import SPECTRA_DISPLAY_TEXT
@@ -92,7 +92,6 @@ class Data_Handler(object):
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
-                print("init, led pin is:", self.led.pin)
             self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
@@ -103,7 +102,6 @@ class Data_Handler(object):
                 try:
                     if not self.send_fail and not self.led.is_on:
                         self.led.on()
-                        print("Turning light on")
                     self.manager.sender.send_cpm_new(
                         trash[0], trash[1], trash[2])
                 except (socket.gaierror, socket.error, socket.timeout) as e:
@@ -147,7 +145,6 @@ class Data_Handler(object):
                     no_error_yet = False
                 if self.send_fail and no_error_yet:
                     self.send_fail = False
-                    print("send fail is false")
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
             self.manager.sender.send_spectra_new_D3S(this_end, spectra)
@@ -468,16 +465,11 @@ class Data_Handler(object):
                     self.vprint(1, 'Failed to send packet! Socket timeout')
                 if self.manager.sensor_type == 1:
                     if self.send_fail:
-                        print("Failed again")
                         self.led.stop_blink()
                         self.led.off()
-                        print("Light is now off")
                     if not self.send_fail:
                         self.send_fail = True
-                        print("failed, led pin is:", self.led.pin)
-                        print("Send fail is now true")
-                        self.led.start_blink(interval=self.blink_period_s)
-                        print("Blinking light")
+                        self.led.start_blink(interval=self.blink_period_lost_connection)
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
                     self.send_to_memory(spectra=spectra)
@@ -499,7 +491,8 @@ class Data_Handler_Pocket(Data_Handler):
 
         super(Data_Handler_Pocket, self).__init__(**kwargs)
 
-        self.blink_period_s = 0.1
+        self.blink_period_s = NETWORK_LED_BLINK_PERIOD_S
+        self.blink_period_lost_connection = NETWORK_LED_BLINK_LOST_CONNECTION
         self.led = network_led
 
 class Data_Handler_D3S(Data_Handler):

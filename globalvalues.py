@@ -29,6 +29,7 @@ else:
     D3S_LED_PIN = 21
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
+NETWORK_LED_BLINK_LOST_CONNECTION = 0.75
 
 # Defaults
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
