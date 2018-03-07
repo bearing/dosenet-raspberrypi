@@ -49,6 +49,8 @@ class Data_Handler(object):
         else:
             set_verbosity(self, logfile=logfile)
 
+        self.first_run = True
+
         self.manager = manager
         self.queue = deque('')
 
@@ -85,7 +87,8 @@ class Data_Handler(object):
         """
         if self.manager.sensor_type == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
-            if self.led:
+            if self.led and self.first_run:
+                self.first_run = False
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
