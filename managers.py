@@ -69,7 +69,7 @@ def signal_term_handler(signal, frame):
     #   get run
     sys.exit(0)
 
-signal.signal(signal.SIGTERM, signal_term_handler)
+#signal.signal(signal.SIGTERM, signal_term_handler)
 
 def signal_quit_handler(signal, frame):
     # If SIGQUIT signal is intercepted, the SystemExit exception routines
