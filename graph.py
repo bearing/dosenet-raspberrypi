@@ -1,6 +1,9 @@
 # Python file that graphs air quality test result CSV files
 
 import matplotlib.pyplot as plt
+import matplotlib.figure as fig
+import matplotlib.pylab as pyl
+import matplotlib
 import csv
 import dateutil
 import argparse
@@ -49,6 +52,10 @@ while len(times)< combine_number or combine_number<1:
     if len(times) == 1:
         print("The number provided was too large or not a natural number. There is only 1 result. All data points will be graphed.")
         combine_number = 1
+
+    elif len(times) == 0:
+        print("There are no results in the document provided.")
+        quit()
 
     else:
         combine_number = input("The number provided was too large or not a natural number. There are "+str(len(times))+" results. Choose a natural number between 1 and "+str(len(times))+" that will determine the amount of results added together before being graphed. Number: ")
@@ -192,7 +199,6 @@ for i in range(int(len(Val100)/combine_number)):
     sum_Val100 = [sum(Val100[numberV:numberW])]
     new_Val100.append(sum_Val100)
 
-
 #Get rid of last time if unecessary
 if remainder_P25 !=0:
     for i in range(int(remainder_P25)):
@@ -240,28 +246,32 @@ for i in range(len(middletimes)):
     middletime_final.append(loc_zone)
 
 #Use plot() method to graph particle count vs. time and add legend
-plt.figure(1)
+plt.figure(figsize = [5,5])
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
 plt.plot(middletime_final, new_P10, "r.", label = 'P10')
 plt.plot(middletime_final, new_P25, "m.", label = 'P25')
 plt.plot(middletime_final, new_P50, "y.", label = 'P50')
 plt.plot(middletime_final, new_P100, "c.", label = 'P100')
-plt.legend(loc="best")
+plt.legend(loc="best", title = "Key")
 plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title(file_title)
+plt.title("Particle Count vs. Time")
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title(file_title)
 
 #Use plot() method to graph particle concentration vs. time and add legend
-plt.figure(2)
+plt.figure(figsize = [5,5])
 plt.plot(middletime_final, new_Val10, "b.", label='1.0')
 plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
 plt.plot(middletime_final, new_Val100, "r.", label = '10')
-plt.legend(loc="best")
+plt.legend(loc="best", title = "Key")
 plt.xlabel("Time")
 plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title(file_title)
+plt.title("Particle Concentration vs. Time")
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title(file_title)
 
 plt.show()
