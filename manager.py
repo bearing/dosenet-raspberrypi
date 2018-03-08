@@ -345,6 +345,7 @@ class Manager(object):
         Sleep until the given timestamp.
 
         Input:
+
           end_time: number of seconds since epoch, e.g. time.time()
         """
 
@@ -378,11 +379,12 @@ class Manager(object):
         end_time = start_time + self.interval
         return start_time, end_time
 
-    def data_log(self, file, cpm, cpm_err):
+    def data_log(self, file, **kwargs):
         """
         Writes cpm to data-log.
         """
         time_string = time.strftime("%Y-%m-%d %H:%M:%S")
+        cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
         if self.datalogflag:
             with open(file, 'a') as f:
                 f.write('{0}, {1}, {2}'.format(time_string, cpm, cpm_err))
