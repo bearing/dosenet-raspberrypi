@@ -18,7 +18,9 @@ from Crypto.Cipher import AES
 from auxiliaries import set_verbosity, Config, PublicKey
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
+from globalvalues import TESTING_UDP_PORT, TESTING_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
+from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 
 TCP_TIMEOUT = 5
 D3S_PREPEND_STR = '{:05d}'
@@ -68,6 +70,10 @@ class ServerSender(object):
         try:
             if mode is None:
                 self.mode = DEFAULT_SENDER_MODE
+            elif mode == 'udp_test':
+                self.mode = 'udp_test'
+            elif mode == 'tcp_test':
+                self.mode = 'tcp_test'
             elif mode.lower() == 'udp':
                 self.mode = 'udp'
             elif mode.lower() == 'tcp':
@@ -89,6 +95,20 @@ class ServerSender(object):
         elif self.mode == 'tcp':
             if port is None:
                 self.port = DEFAULT_TCP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
+                self.address, self.port))
+        elif self.mode == 'udp_test':
+            if port is None:
+                self.port = TESTING_UDP_PORT
+            else:
+                self.port = port
+            self.vprint(3, 'ServerSender using UDP for {}:{}'.format(
+                self.address, self.port))
+        elif self.mode == 'tcp_test':
+            if port is None:
+                self.port = TESTING_TCP_PORT
             else:
                 self.port = port
             self.vprint(3, 'ServerSender using TCP for {}:{}'.format(
@@ -192,6 +212,54 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
+    def construct_packet_new_AQ(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 avgdata_str,
+                 str(error_code)]
+            )
+        except AttributeError:      # on self.config.hash
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
+
+    def construct_packet_new_CO2(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 avgdata_str,
+                 str(error_code)]
+            )
+        except AttributeError:
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
+
+    def construct_packet_new_weather(self, timestamp, average_data, error_code=0):
+        avgdata_str = str(average_data).replace(',', ';')
+        try:
+            raw_packet = ','.join(
+                [str(self.config.hash),
+                 str(self.config.ID),
+                 str(timestamp),
+                 avgdata_str,
+                 str(error_code)]
+            )
+        except AttributeError:
+            raise MissingFile('Missing or broken Config object')
+        else:
+            self.vprint(3, 'Constructed packet')
+            return raw_packet
+
     def construct_log_packet(self, msg_code, msg_text):
         """
         Send a message to be recorded in the server log database.
@@ -252,9 +320,9 @@ class ServerSender(object):
         """
 
         self.vprint(3, 'Trying to send data by {}'.format(self.mode))
-        if self.mode == 'udp':
+        if self.mode == 'udp' or self.mode == 'udp_test':
             self.send_udp(encrypted)
-        elif self.mode == 'tcp':
+        elif self.mode == 'tcp' or self.mode == 'tcp_test':
             self.send_tcp(encrypted)
 
     def send_udp(self, encrypted):
@@ -295,7 +363,6 @@ class ServerSender(object):
             else:
                 self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
-
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
 
@@ -327,6 +394,33 @@ class ServerSender(object):
         packet = self.construct_packet_new_D3S(
             timestamp, spectra, error_code=error_code)
         encrypted = self.encrypt_packet_aes(packet)
+        self.send_data(encrypted)
+
+    def send_data_new_AQ(self, timestamp, average_data, error_code=0):
+        """
+        Protocol for sending average air quality data
+        """
+        packet = self.construct_packet_new_AQ(
+            timestamp, average_data, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
+
+    def send_data_new_CO2(self, timestamp, average_data, error_code=0):
+        """
+        Protocol for sending the average CO2 data
+        """
+        packet = self.construct_packet_new_CO2(
+            timestamp, average_data, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
+        self.send_data(encrypted)
+
+    def send_data_new_weather(self, timestamp, average_data, error_code=0):
+        """
+        Protocol for sending the average CO2 data
+        """
+        packet = self.construct_packet_new_weather(
+            timestamp, average_data, error_code=error_code)
+        encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
     def handle_return_packet(self, received):
@@ -505,7 +599,7 @@ if __name__ == '__main__':
         description='Sender for UDP/TCP data packets. ' +
         'Normally called from manager.py. ' +
         'Called directly, it will send a log message to the server.')
-    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP'],
+    parser.add_argument('--mode', '-n', choices=['udp', 'tcp', 'UDP', 'TCP', 'udp_test', 'tcp_test', 'UDP_test', 'TCP_test'],
                         default=DEFAULT_SENDER_MODE,
                         help='Network protocol to use')
     parser.add_argument('--config', '-g', type=str, default=DEFAULT_CONFIG,
