@@ -5,6 +5,7 @@ from __future__ import print_function
 import serial
 import Adafruit_MCP3008
 from Adafruit_BME280 import *
+import os
 
 try:
     import RPi.GPIO as GPIO
@@ -18,11 +19,17 @@ except ImportError:
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-D3S_LED_PIN = 13
-NETWORK_LED_PIN = 16
-COUNTS_LED_PIN = 19
+if "NEW_SENSOR_LIGHT_SETUP" in os.environ:
+    D3S_LED_PIN = 13
+    NETWORK_LED_PIN = 16
+    COUNTS_LED_PIN = 19
+else:
+    COUNTS_LED_PIN = 19
+    NETWORK_LED_PIN = 20
+    D3S_LED_PIN = 21
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
+NETWORK_LED_BLINK_LOST_CONNECTION = 0.75
 
 # Defaults
 DEFAULT_CONFIG = '/home/pi/config/config.csv'
@@ -107,6 +114,8 @@ Command line output statements used in the data-handlers
 
 SENSOR_NAMES = ['Pocket Geiger Counter', 'D3S', 'Air Quality Sensor',
     'CO2 Sensor', 'Weather Sensor']
+
+DATA_NAMES = ['pocket geiger data', 'D3S data', 'air quality data', 'CO2 data', 'weather/temp/humidity data']
 
 SENSOR_DISPLAY_TEXT = (
     '{green}Starting the {{sensor_name}}.{reset}').format(

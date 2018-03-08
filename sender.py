@@ -20,6 +20,7 @@ from globalvalues import DEFAULT_HOSTNAME, DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import TESTING_UDP_PORT, TESTING_TCP_PORT
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
+from globalvalues import NETWORK_LED_BLINK_PERIOD_S
 
 TCP_TIMEOUT = 5
 D3S_PREPEND_STR = '{:05d}'
@@ -362,7 +363,6 @@ class ServerSender(object):
             else:
                 self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
-
     def send_cpm(self, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
 

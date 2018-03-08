@@ -34,7 +34,7 @@ from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
 from globalvalues import D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
-from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES
+from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -69,12 +69,17 @@ def signal_term_handler(signal, frame):
     #   get run
     sys.exit(0)
 
-signal.signal(signal.SIGTERM, signal_term_handler)
+#signal.signal(signal.SIGTERM, signal_term_handler)
 
 def signal_quit_handler(signal, frame):
     # If SIGQUIT signal is intercepted, the SystemExit exception routines
     #   get run if it's right after an interval
     mgr.quit_after_interval = True
+
+def timeout_handler(num, stack):
+    raise Exception("TIMEOUT")
+
+signal.signal(signal.SIGALRM, timeout_handler)
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
 
@@ -101,6 +106,7 @@ class Base_Manager(object):
                  aeskey=None,
                  sensor_type=None,
                  sensor=None,
+                 data_names=DATA_NAMES,
                  ):
         self.sensor_type = sensor_type
 
@@ -110,6 +116,7 @@ class Base_Manager(object):
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
+        self.data_names = data_names
 
         self.test = test
 
@@ -347,6 +354,8 @@ class Base_Manager(object):
                 self.takedown()
 
         if self.sensor_type == 2:
+            print("Attempting to connect to D3S now")
+
             if self.transport == 'any':
                 devs = kromek.discover()
             else:
@@ -355,12 +364,14 @@ class Base_Manager(object):
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
                 self.d3s_LED.stop_blink()
+                self.d3s_presence = False
                 GPIO.cleanup()
                 return
             else:
                 print ('Discovered %s' % devs)
                 print("D3S device found, checking for data now")
                 self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
+                self.d3s_presence = True
             filtered = []
 
             for dev in devs:
@@ -371,85 +382,101 @@ class Base_Manager(object):
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
                 self.d3s_LED.stop_blink()
+                self.d3s_presence = False
                 GPIO.cleanup()
                 return
+
+            signal.alarm(10)
             # Checks if the RaspberryPi is getting data from the D3S and turns on
             # the red LED if it is. If a D3S is connected but no data is being recieved,
             # it tries a couple times then reboots the RaspberryPi.
-            try:
-                while self.signal_test_attempts < 3 and self.signal_test_connection == False:
-                    test_time = time.time() + self.signal_test_time + 5
-                    try:
-                        with kromek.Controller(devs, self.signal_test_time) as controller:
-                            for reading in controller.read():
-                                if sum(reading[4]) != 0:
-                                    self.d3s_light_switch = True
-                                    self.signal_test_loop = False
-                                    break
-                                else:
-                                    self.signal_test_loop = False
-                                    break
-                    except time.time() < test_time:
-                        self.signal_test_attempts += 1
-                        self.signal_test_loop = True
-                        print("Connection to D3S not found, trying another {} times".format(
-                            3 - self.signal_test_attempts))
-                    if self.d3s_light_switch:
-                        self.signal_test_connection = True
-                if not self.signal_test_connection:
-                    print("No data from D3S found, restarting now")
-                    os.system('sudo reboot')
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.takedown()
+            if self.d3s_presence:
+                try:
+                    test_time_outer = time.time() + self.signal_test_time + 25
+                    while time.time() < test_time_outer:
+                        test_time_inner = time.time() + self.signal_test_time + 5
+                        while time.time() < test_time_inner:
+                            try:
+                                with kromek.Controller(devs, self.signal_test_time) as controller:
+                                    for reading in controller.read():
+                                        if sum(reading[4]) != 0:
+                                            self.d3s_light_switch = True
+                                            signal.alarm(0)
+                                            break
+                                        else:
+                                            break
+                            except Exception as e:
+                                print(e)
+                                print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
+                                if self.d3s_data_attempts != self.d3s_data_lim:
+                                    signal.alarm(10)
+                                self.d3s_data_attempts += 1
+                        if self.d3s_light_switch:
+                            print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
+                            break
+                        if self.d3s_data_attempts > self.d3s_data_lim:
+                            print("Failed to find data from D3S {} times".format(self.d3s_data_attempts-1))
+                            print("The D3S is either having data collection issues or is currently off")
+                            self.d3s_presence = False
+                            break
+                except KeyboardInterrupt:
+                    self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                    self.takedown()
+                except SystemExit:
+                    self.vprint(1, '\nSystemExit: taking down Manager')
+                    self.takedown()
 
             if self.d3s_light_switch:
                 self.d3s_LED.stop_blink()
                 print("D3S data connection found, continuing with normal data collection")
                 self.d3s_LED.on()
+            else:
+                self.d3s_LED.stop_blink()
+                print("Turning off light and will try to gather data again at reboot")
+                self.d3s_LED.off()
+                GPIO.cleanup()
+                return
 
-            self.vprint(
-                1, RUNNING_DISPLAY_TEXT.format(
-                    start_time=datetime_from_epoch(this_start).strftime(strf),
-                    date=str(datetime.date.today()),
-                    interval=self.interval))
+            if self.d3s_presence:
+                self.vprint(
+                    1, RUNNING_DISPLAY_TEXT.format(
+                        start_time=datetime_from_epoch(this_start).strftime(strf),
+                        date=str(datetime.date.today()),
+                        interval=self.interval))
 
-            done_devices = set()
-            try:
-                while self.running:
-                    with kromek.Controller(devs, self.interval) as controller:
-                        for reading in controller.read():
-                            if self.create_structures:
-                                self.total = np.array(reading[4])
-                                self.lst = np.array([reading[4]])
-                                self.create_structures = False
-                            else:
-                                self.total += np.array(reading[4])
-                                self.lst = np.concatenate(
-                                    (self.lst, [np.array(reading[4])]))
-                            serial = reading[0]
-                            dev_count = reading[1]
-                            if serial not in done_devices:
-                                this_start, this_end = self.get_interval(
-                                    time.time() - self.interval)
+                done_devices = set()
+                try:
+                    while self.running:
+                        with kromek.Controller(devs, self.interval) as controller:
+                            for reading in controller.read():
+                                if self.create_structures:
+                                    self.total = np.array(reading[4])
+                                    self.lst = np.array([reading[4]])
+                                    self.create_structures = False
+                                else:
+                                    self.total += np.array(reading[4])
+                                    self.lst = np.concatenate(
+                                        (self.lst, [np.array(reading[4])]))
+                                serial = reading[0]
+                                dev_count = reading[1]
+                                if serial not in done_devices:
+                                    this_start, this_end = self.get_interval(
+                                        time.time() - self.interval)
 
-                                self.handle_data(
-                                    this_start, this_end, reading[4])
+                                    self.handle_data(
+                                        this_start, this_end, reading[4])
 
-                            if dev_count >= self.count > 0:
-                                done_devices.add(serial)
-                                controller.stop_collector(serial)
-                            if len(done_devices) >= len(devs):
-                                break
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.takedown()
+                                if dev_count >= self.count > 0:
+                                    done_devices.add(serial)
+                                    controller.stop_collector(serial)
+                                if len(done_devices) >= len(devs):
+                                    break
+                except KeyboardInterrupt:
+                    self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                    self.takedown()
+                except SystemExit:
+                    self.vprint(1, '\nSystemExit: taking down Manager')
+                    self.takedown()
 
         if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             try:
@@ -501,7 +528,7 @@ class Base_Manager(object):
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
-                    self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type+1],file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -760,11 +787,11 @@ class Manager_D3S(Base_Manager):
                  device='all',
                  log_bytes=False,
                  running=False,
-                 signal_test_attempts=0,
-                 signal_test_connection=False,
-                 signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
                  transport='usb',
+                 d3s_presence=None,
+                 d3s_data_attempts=1,
+                 d3s_data_lim=3,
                  **kwargs):
 
         super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
@@ -792,9 +819,9 @@ class Manager_D3S(Base_Manager):
         self.make_calibration_log(self.calibrationlog)
 
         self.signal_test_time = signal_test_time
-        self.signal_test_loop = signal_test_loop
-        self.signal_test_connection = signal_test_connection
-        self.signal_test_attempts = signal_test_attempts
+        self.d3s_presence = d3s_presence
+        self.d3s_data_attempts = d3s_data_attempts
+        self.d3s_data_lim = d3s_data_lim
 
         self.d3s_LED = LED(d3s_LED_pin)
         self.d3s_light_switch = d3s_light_switch
@@ -803,7 +830,6 @@ class Manager_D3S(Base_Manager):
         self.d3s_LED_blink = d3s_LED_blink
 
         if d3s_LED_blink:
-            print("Attempting to connect to D3S now")
             self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
         if d3s_light_switch:
             self.d3s_LED.on()
@@ -1198,7 +1224,6 @@ if __name__ == '__main__':
             if sensor == (1 + i):
                 print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
                 sys.stdout.flush()
-
         mgr.run()
 
     except:

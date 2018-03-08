@@ -123,17 +123,20 @@ class LED(object):
             GPIO.setup(pin, GPIO.OUT)
             self.pin = pin
             self.blinker = None
+            self.is_on = False
         else:
             raise EnvironmentError('Must be a Raspberry Pi to have an LED')
 
     def on(self):
         """Turn on the LED"""
         GPIO.output(self.pin, True)
+        self.is_on = True
 
     def off(self):
         """Turn off the LED"""
         try:
             GPIO.output(self.pin, False)
+            self.is_on = False
         except RuntimeError:
             # if GPIO is cleaned up too early
             pass
