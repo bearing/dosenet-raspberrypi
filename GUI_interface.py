@@ -51,6 +51,8 @@ n_merge.set(option2[2])
 def make_run_gui():
     top1 = Tkinter.Tk()
     top1.geometry('+0+410')
+    top2 = Tkinter.Tk()
+    top2.geometry('+0+410')
     global job1
     global jobd3s
     jobd3s = None
@@ -61,7 +63,7 @@ def make_run_gui():
             if plot_jobs[i] is not None:
                 if i != index:
                     #cancel job, close graph
-                    top1.after_cancel(plot_jobs[i])
+                    top2.after_cancel(plot_jobs[i])
                     plot_jobs[i] = None
                     close(i)
                     
@@ -111,35 +113,35 @@ def make_run_gui():
         global plot_jobs
         check_plots(0)
         wdaq.press()
-        plot_jobs[0]=top1.after(int(n_merge.get()),press)
+        plot_jobs[0]=top2.after(int(n_merge.get())*1000,press)
         
     def temp():
         global wdaq
         global plot_jobs
         check_plots(1)
         wdaq.temp()
-        plot_jobs[1]=top1.after(int(n_merge.get()),temp)
+        plot_jobs[1]=top2.after(int(n_merge.get())*1000,temp)
         
     def humid():
         global wdaq
         global plot_jobs
         check_plots(2)
         wdaq.humid()
-        plot_jobs[2]=top1.after(int(n_merge.get()),humid)
+        plot_jobs[2]=top2.after(int(n_merge.get())*1000,humid)
         
     def CO2():
         global adcdaq
         global plot_jobs
         check_plots(3)
         adcdaq.plot_CO2()
-        plot_jobs[3]=top1.after(int(n_merge.get()),CO2)
+        plot_jobs[3]=top2.after(int(n_merge.get())*1000,CO2)
         
     def airquality():
         global aqdaq
         global plot_jobs
         check_plots(4)
         aqdaq.pmplot()
-        plot_jobs[4]=top1.after(int(n_merge.get()),airquality)
+        plot_jobs[4]=top2.after(int(n_merge.get())*1000,airquality)
 
     def D3S_spectra():
         global mgrD3S
@@ -147,14 +149,14 @@ def make_run_gui():
         check_plots(5)
         mgrD3S.plot_spectrum(2)
         print("Updating spectra")
-        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
+        plot_jobs[5]=top2.after(int(n_merge.get())*1000,D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(1)
-        plot_jobs[6]=top1.after(int(n_merge.get()),D3S_waterfall)
+        plot_jobs[6]=top2.after(int(n_merge.get())*1000,D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
@@ -184,7 +186,8 @@ def make_run_gui():
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=10, text = "D3S Waterfall", command = D3S_waterfall)
         d3sButton_waterfall.grid(row=0, column=8)
 
-    
+    top2.attributes("-topmost", True)
+    top2.mainloop()
     top1.attributes("-topmost", True)
     top1.mainloop()
 
