@@ -100,10 +100,14 @@ class adc_DAQ(object):
         fig = plt.figure(plot_id)
         plt.clf()
         #ax=fig.add_subplot(111)
+        
+        print('SegFault: Right before grid spec')
 
         gs = GridSpec(6,1)
         ax1 = fig.add_subplot(gs[0,:])
         ax2 = fig.add_subplot(gs[1:5,:])
+
+        print('SegFault: Right before ax1.set_axis_off')
 
 
         ax1.set_axis_off()
@@ -120,6 +124,8 @@ class adc_DAQ(object):
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
             ax2.set_ylim(250, display+500)
 
+        print('SegFault: Right before ax2')
+        print('SegFault: x {} y {}'.format(xdata,ydata))
 
 
         ax2.set(xlabel = xlabel, ylabel = ylable, title = title)
