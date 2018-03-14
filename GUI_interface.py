@@ -186,8 +186,8 @@ def make_run_gui():
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=10, text = "D3S Waterfall", command = D3S_waterfall)
         d3sButton_waterfall.grid(row=0, column=8)
 
-    top2.attributes("-topmost", True)
-    top2.mainloop()
+    #top2.attributes("-topmost", True)
+    #top2.mainloop()
     top1.attributes("-topmost", True)
     top1.mainloop()
 
