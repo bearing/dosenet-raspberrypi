@@ -17,6 +17,8 @@ LOGTAG=dosenet
 
 LOG=/tmp/manager.log
 
+source /home/pi/.bashrc
+
 case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts"
