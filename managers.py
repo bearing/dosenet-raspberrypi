@@ -9,7 +9,10 @@ import csv
 import os
 import subprocess
 import socket
-import kromek
+try:
+    import kromek
+except:
+    print("Not set up to run a D3S, continuing anyway")
 import numpy as np
 import datetime
 from Crypto.Cipher import AES

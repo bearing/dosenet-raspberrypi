@@ -3,8 +3,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import serial
-import Adafruit_MCP3008
-from Adafruit_BME280 import *
+try:
+    import Adafruit_MCP3008
+except:
+    pass
+try:
+    from Adafruit_BME280 import *
+except:
+    pass
 import os
 
 try:
