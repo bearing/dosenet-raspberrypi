@@ -973,7 +973,10 @@ class Manager_CO2(Base_Manager):
 
         super(Manager_CO2, self).__init__(sensor_type=4, **kwargs)
 
-        self.CO2_port = CO2_port
+        if not CO2_port:
+            self.CO2_port = DEFAULT_CO2_PORT
+        else:
+            self.CO2_port = CO2_port
 
         self.data_handler = Data_Handler_CO2(
             manager=self,
