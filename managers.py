@@ -679,7 +679,7 @@ class Manager_Pocket(Base_Manager):
         self.quit_after_interval = False
 
         if RPI:
-            print(self.config.ID)
+            print("self.config.ID prints: {}".format(self.config.ID))
             self.counts_LED = LED(counts_LED_pin)
             self.network_LED = LED(network_LED_pin)
         else:
@@ -784,7 +784,7 @@ class Manager_D3S(Base_Manager):
                  calibrationlogflag=False,
                  calibrationlogtime=None,
                  count=0,
-                 d3s_LED_pin=D3S_LED_PIN,
+                 d3s_LED_pin=None,
                  d3s_LED_blink=True,
                  d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
                  d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
