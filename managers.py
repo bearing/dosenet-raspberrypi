@@ -52,7 +52,7 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
-from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
+from globalvalues import CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
@@ -61,6 +61,10 @@ except ImportError:
 try:
     from globalvalues import DEFAULT_AQ_PORT
 except ImportError:
+    pass
+try:
+    from globalvalues import DEFAULT_CO2_PORT
+except:
     pass
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
