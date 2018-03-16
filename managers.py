@@ -679,7 +679,6 @@ class Manager_Pocket(Base_Manager):
         self.quit_after_interval = False
 
         if RPI:
-            print(self.config.ID)
             if counts_LED_pin == None:
                 if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
                     self.config.ID == 33 or self.config.ID >= 39:
@@ -691,11 +690,11 @@ class Manager_Pocket(Base_Manager):
             if network_LED_pin == None:
                 if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
                     self.config.ID == 33 or self.config.ID >= 39:
-                    self.counts_LED = LED(NEW_NETWORK_LED_PIN)
+                    self.network_LED = LED(NEW_NETWORK_LED_PIN)
                 else:
-                    self.counts_LED = LED(OLD_NETWORK_LED_PIN)
+                    self.network_LED = LED(OLD_NETWORK_LED_PIN)
             else:
-                self.counts_LED = LED(network_LED_pin)
+                self.network_LED = LED(network_LED_pin)
         else:
             self.counts_LED = None
             self.network_LED = None
