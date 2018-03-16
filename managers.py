@@ -965,7 +965,7 @@ class Manager_CO2(Base_Manager):
     CO2 sensor.
     """
     def __init__(self,
-                 CO2_port=DEFAULT_CO2_PORT,
+                 CO2_port=None,
                  variables=CO2_VARIABLES,
                  **kwargs):
 
