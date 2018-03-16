@@ -679,9 +679,23 @@ class Manager_Pocket(Base_Manager):
         self.quit_after_interval = False
 
         if RPI:
-            print("self.config.ID prints: {}".format(self.config.ID))
-            self.counts_LED = LED(counts_LED_pin)
-            self.network_LED = LED(network_LED_pin)
+            print(self.config.ID)
+            if counts_LED_pin == None:
+                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                    self.config.ID == 33 or self.config.ID >= 39:
+                    self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+                else:
+                    self.counts_LED = LED(OLD_COUNTS_LED_PIN)
+            else:
+                self.counts_LED = LED(counts_LED_pin)
+            if network_LED_pin == None:
+                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                    self.config.ID == 33 or self.config.ID >= 39:
+                    self.counts_LED = LED(NEW_NETWORK_LED_PIN)
+                else:
+                    self.counts_LED = LED(OLD_NETWORK_LED_PIN)
+            else:
+                self.counts_LED = LED(network_LED_pin)
         else:
             self.counts_LED = None
             self.network_LED = None
@@ -828,7 +842,15 @@ class Manager_D3S(Base_Manager):
         self.d3s_data_attempts = d3s_data_attempts
         self.d3s_data_lim = d3s_data_lim
 
-        self.d3s_LED = LED(d3s_LED_pin)
+        if d3s_LED_pin == None:
+            if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                self.config.ID == 33 or self.config.ID >= 39:
+                self.d3s_LED = LED(NEW_D3S_LED_PIN)
+            else:
+                self.d3s_LED = LED(OLD_D3S_LED_PIN)
+        else:
+            self.d3s_LED = LED(d3s_LED_pin)
+
         self.d3s_light_switch = d3s_light_switch
         self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
         self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
