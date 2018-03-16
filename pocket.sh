@@ -8,7 +8,6 @@ LOG=/tmp/pocket_manager.log
 case "$1" in
   start)
     echo "Starting pocket Geiger script" > $LOG
-    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo -E python $DOSENET/managers.py --sensor 1 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished pocket Geiger script" >> $LOG
     ;;

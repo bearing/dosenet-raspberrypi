@@ -8,7 +8,6 @@ LOG=/tmp/CO2_manager.log
 case "$1" in
   start)
     echo "Starting CO2 sensor script" > $LOG
-    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
     sudo -E python $DOSENET/managers.py --sensor 4 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished CO2 sensor script" >> $LOG
     ;;

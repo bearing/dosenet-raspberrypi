@@ -3,8 +3,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import serial
-import Adafruit_MCP3008
-from Adafruit_BME280 import *
+try:
+    import Adafruit_MCP3008
+except:
+    pass
+try:
+    from Adafruit_BME280 import *
+except:
+    pass
 import os
 
 try:
@@ -19,14 +25,12 @@ except ImportError:
 # (Broadcom numbers are labeled on the pi hat)
 SIGNAL_PIN = 17
 NOISE_PIN = 4
-if "NEW_SENSOR_LIGHT_SETUP" in os.environ:
-    D3S_LED_PIN = 13
-    NETWORK_LED_PIN = 16
-    COUNTS_LED_PIN = 19
-else:
-    COUNTS_LED_PIN = 19
-    NETWORK_LED_PIN = 20
-    D3S_LED_PIN = 21
+NEW_D3S_LED_PIN = 13
+NEW_NETWORK_LED_PIN = 16
+NEW_COUNTS_LED_PIN = 19
+OLD_COUNTS_LED_PIN = 19
+OLD_NETWORK_LED_PIN = 20
+OLD_D3S_LED_PIN = 21
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
 NETWORK_LED_BLINK_LOST_CONNECTION = 0.75
@@ -75,22 +79,25 @@ D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 try:
     DEFAULT_AQ_PORT = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
 except:
-    print("No AQ Sensor detected, proceeding without initializing AQ Port.")
+    print("No AQ Sensor setup, proceeding without initializing AQ Port.")
 DEFAULT_INTERVAL_NORMAL_AQ = 300
 DEFAULT_INTERVAL_TEST_AQ = 30
 AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10 ', '0.3 um', '0.5 um',
             '1.0 um', '2.5 um', '5.0 um', '10 um ']
 
 CLK, MISO, MOSI, CS = 18, 23, 24, 25
-DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+try:
+    DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+except:
+    print("No CO2 Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
 try:
     DEFAULT_WEATHER_PORT = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
-except IOError:
-    print("No Weather Sensor detected, proceeding without initializing Weather Port.")
+except:
+    print("No Weather Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
 DEFAULT_INTERVAL_TEST_WEATHER = 30
 WEATHER_VARIABLES = ['temperature', 'pressure', 'humidity']

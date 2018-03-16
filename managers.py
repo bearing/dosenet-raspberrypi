@@ -9,7 +9,10 @@ import csv
 import os
 import subprocess
 import socket
-import kromek
+try:
+    import kromek
+except:
+    print("Not set up to run a D3S, continuing anyway")
 import numpy as np
 import datetime
 from Crypto.Cipher import AES
@@ -30,8 +33,9 @@ from data_handlers import Data_Handler_CO2
 from data_handlers import Data_Handler_Weather
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
-from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
-from globalvalues import D3S_LED_PIN
+from globalvalues import NEW_NETWORK_LED_PIN, OLD_NETWORK_LED_PIN
+from globalvalues import NEW_COUNTS_LED_PIN, OLD_COUNTS_LED_PIN
+from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
@@ -48,7 +52,7 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
 from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
-from globalvalues import DEFAULT_CO2_PORT, CO2_VARIABLES
+from globalvalues import CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
@@ -57,6 +61,10 @@ except ImportError:
 try:
     from globalvalues import DEFAULT_AQ_PORT
 except ImportError:
+    pass
+try:
+    from globalvalues import DEFAULT_CO2_PORT
+except:
     pass
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
@@ -664,8 +672,8 @@ class Manager_Pocket(Base_Manager):
     pocket geiger sensor.
     """
     def __init__(self,
-                 counts_LED_pin=COUNTS_LED_PIN,
-                 network_LED_pin=NETWORK_LED_PIN,
+                 counts_LED_pin=None,
+                 network_LED_pin=None,
                  noise_pin=NOISE_PIN,
                  signal_pin=SIGNAL_PIN,
                  **kwargs):
@@ -675,8 +683,22 @@ class Manager_Pocket(Base_Manager):
         self.quit_after_interval = False
 
         if RPI:
-            self.counts_LED = LED(counts_LED_pin)
-            self.network_LED = LED(network_LED_pin)
+            if counts_LED_pin == None:
+                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                    self.config.ID == 33 or self.config.ID >= 39:
+                    self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+                else:
+                    self.counts_LED = LED(OLD_COUNTS_LED_PIN)
+            else:
+                self.counts_LED = LED(counts_LED_pin)
+            if network_LED_pin == None:
+                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                    self.config.ID == 33 or self.config.ID >= 39:
+                    self.network_LED = LED(NEW_NETWORK_LED_PIN)
+                else:
+                    self.network_LED = LED(OLD_NETWORK_LED_PIN)
+            else:
+                self.network_LED = LED(network_LED_pin)
         else:
             self.counts_LED = None
             self.network_LED = None
@@ -779,7 +801,7 @@ class Manager_D3S(Base_Manager):
                  calibrationlogflag=False,
                  calibrationlogtime=None,
                  count=0,
-                 d3s_LED_pin=D3S_LED_PIN,
+                 d3s_LED_pin=None,
                  d3s_LED_blink=True,
                  d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
                  d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
@@ -823,7 +845,15 @@ class Manager_D3S(Base_Manager):
         self.d3s_data_attempts = d3s_data_attempts
         self.d3s_data_lim = d3s_data_lim
 
-        self.d3s_LED = LED(d3s_LED_pin)
+        if d3s_LED_pin == None:
+            if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
+                self.config.ID == 33 or self.config.ID >= 39:
+                self.d3s_LED = LED(NEW_D3S_LED_PIN)
+            else:
+                self.d3s_LED = LED(OLD_D3S_LED_PIN)
+        else:
+            self.d3s_LED = LED(d3s_LED_pin)
+
         self.d3s_light_switch = d3s_light_switch
         self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
         self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
@@ -935,7 +965,7 @@ class Manager_CO2(Base_Manager):
     CO2 sensor.
     """
     def __init__(self,
-                 CO2_port=DEFAULT_CO2_PORT,
+                 CO2_port=None,
                  variables=CO2_VARIABLES,
                  **kwargs):
 
@@ -943,7 +973,10 @@ class Manager_CO2(Base_Manager):
 
         super(Manager_CO2, self).__init__(sensor_type=4, **kwargs)
 
-        self.CO2_port = CO2_port
+        if not CO2_port:
+            self.CO2_port = DEFAULT_CO2_PORT
+        else:
+            self.CO2_port = CO2_port
 
         self.data_handler = Data_Handler_CO2(
             manager=self,
@@ -1052,13 +1085,11 @@ if __name__ == '__main__':
     if sensor == 1:
         #Pocket Geiger specific variables.
         parser.add_argument(
-            '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
-            help='Specify which pin the counts LED is connected to ' +
-            '(default {})'.format(COUNTS_LED_PIN))
+            '--counts_LED_pin', '-o', default=None,
+            help='Specify which pin the counts LED is connected to.')
         parser.add_argument(
-            '--network_LED_pin', '-e', default=NETWORK_LED_PIN,
-            help='Specify which pin the network LED is connected to ' +
-            '(default {})'.format(NETWORK_LED_PIN))
+            '--network_LED_pin', '-e', default=None,
+            help='Specify which pin the network LED is connected to.')
         parser.add_argument(
             '--noise_pin', '-n', default=NOISE_PIN,
             help='Specify which pin to the noise reader is connected to ' +
@@ -1101,9 +1132,8 @@ if __name__ == '__main__':
             '(default 10 minutes)')
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument(
-            '--d3s_LED_pin', '-3', default=D3S_LED_PIN,
-            help='Specify which pin the D3S LED is connected to ' +
-            '(default {})'.format(D3S_LED_PIN))
+            '--d3s_LED_pin', '-3', default=None,
+            help='Specify which pin the D3S LED is connected to.')
         parser.add_argument(
             '--d3s_LED_blink', '-b', default=True,
             help='Decides whether to blink the d3s LED when looking for the device ' +

@@ -7,33 +7,33 @@ import argparse
 
 def start_dosenet(mode):
     if mode == 0:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/pocket.sh start')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/pocket.sh start')
     if mode == 1:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/pocket.sh test')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/pocket.sh test')
 
 def start_D3S(mode):
     if mode == 0:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh start')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/D3S.sh start')
     if mode == 1:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/D3S.sh test')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/D3S.sh test')
 
 def start_AQ(mode):
     if mode == 0:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/AQ.sh start')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/AQ.sh start')
     if mode == 1:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/AQ.sh test')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/AQ.sh test')
 
 def start_CO2(mode):
     if mode == 0:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/CO2.sh start')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/CO2.sh start')
     if mode == 1:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/CO2.sh test')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/CO2.sh test')
 
 def start_Weather(mode):
     if mode == 0:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh start')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/weather.sh start')
     if mode == 1:
-        os.system('sudo bash /home/pi/dosenet-raspberrypi/weather.sh test')
+        os.system('sudo -E bash /home/pi/dosenet-raspberrypi/weather.sh test')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
