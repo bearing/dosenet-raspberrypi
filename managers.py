@@ -33,8 +33,9 @@ from data_handlers import Data_Handler_CO2
 from data_handlers import Data_Handler_Weather
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
-from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
-from globalvalues import D3S_LED_PIN
+from globalvalues import NEW_NETWORK_LED_PIN, OLD_NETWORK_LED_PIN
+from globalvalues import NEW_COUNTS_LED_PIN, OLD_COUNTS_LED_PIN
+from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
@@ -667,8 +668,8 @@ class Manager_Pocket(Base_Manager):
     pocket geiger sensor.
     """
     def __init__(self,
-                 counts_LED_pin=COUNTS_LED_PIN,
-                 network_LED_pin=NETWORK_LED_PIN,
+                 counts_LED_pin=None,
+                 network_LED_pin=None,
                  noise_pin=NOISE_PIN,
                  signal_pin=SIGNAL_PIN,
                  **kwargs):
@@ -678,6 +679,7 @@ class Manager_Pocket(Base_Manager):
         self.quit_after_interval = False
 
         if RPI:
+            print(self.config.ID)
             self.counts_LED = LED(counts_LED_pin)
             self.network_LED = LED(network_LED_pin)
         else:
@@ -1055,13 +1057,11 @@ if __name__ == '__main__':
     if sensor == 1:
         #Pocket Geiger specific variables.
         parser.add_argument(
-            '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
-            help='Specify which pin the counts LED is connected to ' +
-            '(default {})'.format(COUNTS_LED_PIN))
+            '--counts_LED_pin', '-o', default=None,
+            help='Specify which pin the counts LED is connected to.')
         parser.add_argument(
-            '--network_LED_pin', '-e', default=NETWORK_LED_PIN,
-            help='Specify which pin the network LED is connected to ' +
-            '(default {})'.format(NETWORK_LED_PIN))
+            '--network_LED_pin', '-e', default=None,
+            help='Specify which pin the network LED is connected to.')
         parser.add_argument(
             '--noise_pin', '-n', default=NOISE_PIN,
             help='Specify which pin to the noise reader is connected to ' +
@@ -1104,9 +1104,8 @@ if __name__ == '__main__':
             '(default 10 minutes)')
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument(
-            '--d3s_LED_pin', '-3', default=D3S_LED_PIN,
-            help='Specify which pin the D3S LED is connected to ' +
-            '(default {})'.format(D3S_LED_PIN))
+            '--d3s_LED_pin', '-3', default=None,
+            help='Specify which pin the D3S LED is connected to.')
         parser.add_argument(
             '--d3s_LED_blink', '-b', default=True,
             help='Decides whether to blink the d3s LED when looking for the device ' +
