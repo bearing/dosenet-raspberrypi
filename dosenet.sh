@@ -4,7 +4,7 @@ HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 LOGTAG=dosenet
 
-LOG=/tmp/manager.log
+LOG=/tmp/pocket_manager.log
 
 case "$1" in
   start)
