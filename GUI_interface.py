@@ -200,12 +200,12 @@ def weather_test():
         adcdaq.create_file()
     if varAir.get(): 
         global aqdaq
-        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), n_merge.get())
+        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), int(n_merge.get())*4)
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
         global wdaq
-        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), n_merge.get())
+        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), int(n_merge.get())*4)
         print("create weather file")
         wdaq.create_file()
     if vard3s.get():
