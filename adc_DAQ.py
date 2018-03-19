@@ -23,6 +23,7 @@ class adc_DAQ(object):
         self.time_list=[]
         self.maxdata=int(maxdata)
         self.CO2_queue=deque()
+        self.CO2_error=deque()
         self.UV_queue=deque()
         self.merge_test=False
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
@@ -65,7 +66,7 @@ class adc_DAQ(object):
             adc_results.writerow(results[:])
             
             self.merge_test=False
-            self.add_data(self.CO2_queue,self.CO2_list,concentration)
+            self.add_data(self.CO2_queue,self.CO2_error,self.CO2_list,concentration)
             #self.add_data(self.UV_queue,self.UV_list,uv_index)
             self.add_time(self.time_queue, self.time_list, date_time)
                           
@@ -80,22 +81,24 @@ class adc_DAQ(object):
 
     def plot_CO2(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.CO2_queue,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
+            self.update_plot(1,self.time_queue,self.CO2_queue,self.CO2_error,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
 
     def plot_UV(self):
         if len(self.time_queue)>0:
             self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")        
 
-    def add_data(self, queue, temp_list, data):
+    def add_data(self, queue,queue_error, temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
+            queue_error.append(np.std(np.asarray(temp_list)))
             print(temp_list)
             print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
-            queue.popleft()    
+            queue.popleft()  
+            queue_error.popleft()  
 
-    def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
+    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
@@ -126,6 +129,7 @@ class adc_DAQ(object):
         ax2.set(xlabel = xlabel, ylabel = ylable, title = title)
 
         ax2.plot(xdata,ydata,"r.-")
+        ax.errorbar(xdata, ydata, yerr=yerr, fmt='o')
         #fig.autofmt_xdate()
         ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
