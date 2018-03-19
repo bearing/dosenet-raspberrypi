@@ -53,7 +53,9 @@ def make_run_gui():
     top1.geometry('+0+410')
     # top2 = Tkinter.Tk()
     # top2.geometry('+0+410')
-    global job1
+    global jobCO2
+    global jobAir
+    global jobWeather
     global jobd3s
     jobd3s = None
     
@@ -74,7 +76,9 @@ def make_run_gui():
 
 
     def start():        
-        global job1
+        global jobCO2
+        global jobAir
+        global jobWeather
         global jobd3s 
         global wdaq
         global adcdaq
@@ -88,16 +92,23 @@ def make_run_gui():
                 print("Error: Failed to start D3S")
         if varWeather.get(): 
             wdaq.start()
+            jobWeather =top1.after(1000,start)
         if varAir.get():
             aqdaq.start()
+            jobAir =top1.after(1000,start)
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(250,start)
+        	jobCO2=top1.after(250,start)
 
     def stop():
+        global jobCO2
+        global jobAir
+        global jobWeather
         global jobd3s
-        global job1
-        top1.after_cancel(job1)
+
+        top1.after_cancel(jobCO2)
+        top1.after_cancel(jobAir)
+        top1.after_cancel(jobWeather)
         jobd3s = None
         check_plots(-1)
         if vard3s.get():            
@@ -200,12 +211,12 @@ def weather_test():
         adcdaq.create_file()
     if varAir.get(): 
         global aqdaq
-        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), int(n_merge.get())*4)
+        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), int(n_merge.get()))
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
         global wdaq
-        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), int(n_merge.get())*4)
+        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), int(n_merge.get()))
         print("create weather file")
         wdaq.create_file()
     if vard3s.get():
