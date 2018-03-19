@@ -160,9 +160,9 @@ class air_quality_DAQ(object):
         fig = plt.figure(plot_id)
         plt.clf()
 
-        gs = GridSpec(6,2)
+        gs = GridSpec(6,3)
         ax1 = fig.add_subplot(gs[0,0])
-        ax2 = fig.add_subplot(gs[0,1])
+        ax2 = fig.add_subplot(gs[0,2])
         ax3 = fig.add_subplot(gs[1:5,:])
 
         ax1.set_axis_off()
@@ -171,48 +171,47 @@ class air_quality_DAQ(object):
         display2_5 = ydata2[-1]
         display_10 = ydata3[-1]
         if display_10 <= 12:
-            ax1.text(0.5, 0.6,"PM 10: "+ str(display_10), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+ str(display_10), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
 
         elif display_10 > 54 and display_10 <= 154:
-            ax1.text(0.5, 0.6,"PM 10: "+str(display_10), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center", backgroundcolor = "yellow")
 
         elif display_10 > 154 and display_10 <= 254:
-            ax1.text(0.5, 0.6,"PM 10: "+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "orange")
+            ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "orange")
 
         elif display_10 > 254 and display_10 <= 354:
-            ax1.text(0.5, 0.6,"PM 10: "+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "red")
 
         elif display_10 > 354 and display_10 <= 424:
-            ax1.text(0.5, 0.6,"PM 10: "+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "purple")
+            ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "purple")
 
         else:
-            ax1.text(0.5, 1.2,"PM 2.5: "+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
+            ax1.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
 
         if display2_5 <= 12:
-            ax2.text(0.5, 1.2,"PM 2.5: "+ str(display2_5), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+ str(display2_5), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
 
         elif display2_5 > 12.1 and display_10 <= 35.4:
-            ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center", backgroundcolor = "yellow")
 
         elif display2_5 > 35.4 and display_10 <= 55.4:
-            ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "orange")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "orange")
 
         elif display2_5 > 55.4 and display_10 <= 150.4:
-            ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "red")
 
         elif display2_5 > 150.4 and display_10 <= 250.4:
-            ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "purple")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "purple")
 
         else:
-            ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
+            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
         
 
         ax3.set(xlabel = xlabel, ylabel = ylabel, title = title)
-        ax3.plot(xdata,ydata1,"b.", label='1.0')
-        ax3.plot(xdata,ydata2,"g.", label = '2.5')
-        ax3.plot(xdata,ydata3,"r.", label = '10')
+        ax3.plot(xdata,ydata1,"-bo", label='1.0')
+        ax3.plot(xdata,ydata2,"-go.", label = '2.5')
+        ax3.plot(xdata,ydata3,"-ro", label = '10')
         plt.legend(loc="best")
-        fig.autofmt_xdate()
         ax3.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         fig.show()
         plt.pause(0.0005)
