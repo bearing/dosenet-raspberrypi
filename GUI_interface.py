@@ -134,7 +134,7 @@ def make_run_gui():
         global plot_jobs
         check_plots(3)
         adcdaq.plot_CO2()
-        plot_jobs[3]=top2.after(int(n_merge.get()),CO2)
+        plot_jobs[3]=top2.after(int(n_merge.get())*100,CO2)
         
     def airquality():
         global aqdaq
