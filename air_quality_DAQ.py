@@ -207,7 +207,7 @@ class air_quality_DAQ(object):
             ax2.text(0.5, 1.2,"PM 2.5: "+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
         
 
-        ax3.set(xlabel = xlabel, ylabel = ylable, title = title)
+        ax3.set(xlabel = xlabel, ylabel = ylabel, title = title)
         ax3.plot(xdata,ydata1,"b.", label='1.0')
         ax3.plot(xdata,ydata2,"g.", label = '2.5')
         ax3.plot(xdata,ydata3,"r.", label = '10')
