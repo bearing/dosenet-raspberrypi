@@ -98,7 +98,7 @@ class adc_DAQ(object):
             queue.popleft()  
             queue_error.popleft()  
 
-    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
+    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
@@ -126,7 +126,7 @@ class adc_DAQ(object):
 
 
 
-        ax2.set(xlabel = xlabel, ylabel = ylable, title = title)
+        ax2.set(xlabel = xlabel, ylabel = ylabel, title = title)
 
         ax2.plot(xdata,ydata,"r.-")
         ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
