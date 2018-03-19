@@ -129,7 +129,7 @@ class adc_DAQ(object):
         ax2.set(xlabel = xlabel, ylabel = ylable, title = title)
 
         ax2.plot(xdata,ydata,"r.-")
-        ax.errorbar(xdata, ydata, yerr=yerr, fmt='o')
+        ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
         #fig.autofmt_xdate()
         ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
