@@ -98,7 +98,7 @@ def make_run_gui():
             jobAir =top1.after(1000,start)
         if varCO2.get():
             adcdaq.start()                
-        	jobCO2=top1.after(250,start)
+            jobCO2=top1.after(250,start)
 
     def stop():
         global jobCO2
