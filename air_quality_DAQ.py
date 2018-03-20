@@ -162,7 +162,7 @@ class air_quality_DAQ(object):
 
         gs = GridSpec(6,2)
         ax1 = fig.add_subplot(gs[0,0])
-        ax2 = fig.add_subplot(gs[0,q])
+        ax2 = fig.add_subplot(gs[0,1])
         ax3 = fig.add_subplot(gs[1:5,:])
 
         ax1.set_axis_off()
