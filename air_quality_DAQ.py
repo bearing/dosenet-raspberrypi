@@ -209,7 +209,7 @@ class air_quality_DAQ(object):
 
         ax3.set(xlabel = xlabel, ylabel = ylabel, title = title)
         ax3.plot(xdata,ydata1,"-bo", label='1.0')
-        ax3.plot(xdata,ydata2,"-go.", label = '2.5')
+        ax3.plot(xdata,ydata2,"-go", label = '2.5')
         ax3.plot(xdata,ydata3,"-ro", label = '10')
         plt.legend(loc="best")
         ax3.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
