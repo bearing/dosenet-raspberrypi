@@ -160,9 +160,9 @@ class air_quality_DAQ(object):
         fig = plt.figure(plot_id)
         plt.clf()
 
-        gs = GridSpec(6,3)
+        gs = GridSpec(6,2)
         ax1 = fig.add_subplot(gs[0,0])
-        ax2 = fig.add_subplot(gs[0,2])
+        ax2 = fig.add_subplot(gs[0,q])
         ax3 = fig.add_subplot(gs[1:5,:])
 
         ax1.set_axis_off()
@@ -186,25 +186,25 @@ class air_quality_DAQ(object):
             ax1.text(0.5, 0.6,"PM 10: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "purple")
 
         else:
-            ax1.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
+            ax1.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display_10), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
 
         if display2_5 <= 12:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+ str(display2_5), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+ str(display2_5), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
 
         elif display2_5 > 12.1 and display_10 <= 35.4:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center", backgroundcolor = "yellow")
 
         elif display2_5 > 35.4 and display_10 <= 55.4:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "orange")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "orange")
 
         elif display2_5 > 55.4 and display_10 <= 150.4:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "red")
 
         elif display2_5 > 150.4 and display_10 <= 250.4:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "purple")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "purple")
 
         else:
-            ax2.text(0.5, 1.2,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
+            ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
         
 
         ax3.set(xlabel = xlabel, ylabel = ylabel, title = title)
