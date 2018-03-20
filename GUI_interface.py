@@ -106,9 +106,13 @@ def make_run_gui():
         global jobWeather
         global jobd3s
 
-        top1.after_cancel(jobCO2)
-        top1.after_cancel(jobAir)
-        top1.after_cancel(jobWeather)
+        if varWeather.get(): 
+            top1.after_cancel(jobWeather)
+        if varAir.get():
+            top1.after_cancel(jobAir)
+        if varCO2.get():
+            top1.after_cancel(jobCO2)             
+        
         jobd3s = None
         check_plots(-1)
         if vard3s.get():            
