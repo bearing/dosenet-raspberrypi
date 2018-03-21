@@ -54,14 +54,20 @@ class weather_DAQ(object):
         hectopascals = pascals / 100
         humidity = self.sensor.read_humidity()
     
+        data=[]
 
         self.merge_test=False
         self.add_data(self.temp_queue,self.temp_err,self.temp_list,degrees)
         self.add_data(self.humid_queue,self.humid_err,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
         self.add_time(self.time_queue,self.time_list, date_time)
-   
-
+        
+        data.append(date_time)
+        data.append(degrees)
+        data.append(hectopascals)
+        data.append(humidity)
+    
+        results.writerow(data)                
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
@@ -99,21 +105,10 @@ class weather_DAQ(object):
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
             queue_err.append(np.std(np.asarray(temp_list)))
-            global results
-            data = []
-            data.append(datetime.datetime.now())
-            data.append(self.temp_queue[-1])
-            data.append(self.temp_err[-1])
-            data.append(self.humid_queue[-1])
-            data.append(self.humid_err[-1])
-            data.append(self.press_queue[-1])
-            data.append(self.press_err[-1])
-            results.writerow(data)  
             for i in range(len(temp_list)):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
-   
     
     def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
         plt.ion()
