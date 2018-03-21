@@ -156,7 +156,7 @@ class air_quality_DAQ(object):
         if len(queue)>self.maxdata:
             queue.popleft()
 
-    def update_plot(self,plot_id,xdata,xlabel,ylabel,title,ydata1,ydata2=None,ydata3=None,yerr1 = None, yeer2 = None, yerr3 = None):
+    def update_plot(self,plot_id,xdata,xlabel,ylabel,title,ydata1,ydata2=None,ydata3=None,yerr1 = None, yerr2 = None, yerr3 = None):
         #print("\n\n\n")
         #print("Number of time entries = {}".format(len(xdata)))
         #print("Number of PM1 entries = {}".format(len(ydata1)))
