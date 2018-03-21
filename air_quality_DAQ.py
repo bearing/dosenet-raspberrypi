@@ -22,6 +22,9 @@ class air_quality_DAQ(object):
         self.PM01_queue = deque()
         self.PM25_queue = deque()
         self.PM10_queue = deque()
+        self.PM01_error = deque()
+        self.PM25_error = deque()
+        self.PM10_error = deque()        
         self.P3_queue = deque()
         self.P5_queue = deque()
         self.P10_queue = deque()
@@ -107,9 +110,9 @@ class air_quality_DAQ(object):
             results.writerow(data)
 
             self.merge_test = False
-            self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val))
-            self.add_data(self.PM25_queue,self.PM25_list,int(PM25Val))
-            self.add_data(self.PM10_queue,self.PM10_list,int(PM10Val))
+            self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val),self.PM01_error)
+            self.add_data(self.PM25_queue,self.PM25_list,int(PM25Val),self.PM25_error)
+            self.add_data(self.PM10_queue,self.PM10_list,int(PM10Val),,self.PM10_error)
             self.add_data(self.P3_queue,self.P3_list,int(P3))
             self.add_data(self.P5_queue,self.P5_list,int(P5))
             self.add_data(self.P10_queue,self.P10_list,int(P10))
@@ -132,7 +135,7 @@ class air_quality_DAQ(object):
             
     def pmplot(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue)        
+            self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue,self.PM01_error,self.PM25_error,self.PM10_error)        
 
     def add_time(self, queue, timelist, data):
         timelist.append(data)
@@ -143,15 +146,17 @@ class air_quality_DAQ(object):
         if len(queue)>self.maxdata:
             queue.popleft()
 
-    def add_data(self, queue, datalist, data):
+    def add_data(self, queue, datalist, data,queue_error=None):
         datalist.append(data)
         if len(datalist)>=self.n_merge:
             queue.append(np.mean(np.asarray(datalist)))
+            if queue_error is not None:
+            	queue_error.append(np.std(np.asarray(datalist)))
             datalist = []
         if len(queue)>self.maxdata:
             queue.popleft()
 
-    def update_plot(self,plot_id,xdata,xlabel,ylabel,title,ydata1,ydata2=None,ydata3=None):
+    def update_plot(self,plot_id,xdata,xlabel,ylabel,title,ydata1,ydata2=None,ydata3=None,yerr1 = None, yeer2 = None, yerr3 = None):
         #print("\n\n\n")
         #print("Number of time entries = {}".format(len(xdata)))
         #print("Number of PM1 entries = {}".format(len(ydata1)))
@@ -211,6 +216,9 @@ class air_quality_DAQ(object):
         ax3.plot(xdata,ydata1,"-bo", label='1.0')
         ax3.plot(xdata,ydata2,"-go", label = '2.5')
         ax3.plot(xdata,ydata3,"-ro", label = '10')
+        ax3.errorbar(xdata, ydata1, yerr=yerr1)
+        ax3.errorbar(xdata, ydata2, yerr=yerr2)
+        ax3.errorbar(xdata, ydata3, yerr=yerr3)
         plt.legend(loc="best")
         ax3.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         fig.show()
