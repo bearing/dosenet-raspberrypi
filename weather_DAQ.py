@@ -63,12 +63,21 @@ class weather_DAQ(object):
         self.add_time(self.time_queue,self.time_list, date_time)
 
         data.append(date_time)
-        data.append(self.temp_queue[-1])
-        data.append(self.temp_err[-1])
-        data.append(self.humid_queue[-1])
-        data.append(self.humid_err[-1])
-        data.append(self.press_queue[-1])
-        data.append(self.press_err[-1])
+        try:
+            data.append(self.temp_queue[-1])
+            data.append(self.temp_err[-1])
+            data.append(self.humid_queue[-1])
+            data.append(self.humid_err[-1])
+            data.append(self.press_queue[-1])
+            data.append(self.press_err[-1])
+        except:
+            data.append(self.temp_queue[0])
+            data.append(self.temp_err[0])
+            data.append(self.humid_queue[0])
+            data.append(self.humid_err[0])
+            data.append(self.press_queue[0])
+            data.append(self.press_err[0])
+
     
         results.writerow(data)                
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
