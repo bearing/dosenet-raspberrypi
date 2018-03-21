@@ -71,7 +71,7 @@ class weather_DAQ(object):
             data.append(self.press_queue[-1])
             data.append(self.press_err[-1])
         except:
-            continue
+            print ('No data collected')
 
     
         results.writerow(data)                
