@@ -23,6 +23,9 @@ class weather_DAQ(object):
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
+        self.temp_err=deque()
+        self.humid_err=deque()
+        self.press_err=deque()
         self.maxdata=int(maxdata)
         self.n_merge=int(n_merge)
         self.temp_list=[]
@@ -60,10 +63,10 @@ class weather_DAQ(object):
         results.writerow(data)
 
         self.merge_test=False
-        self.add_data(self.temp_queue,self.temp_list,degrees)
-        self.add_data(self.humid_queue,self.humid_list,humidity)
-        self.add_data(self.press_queue,self.press_list,hectopascals)
-        self.add_time(self.time_queue, self.time_list, date_time)
+        self.add_data(self.temp_queue,self.temp_err,self.temp_list,degrees)
+        self.add_data(self.humid_queue,self.humid_err,self.humid_list,humidity)
+        self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
+        self.add_time(self.time_queue,self.time_list, date_time)
                 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
@@ -97,16 +100,17 @@ class weather_DAQ(object):
             queue.popleft()
         
 
-    def add_data(self, queue, temp_list, data):
+    def add_data(self, queue, queue_err,temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
+            queue_err.append(np.std(np.asarray(temp_list)))
             for i in range(len(temp_list)):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
     
-    def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
+    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
@@ -117,6 +121,7 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        ax.errorbar(xdata, ydata, yerr=yerr)
         fig.show()
         plt.pause(0.0005)
 
