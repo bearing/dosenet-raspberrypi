@@ -112,7 +112,7 @@ class air_quality_DAQ(object):
             self.merge_test = False
             self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val),self.PM01_error)
             self.add_data(self.PM25_queue,self.PM25_list,int(PM25Val),self.PM25_error)
-            self.add_data(self.PM10_queue,self.PM10_list,int(PM10Val),,self.PM10_error)
+            self.add_data(self.PM10_queue,self.PM10_list,int(PM10Val),self.PM10_error)
             self.add_data(self.P3_queue,self.P3_list,int(P3))
             self.add_data(self.P5_queue,self.P5_list,int(P5))
             self.add_data(self.P10_queue,self.P10_list,int(P10))
