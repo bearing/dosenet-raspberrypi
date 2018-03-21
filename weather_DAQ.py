@@ -43,7 +43,7 @@ class weather_DAQ(object):
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "/home/pi/data/weather_test_results_"+file_time+".csv"
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
-        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+        metadata=["Time", "Temp (C)","Temp SD","Pressure (hPa)", "Pressure SD","Humidity (%)","Humidity SD"]
         results.writerow(metadata)
 
     def start(self):
@@ -55,19 +55,22 @@ class weather_DAQ(object):
         humidity = self.sensor.read_humidity()
     
         data=[]
-        data.append(date_time)
-        data.append(degrees)
-        data.append(hectopascals)
-        data.append(humidity)
-    
-        results.writerow(data)
 
         self.merge_test=False
         self.add_data(self.temp_queue,self.temp_err,self.temp_list,degrees)
         self.add_data(self.humid_queue,self.humid_err,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
         self.add_time(self.time_queue,self.time_list, date_time)
-                
+
+        data.append(date_time)
+        data.append(self.temp_queue[-1])
+        data.append(self.temp_err[-1])
+        data.append(self.humid_queue[-1])
+        data.append(self.humid_err[-1])
+        data.append(self.press_queue[-1])
+        data.append(self.press_err[-1])
+    
+        results.writerow(data)                
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
