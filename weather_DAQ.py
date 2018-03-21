@@ -71,12 +71,7 @@ class weather_DAQ(object):
             data.append(self.press_queue[-1])
             data.append(self.press_err[-1])
         except:
-            data.append(self.temp_queue[0])
-            data.append(self.temp_err[0])
-            data.append(self.humid_queue[0])
-            data.append(self.humid_err[0])
-            data.append(self.press_queue[0])
-            data.append(self.press_err[0])
+            continue
 
     
         results.writerow(data)                
