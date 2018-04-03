@@ -21,12 +21,12 @@ case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts"
     echo "Starting all DoseNet scripts" > $LOG
-    python $DOSENET/master_manager.py >> $LOG 2>&1
+    sudo -u pi -E python $DOSENET/master_manager.py >> $LOG 2>&1
     ;;
   test)
     logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts in test mode"
     echo "Starting all DoseNet scripts in test mode" > $LOG
-    python $DOSENET/master_manager.py --test_mode >> $LOG 2>&1
+    sudo -u pi -E python $DOSENET/master_manager.py --test_mode >> $LOG 2>&1
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping all DoseNet scripts"
