@@ -701,11 +701,11 @@ class Manager_Pocket(Base_Manager):
                     self.network_LED = LED(NEW_NETWORK_LED_PIN)
                     print("New network pin")
                     print(self.config.ID)
-                    assert self.config.ID == 5
-                    assert self.config.ID == 29
-                    assert self.config.ID == 32
-                    assert self.config.ID == 33
-                    assert self.config.ID >= 39
+                    print(self.config.ID == 5)
+                    print(self.config.ID == 29)
+                    print(self.config.ID == 32)
+                    print(self.config.ID == 33)
+                    print(self.config.ID >= 39)
                 else:
                     self.network_LED = LED(OLD_NETWORK_LED_PIN)
                     print("New network pin")
