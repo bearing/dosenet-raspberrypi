@@ -705,7 +705,7 @@ class Manager_Pocket(Base_Manager):
                     print(self.config.ID == 29)
                     print(self.config.ID == 32)
                     print(self.config.ID == 33)
-                    print(self.config.ID >= 39)
+                    print(self.config.ID <= 39)
                 else:
                     self.network_LED = LED(OLD_NETWORK_LED_PIN)
                     print("New network pin")
