@@ -278,6 +278,7 @@ class Base_Manager(object):
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
+                self.int_ID = int(self.config.ID)
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -684,32 +685,19 @@ class Manager_Pocket(Base_Manager):
 
         if RPI:
             if counts_LED_pin == None:
-                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                    self.config.ID == 33 or self.config.ID >= 39:
+                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                    self.int_ID == 33 or self.int_ID >= 39:
                     self.counts_LED = LED(NEW_COUNTS_LED_PIN)
-                    print("New counts pin")
-                    print(self.config.ID)
                 else:
                     self.counts_LED = LED(OLD_COUNTS_LED_PIN)
-                    print("old counts pin")
-                    print(self.config.ID)
             else:
                 self.counts_LED = LED(counts_LED_pin)
             if network_LED_pin == None:
-                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                    self.config.ID == 33 or self.config.ID >= 39:
+                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                    self.int_ID == 33 or self.int_ID >= 39:
                     self.network_LED = LED(NEW_NETWORK_LED_PIN)
-                    print("New network pin")
-                    print(self.config.ID)
-                    print(self.config.ID == 5)
-                    print(self.config.ID == 29)
-                    print(self.config.ID == 32)
-                    print(self.config.ID == 33)
-                    print(self.config.ID <= 39)
                 else:
                     self.network_LED = LED(OLD_NETWORK_LED_PIN)
-                    print("New network pin")
-                    print(self.config.ID)
             else:
                 self.network_LED = LED(network_LED_pin)
         else:
@@ -859,15 +847,11 @@ class Manager_D3S(Base_Manager):
         self.d3s_data_lim = d3s_data_lim
 
         if d3s_LED_pin == None:
-            if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                self.config.ID == 33 or self.config.ID >= 39:
+            if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                self.int_ID == 33 or self.int_ID >= 39:
                 self.d3s_LED = LED(NEW_D3S_LED_PIN)
-                print("New D3S Pins")
-                print(self.config.ID)
             else:
                 self.d3s_LED = LED(OLD_D3S_LED_PIN)
-                print("Old D3S Pins")
-                print(self.config.ID)
         else:
             self.d3s_LED = LED(d3s_LED_pin)
 
