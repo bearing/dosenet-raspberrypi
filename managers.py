@@ -330,10 +330,10 @@ class Base_Manager(object):
         """
         if self.new_setup:
             self.vprint(
-                    1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.SENSOR_NAMES[self.sensor_type-1]))
+                    1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
         else:
             self.vprint(
-                    1, OLD_SENSOR_DISPLAY_TEXT.format(sensor_name=self.SENSOR_NAMES[self.sensor_type-1]))
+                    1, OLD_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
         this_start, this_end = self.get_interval(time.time())
         if self.sensor_type != 2:
             self.vprint(
