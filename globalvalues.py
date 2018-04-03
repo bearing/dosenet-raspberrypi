@@ -28,9 +28,9 @@ NOISE_PIN = 4
 NEW_D3S_LED_PIN = 13
 NEW_NETWORK_LED_PIN = 16
 NEW_COUNTS_LED_PIN = 19
-OLD_COUNTS_LED_PIN = 19
+OLD_COUNTS_LED_PIN = 21
 OLD_NETWORK_LED_PIN = 20
-OLD_D3S_LED_PIN = 21
+OLD_D3S_LED_PIN = 19
 
 NETWORK_LED_BLINK_PERIOD_S = 1.5
 NETWORK_LED_BLINK_LOST_CONNECTION = 0.75
@@ -124,8 +124,12 @@ SENSOR_NAMES = ['Pocket Geiger Counter', 'D3S', 'Air Quality Sensor',
 
 DATA_NAMES = ['pocket geiger data', 'D3S data', 'air quality data', 'CO2 data', 'weather/temp/humidity data']
 
-SENSOR_DISPLAY_TEXT = (
-    '{green}Starting the {{sensor_name}}.{reset}').format(
+NEW_SENSOR_DISPLAY_TEXT = (
+    '{green}Starting the {{sensor_name}} with new LED pins.{reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
+OLD_SENSOR_DISPLAY_TEXT = (
+    '{green}Starting the {{sensor_name}} with old LED pins.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
 RUNNING_DISPLAY_TEXT = (

@@ -3,7 +3,6 @@
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
 LOGTAG=dosenet
-
 LOG=/tmp/manager.log
 
 case "$1" in

@@ -38,7 +38,8 @@ from globalvalues import NEW_COUNTS_LED_PIN, OLD_COUNTS_LED_PIN
 from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
-from globalvalues import SENSOR_DISPLAY_TEXT, RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
+from globalvalues import NEW_SENSOR_DISPLAY_TEXT, OLD_SENSOR_DISPLAY_TEXT
+from globalvalues import RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -114,6 +115,7 @@ class Base_Manager(object):
                  aeskey=None,
                  sensor_type=None,
                  sensor=None,
+                 sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
                  ):
         self.sensor_type = sensor_type
@@ -133,6 +135,8 @@ class Base_Manager(object):
 
         self.sender_mode = sender_mode
         self.port = port
+
+        self.sensor_names = sensor_names
 
     def a_flag(self):
         """
@@ -278,6 +282,12 @@ class Base_Manager(object):
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
+                self.int_ID = int(self.config.ID)
+                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                    self.int_ID == 33 or self.int_ID >= 39:
+                    self.new_setup = True
+                else:
+                    self.new_setup = False
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -318,6 +328,12 @@ class Base_Manager(object):
         Main method to run the sensors continuously, the run
         procedure is determined by the sensor_type of the instance.
         """
+        if self.new_setup:
+            self.vprint(
+                    1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
+        else:
+            self.vprint(
+                    1, OLD_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
         this_start, this_end = self.get_interval(time.time())
         if self.sensor_type != 2:
             self.vprint(
@@ -536,7 +552,7 @@ class Base_Manager(object):
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
-                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type+1],file))
+                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -684,16 +700,14 @@ class Manager_Pocket(Base_Manager):
 
         if RPI:
             if counts_LED_pin == None:
-                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                    self.config.ID == 33 or self.config.ID >= 39:
+                if self.new_setup:
                     self.counts_LED = LED(NEW_COUNTS_LED_PIN)
                 else:
                     self.counts_LED = LED(OLD_COUNTS_LED_PIN)
             else:
                 self.counts_LED = LED(counts_LED_pin)
             if network_LED_pin == None:
-                if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                    self.config.ID == 33 or self.config.ID >= 39:
+                if self.new_setup:
                     self.network_LED = LED(NEW_NETWORK_LED_PIN)
                 else:
                     self.network_LED = LED(OLD_NETWORK_LED_PIN)
@@ -846,8 +860,7 @@ class Manager_D3S(Base_Manager):
         self.d3s_data_lim = d3s_data_lim
 
         if d3s_LED_pin == None:
-            if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
-                self.config.ID == 33 or self.config.ID >= 39:
+            if self.new_setup:
                 self.d3s_LED = LED(NEW_D3S_LED_PIN)
             else:
                 self.d3s_LED = LED(OLD_D3S_LED_PIN)
@@ -1250,10 +1263,6 @@ if __name__ == '__main__':
         mgr = Manager_Weather(**arg_dict)
 
     try:
-        for i in range(len(SENSOR_NAMES)):
-            if sensor == (1 + i):
-                print(SENSOR_DISPLAY_TEXT.format(sensor_name=SENSOR_NAMES[i]))
-                sys.stdout.flush()
         mgr.run()
 
     except:
