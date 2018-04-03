@@ -687,16 +687,24 @@ class Manager_Pocket(Base_Manager):
                 if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
                     self.config.ID == 33 or self.config.ID >= 39:
                     self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+                    print("New counts pin")
+                    print(self.config.ID)
                 else:
                     self.counts_LED = LED(OLD_COUNTS_LED_PIN)
+                    print("old counts pin")
+                    print(self.config.ID)
             else:
                 self.counts_LED = LED(counts_LED_pin)
             if network_LED_pin == None:
                 if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
                     self.config.ID == 33 or self.config.ID >= 39:
                     self.network_LED = LED(NEW_NETWORK_LED_PIN)
+                    print("New network pin")
+                    print(self.config.ID)
                 else:
                     self.network_LED = LED(OLD_NETWORK_LED_PIN)
+                    print("New network pin")
+                    print(self.config.ID)
             else:
                 self.network_LED = LED(network_LED_pin)
         else:
@@ -849,8 +857,12 @@ class Manager_D3S(Base_Manager):
             if self.config.ID == 5 or self.config.ID == 29 or self.config.ID == 32 or \
                 self.config.ID == 33 or self.config.ID >= 39:
                 self.d3s_LED = LED(NEW_D3S_LED_PIN)
+                print("New D3S Pins")
+                print(self.config.ID)
             else:
                 self.d3s_LED = LED(OLD_D3S_LED_PIN)
+                print("Old D3S Pins")
+                print(self.config.ID)
         else:
             self.d3s_LED = LED(d3s_LED_pin)
 
