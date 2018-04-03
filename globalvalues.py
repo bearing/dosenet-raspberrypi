@@ -124,8 +124,12 @@ SENSOR_NAMES = ['Pocket Geiger Counter', 'D3S', 'Air Quality Sensor',
 
 DATA_NAMES = ['pocket geiger data', 'D3S data', 'air quality data', 'CO2 data', 'weather/temp/humidity data']
 
-SENSOR_DISPLAY_TEXT = (
-    '{green}Starting the {{sensor_name}}.{reset}').format(
+NEW_SENSOR_DISPLAY_TEXT = (
+    '{green}Starting the {{sensor_name}} with new LED pins.{reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
+OLD_SENSOR_DISPLAY_TEXT = (
+    '{green}Starting the {{sensor_name}} with old LED pins.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
 RUNNING_DISPLAY_TEXT = (
