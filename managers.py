@@ -115,6 +115,7 @@ class Base_Manager(object):
                  aeskey=None,
                  sensor_type=None,
                  sensor=None,
+                 sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
                  ):
         self.sensor_type = sensor_type
@@ -135,7 +136,7 @@ class Base_Manager(object):
         self.sender_mode = sender_mode
         self.port = port
 
-        self.sensor_names = SENSOR_NAMES
+        self.sensor_names = sensor_names
 
     def a_flag(self):
         """
@@ -551,7 +552,7 @@ class Base_Manager(object):
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
-                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type+1],file))
+                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
