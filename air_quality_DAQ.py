@@ -60,6 +60,7 @@ class air_quality_DAQ(object):
         results = csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
         results.writerow(metadata)
+        f.flush()
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
         
     def start(self):
