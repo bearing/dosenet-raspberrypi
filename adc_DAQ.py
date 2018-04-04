@@ -37,7 +37,7 @@ class adc_DAQ(object):
         metadata = []
         metadata.append("Date and Time")
         metadata.append("CO2 (ppm)")
-        metadata.append("UV")
+        #metadata.append("UV")
         adc_results.writerow(metadata[:])
 
     def start(self):
@@ -61,7 +61,7 @@ class adc_DAQ(object):
             results = []
             results.append(date_time)
             results.append(concentration)
-            results.append(uv_index)
+            #results.append(uv_index)
                 
             adc_results.writerow(results[:])
             

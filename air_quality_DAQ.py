@@ -45,6 +45,8 @@ class air_quality_DAQ(object):
         self.time_list = []
         self.merge_test=False
         self.port = None
+        self.first_data = True
+
             
     def close(self,plot_id):
         plt.close(plot_id)
@@ -95,19 +97,6 @@ class air_quality_DAQ(object):
             print('#Particles, diameter over 10  um = {}'.format(P100))
 			'''
 
-            data = []
-            data.append(date_time)
-            data.append(PM01Val)
-            data.append(PM25Val)
-            data.append(PM10Val)
-            data.append(P3)
-            data.append(P5)
-            data.append(P10)
-            data.append(P25)
-            data.append(P50)
-            data.append(P100)
-
-            results.writerow(data)
 
             self.merge_test = False
             self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val),self.PM01_error)
@@ -132,6 +121,38 @@ class air_quality_DAQ(object):
                 self.P50_list=[]
                 self.P100_list=[]
                 self.time_list=[]
+
+            if self.first_data:
+                for i in range(len(PM01_queue)):
+                    data = []
+                    data.append(time_queue[i])
+                    data.append(PM01_queue[i])
+                    data.append(PM25_queue[i])
+                    data.append(PM10_queue[i])
+                    data.append(P3_queue[i])
+                    data.append(P5_queue[i])
+                    data.append(P10_queue[i])
+                    data.append(P25_queue[i])
+                    data.append(P50_queue[i])
+                    data.append(P100_queue[i])
+
+                    results.writerow(data)
+                self.first_data = False
+            else:
+                data = []
+                data.append(time_queue[-1])
+                data.append(PM01_queue[-1])
+                data.append(PM25_queue[-1])
+                data.append(PM10_queue[-1])
+                data.append(P3_queue[-1])
+                data.append(P5_queue[-1])
+                data.append(P10_queue[-1])
+                data.append(P25_queue[-1])
+                data.append(P50_queue[-1])
+                data.append(P100_queue[-1])
+                results.writerow(data)
+
+
             
     def pmplot(self):
         if len(self.time_queue)>0:
