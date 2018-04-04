@@ -33,6 +33,7 @@ class adc_DAQ(object):
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "/home/pi/data/CO2_test_results_"+file_time+".csv"
+        f = open(filename, "ab+")
         adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = []
         metadata.append("Date and Time")
@@ -61,7 +62,7 @@ class adc_DAQ(object):
             results = []
             results.append(date_time)
             results.append(concentration)
-            #results.append(uv_index)
+            # results.append(uv_index)
                 
             adc_results.writerow(results[:])
             

@@ -53,15 +53,19 @@ class air_quality_DAQ(object):
 
     def create_file(self):
         global results
+        global f
         file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "/home/pi/data/air_quality_test_results_"+file_time+".csv"
+        f = open(filename, "ab+")
         results = csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
         results.writerow(metadata)
+        f.close()
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
         
     def start(self):
         global results
+        global f
         date_time = datetime.datetime.now()
         text = self.port.read(32)
         buffer = [ord(c) for c in text]
@@ -154,6 +158,7 @@ class air_quality_DAQ(object):
                     results.writerow(data)
                 except IndexError:
                     print('No new data being written.')
+            f.close()
 
 
             
