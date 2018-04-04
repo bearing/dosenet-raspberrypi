@@ -127,7 +127,7 @@ class air_quality_DAQ(object):
             try:    
                 last_time = self.time_queue[len(self.PM01_queue)-1]    
             except:
-                last_time = self.time_queue[0]
+                last_time = np.NaN
 
             if self.first_data and len(self.PM01_queue) != 0:
                 for i in range(len(self.PM01_queue)):
