@@ -140,7 +140,7 @@ class air_quality_DAQ(object):
                     data.append(self.P100_queue[i])
 
                     results.writerow(data)
-                    last_time = self.time_queue[i]
+                last_time = self.time_queue[len(self.PM01_queue)-1]
                 self.first_data = False
             else:
                 try:
