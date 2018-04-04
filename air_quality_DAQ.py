@@ -157,7 +157,7 @@ class air_quality_DAQ(object):
                 except IndexError:
                     print('No new data being written.')
 
-    def close_file():
+    def close_file(self):
         global f
         f.close()
 
