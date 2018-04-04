@@ -141,6 +141,7 @@ class air_quality_DAQ(object):
 
                     results.writerow(data)
                 last_time = self.time_queue[len(self.PM01_queue)-1]
+                print(last_time)
                 self.first_data = False
             elif not self.first_data:
                 try:
