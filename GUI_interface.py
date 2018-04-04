@@ -105,11 +105,15 @@ def make_run_gui():
         global jobAir
         global jobWeather
         global jobd3s
+        global wdaq
+        global adcdaq
+        global aqdaq
 
         if varWeather.get(): 
             top1.after_cancel(jobWeather)
         if varAir.get():
             top1.after_cancel(jobAir)
+            aqdaq.close_file()
         if varCO2.get():
             top1.after_cancel(jobCO2)             
         
