@@ -123,33 +123,33 @@ class air_quality_DAQ(object):
                 self.time_list=[]
 
             if self.first_data:
-                for i in range(len(PM01_queue)):
+                for i in range(len(self.PM01_queue)):
                     data = []
-                    data.append(time_queue[i])
-                    data.append(PM01_queue[i])
-                    data.append(PM25_queue[i])
-                    data.append(PM10_queue[i])
-                    data.append(P3_queue[i])
-                    data.append(P5_queue[i])
-                    data.append(P10_queue[i])
-                    data.append(P25_queue[i])
-                    data.append(P50_queue[i])
-                    data.append(P100_queue[i])
+                    data.append(self.time_queue[i])
+                    data.append(self.PM01_queue[i])
+                    data.append(self.PM25_queue[i])
+                    data.append(self.PM10_queue[i])
+                    data.append(self.P3_queue[i])
+                    data.append(self.P5_queue[i])
+                    data.append(self.P10_queue[i])
+                    data.append(self.P25_queue[i])
+                    data.append(self.P50_queue[i])
+                    data.append(self.P100_queue[i])
 
                     results.writerow(data)
                 self.first_data = False
             else:
                 data = []
-                data.append(time_queue[-1])
-                data.append(PM01_queue[-1])
-                data.append(PM25_queue[-1])
-                data.append(PM10_queue[-1])
-                data.append(P3_queue[-1])
-                data.append(P5_queue[-1])
-                data.append(P10_queue[-1])
-                data.append(P25_queue[-1])
-                data.append(P50_queue[-1])
-                data.append(P100_queue[-1])
+                data.append(self.time_queue[-1])
+                data.append(self.PM01_queue[-1])
+                data.append(self.PM25_queue[-1])
+                data.append(self.PM10_queue[-1])
+                data.append(self.P3_queue[-1])
+                data.append(self.P5_queue[-1])
+                data.append(self.P10_queue[-1])
+                data.append(self.P25_queue[-1])
+                data.append(self.P50_queue[-1])
+                data.append(self.P100_queue[-1])
                 results.writerow(data)
 
 
