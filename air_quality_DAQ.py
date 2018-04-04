@@ -163,6 +163,8 @@ class air_quality_DAQ(object):
                         data.append(self.P100_queue[-1])
                         results.writerow(data)
                         last_time = self.time_queue[-1]
+                    else:
+                        print('duplicated data.')
                 except IndexError:
                     print('No new data being written.')
             else: 
