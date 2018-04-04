@@ -161,6 +161,8 @@ class air_quality_DAQ(object):
                         last_time = self.time_queue[-1]
                 except IndexError:
                     print('No new data being written.')
+            else: 
+                print('No data acquired yet.')
 
     def close_file(self):
         global f
