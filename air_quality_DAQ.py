@@ -124,6 +124,10 @@ class air_quality_DAQ(object):
                 self.P50_list=[]
                 self.P100_list=[]
                 self.time_list=[]
+            try:    
+                last_time = self.time_queue[len(self.PM01_queue)-1]    
+            except:
+                last_time = self.time_queue[0]
 
             if self.first_data and len(self.PM01_queue) != 0:
                 for i in range(len(self.PM01_queue)):
@@ -141,10 +145,10 @@ class air_quality_DAQ(object):
 
                     results.writerow(data)
                 last_time = self.time_queue[len(self.PM01_queue)-1]
-                print(last_time)
                 self.first_data = False
             elif not self.first_data:
                 try:
+                print(last_time)
                     if self.time_queue[-1] != last_time:
                         data = []
                         data.append(self.time_queue[-1])
