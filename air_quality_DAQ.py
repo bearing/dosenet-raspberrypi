@@ -66,6 +66,7 @@ class air_quality_DAQ(object):
         
     def start(self):
         global results
+        global f
         date_time = datetime.datetime.now()
         text = self.port.read(32)
         buffer = [ord(c) for c in text]
@@ -142,6 +143,7 @@ class air_quality_DAQ(object):
                     data.append(self.P100_queue[i])
 
                     results.writerow(data)
+                    f.flush()
                 self.last_time = data[0]
                 self.first_data = False
             elif not self.first_data:
@@ -160,6 +162,7 @@ class air_quality_DAQ(object):
                         data.append(self.P50_queue[-1])
                         data.append(self.P100_queue[-1])
                         results.writerow(data)
+                        f.flush()
                         self.last_time = self.time_queue[-1]
                     else:
                         print('duplicated data.')

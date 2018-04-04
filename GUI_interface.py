@@ -112,8 +112,8 @@ def make_run_gui():
         if varWeather.get(): 
             top1.after_cancel(jobWeather)
         if varAir.get():
-            top1.after_cancel(jobAir)
             aqdaq.close_file()
+            top1.after_cancel(jobAir)
         if varCO2.get():
             top1.after_cancel(jobCO2)             
         
@@ -124,7 +124,7 @@ def make_run_gui():
             if jobd3s is not None:
                 mgrD3S.takedown()
                 print(mgrD3S.running)
-        os.system("pkill -9 -f GUI_interface.py")
+            os.system("pkill -9 -f GUI_interface.py")
 
 
     def press(): 
