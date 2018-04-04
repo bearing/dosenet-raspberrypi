@@ -46,6 +46,7 @@ class air_quality_DAQ(object):
         self.merge_test=False
         self.port = None
         self.first_data = True
+        self.last_time = None
 
             
     def close(self,plot_id):
@@ -125,7 +126,6 @@ class air_quality_DAQ(object):
                 self.P100_list=[]
                 self.time_list=[]
 
-            last_time = np.NaN
 
             if self.first_data and len(self.PM01_queue) != 0:
                 for i in range(len(self.PM01_queue)):
@@ -142,12 +142,12 @@ class air_quality_DAQ(object):
                     data.append(self.P100_queue[i])
 
                     results.writerow(data)
-                last_time = data[0]
+                self.last_time = data[0]
                 self.first_data = False
             elif not self.first_data:
                 try:
                     print(last_time)
-                    if self.time_queue[-1] != last_time:
+                    if self.time_queue[-1] != self.last_time:
                         data = []
                         data.append(self.time_queue[-1])
                         data.append(self.PM01_queue[-1])
@@ -160,7 +160,7 @@ class air_quality_DAQ(object):
                         data.append(self.P50_queue[-1])
                         data.append(self.P100_queue[-1])
                         results.writerow(data)
-                        last_time = self.time_queue[-1]
+                        self.last_time = self.time_queue[-1]
                     else:
                         print('duplicated data.')
                 except IndexError:
