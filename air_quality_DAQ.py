@@ -139,18 +139,21 @@ class air_quality_DAQ(object):
                     results.writerow(data)
                 self.first_data = False
             else:
-                data = []
-                data.append(self.time_queue[-1])
-                data.append(self.PM01_queue[-1])
-                data.append(self.PM25_queue[-1])
-                data.append(self.PM10_queue[-1])
-                data.append(self.P3_queue[-1])
-                data.append(self.P5_queue[-1])
-                data.append(self.P10_queue[-1])
-                data.append(self.P25_queue[-1])
-                data.append(self.P50_queue[-1])
-                data.append(self.P100_queue[-1])
-                results.writerow(data)
+                try:
+                    data = []
+                    data.append(self.time_queue[-1])
+                    data.append(self.PM01_queue[-1])
+                    data.append(self.PM25_queue[-1])
+                    data.append(self.PM10_queue[-1])
+                    data.append(self.P3_queue[-1])
+                    data.append(self.P5_queue[-1])
+                    data.append(self.P10_queue[-1])
+                    data.append(self.P25_queue[-1])
+                    data.append(self.P50_queue[-1])
+                    data.append(self.P100_queue[-1])
+                    results.writerow(data)
+                except IndexError:
+                    print('No new data being written.')
 
 
             
