@@ -26,6 +26,8 @@ class adc_DAQ(object):
         self.CO2_error=deque()
         self.UV_queue=deque()
         self.merge_test=False
+        self.first_data = True
+        self.last_time = None
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
         print('N MERGE: {}'.format(n_merge) )
         
@@ -75,7 +77,34 @@ class adc_DAQ(object):
                 self.CO2_list=[]
                 #self.UV_list=[]
                 self.time_list=[]
-                    
+            if self.first_data and len(self.CO2_queue) != 0:
+                for i in range(len(self.CO2_queue)):
+                    data = []
+                    data.append(self.time_queue[i])
+                    data.append(self.CO2_queue[i])
+                    data.append(self.CO2_err[i])
+                    results.writerow(data)
+
+                self.last_time = data[0]
+                self.first_data = False
+            elif not self.first_data:
+                try:
+                    print(self.last_time)
+                    if self.time_queue[-1] != self.last_time:
+                        data = []
+                        data.append(self.time_queue[-1])
+                        data.append(self.CO2_queue[-1])
+                        data.append(self.CO2_err[-1])
+                        results.writerow(data)
+
+                        self.last_time = self.time_queue[-1]
+                    else:
+                        print('duplicated data.')
+                except IndexError:
+                    print('No new data being written.')
+            else: 
+                print('No data acquired yet.')
+                        
         except:
             print("CO2 sensor error\n\n")
 
