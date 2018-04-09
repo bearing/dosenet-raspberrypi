@@ -33,7 +33,9 @@ class weather_DAQ(object):
         self.press_list=[]
         self.time_list=[]
         self.merge_test=False
-        
+        self.first_data = True
+        self.last_time = None
+
     def close(self,plot_id):
         plt.close(plot_id)
         
@@ -62,12 +64,49 @@ class weather_DAQ(object):
         self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
         self.add_time(self.time_queue,self.time_list, date_time)
         
-        data.append(date_time)
-        data.append(degrees)
-        data.append(hectopascals)
-        data.append(humidity)
+        # data.append(date_time)
+        # data.append(degrees)
+        # data.append(hectopascals)
+        # data.append(humidity)
     
-        results.writerow(data)                
+        # results.writerow(data)         
+
+        if self.first_data and len(self.temp_queue) != 0:
+            for i in range(len(self.temp_queue)):
+                data = []
+                data.append(self.time_queue[i])
+                data.append(self.temp_queue[i])
+                data.append(self.temp_err[i])
+                data.append(self.press_queue[i])
+                data.append(self.press_err[i])
+                data.append(self.humid_queue[i])
+                data.append(self.humid_err[i])
+                results.writerow(data)
+
+            self.last_time = data[0]
+            self.first_data = False
+        elif not self.first_data:
+            try:
+                print(self.last_time)
+                if self.time_queue[-1] != self.last_time:
+                    data = []
+                    data.append(self.time_queue[-1])
+                    data.append(self.temp_queue[-1])
+                    data.append(self.temp_err[-1])
+                    data.append(self.press_queue[-1])
+                    data.append(self.press_err[-1])
+                    data.append(self.humid_queue[-1])
+                    data.append(self.humid_err[-1])
+                    results.writerow(data)
+
+                    self.last_time = self.time_queue[-1]
+                else:
+                    print('duplicated data.')
+            except IndexError:
+                print('No new data being written.')
+        else: 
+            print('No data acquired yet.')
+
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
