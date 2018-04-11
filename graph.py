@@ -200,6 +200,11 @@ for i in range(int(len(Val100)/combine_number)):
     sum_Val100 = [sum(Val100[numberV:numberW])]
     new_Val100.append(sum_Val100)
 
+#Get rid of last time if unecessary
+if remainder_P25 !=0:
+    for i in range(int(remainder_P25)):
+        times.pop()
+
 #State how many results have been excluded
 if int(remainder_P25) != 1:
     print(str(int(remainder_P25))+" results have been excluded from the graph.")
@@ -218,38 +223,33 @@ for i in range(int(len(times)/combine_number)):
 
 print(middletimes)
 #Use plot() method to graph particle count vs. time and add legend
-fig = plt.figure()
 
-plt.figure(1)
-ax = fig.add_subplot(111)
-plt.plot(middletimes, new_P3, "b.", label='P3')
-plt.plot(middletimes, new_P5, "g.", label = 'P5')
-plt.plot(middletimes, new_P10, "r.", label = 'P10')
-plt.plot(middletimes, new_P25, "m.", label = 'P25')
-plt.plot(middletimes, new_P50, "y.", label = 'P50')
-plt.plot(middletimes, new_P100, "c.", label = 'P100')
-plt.legend(loc="best")
+plt.figure(figsize = [5,5])
+plt.plot(middletime_final, new_P3, "b.", label='P3')
+plt.plot(middletime_final, new_P5, "g.", label = 'P5')
+plt.plot(middletime_final, new_P10, "r.", label = 'P10')
+plt.plot(middletime_final, new_P25, "m.", label = 'P25')
+plt.plot(middletime_final, new_P50, "y.", label = 'P50')
+plt.plot(middletime_final, new_P100, "c.", label = 'P100')
+plt.legend(loc="best", title = "Key")
 plt.xlabel("Time")
 plt.ylabel("Particle Count")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title(file_title)
-fig.autofmt_xdate()
-ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
+plt.title("Particle Count vs. Time")
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title(file_title)
 
 #Use plot() method to graph particle concentration vs. time and add legend
-fig = plt.figure()
-
-plt.figure(2)
-ax = fig.add_subplot(111)
-plt.plot(middletimes, new_Val10, "b.", label='1.0')
-plt.plot(middletimes, new_Val25, "g.", label = '2.5')
-plt.plot(middletimes, new_Val100, "r.", label = '10')
-plt.legend(loc="best")
+plt.figure(figsize = [5,5])
+plt.plot(middletime_final, new_Val10, "b.", label='1.0')
+plt.plot(middletime_final, new_Val25, "g.", label = '2.5')
+plt.plot(middletime_final, new_Val100, "r.", label = '10')
+plt.legend(loc="best", title = "Key")
 plt.xlabel("Time")
 plt.ylabel("Particle Concentration")
 file_title = "Air Quality Test Results: From "+datetime.datetime.strftime(times[0], "%Y-%m-%d %H:%M:%S")+" To "+datetime.datetime.strftime(times[-1], "%Y-%m-%d %H:%M:%S")
-plt.title(file_title)
-fig.autofmt_xdate()
-ax.xaxis.set_major_formatter(DateFormatter('%m-%d-%Y %H:%M:%S'))
-ax.set_xlim([datetime.datetime(2017, 8, 2, 10, 00, 00), datetime.datetime(2017, 8, 3, 00, 00, 00)])
+plt.title("Particle Concentration vs. Time")
+wtitle = pyl.gcf()
+wtitle.canvas.set_window_title(file_title)
+
 plt.show()

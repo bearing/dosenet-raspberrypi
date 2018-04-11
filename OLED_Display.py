@@ -4,16 +4,8 @@ import time
 from dateutil import parser as theparser
 import argparse
 import sys
-import signal
-import numpy as np
 
 sys.stdout.flush()
-
-def proper_quit(*args):
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    print("Exiting")
-    exit()
-    pass
 
 class OLED_Display:
     def _init_(self):
@@ -31,7 +23,7 @@ class OLED_Display:
         if sensor == "Atmosphere Sensor":
             display_which_column = [1, 2, 3]
         if sensor == "U.V. Sensor":
-            display_which_column = [1]
+            display_which_column = [2]
         if sensor == "Si Radiation Sensor":
             display_which_column = [1]
         if sensor == "Csi Radiation Sensor":
@@ -50,88 +42,68 @@ class OLED_Display:
 
     #Checks if there is data in the log file
     def Check_Any(self, fname, sensor):
-        try:
+        begin_time = int(time.time())
+        check = open(fname).readlines()[0:2]
+        while check == []:
+            time.sleep(0.5)
             check = open(fname).readlines()[0:2]
-            a = 0
-
-            if check == []:
-                print(sensor+":")
-                print("Error: Empty CSV \n")
+            nowtime = int(time.time())
+            if nowtime-begin_time > 3:
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: Empty CSV")
-                time.sleep(3)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
+                time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                a = 1
+                break
 
-            if len(check) < 2:
-                print(sensor+":")
-                print("Error: No Data \n")
+        begin_time = int(time.time())
+        while len(check) < 2:
+            time.sleep(0.5)
+            check = open(fname).readlines()[0:2]
+            nowtime = int(time.time())
+            if nowtime-begin_time > 3:
+                print("Error: No Data")
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error: No Data")
-                time.sleep(3)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,1,sensor)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: No Data")
+                time.sleep(2)
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                a = 1
-
-            return a
-
-        except Exception as Error:
-            if str(Error) == "KeyboardInterrupt":
-                proper_quit()
-
-            else:
-                a = 2
-                return a
+                break
 
     #Displays data on screen
     def Display_Data(self, fname, sensor):
-        check = self.Check_Any(self.log_files[sensor], sensor)
-        if  check == 0:
-            metadata_line = open(fname).readlines()[0:1]
-            metadata = [line.split(",") for line in metadata_line]
+        metadata_line = open(fname).readlines()[0:1]
+        metadata = [line.split(",") for line in metadata_line]
 
-            results = open(fname).readlines()[-1:]
-            lastline = [line.split(",") for line in results]
+        results = open(fname).readlines()[-1:]
+        lastline = [line.split(",") for line in results]
 
-            if "\n" in metadata[0][len(metadata[0])-1]:
-                metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
+        if "\n" in metadata[0][len(metadata[0])-1]:
+            metadata[0][len(metadata[0])-1] = metadata[0][len(metadata[0])-1].strip("\n")
 
-            if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
-                for i in self.display_which(sensor):
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-
-                    if "\n" in lastline[0][i]:
-                        lastline[0][i] = lastline[0][i].strip("\n")
-
-                    to_be_displayed1 = str("Time       "+metadata[0][i])
-                    to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
-
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
-                    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
-                    print(sensor+":")
-                    print(to_be_displayed1)
-                    print(to_be_displayed2+"\n")
-                    time.sleep(3.5)
-
-            elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
-                print(sensor+":\nCouldn't Recieve Data \n")
+        if self.CheckIf_Repeat(lastline[0][0], sensor) == True:
+            for i in self.display_which(sensor):
                 ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
-                time.sleep(3)
 
-        if check == 2:
-             print(sensor+":")
-             print("Error Opening CSV \n")
-             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":")
-             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
-             time.sleep(3)
+                if "\n" in lastline[0][i]:
+                    lastline[0][i] = lastline[0][i].strip("\n")
 
-        else:
-            pass
+                to_be_displayed1 = str("Time       "+metadata[0][i])
+                to_be_displayed2 = str(theparser.parse(lastline[0][0]).strftime("%H:%M:%S")+"   "+lastline[0][i])
+
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor+":") # x: until 100 and then starts again from y-axis; y: until 7
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,to_be_displayed1)
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,6,to_be_displayed2)
+                print(sensor+":")
+                print(to_be_displayed1)
+                print(to_be_displayed2+"\n")
+                time.sleep(3.5)
+
+        elif self.CheckIf_Repeat(lastline[0][0], sensor) == False:
+            print(str(sensor)+": Couldn't Recieve Data \n")
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor)
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Couldn't Recieve Data")
+            time.sleep(3)
 
     #Checks if new data is being obtained
     def CheckIf_Repeat(self, returned_time, sensor):
@@ -142,91 +114,65 @@ class OLED_Display:
             self.returned_times[sensor] = returned_time
             return True
 
-signal.signal(signal.SIGINT, proper_quit)
-
 try:
-    sensor_name = []
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor", action = "store_true")
-    parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor", action = "store_true")
-    parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor", action = "store_true")
-    parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor", action = "store_true")
-    parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor", action = "store_true")
-    parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor", action = "store_true")
-    parser.add_argument("-Config", help = "Indicates usage of config.txt to determine list of sensors to run", action = "store_true")
-    inclusion = parser.parse_args()
+    OLED = OLED_Display()
+    OLED.Pin_SetUp()
+except:
+    print("Error Initializing")
+    exit()
 
-    AQ = inclusion.AQual
-    CO = inclusion.CO2
-    AT = inclusion.Atmos
-    uv = inclusion.UV
-    SI = inclusion.Si
-    CSI = inclusion.CsI
-    config = inclusion.Config
+sensor_name = []
+parser = argparse.ArgumentParser()
+parser.add_argument("-AQual", help = "Indicates inclusion of Air Quality Sensor.", action = "store_true")
+parser.add_argument("-CO2", help = "Indicates inclusion of CO2 Sensor.", action = "store_true")
+parser.add_argument("-Atmos", help = "Indicates inclusion of Atmosphere Sensor.", action = "store_true")
+parser.add_argument("-UV", help = "Indicates inclusion of U.V. Sensor.", action = "store_true")
+parser.add_argument("-Si", help = "Indicates inclusion of Si Radiation Sensor.", action = "store_true")
+parser.add_argument("-CsI", help = "Indicates inclusion of CsI Radiation Sensor.", action = "store_true")
+inclusion = parser.parse_args()
 
-    if config == True:
-        results = open("config.txt").readlines()
-        for line in results:
-            sensor_name = line.split(",")
-        if "\n" in sensor_name[len(sensor_name)-1]:
-            sensor_name[len(sensor_name)-1] = sensor_name[len(sensor_name)-1].strip("\n")
+AQ = inclusion.AQual
+CO = inclusion.CO2
+AT = inclusion.Atmos
+uv = inclusion.UV
+SI = inclusion.Si
+CSI = inclusion.CsI
 
-    else:
-        if AQ == True:
-            sensor_name.append("Air Quality Sensor")
-        if CO == True:
-            sensor_name.append("CO2 Sensor")
-        if AT == True:
-            sensor_name.append("Atmosphere Sensor")
-        if uv == True:
-            sensor_name.append("U.V. Sensor")
-        if SI == True:
-            sensor_name.append("Si Sensor")
-        if CSI == True:
-            sensor_name.append("CsI Sensor")
-        if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
-            parser.print_help()
-            exit()
 
+if AQ == True:
+    sensor_name.append("Air Quality Sensor")
+if CO == True:
+    sensor_name.append("CO2 Sensor")
+if AT == True:
+    sensor_name.append("Atmosphere Sensor")
+if uv == True:
+    sensor_name.append("U.V. Sensor")
+if SI == True:
+    sensor_name.append("Si Sensor")
+if CSI == True:
+    sensor_name.append("CsI Sensor")
+if AQ == False and CO == False and AT == False and uv == False and SI == False and CSI == False:
+    parser.print_help()
+    exit()
+
+print("OLED Display Print: \n")
+
+for i in range(len(sensor_name)):
     try:
-        OLED = OLED_Display()
-        OLED.Pin_SetUp()
+        OLED.Check_Any(OLED.log_files[sensor_name[i]], sensor_name[i])
     except:
-        print("Error Initializing")
-        exit()
+        print("Error Opening "+sensor_name[i]+" CSV \n")
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,2,sensor_name[i])
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,4,"Error Opening CSV")
+        time.sleep(3)
 
-    print("OLED Display Print: \n")
-
-    #To give sensors time to start running and acquire data
-    print("Starting Up \n")
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Starting Up")
-    time.sleep(3)
-    ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-
-    while True:
-        try:
-            for i in range(len(sensor_name)):
-                OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
-
-        except Exception as Error:
-            if str(Error) == "KeyboardInterrupt":
-                proper_quit()
-
-            else:
-                print("Error: "+str(Error))
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
-                time.sleep(3)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-                exit()
-
-except Exception as Error:
-    if str(Error) == "KeyboardInterrupt":
-        proper_quit()
-
-    else:
-        print("Error: "+str(Error))
+while True:
+    try:
+        for i in range(len(sensor_name)):
+            OLED.Display_Data(OLED.log_files[sensor_name[i]], sensor_name[i])
+    except:
+        print("Error: Exiting")
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(0,3,"Error: Exiting")
         time.sleep(3)

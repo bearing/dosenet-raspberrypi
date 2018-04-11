@@ -119,7 +119,6 @@ class Manager_D3S(object):
             manager=self,
             verbosity=self.v)
 
-
     def z_flag(self):
         """
         Checks if the -z from_argparse is called.
@@ -244,7 +243,6 @@ class Manager_D3S(object):
         done_devices = set()
         try:
             while self.running:
-
                 print("Plot_manager.run: getting data")
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
@@ -258,15 +256,12 @@ class Manager_D3S(object):
                                 (self.lst, [np.array(reading[4])]))
                         serial = reading[0]
                         dev_count = reading[1]
-
                         if serial not in done_devices:
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
-                            
-
                         if dev_count >= self.count > 0:
                             done_devices.add(serial)
                             controller.stop_collector(serial)

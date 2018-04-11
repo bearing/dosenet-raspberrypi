@@ -9,7 +9,10 @@ import csv
 import os
 import subprocess
 import socket
-import kromek
+try:
+    import kromek
+except:
+    print("Not set up to run a D3S, continuing anyway")
 import numpy as np
 import datetime
 from Crypto.Cipher import AES
@@ -23,15 +26,20 @@ from auxiliaries import LED, Config, PublicKey
 from auxiliaries import datetime_from_epoch, set_verbosity
 from sensor import Sensor
 from sender import ServerSender
-from data_handler import Data_Handler
-from data_handler_d3s import Data_Handler_D3S
-from data_handler_aq import Data_Handler_AQ
+from data_handlers import Data_Handler_Pocket
+from data_handlers import Data_Handler_D3S
+from data_handlers import Data_Handler_AQ
+from data_handlers import Data_Handler_CO2
+from data_handlers import Data_Handler_Weather
 
 from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
-from globalvalues import NETWORK_LED_PIN, COUNTS_LED_PIN
-from globalvalues import D3S_LED_PIN
+from globalvalues import NEW_NETWORK_LED_PIN, OLD_NETWORK_LED_PIN
+from globalvalues import NEW_COUNTS_LED_PIN, OLD_COUNTS_LED_PIN
+from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
+from globalvalues import NEW_SENSOR_DISPLAY_TEXT, OLD_SENSOR_DISPLAY_TEXT
+from globalvalues import RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILE
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
@@ -43,22 +51,44 @@ from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
 from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S, DEFAULT_INTERVAL_TEST_D3S, DEFAULT_D3STEST_TIME
 from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
 from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
-from globalvalues import DEFAULT_AQ_PORT, AQ_VARIABLES
-from globalvalues import DEFAULT_LOGFILE_AQ
-from globalvalues import DEFAULT_PROTOCOL
+from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
+from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
+from globalvalues import CO2_VARIABLES
+from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
+try:
+    from globalvalues import DEFAULT_WEATHER_PORT
+except ImportError:
+    pass
+try:
+    from globalvalues import DEFAULT_AQ_PORT
+except ImportError:
+    pass
+try:
+    from globalvalues import DEFAULT_CO2_PORT
+except:
+    pass
+from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
+from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
+from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
+from globalvalues import strf
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
     sys.exit(0)
 
-signal.signal(signal.SIGTERM, signal_term_handler)
+#signal.signal(signal.SIGTERM, signal_term_handler)
 
 def signal_quit_handler(signal, frame):
     # If SIGQUIT signal is intercepted, the SystemExit exception routines
     #   get run if it's right after an interval
     mgr.quit_after_interval = True
+
+def timeout_handler(num, stack):
+    raise Exception("TIMEOUT")
+
+signal.signal(signal.SIGALRM, timeout_handler)
 
 signal.signal(signal.SIGQUIT, signal_quit_handler)
 
@@ -85,6 +115,8 @@ class Base_Manager(object):
                  aeskey=None,
                  sensor_type=None,
                  sensor=None,
+                 sensor_names=SENSOR_NAMES,
+                 data_names=DATA_NAMES,
                  ):
         self.sensor_type = sensor_type
 
@@ -94,6 +126,7 @@ class Base_Manager(object):
         self.a_flag()
         self.d_flag()
         self.make_data_log(self.datalog)
+        self.data_names = data_names
 
         self.test = test
 
@@ -102,6 +135,8 @@ class Base_Manager(object):
 
         self.sender_mode = sender_mode
         self.port = port
+
+        self.sensor_names = sensor_names
 
     def a_flag(self):
         """
@@ -116,6 +151,10 @@ class Base_Manager(object):
             self.datalog = DEFAULT_DATALOG_D3S
         if self.datalogflag and self.sensor_type == 3:
             self.datalog = DEFAULT_DATALOG_AQ
+        if self.datalogflag and self.sensor_type == 4:
+            self.datalog = DEFAULT_DATALOG_CO2
+        if self.datalogflag and self.sensor_type == 5:
+            self.datalog = DEFAULT_DATALOG_WEATHER
 
     def d_flag(self):
         """
@@ -138,17 +177,25 @@ class Base_Manager(object):
             self.vprint(1,
                 "No sensor running, try executing one of the subclasses to get a proper setup.")
             self.takedown()
-        if log and self.sensor_type == 1:
+        if log and self.sensor_type == 1 and logfile == None:
             #If the sensor type is a pocket geiger use the pocket geiger log file
             logfile = DEFAULT_LOGFILE
 
-        if log and self.sensor_type == 2:
+        if log and self.sensor_type == 2 and logfile == None:
             #If the sensor type is a D3S use the D3S log file
             logfile = DEFAULT_LOGFILE_D3S
 
-        if log and self.sensor_type == 3:
+        if log and self.sensor_type == 3 and logfile == None:
             #If the sensor type is an air quality sensor use the air quality log file
             logfile = DEFAULT_LOGFILE_AQ
+
+        if log and self.sensor_type == 4 and logfile == None:
+            #If the sensor type is a CO2 sensor, use the CO2 log file
+            logfile = DEFAULT_LOGFILE_CO2
+
+        if log and self.sensor_type == 5 and logfile == None:
+            #If the sensor type is a weather sensor, use the weather log file
+            logfile = DEFAULT_LOGFILE_WEATHER
 
         if log:
             self.logfile = logfile
@@ -183,6 +230,16 @@ class Base_Manager(object):
                 self.vprint(
                     2, "No interval given, using default for AQ TEST MODE")
                 interval = DEFAULT_INTERVAL_TEST_AQ
+        if self.test and self.sensor_type == 4:
+            if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for CO2 TEST MODE")
+                interval = DEFAULT_INTERVAL_TEST_CO2
+        if self.test and self.sensor_type == 5:
+            if interval is None:
+                self.vprint(
+                    2, "No interval given, using default for WEATHER TEST MODE")
+                interval = DEFAULT_INTERVAL_TEST_WEATHER
 
         if interval is None and self.sensor_type == 1:
             self.vprint(
@@ -196,6 +253,14 @@ class Base_Manager(object):
             self.vprint(
                 2, "No interval given, using interval at 5 minutes")
             interval = DEFAULT_INTERVAL_NORMAL_AQ
+        if interval is None and self.sensor_type == 4:
+            self.vprint(
+                2, "No interval given, using interval at 5 minutes")
+            interval = DEFAULT_INTERVAL_NORMAL_CO2
+        if interval is None and self.sensor_type == 5:
+            self.vprint(
+                2, "No interval given, using interval at 5 minutes")
+            interval = DEFAULT_INTERVAL_NORMAL_WEATHER
 
         if config is None:
             self.vprint(2, "No config file given, " +
@@ -217,6 +282,12 @@ class Base_Manager(object):
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
+                self.int_ID = int(self.config.ID)
+                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                    self.int_ID == 33 or self.int_ID >= 39:
+                    self.new_setup = True
+                else:
+                    self.new_setup = False
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -257,12 +328,19 @@ class Base_Manager(object):
         Main method to run the sensors continuously, the run
         procedure is determined by the sensor_type of the instance.
         """
+        if self.new_setup:
+            self.vprint(
+                    1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
+        else:
+            self.vprint(
+                    1, OLD_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
         this_start, this_end = self.get_interval(time.time())
         if self.sensor_type != 2:
             self.vprint(
-                1, ('Manager is starting to run at {}' +
-                    ' with intervals of {}s').format(
-                    datetime_from_epoch(this_start), self.interval))
+                1, RUNNING_DISPLAY_TEXT.format(
+                    start_time=datetime_from_epoch(this_start).strftime(strf),
+                    date=str(datetime.date.today()),
+                    interval=self.interval))
         self.running = True
 
         if self.sensor_type == 1:
@@ -300,6 +378,8 @@ class Base_Manager(object):
                 self.takedown()
 
         if self.sensor_type == 2:
+            print("Attempting to connect to D3S now")
+
             if self.transport == 'any':
                 devs = kromek.discover()
             else:
@@ -308,12 +388,14 @@ class Base_Manager(object):
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
                 self.d3s_LED.stop_blink()
+                self.d3s_presence = False
                 GPIO.cleanup()
                 return
             else:
                 print ('Discovered %s' % devs)
                 print("D3S device found, checking for data now")
                 self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
+                self.d3s_presence = True
             filtered = []
 
             for dev in devs:
@@ -324,90 +406,106 @@ class Base_Manager(object):
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
                 self.d3s_LED.stop_blink()
+                self.d3s_presence = False
                 GPIO.cleanup()
                 return
+
+            signal.alarm(10)
             # Checks if the RaspberryPi is getting data from the D3S and turns on
             # the red LED if it is. If a D3S is connected but no data is being recieved,
             # it tries a couple times then reboots the RaspberryPi.
-            try:
-                while self.signal_test_attempts < 3 and self.signal_test_connection == False:
-                    test_time = time.time() + self.signal_test_time + 5
-                    while time.time() < test_time and self.signal_test_loop:
-                        with kromek.Controller(devs, self.signal_test_time) as controller:
-                            for reading in controller.read():
-                                if sum(reading[4]) != 0:
-                                    self.d3s_light_switch = True
-                                    self.signal_test_loop = False
-                                    break
-                                else:
-                                    self.signal_test_loop = False
-                                    break
-                    if self.d3s_light_switch:
-                        self.signal_test_connection = True
-                    else:
-                        self.signal_test_attempts += 1
-                        self.signal_test_loop = True
-                        print("Connection to D3S not found, trying another {} times".format(3 - self.signal_test_attempts))
-                if not self.signal_test_connection:
-                    print("No data from D3S found, restarting now")
-                    os.system('sudo reboot')
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.takedown()
+            if self.d3s_presence:
+                try:
+                    test_time_outer = time.time() + self.signal_test_time + 25
+                    while time.time() < test_time_outer:
+                        test_time_inner = time.time() + self.signal_test_time + 5
+                        while time.time() < test_time_inner:
+                            try:
+                                with kromek.Controller(devs, self.signal_test_time) as controller:
+                                    for reading in controller.read():
+                                        if sum(reading[4]) != 0:
+                                            self.d3s_light_switch = True
+                                            signal.alarm(0)
+                                            break
+                                        else:
+                                            break
+                            except Exception as e:
+                                print(e)
+                                print("Data acquisition attempt {} failed".format(self.d3s_data_attempts))
+                                if self.d3s_data_attempts != self.d3s_data_lim:
+                                    signal.alarm(10)
+                                self.d3s_data_attempts += 1
+                        if self.d3s_light_switch:
+                            print("Data from D3S found on attempt {}".format(self.d3s_data_attempts))
+                            break
+                        if self.d3s_data_attempts > self.d3s_data_lim:
+                            print("Failed to find data from D3S {} times".format(self.d3s_data_attempts-1))
+                            print("The D3S is either having data collection issues or is currently off")
+                            self.d3s_presence = False
+                            break
+                except KeyboardInterrupt:
+                    self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                    self.takedown()
+                except SystemExit:
+                    self.vprint(1, '\nSystemExit: taking down Manager')
+                    self.takedown()
 
             if self.d3s_light_switch:
                 self.d3s_LED.stop_blink()
                 print("D3S data connection found, continuing with normal data collection")
                 self.d3s_LED.on()
+            else:
+                self.d3s_LED.stop_blink()
+                print("Turning off light and will try to gather data again at reboot")
+                self.d3s_LED.off()
+                GPIO.cleanup()
+                return
 
-            self.vprint(
-                1, ('Manager is starting to run at {}' +
-                    ' with intervals of {}s').format(
-                    datetime_from_epoch(this_start), self.interval))
+            if self.d3s_presence:
+                self.vprint(
+                    1, RUNNING_DISPLAY_TEXT.format(
+                        start_time=datetime_from_epoch(this_start).strftime(strf),
+                        date=str(datetime.date.today()),
+                        interval=self.interval))
 
-            done_devices = set()
+                done_devices = set()
+                try:
+                    while self.running:
+                        with kromek.Controller(devs, self.interval) as controller:
+                            for reading in controller.read():
+                                if self.create_structures:
+                                    self.total = np.array(reading[4])
+                                    self.lst = np.array([reading[4]])
+                                    self.create_structures = False
+                                else:
+                                    self.total += np.array(reading[4])
+                                    self.lst = np.concatenate(
+                                        (self.lst, [np.array(reading[4])]))
+                                serial = reading[0]
+                                dev_count = reading[1]
+                                if serial not in done_devices:
+                                    this_start, this_end = self.get_interval(
+                                        time.time() - self.interval)
+
+                                    self.handle_data(
+                                        this_start, this_end, reading[4])
+
+                                if dev_count >= self.count > 0:
+                                    done_devices.add(serial)
+                                    controller.stop_collector(serial)
+                                if len(done_devices) >= len(devs):
+                                    break
+                except KeyboardInterrupt:
+                    self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+                    self.takedown()
+                except SystemExit:
+                    self.vprint(1, '\nSystemExit: taking down Manager')
+                    self.takedown()
+
+        if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             try:
                 while self.running:
-                    with kromek.Controller(devs, self.interval) as controller:
-                        for reading in controller.read():
-                            if self.create_structures:
-                                self.total = np.array(reading[4])
-                                self.lst = np.array([reading[4]])
-                                self.create_structures = False
-                            else:
-                                self.total += np.array(reading[4])
-                                self.lst = np.concatenate(
-                                    (self.lst, [np.array(reading[4])]))
-                            serial = reading[0]
-                            dev_count = reading[1]
-                            if serial not in done_devices:
-                                this_start, this_end = self.get_interval(
-                                    time.time() - self.interval)
-
-                                self.handle_data(
-                                    this_start, this_end, reading[4])
-
-                            if dev_count >= self.count > 0:
-                                done_devices.add(serial)
-                                controller.stop_collector(serial)
-                            if len(done_devices) >= len(devs):
-                                break
-            except KeyboardInterrupt:
-                self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
-                self.takedown()
-            except SystemExit:
-                self.vprint(1, '\nSystemExit: taking down Manager')
-                self.takedown()
-
-        if self.sensor_type == 3:
-            try:
-                while self.running:
-
                     self.handle_data(this_start, this_end, None)
-
                     this_start, this_end = self.get_interval(this_end)
             except KeyboardInterrupt:
                 self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
@@ -448,13 +546,13 @@ class Base_Manager(object):
                     f.write('{0}, '.format(spectra))
                     self.vprint(
                         2, 'Writing spectra to data log at {}'.format(file))
-        if self.sensor_type == 3:
+        if self.sensor_type == 3 or self.sensor_type == 4 or self.sensor_type == 5:
             average_data = kwargs.get('average_data')
             if self.datalogflag:
                 with open(file, 'a') as f:
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
-                    self.vprint(2, 'Writing average air quality data to data log at {}'.format(file))
+                    self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -465,11 +563,13 @@ class Base_Manager(object):
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
             self.data_handler.main(
-                self.datalog, cpm, cpm_err, this_start, this_end, counts)
+                self.datalog, this_start, this_end,
+                cpm=cpm, cpm_err=cpm_err, counts=counts)
 
         if self.sensor_type == 2:
             self.data_handler.main(
-                self.datalog, self.calibrationlog, spectra, this_start, this_end)
+                self.datalog, this_start, this_end,
+                calibrationlog=self.calibrationlog, spectra=spectra)
 
         if self.sensor_type == 3:
             aq_data_set = []
@@ -483,21 +583,74 @@ class Base_Manager(object):
                     if summation == checkbyte:
                         current_second_data = []
                         buf = buffer[1:32]
-                        current_second_data.append(datetime.datetime.now())
                         for n in range(1,4):
                             current_second_data.append(repr(((buf[(2*n)+1]<<8) + buf[(2*n)+2])))
                         for n in range(1,7):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
+                        current_second_data = ['%.2f' % i for i in list(map(float, current_second_data))]
+                        current_second_data.insert(0,datetime.datetime.now())
                         aq_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(aq_data_set)):
                     c_data.append(aq_data_set[i][c+1])
-                c_data_int = list(map(int, c_data))
-                avg_c = sum(c_data_int)/len(c_data_int)
+                c_data_int = list(map(float, c_data))
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
             self.data_handler.main(
-                self.datalog, average_data, this_start, this_end)
+                self.datalog, this_start, this_end, average_data=average_data)
+
+        if self.sensor_type == 4:
+            co2_data_set = []
+            average_data = []
+            while time.time() < this_end:
+                date_time = datetime.datetime.now()
+                this_instant_data = []
+                values = [0]*8
+                for i in range(8):
+                    values[i] = self.CO2_port.read_adc(i)
+                conc = 5000/496*values[0] - 1250
+                uv_index = values[7]
+                this_instant_data.append(date_time)
+                this_instant_data.append(float('%.2f'%conc))
+                this_instant_data.append(float('%.2f'%uv_index))
+                co2_data_set.append(this_instant_data)
+            for c in range(len(self.variables)):
+                c_data = []
+                for i in range(len(co2_data_set)):
+                    c_data.append(co2_data_set[i][c+1])
+                c_data_int = list(map(float, c_data))
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
+                average_data.append(avg_c)
+            self.data_handler.main(
+                self.datalog, this_start, this_end, average_data=average_data)
+
+        if self.sensor_type == 5:
+            weather_data_set = []
+            average_data = []
+            while time.time() < this_end:
+                date_time = datetime.datetime.now()
+                this_instant_data = []
+                temp = self.Weather_Port.read_temperature()
+                press = self.Weather_Port.read_pressure() / 100
+                humid = self.Weather_Port.read_humidity()
+                this_instant_data.append(date_time)
+                this_instant_data.append(float('%.2f'%temp))
+                this_instant_data.append(float('%.2f'%press))
+                this_instant_data.append(float('%.2f'%humid))
+                weather_data_set.append(this_instant_data)
+            for c in range(len(self.variables)):
+                c_data = []
+                for i in range(len(weather_data_set)):
+                    c_data.append(weather_data_set[i][c+1])
+                c_data_int = list(map(float, c_data))
+                avg_f = sum(c_data_int)/len(c_data_int)
+                avg_c = float('%.2f'%avg_f)
+                average_data.append(avg_c)
+            self.data_handler.main(
+                self.datalog, this_start, this_end, average_data=average_data)
 
     def takedown(self):
         """
@@ -535,22 +688,31 @@ class Manager_Pocket(Base_Manager):
     pocket geiger sensor.
     """
     def __init__(self,
-                 counts_LED_pin=COUNTS_LED_PIN,
-                 network_LED_pin=NETWORK_LED_PIN,
+                 counts_LED_pin=None,
+                 network_LED_pin=None,
                  noise_pin=NOISE_PIN,
                  signal_pin=SIGNAL_PIN,
-                 protocol=DEFAULT_PROTOCOL,
                  **kwargs):
 
         super(Manager_Pocket, self).__init__(sensor_type=1, **kwargs)
 
         self.quit_after_interval = False
 
-        self.protocol = protocol
-
         if RPI:
-            self.counts_LED = LED(counts_LED_pin)
-            self.network_LED = LED(network_LED_pin)
+            if counts_LED_pin == None:
+                if self.new_setup:
+                    self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+                else:
+                    self.counts_LED = LED(OLD_COUNTS_LED_PIN)
+            else:
+                self.counts_LED = LED(counts_LED_pin)
+            if network_LED_pin == None:
+                if self.new_setup:
+                    self.network_LED = LED(NEW_NETWORK_LED_PIN)
+                else:
+                    self.network_LED = LED(OLD_NETWORK_LED_PIN)
+            else:
+                self.network_LED = LED(network_LED_pin)
         else:
             self.counts_LED = None
             self.network_LED = None
@@ -559,7 +721,7 @@ class Manager_Pocket(Base_Manager):
             counts_LED=self.counts_LED,
             verbosity=self.v,
             logfile=self.logfile)
-        self.data_handler = Data_Handler(
+        self.data_handler = Data_Handler_Pocket(
             manager=self,
             verbosity=self.v,
             logfile=self.logfile,
@@ -653,7 +815,7 @@ class Manager_D3S(Base_Manager):
                  calibrationlogflag=False,
                  calibrationlogtime=None,
                  count=0,
-                 d3s_LED_pin=D3S_LED_PIN,
+                 d3s_LED_pin=None,
                  d3s_LED_blink=True,
                  d3s_LED_blink_period_1=D3S_LED_BLINK_PERIOD_INITIAL,
                  d3s_LED_blink_period_2=D3S_LED_BLINK_PERIOD_DEVICE_FOUND,
@@ -661,11 +823,11 @@ class Manager_D3S(Base_Manager):
                  device='all',
                  log_bytes=False,
                  running=False,
-                 signal_test_attempts=0,
-                 signal_test_connection=False,
-                 signal_test_loop=True,
                  signal_test_time=DEFAULT_D3STEST_TIME,
-                 transport='any',
+                 transport='usb',
+                 d3s_presence=None,
+                 d3s_data_attempts=1,
+                 d3s_data_lim=3,
                  **kwargs):
 
         super(Manager_D3S, self).__init__(sensor_type=2, **kwargs)
@@ -693,18 +855,24 @@ class Manager_D3S(Base_Manager):
         self.make_calibration_log(self.calibrationlog)
 
         self.signal_test_time = signal_test_time
-        self.signal_test_loop = signal_test_loop
-        self.signal_test_connection = signal_test_connection
-        self.signal_test_attempts = signal_test_attempts
+        self.d3s_presence = d3s_presence
+        self.d3s_data_attempts = d3s_data_attempts
+        self.d3s_data_lim = d3s_data_lim
 
-        self.d3s_LED = LED(d3s_LED_pin)
+        if d3s_LED_pin == None:
+            if self.new_setup:
+                self.d3s_LED = LED(NEW_D3S_LED_PIN)
+            else:
+                self.d3s_LED = LED(OLD_D3S_LED_PIN)
+        else:
+            self.d3s_LED = LED(d3s_LED_pin)
+
         self.d3s_light_switch = d3s_light_switch
         self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
         self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
         self.d3s_LED_blink = d3s_LED_blink
 
         if d3s_LED_blink:
-            print("Attempting to connect to D3S now")
             self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
         if d3s_light_switch:
             self.d3s_LED.on()
@@ -777,7 +945,7 @@ class Manager_AQ(Base_Manager):
     Air Quality sensor.
     """
     def __init__(self,
-                 AQ_port=DEFAULT_AQ_PORT,
+                 AQ_port=None,
                  variables=AQ_VARIABLES,
                  **kwargs):
 
@@ -785,7 +953,10 @@ class Manager_AQ(Base_Manager):
 
         super(Manager_AQ, self).__init__(sensor_type=3, **kwargs)
 
-        self.AQ_port = AQ_port
+        if not AQ_port:
+            self.AQ_port = DEFAULT_AQ_PORT
+        else:
+            self.AQ_port = AQ_port
 
         self.data_handler = Data_Handler_AQ(
             manager=self,
@@ -801,16 +972,74 @@ class Manager_AQ(Base_Manager):
 
         self.data_handler.backlog_to_queue()
 
-    @classmethod
-    def from_argparse(cls):
-        super_dict = Base_Manager.from_argparse()
-        parser = argparse.ArgumentParser()
-        args = parser.parse_args()
-        arg_dict = vars(args)
-        arg_dict.update(super_dict)
-        mgr = Manager_AQ(**arg_dict)
+class Manager_CO2(Base_Manager):
+    """
+    The subclass that uses the main Manager class and initializes the
+    CO2 sensor.
+    """
+    def __init__(self,
+                 CO2_port=None,
+                 variables=CO2_VARIABLES,
+                 **kwargs):
 
-        return mgr
+        self.variables = variables
+
+        super(Manager_CO2, self).__init__(sensor_type=4, **kwargs)
+
+        if not CO2_port:
+            self.CO2_port = DEFAULT_CO2_PORT
+        else:
+            self.CO2_port = CO2_port
+
+        self.data_handler = Data_Handler_CO2(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile,
+            variables=self.variables)
+        self.sender = ServerSender(
+            manager=self,
+            mode=self.sender_mode,
+            port=self.port,
+            verbosity=self.v,
+            logfile=self.logfile)
+
+        self.data_handler.backlog_to_queue()
+
+class Manager_Weather(Base_Manager):
+    """
+    The subclass that uses the main Manager class and initializes the
+    weather sensor.
+    """
+    def __init__(self,
+                 Weather_Port=None,
+                 variables=WEATHER_VARIABLES,
+                 variables_units=WEATHER_VARIABLES_UNITS,
+                 **kwargs):
+
+        self.variables = variables
+        self.variables_units = variables_units
+
+        super(Manager_Weather, self).__init__(sensor_type=5, **kwargs)
+
+        if not Weather_Port:
+            self.Weather_Port = DEFAULT_WEATHER_PORT
+        else:
+            self.Weather_Port = Weather_Port
+
+        self.data_handler = Data_Handler_Weather(
+            manager=self,
+            verbosity=self.v,
+            logfile=self.logfile,
+            variables=self.variables,
+            variables_units=self.variables_units)
+        self.sender = ServerSender(
+            manager=self,
+            mode=self.sender_mode,
+            port=self.port,
+            verbosity=self.v,
+            logfile=self.logfile)
+
+        self.data_handler.backlog_to_queue()
 
 class SleepError(Exception):
     pass
@@ -820,9 +1049,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--sensor', '-s', type=int, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
-        '\n3 = The Air Quality Sensor')
-    sensor_tuple = parser.parse_known_args()
-    sensor = sensor_tuple[0].sensor
+        '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
+    sensor = parser.parse_known_args()[0].sensor
 
     #Generic Manager control variables.
     parser.add_argument(
@@ -859,7 +1087,7 @@ if __name__ == '__main__':
         help='Enable logging local data (default off)')
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
-        choices=['udp', 'tcp', 'UDP', 'TCP'],
+        choices=['udp', 'tcp', 'UDP', 'TCP', 'udp_test', 'tcp_test'],
         help='The network protocol used in sending data ' +
         '(default {})'.format(DEFAULT_SENDER_MODE))
     parser.add_argument(
@@ -870,13 +1098,11 @@ if __name__ == '__main__':
     if sensor == 1:
         #Pocket Geiger specific variables.
         parser.add_argument(
-            '--counts_LED_pin', '-o', default=COUNTS_LED_PIN,
-            help='Specify which pin the counts LED is connected to ' +
-            '(default {})'.format(COUNTS_LED_PIN))
+            '--counts_LED_pin', '-o', default=None,
+            help='Specify which pin the counts LED is connected to.')
         parser.add_argument(
-            '--network_LED_pin', '-e', default=NETWORK_LED_PIN,
-            help='Specify which pin the network LED is connected to ' +
-            '(default {})'.format(NETWORK_LED_PIN))
+            '--network_LED_pin', '-e', default=None,
+            help='Specify which pin the network LED is connected to.')
         parser.add_argument(
             '--noise_pin', '-n', default=NOISE_PIN,
             help='Specify which pin to the noise reader is connected to ' +
@@ -885,10 +1111,6 @@ if __name__ == '__main__':
             '--signal_pin', '-u', default=SIGNAL_PIN,
             help='Specify which pin the signal is coming in from ' +
             '(default {})'.format(SIGNAL_PIN))
-        parser.add_argument(
-            '--protocol', '-r', default=DEFAULT_PROTOCOL,
-            help='Specify what communication protocol is to be used ' +
-            '(default {})'.format(DEFAULT_PROTOCOL))
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -923,9 +1145,8 @@ if __name__ == '__main__':
             '(default 10 minutes)')
         parser.add_argument('--count', '-0', dest='count', default=0)
         parser.add_argument(
-            '--d3s_LED_pin', '-3', default=D3S_LED_PIN,
-            help='Specify which pin the D3S LED is connected to ' +
-            '(default {})'.format(D3S_LED_PIN))
+            '--d3s_LED_pin', '-3', default=None,
+            help='Specify which pin the D3S LED is connected to.')
         parser.add_argument(
             '--d3s_LED_blink', '-b', default=True,
             help='Decides whether to blink the d3s LED when looking for the device ' +
@@ -947,7 +1168,7 @@ if __name__ == '__main__':
         parser.add_argument(
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
-        parser.add_argument('--transport', '-n', default='any')
+        parser.add_argument('--transport', '-n', default='usb')
         #Put these last in each subclass argparse
         #These specify the default datalog/logfile for which
         #the help is unique to each sensor
@@ -991,8 +1212,59 @@ if __name__ == '__main__':
 
         mgr = Manager_AQ(**arg_dict)
 
+    if sensor == 4:
+        #CO2 Sensor specific variables.
+        parser.add_argument(
+            '--CO2_port', '-a', default=DEFAULT_CO2_PORT,
+            help='Specify which port the CO2 sensor is sending ' +
+            'data through \n[Note this is an Adafruit MCP port so be sure ' +
+            'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
+        #Put these last in each subclass argparse
+        #These specify the default datalog/logfile for which
+        #the help is unique to each sensor
+        parser.add_argument(
+            '--logfile', '-l', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE_CO2))
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG_CO2))
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        del arg_dict['sensor']
+
+        mgr = Manager_CO2(**arg_dict)
+
+    if sensor == 5:
+        #CO2 Sensor specific variables.
+        parser.add_argument(
+            '--Weather_Port', '-a', default=DEFAULT_WEATHER_PORT,
+            help='Specify which port the Weather sensor is sending ' +
+            'data through \n[Note this is an I2C port so be sure ' +
+            'to use that notation] (default {})'.format(DEFAULT_WEATHER_PORT))
+        #Put these last in each subclass argparse
+        #These specify the default datalog/logfile for which
+        #the help is unique to each sensor
+        parser.add_argument(
+            '--logfile', '-l', type=str, default=None,
+            help='Specify file for logging (default {})'.format(
+                DEFAULT_LOGFILE_WEATHER))
+        parser.add_argument(
+            '--datalog', '-d', default=None,
+            help='Specify a path for the datalog (default {})'.format(
+                DEFAULT_DATALOG_WEATHER))
+
+        args = parser.parse_args()
+        arg_dict = vars(args)
+        del arg_dict['sensor']
+
+        mgr = Manager_Weather(**arg_dict)
+
     try:
         mgr.run()
+
     except:
         if mgr.logfile:
             # print exception info to logfile

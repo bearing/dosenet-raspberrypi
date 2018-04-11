@@ -6,7 +6,7 @@ import datetime
 from matplotlib.dates import DateFormatter
 import numpy as np
 
-user_file = input("File Name: ")
+user_file = input("What CO2 concentration test result file do you want to graph? (Put quotation marks around the file name.) File Name: ")
 
 results = csv.reader(open(user_file), delimiter=',')
 times = []

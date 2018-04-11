@@ -40,7 +40,6 @@ for r in results:
         humidity_list.append(float(r[3]))
         
     row_counter+=1
-
         
 start1 = datetime.datetime(2017, 8, 2, 10, 00, 00) 
 stop1 = datetime.datetime(2017, 8, 3, 00, 00, 00)
@@ -91,7 +90,6 @@ for i in range(nsum_data):
     merge_times.append(itime)
 
 
-    
 fig=plt.figure()
 ax=fig.add_subplot(111)   
 plt.plot(merge_times, temp_ave, "b.")
@@ -102,7 +100,6 @@ plt.ylabel("Temperature(C)")
 fig.autofmt_xdate()
 ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
 
-
 fig=plt.figure()
 ax=fig.add_subplot(111)
 plt.plot(merge_times, pressure_ave,"g." )
@@ -112,7 +109,6 @@ plt.xlabel("Time(s)")
 plt.ylabel("Pressure(hPa)")
 fig.autofmt_xdate()
 ax.xaxis.set_major_formatter(DateFormatter('%d-%m-%y %H:%M:%S'))
-
 
 fig=plt.figure()
 ax=fig.add_subplot(111)

@@ -49,7 +49,6 @@ class air_quality_DAQ(object):
         self.port = None
         self.first_data = True
         self.last_time = None
-
             
     def close(self,plot_id):
         plt.close(plot_id)
@@ -103,7 +102,6 @@ class air_quality_DAQ(object):
             print('#Particles, diameter over 10  um = {}'.format(P100))
 			'''
 
-
             self.merge_test = False
             self.add_data(self.PM01_queue,self.PM01_list,int(PM01Val),self.PM01_error)
             self.add_data(self.PM25_queue,self.PM25_list,int(PM25Val),self.PM25_error)
@@ -127,7 +125,6 @@ class air_quality_DAQ(object):
                 self.P50_list=[]
                 self.P100_list=[]
                 self.time_list=[]
-
 
             if self.first_data and len(self.PM01_queue) != 0:
                 for i in range(len(self.PM01_queue)):
@@ -269,7 +266,6 @@ class air_quality_DAQ(object):
         fig.show()
         plt.pause(0.0005)
         
-    
 
 
 

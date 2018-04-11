@@ -1,53 +1,29 @@
 #! /bin/sh
-# /etc/init.d/dosenet.sh
-### BEGIN INIT INFO
-# Provides: dosenet
-# Required-Start: $all
-# Required-Stop: $all
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
-# X-Interactive: false
-# Short-Description: DoseNet - sends data for the DoseNet project
-### END INIT INFO
 
-# setup paths and check config files
 HOME=/home/pi
 DOSENET=$HOME/dosenet-raspberrypi
-CONFIGDIR=$HOME/config
 LOGTAG=dosenet
-
-CONFIGFILE=$CONFIGDIR/config.csv
-PUBLICKEY=$CONFIGDIR/id_rsa_lbl.pub
-# if either file is missing, in normal mode, let manager.py raise the IOError
+LOG=/tmp/manager.log
 
 case "$1" in
   start)
     logger --stderr --id --tag $LOGTAG "Starting DoseNet script"
-    # -dm runs screen in background. doesn't work without it on Raspbian Jesse.
-    sudo screen -dm python $DOSENET/manager.py
+    echo "Starting pocket Geiger script" > $LOG
+    sudo -E python $DOSENET/managers.py --sensor 1 --log --logfile $LOG >>$LOG 2>&1
+    echo "Finished pocket Geiger script" >> $LOG
+    ;;
+  test)
+    logger --stderr --id --tag $LOGTAG "Starting DoseNet script in test mode"
+    echo "Starting pocket Geiger script in test mode" > $LOG
+    sudo -E python $DOSENET/managers.py --sensor 1 --interval 30 --verbosity 3 --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     logger --stderr --id --tag $LOGTAG "Stopping DoseNet script"
-    sudo killall python &
+    echo "Stopping pocket Geiger script" >> $LOG
+    sudo pkill -SIGQUIT -f managers.py
     ;;
-  finish)
-    sudo kill -s SIGQUIT
-    ;;
-  test)
-    logger --stderr --id --tag $LOGTAG "Testing DoseNet script"
-    # allow testing without configfile and/or publickey
-    if [ -f $CONFIGFILE ]; then
-      if [ -f $PUBLICKEY ]; then
-        sudo python $DOSENET/manager.py -c $CONFIGFILE -k $PUBLICKEY --test
-      else
-        sudo python $DOSENET/manager.py -c $CONFIGFILE --test
-      fi
-    else
-      sudo python $DOSENET/manager.py --test
-    fi
-    ;;
-  *)
-    echo "Usage: /etc/init.d/dosenet {start|test|stop}"
+ *)
+    echo "Usage: /home/pi/dosenet-raspberrypi/pocket.sh {start|test|stop}"
     exit 1
     ;;
 esac

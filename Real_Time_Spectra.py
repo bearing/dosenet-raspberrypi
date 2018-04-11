@@ -434,4 +434,3 @@ class Real_Time_Spectra(object):
         plt.pause(0.0005)
 
         # plt.close()
-
