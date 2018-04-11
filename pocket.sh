@@ -10,6 +10,11 @@ case "$1" in
     echo "Starting pocket Geiger script" > $LOG
     sudo -E python $DOSENET/managers.py --sensor 1 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished pocket Geiger script" >> $LOG
+    exit 0
+    ;;
+  test)
+    echo "Starting pocket Geiger script in test mode" > $LOG
+    sudo python $DOSENET/managers.py --sensor 1 --test --datalogflag --logfile $LOG >> $LOG 2>&1
     ;;
   test)
     echo "Starting pocket Geiger script in test mode" > $LOG
@@ -24,5 +29,3 @@ case "$1" in
     exit 1
     ;;
 esac
-
-exit 0

@@ -13,9 +13,14 @@ info = parser.parse_args()
 run_time = info.runtime
 counter_time= int(time.time())
 
+sys.stdout.flush()
 
 # Open CSV file to save results
 sys.stdout.flush()
+#Open CSV file to log results
+logfilename = "air_quality_test_results.csv"
+log_results = open(logfilename, "wb+", 0)
+
 #Open CSV file to log results
 logfilename = "air_quality_test_results.csv"
 log_results = open(logfilename, "wb+", 0)

@@ -9,31 +9,23 @@ import kromek
 import numpy as np
 import signal
 import sys
-from Crypto.Cipher import AES
-from collections import deque
-import matplotlib.pyplot as plt
 
-from auxiliaries import Config, PublicKey, LED, set_verbosity
-from globalvalues import POWER_LED_PIN, NETWORK_LED_PIN
-from auxiliaries import datetime_from_epoch, set_verbosity
+from auxiliaries import set_verbosity
 #from sender import ServerSender
 from data_handler_d3s import Data_Handler_D3S
 from Real_Time_Spectra import Real_Time_Spectra
+# import spectra_fitter
 
-from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
-from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_DATALOG_D3S
-from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S
-from globalvalues import DEFAULT_INTERVAL_TEST_D3S
-
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
     #   get run
-    print 'Got Sigterm!'
+
+    print('Got Sigterm!')
+
     sys.exit(0)
 
 signal.signal(signal.SIGTERM, signal_term_handler)
@@ -48,9 +40,10 @@ class Manager_D3S(object):
     """
 
     def __init__(self,
-                 interval=None,
+                 interval=5,
+                 maxspectra=20,
                  count=0,
-                 transport='any',
+                 transport='usb',
                  device='all',
                  log_bytes=False,
                  verbosity=None,
@@ -73,6 +66,8 @@ class Manager_D3S(object):
         self.create_structures = True
 
         self.interval = interval
+        self.maxspectra = maxspectra
+
         self.count = count
 
         self.config = None
@@ -118,13 +113,11 @@ class Manager_D3S(object):
         # DEFAULT_UDP_PORT and DEFAULT_TCP_PORT are assigned in sender
 
         self.data_handler.backlog_to_queue()
-        
-        if self.plot:
-            print('creating plotter')
-            self.rt_plot = Real_Time_Spectra(
-                manager=self, 
-                verbosity=self.v)
-            self.wqueue = []
+
+        print('creating plotter')
+        self.rt_plot = Real_Time_Spectra(
+            manager=self,
+            verbosity=self.v)
 
     def z_flag(self):
         """
@@ -216,9 +209,10 @@ class Manager_D3S(object):
                 2, "No interval given, using interval at 30 seconds")
             interval = DEFAULT_INTERVAL_NORMAL_D3S
 
-        self.interval = interval
+        self.interval = int(interval)
 
-       
+    def close(self, plot_id):
+        self.rt_plot.close(plot_id)
 
     def run(self):
         """
@@ -230,7 +224,9 @@ class Manager_D3S(object):
             devs = kromek.discover()
         else:
             devs = kromek.discover(self.transport)
-        print 'Discovered %s' % devs
+
+        print('Discovered %s' % devs)
+
         if len(devs) <= 0:
             return
 
@@ -247,6 +243,7 @@ class Manager_D3S(object):
         done_devices = set()
         try:
             while self.running:
+                print("Plot_manager.run: getting data")
                 with kromek.Controller(devs, self.interval) as controller:
                     for reading in controller.read():
                         if self.create_structures:
@@ -308,13 +305,44 @@ class Manager_D3S(object):
                 self.vprint(1, 'Calibration Complete')
                 self.takedown()
 
+    def plot_waterfall(self, plot_id):
+        """Wrapper around waterfall plotter in Real_Time_Spectra class"""
+        self.rt_plot.plot_waterfall(plot_id)
+        
+    def plot_spectrum(self,plot_id):
+        """Wrapper around spectrum plotter in Real_Time_Spectra class"""
+        self.rt_plot.plot_sum(plot_id)
+
+
+    def plot_fitter(self):
+        """
+        Wrapper around spectrum-fitter data acquisition plotter in
+        spectra_fitter class
+        """
+
+        total_time=self.interval*self.maxspectra
+        times = np.linspace(self.interval,total_time + 1,self.interval)
+        spectra_fitter.main(self.rt_plot.sum_data, times)
+
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to server.
         """
+
+        self.rt_plot.add_data(self.rt_plot.queue, spectra, self.maxspectra)
+
         if self.plot:
-            self.Real_Time_Spectra.plot_waterfall(spectra)
-            self.Real_Time_Spectra.plot_sum(spectra)
+
+            '''
+            Plot the data.
+            '''
+            self.plot_waterfall(1)
+            self.plot_spectrum(2)
+            # self.plot_fitter()
+
+            '''
+            Uncomment 3 lines below to plot the spectra fitter plots.
+            '''
         else:
             self.data_handler.main(
                 self.datalog, self.calibrationlog, spectra, this_start, this_end)
@@ -328,19 +356,21 @@ class Manager_D3S(object):
         self.running = False
         self.data_handler.send_all_to_backlog()
 
+        
         del(self)
-
+        
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
         parser.add_argument('--datalog', '-d', default=None)
         parser.add_argument(
-            '--datalogflag', '-a', action='store_true', default=False)
+            '--datalogflag', '-a', action='store_true', default=True)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
-        parser.add_argument('--test', '-t', action='store_true', default=False)
-        parser.add_argument('--transport', '-n', default='any')
-        parser.add_argument('--interval', '-i', type=int, default=None)
-        parser.add_argument('--count', '-0', dest='count', default=0)
+        parser.add_argument('--test', '-t', action='store_true', default=None)
+        parser.add_argument('--transport', '-n', default= 'usb')
+        parser.add_argument('--interval', '-i', type=int, default=5)
+        parser.add_argument('--maxspectra', '-s', type = int, default=20)
+        parser.add_argument('--count', '-o', dest='count', default=0)
         parser.add_argument('--device', '-e', dest='device', default='all')
         parser.add_argument(
             '--log-bytes', '-b', dest='log_bytes', default=False,
@@ -351,16 +381,18 @@ class Manager_D3S(object):
         parser.add_argument('--calibrationlog', '-y', default=None)
         parser.add_argument(
             '--calibrationlogflag', '-z', action='store_true', default=False)
-        parser.add_argument('--plot', '-p', action = 'store_true', default=True)
-        
+        parser.add_argument('--plot', '-p', action='store_true', default=True)
+
         args = parser.parse_args()
         arg_dict = vars(args)
         mgr = Manager_D3S(**arg_dict)
 
         return mgr
 
-if __name__ == '__main__':
+def main():
+
     mgr = Manager_D3S.from_argparse()
+
     try:
         mgr.run()
     except:
@@ -370,3 +402,10 @@ if __name__ == '__main__':
                 traceback.print_exc(15, f)
         # regardless, re-raise the error which will print to stderr
         raise
+
+if __name__ == '__main__':
+
+    '''
+    Execute the main method with argument parsing enabled.
+    '''
+    main()

@@ -10,6 +10,7 @@ import argparse
 import numpy
 import time
 import datetime
+from matplotlib.dates import DateFormatter
 
 #Given a certain argument, combine results for each size molecule
 parser = argparse.ArgumentParser()
@@ -211,41 +212,18 @@ if int(remainder_P25) != 1:
 else:
     print("1 result has been excluded from the graph.")
 
-#Convert time into epoch seconds
-seconds_times = [time.mktime(t.timetuple()) for t in times]
-
 #Find middle time
 middletimes = []
-for i in range(int(len(seconds_times)/combine_number)):
+for i in range(int(len(times)/combine_number)):
     numberN = int(i*combine_number)
     numberP = int((i*combine_number) + combine_number)
-    time = numpy.array(seconds_times[numberN:numberP])
-    timelength = numpy.where(time)
+    time = times[numberN:numberP]
 
-    #if length of list is even
-    if len(timelength[0])%2 == 0:
-        middle_item1 = len(timelength[0])/2
-        middle_item2 = middle_item1 - 1
-        middletime_sec = (time[middle_item1] + time[middle_item2])/2
-        middletimes.append(middletime_sec)
+    middletimes.append(time[int(len(time)/2)])
 
-    #if length of list is odd
-    elif len(timelength[0])%2 != 0:
-        middle_item = int(len(timelength[0])/2)
-        middletime_sec = time[middle_item]
-        middletimes.append(middletime_sec)
-
-#Convert epoch seconds back into h:m:s
-middletime_final = []
-for i in range(len(middletimes)):
-    t = datetime.datetime.utcfromtimestamp(middletimes[i]/1000)
-    from_zone = dateutil.tz.tzutc()
-    to_zone = dateutil.tz.tzlocal()
-    t = t.replace(tzinfo=from_zone)
-    loc_zone = t.astimezone(to_zone)
-    middletime_final.append(loc_zone)
-
+print(middletimes)
 #Use plot() method to graph particle count vs. time and add legend
+
 plt.figure(figsize = [5,5])
 plt.plot(middletime_final, new_P3, "b.", label='P3')
 plt.plot(middletime_final, new_P5, "g.", label = 'P5')
