@@ -23,6 +23,9 @@ class weather_DAQ(object):
         self.temp_queue=deque()
         self.humid_queue=deque()
         self.press_queue=deque()
+        self.temp_err=deque()
+        self.humid_err=deque()
+        self.press_err=deque()
         self.maxdata=int(maxdata)
         self.n_merge=int(n_merge)
         self.temp_list=[]
@@ -30,7 +33,9 @@ class weather_DAQ(object):
         self.press_list=[]
         self.time_list=[]
         self.merge_test=False
-        
+        self.first_data = True
+        self.last_time = None
+
     def close(self,plot_id):
         plt.close(plot_id)
         
@@ -40,7 +45,7 @@ class weather_DAQ(object):
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         filename = "/home/pi/data/weather_test_results_"+file_time+".csv"
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
-        metadata=["Time", "Temp (C)","Pressure (hPa)", "Humidity (%)"]
+        metadata=["Time", "Temp (C)","Temp SD","Pressure (hPa)", "Pressure SD","Humidity (%)","Humidity SD"]
         results.writerow(metadata)
 
     def start(self):
@@ -52,19 +57,56 @@ class weather_DAQ(object):
         humidity = self.sensor.read_humidity()
     
         data=[]
-        data.append(date_time)
-        data.append(degrees)
-        data.append(hectopascals)
-        data.append(humidity)
-    
-        results.writerow(data)
 
         self.merge_test=False
-        self.add_data(self.temp_queue,self.temp_list,degrees)
-        self.add_data(self.humid_queue,self.humid_list,humidity)
-        self.add_data(self.press_queue,self.press_list,hectopascals)
-        self.add_time(self.time_queue, self.time_list, date_time)
-                
+        self.add_data(self.temp_queue,self.temp_err,self.temp_list,degrees)
+        self.add_data(self.humid_queue,self.humid_err,self.humid_list,humidity)
+        self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
+        self.add_time(self.time_queue,self.time_list, date_time)
+        
+        # data.append(date_time)
+        # data.append(degrees)
+        # data.append(hectopascals)
+        # data.append(humidity)
+    
+        # results.writerow(data)         
+
+        if self.first_data and len(self.temp_queue) != 0:
+            for i in range(len(self.temp_queue)):
+                data = []
+                data.append(self.time_queue[i])
+                data.append(self.temp_queue[i])
+                data.append(self.temp_err[i])
+                data.append(self.press_queue[i])
+                data.append(self.press_err[i])
+                data.append(self.humid_queue[i])
+                data.append(self.humid_err[i])
+                results.writerow(data)
+
+            self.last_time = data[0]
+            self.first_data = False
+        elif not self.first_data:
+            try:
+                print(self.last_time)
+                if self.time_queue[-1] != self.last_time:
+                    data = []
+                    data.append(self.time_queue[-1])
+                    data.append(self.temp_queue[-1])
+                    data.append(self.temp_err[-1])
+                    data.append(self.press_queue[-1])
+                    data.append(self.press_err[-1])
+                    data.append(self.humid_queue[-1])
+                    data.append(self.humid_err[-1])
+                    results.writerow(data)
+
+                    self.last_time = self.time_queue[-1]
+                else:
+                    print('duplicated data.')
+            except IndexError:
+                print('No new data being written.')
+        else: 
+            print('No data acquired yet.')
+
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
@@ -72,15 +114,15 @@ class weather_DAQ(object):
         
     def press(self):
         if len(self.time_queue)>0:
-            self.update_plot(3,self.time_queue,self.press_queue,"Time","Pressure(hPa)","Pressure vs. time")
+            self.update_plot(3,self.time_queue,self.press_queue,self.press_err,"Time","Pressure(hPa)","Pressure vs. time")
         
     def temp(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.temp_queue,"Time","Temperature(C)","Temperature vs. time")
+            self.update_plot(1,self.time_queue,self.temp_queue,self.temp_err,"Time","Temperature(C)","Temperature vs. time")
                 
     def humid(self):
         if len(self.time_queue)>0:
-            self.update_plot(2,self.time_queue,self.humid_queue,"Time","Humidity(%)","Humidity vs.time")
+            self.update_plot(2,self.time_queue,self.humid_queue,self.humid_err,"Time","Humidity(%)","Humidity vs.time")
 
 
     def add_time(self, queue, timelist, data):
@@ -97,16 +139,17 @@ class weather_DAQ(object):
             queue.popleft()
         
 
-    def add_data(self, queue, temp_list, data):
+    def add_data(self, queue, queue_err,temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
+            queue_err.append(np.std(np.asarray(temp_list)))
             for i in range(len(temp_list)):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
     
-    def update_plot(self,plot_id,xdata,ydata,xlabel,ylable,title):
+    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
@@ -117,6 +160,7 @@ class weather_DAQ(object):
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
         ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        ax.errorbar(xdata, ydata, yerr=yerr)
         fig.show()
         plt.pause(0.0005)
 

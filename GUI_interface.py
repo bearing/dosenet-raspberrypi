@@ -51,7 +51,11 @@ n_merge.set(option2[2])
 def make_run_gui():
     top1 = Tkinter.Tk()
     top1.geometry('+0+410')
-    global job1
+    # top2 = Tkinter.Tk()
+    # top2.geometry('+0+410')
+    global jobCO2
+    global jobAir
+    global jobWeather
     global jobd3s
     jobd3s = None
     
@@ -72,7 +76,9 @@ def make_run_gui():
 
 
     def start():        
-        global job1
+        global jobCO2
+        global jobAir
+        global jobWeather
         global jobd3s 
         global wdaq
         global adcdaq
@@ -86,16 +92,31 @@ def make_run_gui():
                 print("Error: Failed to start D3S")
         if varWeather.get(): 
             wdaq.start()
+            jobWeather =top1.after(1000,start)
         if varAir.get():
             aqdaq.start()
+            jobAir =top1.after(1000,start)
         if varCO2.get():
             adcdaq.start()                
-        job1=top1.after(int(n_merge.get())*1000,start)
+            jobCO2=top1.after(250,start)
 
     def stop():
+        global jobCO2
+        global jobAir
+        global jobWeather
         global jobd3s
-        global job1
-        top1.after_cancel(job1)
+        global wdaq
+        global adcdaq
+        global aqdaq
+
+        if varWeather.get(): 
+            top1.after_cancel(jobWeather)
+        if varAir.get():
+            aqdaq.close_file()
+            top1.after_cancel(jobAir)
+        if varCO2.get():
+            top1.after_cancel(jobCO2)             
+        
         jobd3s = None
         check_plots(-1)
         if vard3s.get():            
@@ -103,7 +124,7 @@ def make_run_gui():
             if jobd3s is not None:
                 mgrD3S.takedown()
                 print(mgrD3S.running)
-        os.system("pkill -9 -f GUI_interface.py")
+            os.system("pkill -9 -f GUI_interface.py")
 
 
     def press(): 
@@ -147,14 +168,14 @@ def make_run_gui():
         check_plots(5)
         mgrD3S.plot_spectrum(2)
         print("Updating spectra")
-        plot_jobs[5]=top1.after(int(n_merge.get()),D3S_spectra)
+        plot_jobs[5]=top1.after(int(n_merge.get())*1000,D3S_spectra)
         
     def D3S_waterfall():
         global mgrD3S
         global plot_jobs
         check_plots(6)
         mgrD3S.plot_waterfall(1)
-        plot_jobs[6]=top1.after(int(n_merge.get()),D3S_waterfall)
+        plot_jobs[6]=top1.after(int(n_merge.get())*1000,D3S_waterfall)
 
 
     startButton1 = Tkinter.Button(top1, height=2, width=10, text ="Start", command = start)
@@ -184,7 +205,8 @@ def make_run_gui():
         d3sButton_waterfall = Tkinter.Button(top1, height=2, width=10, text = "D3S Waterfall", command = D3S_waterfall)
         d3sButton_waterfall.grid(row=0, column=8)
 
-    
+    #top2.attributes("-topmost", True)
+    #top2.mainloop()
     top1.attributes("-topmost", True)
     top1.mainloop()
 
@@ -192,17 +214,17 @@ def weather_test():
 
     if varCO2.get(): 
         global adcdaq
-        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), n_merge.get())
+        adcdaq = adc_DAQ.adc_DAQ(maxdata.get(), int(n_merge.get())*4)
         print("create CO2 file")
         adcdaq.create_file()
     if varAir.get(): 
         global aqdaq
-        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), n_merge.get())
+        aqdaq = air_quality_DAQ.air_quality_DAQ(maxdata.get(), int(n_merge.get()))
         print("create Air file")
         aqdaq.create_file()
     if varWeather.get(): 
         global wdaq
-        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), n_merge.get())
+        wdaq = weather_DAQ.weather_DAQ(maxdata.get(), int(n_merge.get()))
         print("create weather file")
         wdaq.create_file()
     if vard3s.get():
