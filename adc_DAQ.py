@@ -96,7 +96,7 @@ class adc_DAQ(object):
                 self.first_data = False
             elif not self.first_data:
                 try:
-                    print(self.last_time)
+                    #print(self.last_time)
                     if self.time_queue[-1] != self.last_time:
                         data = []
                         data.append(self.time_queue[-1])
