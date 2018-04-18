@@ -105,15 +105,15 @@ class adc_DAQ(object):
                         adc_results.writerow(data)
 
                         self.last_time = self.time_queue[-1]
-                    else:
+                    #else:
                         #print('duplicated data.')
-                        continue
+
                 except IndexError:
                     #print('No new data being written.')
                     continue
             else: 
-                #print('No data acquired yet.')
-                continue
+                print('No data acquired yet.')
+
                         
         except Exception as e:
             #print(e)
