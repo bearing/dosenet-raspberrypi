@@ -127,6 +127,7 @@ class adc_DAQ(object):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
         	temp_list = np.asarray(temp_list)
+        	print(temp_list)
         	pre_mean = np.mean(temp_list)
         	pre_sd = np.std(temp_list)
         	while pre_sd/pre_mean > 0.2:
