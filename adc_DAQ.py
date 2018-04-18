@@ -175,10 +175,18 @@ class adc_DAQ(object):
         elif display > 400 and display <= 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
             ax2.set_ylim(400, 600)
+            if sd<50:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-2*sd,mean+2*sd)
 
         elif display > 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
             ax2.set_ylim(550, display+100)
+            if sd<50:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-2*sd,mean+2*sd)
 
 
 
