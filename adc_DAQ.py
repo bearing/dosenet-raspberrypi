@@ -137,7 +137,7 @@ class adc_DAQ(object):
         	pre_mean = np.mean(temp_list)
         	pre_sd = np.std(temp_list)
         	print(pre_mean,pre_sd)
-        	while pre_sd/pre_mean > 0.10:
+        	while pre_sd/pre_mean > 0.07:
         		temp_list = temp_list[np.logical_and(temp_list<(pre_mean+pre_sd), temp_list>(pre_mean-pre_sd))]
         		print(temp_list)
         		pre_mean = np.mean(temp_list)
@@ -172,30 +172,30 @@ class adc_DAQ(object):
         print("Display:{}+/-{}".format(mean,sd))
         if display <= 400:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            if sd<50:
+            if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
-            	ax2.set_ylim(mean-2*sd,mean+2*sd)
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
         elif display > 400 and display <= 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            if sd<50:
+            if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
-            	ax2.set_ylim(mean-2*sd,mean+2*sd)
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
         elif display > 600 and display <= 1000:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
-            if sd<50:
+            if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
-            	ax2.set_ylim(mean-2*sd,mean+2*sd)
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
         elif display > 1000:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            if sd<50:
+            if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
-            	ax2.set_ylim(mean-2*sd,mean+2*sd)
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
 
 
