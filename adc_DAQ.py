@@ -169,7 +169,7 @@ class adc_DAQ(object):
         display = ydata[-1]
         sd = np.std(np.asarray(ydata))
         mean = np.mean(np.asarray(ydata))
-        print("Display:{}".format(mean,sd))
+        print("Display:{}+/-{}".format(mean,sd))
         if display <= 400:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
             if sd<50:
