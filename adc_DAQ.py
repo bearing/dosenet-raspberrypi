@@ -111,8 +111,8 @@ class adc_DAQ(object):
                 except IndexError:
                     #print('No new data being written.')
                     pass
-            else: 
-                print('No data acquired yet.')
+            #else: 
+                #print('No data acquired yet.')
 
                         
         except Exception as e:
