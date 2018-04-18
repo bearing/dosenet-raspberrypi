@@ -32,9 +32,15 @@ class adc_DAQ(object):
         print('N MERGE: {}'.format(n_merge) )
         
     def create_file(self):
+    	import csv
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "/home/pi/data/CO2_test_results_"+file_time+".csv"
+        id_info = []
+        with open ('/home/pi/config/sever_config.csv') as f:
+        	reader = csv.reader(f)
+        	for row in reader:
+        		id_info.append(row)
+        filename = "/home/pi/data/"+"".join(row[1])+"CO2"+file_time+".csv"
         f = open(filename, "ab+")
         adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = []
@@ -120,10 +126,18 @@ class adc_DAQ(object):
     def add_data(self, queue,queue_error, temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
-            queue.append(np.mean(np.asarray(temp_list)))
-            queue_error.append(np.std(np.asarray(temp_list)))
-            print(temp_list)
-            print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
+        	temp_list = np.asarray(temp_list)
+        	pre_mean = np.mean(temp_list)
+        	pre_sd = np.std(temp_list)
+        	while pre_sd/pre_mean > 0.2:
+        		temp_list = temp_list[np.logical_and(temp_list>(pre_mean+pre_sd), temp_list<(pre_mean-pre_sd))]
+        		pre_mean = np.mean(temp_list)
+        		pre_sd = np.std(temp_list)
+
+        	queue.append(np.mean(temp_list))
+        	queue_error.append(np.std(temp_list))
+        # print(temp_list)
+        # print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
             queue.popleft()  
             queue_error.popleft()  
