@@ -57,22 +57,22 @@ class adc_DAQ(object):
         # Read all the ADC channel values in a list.
         values = [0]*8
         try:
-            for i in range(8):
-                # The read_adc function will get the value of the specified channel (0-7).
-                values[i] = self.mcp.read_adc(i)
-            # Print the ADC values.
-            # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
-            #print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
-            concentration = 5000/496*values[0] - 1250
-            print("|{}|\n".format(concentration))
-            # Pause for half a second.
-            uv_index = values[7]
-            results = []
-            results.append(date_time)
-            results.append(concentration)
+            # for i in range(8):
+            #     # The read_adc function will get the value of the specified channel (0-7).
+            #     values[i] = self.mcp.read_adc(i)
+            # # Print the ADC values.
+            # # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
+            # #print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
+            # concentration = 5000/496*values[0] - 1250
+            # print("|{}|\n".format(concentration))
+            # # Pause for half a second.
+            # uv_index = values[7]
+            # results = []
+            # results.append(date_time)
+            # results.append(concentration)
             # results.append(uv_index)
                 
-            adc_results.writerow(results[:])
+            #adc_results.writerow(results[:])
             
             self.merge_test=False
             self.add_data(self.CO2_queue,self.CO2_error,self.CO2_list,concentration)
@@ -89,7 +89,7 @@ class adc_DAQ(object):
                     data.append(self.time_queue[i])
                     data.append(self.CO2_queue[i])
                     data.append(self.CO2_error[i])
-                    results.writerow(data)
+                    adc_results.writerow(data)
 
                 self.last_time = data[0]
                 self.first_data = False
@@ -101,7 +101,7 @@ class adc_DAQ(object):
                         data.append(self.time_queue[-1])
                         data.append(self.CO2_queue[-1])
                         data.append(self.CO2_error[-1])
-                        results.writerow(data)
+                        adc_results.writerow(data)
 
                         self.last_time = self.time_queue[-1]
                     else:
