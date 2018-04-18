@@ -112,7 +112,7 @@ class adc_DAQ(object):
                 print('No data acquired yet.')
                         
         except Exception as e:
-        	print(e)
+            print(e)
             print("CO2 sensor error\n\n")
 
 
