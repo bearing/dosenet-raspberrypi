@@ -110,7 +110,7 @@ class adc_DAQ(object):
 
                 except IndexError:
                     #print('No new data being written.')
-                    continue
+                    pass
             else: 
                 print('No data acquired yet.')
 
@@ -118,7 +118,7 @@ class adc_DAQ(object):
         except Exception as e:
             #print(e)
             #print("CO2 sensor error\n\n")
-            continue
+            pass
 
 
     def plot_CO2(self):
