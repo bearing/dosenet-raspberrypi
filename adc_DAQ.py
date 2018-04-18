@@ -64,7 +64,7 @@ class adc_DAQ(object):
             # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
             #print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
             concentration = 5000/496*values[0] - 1250
-            print("|{}|\n".format(concentration))
+            #print("|{}|\n".format(concentration))
             # Pause for half a second.
             #uv_index = values[7]
             results = []
@@ -133,7 +133,7 @@ class adc_DAQ(object):
         	pre_mean = np.mean(temp_list)
         	pre_sd = np.std(temp_list)
         	print(pre_mean,pre_sd)
-        	while pre_sd/pre_mean > 0.15:
+        	while pre_sd/pre_mean > 0.10:
         		temp_list = temp_list[np.logical_and(temp_list<(pre_mean+pre_sd), temp_list>(pre_mean-pre_sd))]
         		print(temp_list)
         		pre_mean = np.mean(temp_list)
