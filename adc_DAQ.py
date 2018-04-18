@@ -40,7 +40,7 @@ class adc_DAQ(object):
         	reader = csv.reader(f)
         	for row in reader:
         		id_info.append(row)
-        filename = "/home/pi/data/"+"".join(row[1])+"CO2"+file_time+".csv"
+        filename = "/home/pi/data/"+"_".join(row)+"CO2"+file_time+".csv"
         f = open(filename, "ab+")
         adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = []
