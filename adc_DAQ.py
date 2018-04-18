@@ -88,7 +88,7 @@ class adc_DAQ(object):
                     data = []
                     data.append(self.time_queue[i])
                     data.append(self.CO2_queue[i])
-                    data.append(self.CO2_err[i])
+                    data.append(self.CO2_error[i])
                     results.writerow(data)
 
                 self.last_time = data[0]
@@ -100,7 +100,7 @@ class adc_DAQ(object):
                         data = []
                         data.append(self.time_queue[-1])
                         data.append(self.CO2_queue[-1])
-                        data.append(self.CO2_err[-1])
+                        data.append(self.CO2_error[-1])
                         results.writerow(data)
 
                         self.last_time = self.time_queue[-1]
