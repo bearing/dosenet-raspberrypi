@@ -137,6 +137,7 @@ class adc_DAQ(object):
 
         	queue.append(np.mean(temp_list))
         	queue_error.append(np.std(temp_list))
+        	print(queue)
         # print(temp_list)
         # print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
