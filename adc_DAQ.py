@@ -78,7 +78,7 @@ class adc_DAQ(object):
             self.add_data(self.CO2_queue,self.CO2_error,self.CO2_list,concentration)
             #self.add_data(self.UV_queue,self.UV_list,uv_index)
             self.add_time(self.time_queue, self.time_list, date_time)
-            print(self.time_queue[-1])
+            #print(self.time_queue[-1])
                           
             if self.merge_test==True:
                 self.CO2_list=[]
@@ -106,15 +106,19 @@ class adc_DAQ(object):
 
                         self.last_time = self.time_queue[-1]
                     else:
-                        print('duplicated data.')
+                        #print('duplicated data.')
+                        continue
                 except IndexError:
-                    print('No new data being written.')
+                    #print('No new data being written.')
+                    continue
             else: 
-                print('No data acquired yet.')
+                #print('No data acquired yet.')
+                continue
                         
         except Exception as e:
-            print(e)
-            print("CO2 sensor error\n\n")
+            #print(e)
+            #print("CO2 sensor error\n\n")
+            continue
 
 
     def plot_CO2(self):
@@ -165,6 +169,7 @@ class adc_DAQ(object):
         display = ydata[-1]
         sd = np.std(np.asarray(ydata))
         mean = np.mean(np.asarray(ydata))
+        print("Display:{}".format(mean,sd))
         if display <= 400:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
             if sd<50:
@@ -174,15 +179,19 @@ class adc_DAQ(object):
 
         elif display > 400 and display <= 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax2.set_ylim(400, 600)
+            if sd<50:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-2*sd,mean+2*sd)
+        elif display > 600 and display <= 1000:
+            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
             if sd<50:
             	ax2.set_ylim(mean-100,mean+100)
             else:
             	ax2.set_ylim(mean-2*sd,mean+2*sd)
 
-        elif display > 600:
+        elif display > 1000:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax2.set_ylim(550, display+100)
             if sd<50:
             	ax2.set_ylim(mean-100,mean+100)
             else:
