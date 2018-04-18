@@ -131,7 +131,7 @@ class adc_DAQ(object):
         	print(temp_list)
         	pre_mean = np.mean(temp_list)
         	pre_sd = np.std(temp_list)
-        	while pre_sd/pre_mean > 0.2:
+        	while pre_sd/pre_mean > 0.15:
         		temp_list = temp_list[np.logical_and(temp_list<(pre_mean+pre_sd), temp_list>(pre_mean-pre_sd))]
         		print(temp_list)
         		pre_mean = np.mean(temp_list)
@@ -162,15 +162,15 @@ class adc_DAQ(object):
         display = ydata[-1]
         if display <= 400:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            ax2.set_ylim(250,800)
+            ax2.set_ylim(display-100,600)
 
-        elif display > 400 and display <= 1000:
+        elif display > 400 and display <= 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax2.set_ylim(250,800)
+            ax2.set_ylim(400, 600)
 
-        elif display > 1000:
+        elif display > 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax2.set_ylim(250, display+500)
+            ax2.set_ylim(550, display+100)
 
 
 
