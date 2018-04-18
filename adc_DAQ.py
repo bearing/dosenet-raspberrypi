@@ -36,7 +36,7 @@ class adc_DAQ(object):
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         id_info = []
-        with open ('/home/pi/config/sever_config.csv') as f:
+        with open ('/home/pi/config/server_config.csv') as f:
         	reader = csv.reader(f)
         	for row in reader:
         		id_info.append(row)
