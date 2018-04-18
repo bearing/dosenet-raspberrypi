@@ -132,7 +132,8 @@ class adc_DAQ(object):
         	pre_mean = np.mean(temp_list)
         	pre_sd = np.std(temp_list)
         	while pre_sd/pre_mean > 0.2:
-        		temp_list = temp_list[np.logical_and(temp_list>(pre_mean+pre_sd), temp_list<(pre_mean-pre_sd))]
+        		temp_list = temp_list[np.logical_and(temp_list<(pre_mean+pre_sd), temp_list>(pre_mean-pre_sd))]
+        		print(temp_list)
         		pre_mean = np.mean(temp_list)
         		pre_sd = np.std(temp_list)
 
