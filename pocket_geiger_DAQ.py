@@ -149,7 +149,6 @@ class pocket_geiger_DAQ(object):
         ax2.plot(xdata,ydata,"r.-")
         ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
         #fig.autofmt_xdate()
-        ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
         fig.show()
         plt.pause(0.0005)    
