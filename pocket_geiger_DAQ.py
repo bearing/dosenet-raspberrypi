@@ -6,12 +6,12 @@ from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from collections import deque
-import serial
+from sensor import Sensor 
 import sys
 sys.stdout.flush()
 
 
-class adc_DAQ(object):
+class pocket_geiger_DAQ(object):
     def __init__(self, maxdata, n_merge):
         self.time_queue=deque()
         self.n_merge=int(n_merge)
@@ -23,7 +23,7 @@ class adc_DAQ(object):
         self.merge_test=False
         self.first_data = True
         self.last_time = None
-        self.port = None
+        self.sensor = Sensor()
         print('N MERGE: {}'.format(n_merge) )
         
     def create_file(self):
@@ -48,17 +48,12 @@ class adc_DAQ(object):
         global results
         date_time = datetime.datetime.now()    
 
-    
-        # Read all the ADC channel values in a list.
-        values = [0]*8
         try:
-            count = . . .
+            count_cpm,count_err = self.sensor.get_cpm(self.time_list[-2],self.time_list[-1])
             self.merge_test=False
-            self.add_data(self.count_queue,self.count_error,self.count_list,count)
-            #self.add_data(self.UV_queue,self.UV_list,uv_index)
+            self.add_data(self.count_queue,self.count_error,self.count_list, count_cpm)
             self.add_time(self.time_queue, self.time_list, date_time)
-            #print(self.time_queue[-1])
-                          
+
             if self.merge_test==True:
                 self.count_list=[]
                 #self.UV_list=[]
@@ -95,7 +90,7 @@ class adc_DAQ(object):
 
                         
         except Exception as e:
-            #print(e)
+            print(e)
             #print("CO2 sensor error\n\n")
             pass
 
