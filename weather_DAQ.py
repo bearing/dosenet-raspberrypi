@@ -43,6 +43,7 @@ class weather_DAQ(object):
         global results
         self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)        
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+        id_info = []
         with open ('/home/pi/config/server_config.csv') as f:
             reader = csv.reader(f)
             for row in reader:
