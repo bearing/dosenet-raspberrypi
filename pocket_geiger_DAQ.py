@@ -46,10 +46,10 @@ class pocket_geiger_DAQ(object):
 
     def start(self):
         global results
-        date_time = datetime.datetime.now()    
+        date_time = time.time()    
 
         try:
-            count_cpm,count_err = self.sensor.get_cpm(datetime.datetime.now(), datetime.datetime.now()+datetime.timedelta(seconds=int(self.n_merge)))
+            count_cpm,count_err = self.sensor.get_cpm(date_time ,date_time+self.n_merge)
             self.merge_test=False
             self.add_data(self.count_queue,self.count_error,self.count_list, count_cpm)
             self.add_time(self.time_queue, self.time_list, date_time)
