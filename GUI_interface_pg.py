@@ -209,6 +209,7 @@ def weather_test():
         global pgdaq
         pgdaq = pocket_geiger_DAQ.pocket_geiger_DAQ(maxdata.get(), int(n_merge.get()))
         print("create Pocket Geiger file")
+        pgdaq.create_file()
 
     make_run_gui() 
 

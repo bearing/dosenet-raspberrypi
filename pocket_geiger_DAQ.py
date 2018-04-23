@@ -70,7 +70,7 @@ class pocket_geiger_DAQ(object):
                 self.first_data = False
             elif not self.first_data:
                 try:
-                    #print(self.last_time)
+
                     if self.time_queue[-1] != self.last_time:
                         data = []
                         data.append(self.time_queue[-1])
@@ -79,15 +79,10 @@ class pocket_geiger_DAQ(object):
                         results.writerow(data)
 
                         self.last_time = self.time_queue[-1]
-                    #else:
-                        #print('duplicated data.')
 
                 except IndexError:
                     #print('No new data being written.')
                     pass
-            #else: 
-                #print('No data acquired yet.')
-
                         
         except Exception as e:
             print(e)
