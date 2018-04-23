@@ -57,7 +57,12 @@ class air_quality_DAQ(object):
         global results
         global f
         file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "/home/pi/data/air_quality_test_results_"+file_time+".csv"
+        id_info = []
+        with open ('/home/pi/config/server_config.csv') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                id_info.append(row)
+        filename =  "/home/pi/data/"+"_".join(row)+"_air_quality"+file_time+".csv"
         f = open(filename, "ab+")
         results = csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
