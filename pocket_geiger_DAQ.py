@@ -102,12 +102,12 @@ class pocket_geiger_DAQ(object):
     
 
     def add_data(self, queue,queue_error, temp_list, data):
-        datalist.append(data)
-        if len(datalist)>=self.n_merge:
-            queue.append(np.mean(np.asarray(datalist)))
+        temp_list.append(data)
+        if len(temp_list)>=self.n_merge:
+            queue.append(np.mean(np.asarray(temp_list)))
             if queue_error is not None:
-                queue_error.append(np.std(np.asarray(datalist)))
-            datalist = []
+                queue_error.append(np.std(np.asarray(temp_list)))
+            temp_list = []
         if len(queue)>self.maxdata:
             queue.popleft()
 
