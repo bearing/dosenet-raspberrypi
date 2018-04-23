@@ -149,12 +149,12 @@ def make_run_gui():
         aqdaq.pmplot()
         plot_jobs[4]=top1.after(int(n_merge.get())*1000,airquality)
 
-    # def PG():
-    #     global mgrD3S
-    #     global plot_jobs
-    #     check_plots(5)
-    #     pgdaq.plot_pg()
-    #     plot_jobs[5]=top1.after(int(n_merge.get())*1000,PG)
+    def PG():
+        global mgrD3S
+        global plot_jobs
+        check_plots(5)
+        pgdaq.plot_pg()
+        plot_jobs[5]=top1.after(int(n_merge.get())*1000,PG)
         
 
 
@@ -181,7 +181,7 @@ def make_run_gui():
         AirButton.grid(row=0, column=6)
        
     if varPG.get():
-        PGButton = Tkinter.Button(top1, height=2, width=10, text = "Pocket Geiger", command = D3S_spectra )
+        PGButton = Tkinter.Button(top1, height=2, width=10, text = "Pocket Geiger", command = PG )
         PGButton.grid(row=0, column=7)
 
 
