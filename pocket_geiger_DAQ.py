@@ -42,7 +42,7 @@ class pocket_geiger_DAQ(object):
         metadata.append("Date and Time")
         metadata.append("Count Rate")
         #metadata.append("UV")
-        adc_results.writerow(metadata[:])
+        results.writerow(metadata[:])
 
     def start(self):
         global results
