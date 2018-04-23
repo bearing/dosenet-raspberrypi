@@ -40,7 +40,7 @@ class pocket_geiger_DAQ(object):
         results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = []
         metadata.append("Date and Time")
-        metadata.append("Counts")
+        metadata.append("Count Rate")
         #metadata.append("UV")
         adc_results.writerow(metadata[:])
 
