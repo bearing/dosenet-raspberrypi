@@ -95,9 +95,9 @@ class pocket_geiger_DAQ(object):
             pass
 
 
-    # def plot_pg(self):
-    #     if len(self.time_queue)>0:
-    #         self.update_plot(1,self.time_queue,self.count_queue,self.count_error,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
+    def plot_pg(self):
+        if len(self.time_queue)>0:
+            self.update_plot(1,self.time_queue,self.count_queue,self.count_error,"Time","Count Rate (CPM)","Count Rate (CPM) vs. time")    
 
     
 
@@ -111,61 +111,53 @@ class pocket_geiger_DAQ(object):
         if len(queue)>self.maxdata:
             queue.popleft()
 
-    # def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
-    #     plt.ion()
-    #     fig = plt.figure(plot_id)
-    #     plt.clf()
-    #     #ax=fig.add_subplot(111)
+    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
+        plt.ion()
+        fig = plt.figure(plot_id)
+        plt.clf()
+        #ax=fig.add_subplot(111)
 
 
-    #     gs = GridSpec(6,1)
-    #     ax1 = fig.add_subplot(gs[0,:])
-    #     ax2 = fig.add_subplot(gs[1:5,:])
+        gs = GridSpec(6,1)
+        ax1 = fig.add_subplot(gs[0,:])
+        ax2 = fig.add_subplot(gs[1:5,:])
 
 
-    #     ax1.set_axis_off()
-    #     display = ydata[-1]
-    #     sd = np.std(np.asarray(ydata))
-    #     mean = np.mean(np.asarray(ydata))
-    #     print("Display:{}+/-{}".format(mean,sd))
-    #     if display <= 400:
-    #         ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-    #         if sd<25:
-    #         	ax2.set_ylim(mean-100,mean+100)
-    #         else:
-    #         	ax2.set_ylim(mean-4*sd,mean+4*sd)
+        ax1.set_axis_off()
 
-    #     elif display > 400 and display <= 600:
-    #         ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-    #         if sd<25:
-    #         	ax2.set_ylim(mean-100,mean+100)
-    #         else:
-    #         	ax2.set_ylim(mean-4*sd,mean+4*sd)
-    #     elif display > 600 and display <= 1000:
-    #         ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
-    #         if sd<25:
-    #         	ax2.set_ylim(mean-100,mean+100)
-    #         else:
-    #         	ax2.set_ylim(mean-4*sd,mean+4*sd)
+        display = int(ydata[-1])
+        dose = round(display*0.036,4)
+        dose_display = str(dose) + " $\mu$Sv/hr"
 
-    #     elif display > 1000:
-    #         ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-    #         if sd<25:
-    #         	ax2.set_ylim(mean-100,mean+100)
-    #         else:
-    #         	ax2.set_ylim(mean-4*sd,mean+4*sd)
+        if display <= 150:
+            ax1.text(0.1, 1.2,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax1.text(0.7, 1.2,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
+
+        elif display > 150 and display <= 500:
+            ax1.text(0.1, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax1.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
+
+
+        elif display > 500 and display <= 2000:
+            ax1.text(0.1, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax1.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center",  backgroundcolor = "orange")
+
+
+        elif display > 2000:
+            ax1.text(0.2, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax1.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center", backgroundcolor = "red")
 
 
 
-    #     ax2.set(xlabel = xlabel, ylabel = ylabel, title = title)
+        ax2.set(xlabel = xlabel, ylabel = ylabel, title = title)
 
-    #     ax2.plot(xdata,ydata,"r.-")
-    #     ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
-    #     #fig.autofmt_xdate()
-    #     ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-    #     plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
-    #     fig.show()
-    #     plt.pause(0.0005)    
+        ax2.plot(xdata,ydata,"r.-")
+        ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
+        #fig.autofmt_xdate()
+        ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
+        fig.show()
+        plt.pause(0.0005)    
 
     def add_time(self, queue, timelist, data):
         timelist.append(data)

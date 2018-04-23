@@ -208,7 +208,7 @@ def weather_test():
     if varPG.get():
         global pgdaq
         pgdaq = pocket_geiger_DAQ.pocket_geiger_DAQ(maxdata.get(), int(n_merge.get()))
-        print("create D3S file")
+        print("create Pocket Geiger file")
 
     make_run_gui() 
 
