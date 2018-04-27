@@ -6,7 +6,7 @@ from matplotlib.dates import DateFormatter
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from collections import deque
-from sensor import Sensor 
+from sensor import Sensor
 import sys
 sys.stdout.flush()
 
@@ -25,7 +25,7 @@ class pocket_geiger_DAQ(object):
         self.last_time = None
         self.sensor = Sensor()
         print('N MERGE: {}'.format(n_merge) )
-        
+
     def create_file(self):
     	import csv
         global results
@@ -46,10 +46,11 @@ class pocket_geiger_DAQ(object):
 
     def start(self):
         global results
-        date_time = time.time()    
+        date_time = time.time()
 
         try:
             count_cpm,count_err = self.sensor.get_cpm(date_time ,date_time+self.n_merge)
+            print('CPM = {}+/-{}'.format(count_cpm,count_err))
             self.merge_test=False
             self.add_data(self.count_queue,self.count_error,self.count_list, count_cpm)
             self.add_time(self.time_queue, self.time_list, date_time)
@@ -83,7 +84,7 @@ class pocket_geiger_DAQ(object):
                 except IndexError:
                     #print('No new data being written.')
                     pass
-                        
+
         except Exception as e:
             print(e)
             #print("CO2 sensor error\n\n")
@@ -92,9 +93,9 @@ class pocket_geiger_DAQ(object):
 
     def plot_pg(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.count_queue,self.count_error,"Time","Count Rate (CPM)","Count Rate (CPM) vs. time")    
+            self.update_plot(1,self.time_queue,self.count_queue,self.count_error,"Time","Count Rate (CPM)","Count Rate (CPM) vs. time")
 
-    
+
 
     def add_data(self, queue,queue_error, temp_list, data):
         temp_list.append(data)
@@ -151,7 +152,7 @@ class pocket_geiger_DAQ(object):
         #fig.autofmt_xdate()
         plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
         fig.show()
-        plt.pause(0.0005)    
+        plt.pause(0.0005)
 
     def add_time(self, queue, timelist, data):
         timelist.append(data)
@@ -159,7 +160,7 @@ class pocket_geiger_DAQ(object):
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
         if len(queue)>self.maxdata:
-            queue.popleft()    
+            queue.popleft()
 
     def close(self,plot_id):
          plt.close(plot_id)
