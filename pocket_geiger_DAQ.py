@@ -16,6 +16,7 @@ class pocket_geiger_DAQ(object):
         self.time_queue=deque()
         self.n_merge=int(n_merge)
         self.count_list=[]
+        self.error_list=[]
         self.time_list=[]
         self.maxdata=int(maxdata)
         self.count_queue=deque()
@@ -52,11 +53,13 @@ class pocket_geiger_DAQ(object):
             count_cpm,count_err = self.sensor.get_cpm(date_time-30,date_time)
             print('CPM = {}+/-{}'.format(count_cpm,count_err))
             self.merge_test=False
-            self.add_data(self.count_queue,self.count_error,self.count_list, count_cpm)
+            self.add_data(self.count_queue,self.count_error,
+                          self.count_list,self.error_list,count_cpm,count_err)
             self.add_time(self.time_queue, self.time_list, date_time)
 
             if self.merge_test==True:
                 self.count_list=[]
+                self.error_list=[]
                 #self.UV_list=[]
                 self.time_list=[]
             if self.first_data and len(self.count_queue) != 0:
@@ -97,15 +100,18 @@ class pocket_geiger_DAQ(object):
 
 
 
-    def add_data(self, queue,queue_error, temp_list, data):
+    def add_data(self, queue, queue_error, temp_list, error_list, data, error):
         temp_list.append(data)
+        error_list.append(error)
         if len(temp_list)>=self.n_merge:
             queue.append(np.mean(np.asarray(temp_list)))
             if queue_error is not None:
-                queue_error.append(np.std(np.asarray(temp_list)))
+                queue_error.append(np.mean(np.asarray(error_list)))
             temp_list = []
+            error_list = []
         if len(queue)>self.maxdata:
             queue.popleft()
+            queue_error.popleft()
 
     def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
         plt.ion()
@@ -159,6 +165,7 @@ class pocket_geiger_DAQ(object):
         if len(timelist)>=self.n_merge:
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
+            timelist=[]
         if len(queue)>self.maxdata:
             queue.popleft()
 
