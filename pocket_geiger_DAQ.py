@@ -50,7 +50,7 @@ class pocket_geiger_DAQ(object):
         date_time = time.time()
 
         try:
-            count_cpm,count_err = self.sensor.get_cpm(date_time-30,date_time)
+            count_cpm,count_err = self.sensor.get_cpm(date_time-120,date_time)
             print('CPM = {}+/-{}'.format(count_cpm,count_err))
             self.merge_test=False
             self.add_data(self.count_queue,self.count_error,
@@ -132,11 +132,11 @@ class pocket_geiger_DAQ(object):
         dose_display = str(dose) + " $\mu$Sv/hr"
 
         if display <= 150:
-            ax1.text(0.1, 1.2,"Counts: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax1.text(0.1, 1.2,"CPM: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
             ax1.text(0.7, 1.2,"Dose: "+ dose_display, fontsize = 14, ha = "center", backgroundcolor = "lightgreen")
 
         elif display > 150 and display <= 500:
-            ax1.text(0.1, 1.2,"Counts: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax1.text(0.1, 1.2,"CPM: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
             ax1.text(0.7, 1.2,"Dose: "+dose_display, fontsize = 14, ha = "center" , backgroundcolor = "yellow")
 
 
