@@ -77,13 +77,16 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing, slpskp = True, True, False
+    first_run, testing, slpskp, interval_new = True, True, False, None
     while testing:
         if first_run:
             print(running.format(sensor_name=names[0], interval=interval))
             first_run = False
         else:
-            print(retrying.format(sensor_name=names[0], interval=interval))
+            if interval_new != None:
+                print(retrying.format(sensor_name=names[0], interval=interval_new))
+            else:
+                print(retrying.format(sensor_name=names[0], interval=interval))
         try:
             sensor_pocket.sleep_until(end_time)
         except SleepError:
@@ -153,13 +156,16 @@ if pocket:
                     start_time, end_time = time.time(), time.time() + interval
 if AQ:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing = True, True
+    first_run, testing, interval_new = True, True, None
     while testing:
         if first_run:
             print(running.format(sensor_name=names[1], interval=interval))
             first_run = False
         else:
-            print(retrying.format(sensor_name=names[1], interval=interval))
+            if interval_new != None:
+                print(retrying.format(sensor_name=names[1], interval=interval_new))
+            else:
+                print(retrying.format(sensor_name=names[1], interval=interval))
         average_data = sensor_AQ.handle_data(start_time, end_time, None)
         if any(data != 0 for data in average_data):
             print('{green}Found data from the {sensor}!{reset}'.format(
@@ -223,13 +229,16 @@ if AQ:
                     start_time, end_time = time.time(), time.time() + interval
 if CO2:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing = True, True
+    first_run, testing, interval_new = True, True, None
     while testing:
         if first_run:
             print(running.format(sensor_name=names[2], interval=interval))
             first_run = False
         else:
-            print(retrying.format(sensor_name=names[2], interval=interval))
+            if interval_new != None:
+                print(retrying.format(sensor_name=names[2], interval=interval_new))
+            else:
+                print(retrying.format(sensor_name=names[2], interval=interval))
         average_data = sensor_CO2.handle_data(start_time, end_time, None)
         if any(data != 0 for data in average_data):
             print('{green}Found data from the {sensor}!{reset}'.format(
@@ -291,13 +300,16 @@ if CO2:
                     start_time, end_time = time.time(), time.time() + interval
 if Weather:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing = True, True
+    first_run, testing, interval_new = True, True, None
     while testing:
         if first_run:
             print(running.format(sensor_name=names[3], interval=interval))
             first_run = False
         else:
-            print(retrying.format(sensor_name=names[3], interval=interval))
+            if interval_new != None:
+                print(retrying.format(sensor_name=names[3], interval=interval_new))
+            else:
+                print(retrying.format(sensor_name=names[3], interval=interval))
         average_data = sensor_weather.handle_data(start_time, end_time, None)
         if any(data != 0 for data in average_data):
             print('{green}Found data from the {sensor}!{reset}'.format(
