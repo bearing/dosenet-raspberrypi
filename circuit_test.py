@@ -2,18 +2,22 @@ import time
 import sys
 try:
     from managers import Manager_Pocket
+    print('pocket succ')
 except:
     pass
 try:
     from managers import Manager_AQ
+    print('aq succ')
 except:
     pass
 try:
     from managers import Manager_CO2
+    print('co2 succ')
 except:
     pass
 try:
     from managers import Manager_Weather
+    print('weather succ')
 except:
     pass
 from managers import SleepError
