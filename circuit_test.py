@@ -314,7 +314,7 @@ if Weather:
         if any(data != 0 for data in average_data):
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[3]))
-            for i in range(len(CO2_VARIABLES)):
+            for i in range(len(WEATHER_VARIABLES)):
                 print(WEATHER_DISPLAY_TEXT.format(
                     variable=WEATHER_VARIABLES[i], unit=WEATHER_VARIABLES_UNITS[i], data=average_data[i]))
             print(DOUBLE_BREAK_LINE)
