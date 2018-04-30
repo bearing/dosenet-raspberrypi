@@ -40,7 +40,6 @@ while ansr_err:
         ansr_err = False
 if confi == 'NO' or confi == 'N':
     new_setup = False
-setup_dict = {'new_setup':new_setup}
 for sensor in range(4):
     ansr_err = True
     while ansr_err:
@@ -61,17 +60,18 @@ while int_err:
         print('{red}Please enter a time in seconds as a number. {reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
 print(DOUBLE_BREAK_LINE)
 
+pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0] == 'YES' or sensors[0] == 'Y':
-    sensor_pocket = Manager_Pocket(cirtest=True, **setup_dict)
+    sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
     pocket = True
 if sensors[1] == 'YES' or sensors[1] == 'Y':
-    sensor_AQ = Manager_AQ(cirtest=True, **setup_dict)
+    sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup)
     AQ = True
 if sensors[2] == 'YES' or sensors[2] == 'Y':
-    sensor_CO2 = Manager_CO2(cirtest=True, **setup_dict)
+    sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
     CO2 = True
 if sensors[3] == 'YES' or sensors[3] == 'Y':
-    sensor_weather = Manager_Weather(cirtest=True, **setup_dict)
+    sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
     Weather = True
 
 if pocket:
@@ -93,8 +93,8 @@ if pocket:
         else:
             print('{red}No data found from the {sensor}!{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET, sensor=names[0]))
-            print('{red}Either the interval was too short, the sensor is not connected or {reset}' +
-                '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
+            print(('{red}Either the interval was too short, the sensor is not connected or {reset}' +
+                '{red}no data was found.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
             print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
