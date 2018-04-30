@@ -14,7 +14,7 @@ from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
 from globalvalues import CO2_DISPLAY_TEXT
 from globalvalues import WEATHER_DISPLAY_TEXT
-from globalvalues import AQ_VARIABLES, WEATHER_VARIABLES, CO2_VARIABLES
+from globalvalues import AQ_VARIABLES, WEATHER_VARIABLES, CO2_VARIABLES, WEATHER_VARIABLES_UNITS
 
 """
 Code meant to make it easy to test newly soldered PiHats without knowing
@@ -315,7 +315,8 @@ if Weather:
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[3]))
             for i in range(len(CO2_VARIABLES)):
-                print(WEATHER_DISPLAY_TEXT.format(variable=CO2_VARIABLES[i], data=average_data[i]))
+                print(WEATHER_DISPLAY_TEXT.format(
+                    variable=WEATHER_VARIABLES[i], unit=WEATHER_VARIABLES_UNITS[i], data=average_data[i]))
             print(DOUBLE_BREAK_LINE)
             testing = False
         else:
