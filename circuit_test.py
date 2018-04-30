@@ -40,6 +40,7 @@ while ansr_err:
         ansr_err = False
 if confi == 'NO' or confi == 'N':
     new_setup = False
+setup_dict = {'new_setup':new_setup}
 for sensor in range(4):
     ansr_err = True
     while ansr_err:
@@ -61,16 +62,16 @@ while int_err:
 print(DOUBLE_BREAK_LINE)
 
 if sensors[0] == 'YES' or sensors[0] == 'Y':
-    sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
+    sensor_pocket = Manager_Pocket(cirtest=True, **setup_dict)
     pocket = True
 if sensors[1] == 'YES' or sensors[1] == 'Y':
-    sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup)
+    sensor_AQ = Manager_AQ(cirtest=True, **setup_dict)
     AQ = True
 if sensors[2] == 'YES' or sensors[2] == 'Y':
-    sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
+    sensor_CO2 = Manager_CO2(cirtest=True, **setup_dict)
     CO2 = True
 if sensors[3] == 'YES' or sensors[3] == 'Y':
-    sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
+    sensor_weather = Manager_Weather(cirtest=True, **setup_dict)
     Weather = True
 
 if pocket:
