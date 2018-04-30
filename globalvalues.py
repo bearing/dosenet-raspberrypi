@@ -201,12 +201,12 @@ INTERVAL_QUESTION = (
 CIRCUIT_TEST_RUNNING = (
     '{green}Running the {reset}' + '{yellow}{{sensor_name}} {reset}' +
     '{green}on a {reset}' + '{yellow}{{interval}}{reset}' + '{green} second interval to {reset}' +
-    '{green}test for data.{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
+    '{green}test for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
 CIRCUIT_TEST_RETRYING = (
     '{green}Retrying the {reset}' + '{yellow}{{sensor_name}} {reset}' +
     '{green}on a {reset}' + '{yellow}{{interval}}{reset}' + '{green} second interval to {reset}' +
-    '{green}continue testing for data.{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
+    '{green}continue testing for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
 # --- some old notes:
 # Note: GPIO.LOW  - 0V
