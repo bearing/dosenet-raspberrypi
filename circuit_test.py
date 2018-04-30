@@ -85,7 +85,7 @@ if pocket:
         else:
             print(retrying.format(sensor_name=names[0], interval=interval))
         try:
-            pocket.sleep_until(end_time)
+            sensor_pocket.sleep_until(end_time)
         except SleepError:
             print(('{red}SleepError: system clock skipped ahead! This happens every once in a while {reset}' +
                 '{red}just try again and it should work. {reset}').format(
