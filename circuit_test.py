@@ -28,8 +28,18 @@ this testing code, along with giving a couple helpful hints to help determine
 possible things that could cause problems with sensors working properly.
 """
 
-sensors, question = [], SENSOR_CONNECTION_QUESTION
+sensors, question, ansr_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
+while ansr_err:
+    confi = raw_input('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
+        green=ANSI_GR, reset=ANSI_RESET)).upper()
+    if confi not in ['YES', 'Y', 'NO', 'N']:
+        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
+            red=ANSI_RED, reset=ANSI_RESET))
+    else:
+        ansr_err = False
+if confi == 'NO' or confi == 'N':
+    new_setup = False
 for sensor in range(4):
     ansr_err = True
     while ansr_err:
