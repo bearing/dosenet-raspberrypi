@@ -85,7 +85,7 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
-    first_runs, testing, interval_new = True, True, None
+    first_runs, testing, interval_new, counts = True, True, None, 0
     while testing:
         slpskp = False
         if first_run:
@@ -166,7 +166,7 @@ if pocket:
                     start_time, end_time = time.time(), time.time() + interval
 if AQ:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing, interval_new = True, True, None
+    first_run, testing, interval_new, average_data = True, True, None, []
     while testing:
         ind_err = False
         if first_run:
@@ -181,8 +181,8 @@ if AQ:
             average_data = sensor_AQ.handle_data(start_time, end_time, None)
         except IndexError:
             print(('{red}Index Error from the Air Quality Sensor. \n{reset}' +
-                '{red}This happens if the sensor was run too quickly after restart or if {reset}' +
-                '{red}the Air Quality sensor is sending signals to the RaspberryPi.\n{reset}' +
+                '{red}This happens if the sensor was run too quickly after restart or if the \n{reset}' +
+                '{red}Air Quality sensor is not sending signals to the RaspberryPi.\n{reset}' +
                 '{red}Make sure the AQ sensor is connected and try again.\n{reset}' +
                 '{red}If this continues, try restarting or checking the PiHat.{reset}').format(
                 red=ANSI_RED, reset=ANSI_RESET))
@@ -251,7 +251,7 @@ if AQ:
                     start_time, end_time = time.time(), time.time() + interval
 if CO2:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing, interval_new = True, True, None
+    first_run, testing, interval_new, average_data = True, True, None, []
     while testing:
         neg_conc = False
         if first_run:
@@ -332,7 +332,7 @@ if CO2:
                     start_time, end_time = time.time(), time.time() + interval
 if Weather:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing, interval_new = True, True, None
+    first_run, testing, interval_new, average_data = True, True, None, []
     while testing:
         if first_run:
             print(running.format(sensor_name=names[3], interval=interval))
