@@ -86,7 +86,7 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
-    first_runs, testing, interval_new, counts = True, True, None, 0
+    first_run, testing, interval_new, counts = True, True, None, 0
     while testing:
         slpskp = False
         if first_run:
