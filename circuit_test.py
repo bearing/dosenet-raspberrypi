@@ -1,25 +1,9 @@
 import time
 import sys
-try:
-    from managers import Manager_Pocket
-    print('pocket succ')
-except:
-    pass
-try:
-    from managers import Manager_AQ
-    print('aq succ')
-except:
-    pass
-try:
-    from managers import Manager_CO2
-    print('co2 succ')
-except:
-    pass
-try:
-    from managers import Manager_Weather
-    print('weather succ')
-except:
-    pass
+from managers import Manager_Pocket
+from managers import Manager_AQ
+from managers import Manager_CO2
+from managers import Manager_Weather
 from managers import SleepError
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED, ANSI_CYAN, ANSI_YEL
 from globalvalues import CIRCUIT_SENSOR_NAMES
@@ -88,13 +72,22 @@ if sensors[2] == 'YES' or sensors[2] == 'Y':
     sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
     CO2 = True
 if sensors[3] == 'YES' or sensors[3] == 'Y':
-    sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
-    Weather = True
+    try:
+        sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
+        Weather = True
+    except NameError:
+        print(('{red}Could not import the Weather Port and thus could not initiate the Weather Sensor. \n{reset}' +
+            '{red}This usually means that the Weather Sensor is not actually connected to the RaspberryPi.\n{reset}' +
+            '{red}It could also mean that the Weather Sensor itself is not working, check to see \n{reset}' +
+            '{red}if the sensor is actually connected, if it is then try restarting the RaspberryPi.\n{reset}' +
+            '{red}If none of this works then check both the Weather Sensor and the PiHat for any \n{reset}' +
+            '{red}places that the circuitry could fail.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing, slpskp, interval_new = True, True, False, None
+    first_runs, testing, interval_new = True, True, None
     while testing:
+        slpskp = False
         if first_run:
             print(running.format(sensor_name=names[0], interval=interval))
             first_run = False
@@ -122,7 +115,7 @@ if pocket:
             if not slpskp:
                 print('{red}No data found from the {sensor}!{reset}'.format(
                     red=ANSI_RED, reset=ANSI_RESET, sensor=names[0]))
-                print(('{red}Either the interval was too short, the sensor is not connected or {reset}' +
+                print(('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
                     '{red}no data was found.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
                 print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
                     red=ANSI_RED, reset=ANSI_RESET))
@@ -136,17 +129,18 @@ if pocket:
                 else:
                     ansr_err = False
             if retry == 'NO' or retry == 'N':
-                ansr_err = True
-                while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if cont not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if cont == 'NO' or cont == 'N':
-                    sys.exit()
+                if AQ or CO2 or Weather:
+                    ansr_err = True
+                    while ansr_err:
+                        cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                            yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
+                        if cont not in ['YES', 'Y', 'NO', 'N']:
+                            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
+                                red=ANSI_RED, reset=ANSI_RESET))
+                        else:
+                            ansr_err = False
+                    if cont == 'NO' or cont == 'N':
+                        sys.exit()
                 testing = False
             else:
                 ansr_err = True
@@ -174,6 +168,7 @@ if AQ:
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing, interval_new = True, True, None
     while testing:
+        ind_err = False
         if first_run:
             print(running.format(sensor_name=names[1], interval=interval))
             first_run = False
@@ -182,8 +177,17 @@ if AQ:
                 print(retrying.format(sensor_name=names[1], interval=interval_new))
             else:
                 print(retrying.format(sensor_name=names[1], interval=interval))
-        average_data = sensor_AQ.handle_data(start_time, end_time, None)
-        if any(data != 0 for data in average_data):
+        try:
+            average_data = sensor_AQ.handle_data(start_time, end_time, None)
+        except IndexError:
+            print(('{red}Index Error from the Air Quality Sensor. \n{reset}' +
+                '{red}This happens if the sensor was run too quickly after restart or if {reset}' +
+                '{red}the Air Quality sensor is sending signals to the RaspberryPi.\n{reset}' +
+                '{red}Make sure the AQ sensor is connected and try again.\n{reset}' +
+                '{red}If this continues, try restarting or checking the PiHat.{reset}').format(
+                red=ANSI_RED, reset=ANSI_RESET))
+            ind_err = True
+        if any(data != 0 for data in average_data) and not ind_err:
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[1]))
             for i in range(3):
@@ -193,12 +197,13 @@ if AQ:
             print(DOUBLE_BREAK_LINE)
             testing = False
         else:
-            print('{red}No data found from the {sensor}!{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET, sensor=names[1]))
-            print('{red}Either the interval was too short, the sensor is not connected or {reset}' +
-                '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
-            print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET))
+            if not ind_err:
+                print('{red}No data found from the {sensor}!{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET, sensor=names[1]))
+                print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
+                    '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
+                print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -209,17 +214,18 @@ if AQ:
                 else:
                     ansr_err = False
             if retry == 'NO' or retry == 'N':
-                ansr_err = True
-                while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if cont not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if cont == 'NO' or cont == 'N':
-                    sys.exit()
+                if CO2 or Weather:
+                    ansr_err = True
+                    while ansr_err:
+                        cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                            yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
+                        if cont not in ['YES', 'Y', 'NO', 'N']:
+                            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
+                                red=ANSI_RED, reset=ANSI_RESET))
+                        else:
+                            ansr_err = False
+                    if cont == 'NO' or cont == 'N':
+                        sys.exit()
                 testing = False
             else:
                 ansr_err = True
@@ -247,6 +253,7 @@ if CO2:
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing, interval_new = True, True, None
     while testing:
+        neg_conc = False
         if first_run:
             print(running.format(sensor_name=names[2], interval=interval))
             first_run = False
@@ -256,20 +263,28 @@ if CO2:
             else:
                 print(retrying.format(sensor_name=names[2], interval=interval))
         average_data = sensor_CO2.handle_data(start_time, end_time, None)
-        if any(data != 0 for data in average_data):
+        if average_data[0] > 0:
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[2]))
             for i in range(len(CO2_VARIABLES)):
                 print(CO2_DISPLAY_TEXT.format(variable=CO2_VARIABLES[i], data=average_data[i]))
             print(DOUBLE_BREAK_LINE)
             testing = False
-        else:
-            print('{red}No data found from the {sensor}!{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET, sensor=names[2]))
-            print('{red}Either the interval was too short, the sensor is not connected or {reset}' +
-                '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
-            print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
+        elif average_data[0] < 0:
+            print(('{red}Found negative data from the CO2 Sensor. \n{reset}' +
+                '{red}This usually means that the CO2 Sensor is not actually connected.\n{reset}' +
+                '{red}Make sure the CO2 sensor is connected then try again.\n{reset}' +
+                '{red}If this continues, it is likely a problem with the PiHat{reset}').format(
                 red=ANSI_RED, reset=ANSI_RESET))
+            neg_conc = True
+        else:
+            if not neg_conc:
+                print('{red}No data found from the {sensor}!{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET, sensor=names[2]))
+                print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
+                    '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
+                print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -280,17 +295,18 @@ if CO2:
                 else:
                     ansr_err = False
             if retry == 'NO' or retry == 'N':
-                ansr_err = True
-                while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if cont not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if cont == 'NO' or cont == 'N':
-                    sys.exit()
+                if Weather:
+                    ansr_err = True
+                    while ansr_err:
+                        cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                            yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
+                        if cont not in ['YES', 'Y', 'NO', 'N']:
+                            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
+                                red=ANSI_RED, reset=ANSI_RESET))
+                        else:
+                            ansr_err = False
+                    if cont == 'NO' or cont == 'N':
+                        sys.exit()
                 testing = False
             else:
                 ansr_err = True
@@ -338,7 +354,7 @@ if Weather:
         else:
             print('{red}No data found from the {sensor}!{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET, sensor=names[3]))
-            print('{red}Either the interval was too short, the sensor is not connected or {reset}' +
+            print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
                 '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
             print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET))
