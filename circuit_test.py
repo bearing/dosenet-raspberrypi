@@ -1,9 +1,21 @@
 import time
 import sys
-from managers import Manager_Pocket
-from managers import Manager_AQ
-from managers import Manager_CO2
-from managers import Manager_Weather
+try:
+    from managers import Manager_Pocket
+except:
+    pass
+try:
+    from managers import Manager_AQ
+except:
+    pass
+try:
+    from managers import Manager_CO2
+except:
+    pass
+try:
+    from managers import Manager_Weather
+except:
+    pass
 from managers import SleepError
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED, ANSI_CYAN, ANSI_YEL
 from globalvalues import CIRCUIT_SENSOR_NAMES
