@@ -116,10 +116,9 @@ if pocket:
             if not slpskp:
                 print('{red}No data found from the {sensor}!{reset}'.format(
                     red=ANSI_RED, reset=ANSI_RESET, sensor=names[0]))
-                print(('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
-                    '{red}no data was found.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-                print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                    red=ANSI_RED, reset=ANSI_RESET))
+                print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
+                    '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
+                    '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -201,10 +200,9 @@ if AQ:
             if not ind_err:
                 print('{red}No data found from the {sensor}!{reset}'.format(
                     red=ANSI_RED, reset=ANSI_RESET, sensor=names[1]))
-                print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
-                    '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
-                print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                    red=ANSI_RED, reset=ANSI_RESET))
+                print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
+                    '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
+                    '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -281,10 +279,9 @@ if CO2:
         else:
             print('{red}No data found from the {sensor}!{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET, sensor=names[2]))
-            print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
-                '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
-            print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET))
+            print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
+                '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
+                '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
         ansr_err = True
         while ansr_err:
             retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -354,10 +351,9 @@ if Weather:
         else:
             print('{red}No data found from the {sensor}!{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET, sensor=names[3]))
-            print('{red}Either the interval was too short, the sensor is not connected or \n{reset}' +
-                '{red}no data was found.{reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
-            print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET))
+            print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
+                '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
+                '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
