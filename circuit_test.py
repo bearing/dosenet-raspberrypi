@@ -33,7 +33,7 @@ names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_T
 for sensor in range(4):
     ansr_err = True
     while ansr_err:
-        sensor_i = input(question.format(sensor_name=names[sensor])).upper()
+        sensor_i = raw_input(question.format(sensor_name=names[sensor])).upper()
         if sensor_i not in ['YES', 'Y', 'NO', 'N']:
             print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
                 red=ANSI_RED, reset=ANSI_RESET))
@@ -44,7 +44,7 @@ print(SINGLE_BREAK_LINE)
 int_err = True
 while int_err:
     try:
-        interval = int(input(INTERVAL_QUESTION))
+        interval = int(raw_input(INTERVAL_QUESTION))
         int_err = False
     except ValueError:
         print('{red}Please enter a time in seconds as a number. {reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
@@ -88,7 +88,7 @@ if pocket:
                 red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
-                retry = input('{yellow}Would you like to try again?  {reset}'.format(
+                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
                     yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                 if retry not in ['YES', 'Y', 'NO', 'N']:
                     print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -98,7 +98,7 @@ if pocket:
             if retry == 'NO' or retry == 'N':
                 ansr_err = True
                 while ansr_err:
-                    cont = input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if cont not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -111,7 +111,7 @@ if pocket:
             else:
                 ansr_err = True
                 while ansr_err:
-                    change_int = input('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if change_int not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -122,7 +122,7 @@ if pocket:
                     int_err = True
                     while int_err:
                         try:
-                            interval_new = int(input(INTERVAL_QUESTION))
+                            interval_new = int(raw_input(INTERVAL_QUESTION))
                             int_err = False
                         except ValueError:
                             print('{red}Please enter a time in seconds as a number. {reset}'.format(
@@ -158,7 +158,7 @@ if AQ:
                 red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
-                retry = input('{yellow}Would you like to try again?  {reset}'.format(
+                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
                     yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                 if retry not in ['YES', 'Y', 'NO', 'N']:
                     print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -168,7 +168,7 @@ if AQ:
             if retry == 'NO' or retry == 'N':
                 ansr_err = True
                 while ansr_err:
-                    cont = input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if cont not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -181,7 +181,7 @@ if AQ:
             else:
                 ansr_err = True
                 while ansr_err:
-                    change_int = input('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if change_int not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -192,7 +192,7 @@ if AQ:
                     int_err = True
                     while int_err:
                         try:
-                            interval_new = int(input(INTERVAL_QUESTION))
+                            interval_new = int(raw_input(INTERVAL_QUESTION))
                             int_err = False
                         except ValueError:
                             print('{red}Please enter a time in seconds as a number. {reset}'.format(
@@ -226,7 +226,7 @@ if CO2:
                 red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
-                retry = input('{yellow}Would you like to try again?  {reset}'.format(
+                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
                     yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                 if retry not in ['YES', 'Y', 'NO', 'N']:
                     print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -236,7 +236,7 @@ if CO2:
             if retry == 'NO' or retry == 'N':
                 ansr_err = True
                 while ansr_err:
-                    cont = input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if cont not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -249,7 +249,7 @@ if CO2:
             else:
                 ansr_err = True
                 while ansr_err:
-                    change_int = input('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if change_int not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -260,7 +260,7 @@ if CO2:
                     int_err = True
                     while int_err:
                         try:
-                            interval_new = int(input(INTERVAL_QUESTION))
+                            interval_new = int(raw_input(INTERVAL_QUESTION))
                             int_err = False
                         except ValueError:
                             print('{red}Please enter a time in seconds as a number. {reset}'.format(
@@ -296,7 +296,7 @@ if Weather:
                 red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
-                retry = input('{yellow}Would you like to try again?  {reset}'.format(
+                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
                     yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                 if retry not in ['YES', 'Y', 'NO', 'N']:
                     print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -306,7 +306,7 @@ if Weather:
             if retry == 'NO' or retry == 'N':
                 ansr_err = True
                 while ansr_err:
-                    cont = input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if cont not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -319,7 +319,7 @@ if Weather:
             else:
                 ansr_err = True
                 while ansr_err:
-                    change_int = input('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if change_int not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -330,7 +330,7 @@ if Weather:
                     int_err = True
                     while int_err:
                         try:
-                            interval_new = int(input(INTERVAL_QUESTION))
+                            interval_new = int(raw_input(INTERVAL_QUESTION))
                             int_err = False
                         except ValueError:
                             print('{red}Please enter a time in seconds as a number. {reset}'.format(
