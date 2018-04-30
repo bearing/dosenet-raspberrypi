@@ -76,12 +76,13 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
         sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
         Weather = True
     except NameError:
-        print(('{red}Could not import the Weather Port and thus could not initiate the Weather Sensor. \n{reset}' +
-            '{red}This usually means that the Weather Sensor is not actually connected to the RaspberryPi.\n{reset}' +
-            '{red}It could also mean that the Weather Sensor itself is not working, check to see \n{reset}' +
-            '{red}if the sensor is actually connected, if it is then try restarting the RaspberryPi.\n{reset}' +
-            '{red}If none of this works then check both the Weather Sensor and the PiHat for any \n{reset}' +
-            '{red}places that the circuitry could fail.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+        print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
+            '{red}the Weather Sensor. This usually means that the Weather Sensor \n{reset}' +
+            '{red}is not actually connected to the RaspberryPi. It could also mean that \n{reset}' +
+            '{red}the Weather Sensor itself is not working, check to see that \n{reset}' +
+            '{red}the sensor is actually connected, if it is then try restarting the RaspberryPi. \n{reset}' +
+            '{red}If none of this works then check both the Weather Sensor and the PiHat \n{reset}' +
+            '{red}for any places that the circuitry could fail.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
