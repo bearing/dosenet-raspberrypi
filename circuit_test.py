@@ -76,27 +76,36 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
-    first_run, testing = True, True
+    first_run, testing, slpskp = True, True, False
     while testing:
         if first_run:
             print(running.format(sensor_name=names[0], interval=interval))
             first_run = False
         else:
             print(retrying.format(sensor_name=names[0], interval=interval))
-        counts, cpm, cpm_err = sensor_pocket.handle_data(start_time, end_time, None)
-        if counts != 0:
+        try:
+            pocket.sleep_until(end_time)
+        except SleepError:
+            print(('{red}SleepError: system clock skipped ahead! This happens every once in a while {reset}' +
+                '{red}just try again and it should work. {reset}').format(
+                red=ANSI_RED, reset=ANSI_RESET))
+            slpskp = True
+        if not slpskp:
+            counts, cpm, cpm_err = sensor_pocket.handle_data(start_time, end_time, None)
+        if counts != 0 and not slpskp:
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[0]))
             print(CPM_DISPLAY_TEXT.format(counts=counts, cpm=cpm, cpm_err=cpm_err))
             print(DOUBLE_BREAK_LINE)
             testing = False
         else:
-            print('{red}No data found from the {sensor}!{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET, sensor=names[0]))
-            print(('{red}Either the interval was too short, the sensor is not connected or {reset}' +
-                '{red}no data was found.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-            print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET))
+            if not slpskp:
+                print('{red}No data found from the {sensor}!{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET, sensor=names[0]))
+                print(('{red}Either the interval was too short, the sensor is not connected or {reset}' +
+                    '{red}no data was found.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+                print('{red}Make sure the sensor is connected and try again to determine whether it is the circuit or not.{reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET))
             ansr_err = True
             while ansr_err:
                 retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
@@ -280,8 +289,6 @@ if CO2:
                 else:
                     start_time, end_time = time.time(), time.time() + interval
 if Weather:
-    print(running.format(sensor_name=names[3], interval=interval))
-    average_data = sensor_weather.handle_data(start_time, end_time, None)
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing = True, True
     while testing:
