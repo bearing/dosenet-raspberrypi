@@ -195,7 +195,7 @@ SENSOR_CONNECTION_QUESTION = (
     green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
 
 INTERVAL_QUESTION = (
-    '{green}How long do you want to test each sensor for?{reset}').format(
+    '{green}How long do you want to test each sensor for?  {reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
 CIRCUIT_TEST_RUNNING = (

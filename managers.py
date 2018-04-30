@@ -114,11 +114,13 @@ class Base_Manager(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  aeskey=None,
                  sensor_type=None,
+                 new_setup=None,
                  sensor=None,
                  sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
                  cirtest=False,
                  ):
+        self.new_setup = new_setup
         self.sensor_type = sensor_type
 
         self.datalog = datalog
@@ -287,12 +289,13 @@ class Base_Manager(object):
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
-                self.int_ID = int(self.config.ID)
-                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
-                    self.int_ID == 33 or self.int_ID >= 39:
-                    self.new_setup = True
-                else:
-                    self.new_setup = False
+                if self.new_setup == None:
+                    self.int_ID = int(self.config.ID)
+                    if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                        self.int_ID == 33 or self.int_ID >= 39:
+                        self.new_setup = True
+                    else:
+                        self.new_setup = False
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
