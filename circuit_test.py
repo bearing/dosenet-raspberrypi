@@ -269,6 +269,7 @@ if CO2:
                 print(CO2_DISPLAY_TEXT.format(variable=CO2_VARIABLES[i], data=average_data[i]))
             print(DOUBLE_BREAK_LINE)
             testing = False
+            break
         elif average_data[0] < 0:
             print(('{red}Found negative data from the CO2 Sensor. \n{reset}' +
                 '{red}This usually means that the CO2 Sensor is not actually connected.\n{reset}' +
