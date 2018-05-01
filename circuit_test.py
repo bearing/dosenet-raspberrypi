@@ -44,6 +44,7 @@ while ansr_err:
         ansr_err = False
 if confi == 'NO' or confi == 'N':
     new_setup = False
+print('\n')
 for sensor in range(4):
     ansr_err = True
     while ansr_err:
@@ -54,7 +55,7 @@ for sensor in range(4):
         else:
             ansr_err = False
     sensors.append(sensor_i)
-print(SINGLE_BREAK_LINE)
+print('\n')
 int_err = True
 while int_err:
     try:
