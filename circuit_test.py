@@ -33,6 +33,7 @@ possible things that could cause problems with sensors working properly.
 sensors, question, ansr_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
+print(SINGLE_BREAK_LINE)
 while ansr_err:
     confi = raw_input('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
         green=ANSI_GR, reset=ANSI_RESET)).upper()
@@ -424,6 +425,7 @@ if any(ans == False for ans in final):
 else:
     print(('{green}All the sensors aquired data properly!\n{reset}' +
         '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
+print(SINGLE_BREAK_LINE)
 #Turning off LEDs becuase otherwise they would stay on from the manager initializations.
 LED(13).off()
 LED(16).off()
