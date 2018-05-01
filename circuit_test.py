@@ -427,7 +427,7 @@ else:
         '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
 print(SINGLE_BREAK_LINE)
 #Turning off LEDs becuase otherwise they would stay on from the manager initializations.
-pocket_manager.network_LED.stop_blink()
-pocket_manager.counts_LED.stop_blink()
-pocket_manager.network_LED.off()
-pocket_manager.counts_LED.off()
+sensor_pocket.network_LED.stop_blink()
+sensor_pocket.counts_LED.stop_blink()
+sensor_pocket.network_LED.off()
+sensor_pocket.counts_LED.off()
