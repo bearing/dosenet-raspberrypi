@@ -112,7 +112,6 @@ if pocket:
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[0]))
             print(CPM_DISPLAY_TEXT.format(counts=counts, cpm=cpm, cpm_err=cpm_err))
-            print(DOUBLE_BREAK_LINE)
             testing = False
         else:
             if not slpskp:
@@ -166,6 +165,7 @@ if pocket:
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
+print(DOUBLE_BREAK_LINE)
 if AQ:
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing, interval_new, average_data = True, True, None, []
@@ -197,7 +197,6 @@ if AQ:
                 print(AQ_PM_DISPLAY_TEXT.format(variable=AQ_VARIABLES[i], avg_data=average_data[i]))
             for i in range(3, 9):
                 print(AQ_P_DISPLAY_TEXT.format(variable=AQ_VARIABLES[i], avg_data=average_data[i]))
-            print(DOUBLE_BREAK_LINE)
             testing = False
         else:
             if not ind_err:
@@ -251,6 +250,7 @@ if AQ:
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
+print(DOUBLE_BREAK_LINE)
 if CO2:
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing, interval_new, average_data = True, True, None, []
@@ -271,7 +271,6 @@ if CO2:
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[2]))
             for i in range(len(CO2_VARIABLES)):
                 print(CO2_DISPLAY_TEXT.format(variable=CO2_VARIABLES[i], data=average_data[i]))
-            print(DOUBLE_BREAK_LINE)
             testing = False
             break
         elif average_data[0] < 0:
@@ -332,6 +331,7 @@ if CO2:
                 start_time, end_time = time.time(), time.time() + interval_new
             else:
                 start_time, end_time = time.time(), time.time() + interval
+print(DOUBLE_BREAK_LINE)
 if Weather:
     start_time, end_time = time.time(), time.time() + interval
     first_run, testing, interval_new, average_data = True, True, None, []
@@ -352,7 +352,6 @@ if Weather:
             for i in range(len(WEATHER_VARIABLES)):
                 print(WEATHER_DISPLAY_TEXT.format(
                     variable=WEATHER_VARIABLES[i], unit=WEATHER_VARIABLES_UNITS[i], data=average_data[i]))
-            print(DOUBLE_BREAK_LINE)
             testing = False
         else:
             print('{red}No data found from the {sensor}!{reset}'.format(
@@ -405,7 +404,7 @@ if Weather:
                 else:
                     start_time, end_time = time.time(), time.time() + interval
 
-print('\n')
+print(SINGLE_BREAK_LINE)
 init_letters, letters, final = ['p', 'a', 'c', 'w'], [], []
 sensors_data = {'p':pocket_data, 'a':AQ_data, 'c':CO2_data, 'w':weather_data}
 sensors_data_true = {k:v for k,v in sensors_data.items() if v != None}
