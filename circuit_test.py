@@ -31,6 +31,7 @@ possible things that could cause problems with sensors working properly.
 
 sensors, question, ansr_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
+pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 while ansr_err:
     confi = raw_input('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
         green=ANSI_GR, reset=ANSI_RESET)).upper()
@@ -64,17 +65,17 @@ print(DOUBLE_BREAK_LINE)
 pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0] == 'YES' or sensors[0] == 'Y':
     sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
-    pocket = True
+    pocket, pocket_data = True, False
 if sensors[1] == 'YES' or sensors[1] == 'Y':
     sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup)
-    AQ = True
+    AQ, AQ_data = True, False
 if sensors[2] == 'YES' or sensors[2] == 'Y':
     sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
-    CO2 = True
+    CO2, CO2_data = True, False
 if sensors[3] == 'YES' or sensors[3] == 'Y':
     try:
         sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
-        Weather = True
+        Weather, weather_data = True, False
     except NameError:
         print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
             '{red}the Weather Sensor. This usually means that the Weather Sensor \n{reset}' +
@@ -107,6 +108,7 @@ if pocket:
         if not slpskp:
             counts, cpm, cpm_err = sensor_pocket.handle_data(start_time, end_time, None)
         if counts != 0 and not slpskp:
+            pocket_data = True
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[0]))
             print(CPM_DISPLAY_TEXT.format(counts=counts, cpm=cpm, cpm_err=cpm_err))
@@ -188,6 +190,7 @@ if AQ:
                 red=ANSI_RED, reset=ANSI_RESET))
             ind_err = True
         if any(data != 0 for data in average_data) and not ind_err:
+            AQ_data = True
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[1]))
             for i in range(3):
@@ -263,6 +266,7 @@ if CO2:
                 print(retrying.format(sensor_name=names[2], interval=interval))
         average_data = sensor_CO2.handle_data(start_time, end_time, None)
         if average_data[0] > 0:
+            CO2_data = True
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[2]))
             for i in range(len(CO2_VARIABLES)):
@@ -342,6 +346,7 @@ if Weather:
                 print(retrying.format(sensor_name=names[3], interval=interval))
         average_data = sensor_weather.handle_data(start_time, end_time, None)
         if any(data != 0 for data in average_data):
+            weather_data = True
             print('{green}Found data from the {sensor}!{reset}'.format(
                 green=ANSI_GR, reset=ANSI_RESET, sensor=names[3]))
             for i in range(len(WEATHER_VARIABLES)):
@@ -399,3 +404,23 @@ if Weather:
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
+
+letters, final = ['p', 'a', 'c', 'w'], []
+sensors_data = {'p':pocket_data, 'a':AQ_data, 'c':CO2_data, 'w':weather_data}
+sensors_data_true = {k:v for k,v in sensors_data.items() if v != None}
+for k,v in sensors_data_true.items():
+    for i in range(len(letters)):
+        if v:
+            if k == letters[i]:
+                print(('{green}Successful data acquisition from the {sensor}!{reset}').format(
+                    green=ANSI_GR, sensor=names[i], reset=ANSI_RESET))
+        else:
+            print(('{red}Unsuccessful data acquisition from the {sensor}.{reset}').format(
+                red=ANSI_RED, sensor=names[i], reset=ANSI_RESET))
+        final.append(v)
+if any(ans == False for ans in final):
+    print(('{red}At least one of the sensors did not acquire data properly!\n{reset}' +
+        '{red}Check back on error messages for possible fixes.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+else:
+    print(('{green}All the sensors aquired data properly!\n{reset}' +
+        '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
