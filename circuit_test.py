@@ -1,8 +1,6 @@
 import time
-import sys
 from globalvalues import RPI
-if RPI:
-    import RPi.GPIO as GPIO
+from auxiliaries import LED
 from managers import Manager_Pocket
 from managers import Manager_AQ
 from managers import Manager_CO2
@@ -144,7 +142,10 @@ if pocket:
                         else:
                             ansr_err = False
                     if cont == 'NO' or cont == 'N':
-                        sys.exit()
+                        AQ, CO2, Weather = False, False, False
+                        AQ_data, CO2_data, weather_data = None, None, None
+                        testing = False
+                        break
                 testing = False
             else:
                 ansr_err = True
@@ -229,7 +230,10 @@ if AQ:
                         else:
                             ansr_err = False
                     if cont == 'NO' or cont == 'N':
-                        sys.exit()
+                        CO2, Weather = False, False
+                        CO2_data, weather_data = None, None
+                        testing = False
+                        break
                 testing = False
             else:
                 ansr_err = True
@@ -310,7 +314,9 @@ if CO2:
                     else:
                         ansr_err = False
                 if cont == 'NO' or cont == 'N':
-                    sys.exit()
+                    Weather, weather_data = False, None
+                    testing = False
+                    break
             testing = False
         else:
             ansr_err = True
@@ -372,18 +378,8 @@ if Weather:
                 else:
                     ansr_err = False
             if retry == 'NO' or retry == 'N':
-                ansr_err = True
-                while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to the final results?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if cont not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if cont == 'NO' or cont == 'N':
-                    sys.exit()
                 testing = False
+                break
             else:
                 ansr_err = True
                 while ansr_err:
@@ -428,4 +424,7 @@ if any(ans == False for ans in final):
 else:
     print(('{green}All the sensors aquired data properly!\n{reset}' +
         '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
-GPIO.cleanup()
+#Turning off LEDs becuase otherwise they would stay on from the manager initializations.
+LED(13).off()
+LED(16).off()
+LED(19).off()
