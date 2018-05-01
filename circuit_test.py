@@ -372,7 +372,7 @@ if Weather:
             if retry == 'NO' or retry == 'N':
                 ansr_err = True
                 while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    cont = raw_input('{yellow}Would you like to continue to the final results?  {reset}'.format(
                         yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
                     if cont not in ['YES', 'Y', 'NO', 'N']:
                         print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
@@ -405,19 +405,21 @@ if Weather:
                 else:
                     start_time, end_time = time.time(), time.time() + interval
 
-letters, final = ['p', 'a', 'c', 'w'], []
+init_letters, letters, final = ['p', 'a', 'c', 'w'], [], []
 sensors_data = {'p':pocket_data, 'a':AQ_data, 'c':CO2_data, 'w':weather_data}
 sensors_data_true = {k:v for k,v in sensors_data.items() if v != None}
 for k,v in sensors_data_true.items():
-    for i in range(len(letters)):
-        if v:
-            if k == letters[i]:
+    letters.append(k)
+    final.append(v)
+for i in range(len(letters)):
+    for j in range(len(init_letters)):
+        if letters[i] == init_letters[j]:
+            if final[i]:
                 print(('{green}Successful data acquisition from the {sensor}!{reset}').format(
-                    green=ANSI_GR, sensor=names[i], reset=ANSI_RESET))
-        else:
-            print(('{red}Unsuccessful data acquisition from the {sensor}.{reset}').format(
-                red=ANSI_RED, sensor=names[i], reset=ANSI_RESET))
-        final.append(v)
+                    green=ANSI_GR, sensor=names[j], reset=ANSI_RESET))
+            else:
+                print(('{red}Unsuccessful data acquisition from the {sensor}.{reset}').format(
+                    red=ANSI_RED, sensor=names[j], reset=ANSI_RESET))
 if any(ans == False for ans in final):
     print(('{red}At least one of the sensors did not acquire data properly!\n{reset}' +
         '{red}Check back on error messages for possible fixes.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
