@@ -191,7 +191,7 @@ CIRCUIT_SENSOR_NAMES = ['Pocket Geiger Counter', 'Air Quality Sensor',
 
 SENSOR_CONNECTION_QUESTION = (
     '{green}Is the {reset}' + '{blue}{{sensor_name}}{reset}' +
-    '{green} connected to the circuit you are testing?  {reset}').format(
+    '{green} connected to the PiHat you are testing?  {reset}').format(
     green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
 
 INTERVAL_QUESTION = (
