@@ -405,6 +405,7 @@ if Weather:
                 else:
                     start_time, end_time = time.time(), time.time() + interval
 
+print('\n')
 init_letters, letters, final = ['p', 'a', 'c', 'w'], [], []
 sensors_data = {'p':pocket_data, 'a':AQ_data, 'c':CO2_data, 'w':weather_data}
 sensors_data_true = {k:v for k,v in sensors_data.items() if v != None}
