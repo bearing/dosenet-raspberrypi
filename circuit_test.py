@@ -1,5 +1,8 @@
 import time
 import sys
+from globalvalues import RPI
+if RPI:
+    import RPi.GPIO as GPIO
 from managers import Manager_Pocket
 from managers import Manager_AQ
 from managers import Manager_CO2
@@ -425,3 +428,4 @@ if any(ans == False for ans in final):
 else:
     print(('{green}All the sensors aquired data properly!\n{reset}' +
         '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
+GPIO.cleanup()
