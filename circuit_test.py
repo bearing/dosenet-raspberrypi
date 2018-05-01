@@ -1,6 +1,5 @@
 import time
 from globalvalues import RPI
-from auxiliaries import LED
 from managers import Manager_Pocket
 from managers import Manager_AQ
 from managers import Manager_CO2
@@ -428,6 +427,7 @@ else:
         '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
 print(SINGLE_BREAK_LINE)
 #Turning off LEDs becuase otherwise they would stay on from the manager initializations.
-LED(13).off()
-LED(16).off()
-LED(19).off()
+pocket_manager.network_LED.stop_blink()
+pocket_manager.counts_LED.stop_blink()
+pocket_manager.network_LED.off()
+pocket_manager.counts_LED.off()
