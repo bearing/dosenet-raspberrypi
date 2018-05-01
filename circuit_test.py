@@ -424,7 +424,7 @@ if any(ans == False for ans in final):
         '{red}Check back on error messages for possible fixes.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
 else:
     print(('{green}All the sensors aquired data properly!\n{reset}' +
-        '{green}The test PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
+        '{green}The tested PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
 print(SINGLE_BREAK_LINE)
 #Turning off LEDs becuase otherwise they would stay on from the manager initializations.
 sensor_pocket.network_LED.stop_blink()
