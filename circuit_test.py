@@ -56,7 +56,7 @@ for sensor in range(4):
             ansr_err = False
     sensors.append(sensor_i)
 print('\n')
-if not any(ans==True for ans in sensors):
+if not any(ans=='YES' or ans=='Y' for ans in sensors):
     print(('{red}Shutting down program since no sensors are connected.{reset}').format(
         red=ANSI_RED, reset=ANSI_RESET))
     print(SINGLE_BREAK_LINE)
