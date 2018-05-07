@@ -1,4 +1,5 @@
 import time
+import sys
 from globalvalues import RPI
 from managers import Manager_Pocket
 from managers import Manager_AQ
@@ -86,6 +87,11 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
             '{red}the sensor is actually connected, if it is then try restarting the RaspberryPi. \n{reset}' +
             '{red}If none of this works then check both the Weather Sensor and the PiHat \n{reset}' +
             '{red}for any places that the circuitry could fail.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+
+if not pocket and not AQ and not CO2 and Weather:
+    print(('{red}Shutting down program since no sensors are connected.{reset}').format(
+        red=ANSI_RED, reset=ANSI_RESET))
+    sys.exit()
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
@@ -188,6 +194,14 @@ if AQ:
             average_data = sensor_AQ.handle_data(start_time, end_time, None)
         except IndexError:
             print(('{red}Index Error from the Air Quality Sensor. \n{reset}' +
+                '{red}This happens if the sensor was run too quickly after restart or if the \n{reset}' +
+                '{red}Air Quality sensor is not sending signals to the RaspberryPi.\n{reset}' +
+                '{red}Make sure the AQ sensor is connected and try again.\n{reset}' +
+                '{red}If this continues, try restarting or checking the PiHat.{reset}').format(
+                red=ANSI_RED, reset=ANSI_RESET))
+            ind_err = True
+        except ZeroDivisionError:
+            print(('{red}ZeroDivisionError from the Air Quality Sensor. \n{reset}' +
                 '{red}This happens if the sensor was run too quickly after restart or if the \n{reset}' +
                 '{red}Air Quality sensor is not sending signals to the RaspberryPi.\n{reset}' +
                 '{red}Make sure the AQ sensor is connected and try again.\n{reset}' +
@@ -427,7 +441,8 @@ else:
         '{green}The tested PiHat should be good to go!{reset}').format(green=ANSI_GR, reset=ANSI_RESET))
 print(SINGLE_BREAK_LINE)
 #Turning off LEDs becuase otherwise they would stay on from the manager initializations.
-sensor_pocket.network_LED.stop_blink()
-sensor_pocket.counts_LED.stop_blink()
-sensor_pocket.network_LED.off()
-sensor_pocket.counts_LED.off()
+if pocket:
+    sensor_pocket.network_LED.stop_blink()
+    sensor_pocket.counts_LED.stop_blink()
+    sensor_pocket.network_LED.off()
+    sensor_pocket.counts_LED.off()
