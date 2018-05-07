@@ -30,7 +30,7 @@ this testing code, along with giving a couple helpful hints to help determine
 possible things that could cause problems with sensors working properly.
 """
 
-sensors, question, ansr_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True
+sensors, question, ansr_err, int_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 print(SINGLE_BREAK_LINE)
@@ -56,7 +56,11 @@ for sensor in range(4):
             ansr_err = False
     sensors.append(sensor_i)
 print('\n')
-int_err = True
+if not any(ans==True for ans in sensors):
+    print(('{red}Shutting down program since no sensors are connected.{reset}').format(
+        red=ANSI_RED, reset=ANSI_RESET))
+    print(SINGLE_BREAK_LINE)
+    sys.exit()
 while int_err:
     try:
         interval = int(raw_input(INTERVAL_QUESTION))
@@ -87,11 +91,6 @@ if sensors[3] == 'YES' or sensors[3] == 'Y':
             '{red}the sensor is actually connected, if it is then try restarting the RaspberryPi. \n{reset}' +
             '{red}If none of this works then check both the Weather Sensor and the PiHat \n{reset}' +
             '{red}for any places that the circuitry could fail.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-
-if not pocket and not AQ and not CO2 and Weather:
-    print(('{red}Shutting down program since no sensors are connected.{reset}').format(
-        red=ANSI_RED, reset=ANSI_RESET))
-    sys.exit()
 
 if pocket:
     start_time, end_time = time.time(), time.time() + interval
