@@ -32,9 +32,15 @@ class adc_DAQ(object):
         print('N MERGE: {}'.format(n_merge) )
         
     def create_file(self):
+    	import csv
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        filename = "/home/pi/data/CO2_test_results_"+file_time+".csv"
+        id_info = []
+        with open ('/home/pi/config/server_config.csv') as f:
+        	reader = csv.reader(f)
+        	for row in reader:
+        		id_info.append(row)
+        filename = "/home/pi/data/"+"_".join(row)+"_CO2"+file_time+".csv"
         f = open(filename, "ab+")
         adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
         metadata = []
@@ -58,20 +64,21 @@ class adc_DAQ(object):
             # print('| {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
             #print('| {0:>4} | {1:>4} |'.format(values[0],values[7]))
             concentration = 5000/496*values[0] - 1250
-            print("|{}|\n".format(concentration))
+            #print("|{}|\n".format(concentration))
             # Pause for half a second.
-            uv_index = values[7]
+            #uv_index = values[7]
             results = []
             results.append(date_time)
             results.append(concentration)
-            # results.append(uv_index)
+            #results.append(uv_index)
                 
-            adc_results.writerow(results[:])
+            #adc_results.writerow(results[:])
             
             self.merge_test=False
             self.add_data(self.CO2_queue,self.CO2_error,self.CO2_list,concentration)
             #self.add_data(self.UV_queue,self.UV_list,uv_index)
             self.add_time(self.time_queue, self.time_list, date_time)
+            #print(self.time_queue[-1])
                           
             if self.merge_test==True:
                 self.CO2_list=[]
@@ -82,31 +89,36 @@ class adc_DAQ(object):
                     data = []
                     data.append(self.time_queue[i])
                     data.append(self.CO2_queue[i])
-                    data.append(self.CO2_err[i])
-                    results.writerow(data)
+                    data.append(self.CO2_error[i])
+                    adc_results.writerow(data)
 
                 self.last_time = data[0]
                 self.first_data = False
             elif not self.first_data:
                 try:
-                    print(self.last_time)
+                    #print(self.last_time)
                     if self.time_queue[-1] != self.last_time:
                         data = []
                         data.append(self.time_queue[-1])
                         data.append(self.CO2_queue[-1])
-                        data.append(self.CO2_err[-1])
-                        results.writerow(data)
+                        data.append(self.CO2_error[-1])
+                        adc_results.writerow(data)
 
                         self.last_time = self.time_queue[-1]
-                    else:
-                        print('duplicated data.')
+                    #else:
+                        #print('duplicated data.')
+
                 except IndexError:
-                    print('No new data being written.')
-            else: 
-                print('No data acquired yet.')
+                    #print('No new data being written.')
+                    pass
+            #else: 
+                #print('No data acquired yet.')
+
                         
-        except:
-            print("CO2 sensor error\n\n")
+        except Exception as e:
+            #print(e)
+            #print("CO2 sensor error\n\n")
+            pass
 
 
     def plot_CO2(self):
@@ -120,10 +132,23 @@ class adc_DAQ(object):
     def add_data(self, queue,queue_error, temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
-            queue.append(np.mean(np.asarray(temp_list)))
-            queue_error.append(np.std(np.asarray(temp_list)))
-            print(temp_list)
-            print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
+        	temp_list = np.asarray(temp_list)
+        	print(temp_list)
+        	pre_mean = np.mean(temp_list)
+        	pre_sd = np.std(temp_list)
+        	print(pre_mean,pre_sd)
+        	while pre_sd/pre_mean > 0.07:
+        		temp_list = temp_list[np.logical_and(temp_list<(pre_mean+pre_sd), temp_list>(pre_mean-pre_sd))]
+        		print(temp_list)
+        		pre_mean = np.mean(temp_list)
+        		pre_sd = np.std(temp_list)
+        		print(pre_mean,pre_sd)
+
+        	queue.append(np.mean(temp_list))
+        	queue_error.append(np.std(temp_list))
+        	#print(queue)
+        # print(temp_list)
+        # print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
             queue.popleft()  
             queue_error.popleft()  
@@ -142,17 +167,35 @@ class adc_DAQ(object):
 
         ax1.set_axis_off()
         display = ydata[-1]
+        sd = np.std(np.asarray(ydata))
+        mean = np.mean(np.asarray(ydata))
+        print("Display:{}+/-{}".format(mean,sd))
         if display <= 400:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            ax2.set_ylim(250,1000)
+            if sd<25:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
-        elif display > 400 and display <= 1000:
+        elif display > 400 and display <= 600:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            ax2.set_ylim(250,1000)
+            if sd<25:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
+        elif display > 600 and display <= 1000:
+            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            if sd<25:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
         elif display > 1000:
             ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
-            ax2.set_ylim(250, display+500)
+            if sd<25:
+            	ax2.set_ylim(mean-100,mean+100)
+            else:
+            	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
 
 
