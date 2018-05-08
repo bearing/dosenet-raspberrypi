@@ -16,10 +16,20 @@ HOME=/home/pi
 LOGTAG=dosenet
 LOG=/tmp/network_bootup.log
 
-sudo systemctl stop hostapd
-sudo systemctl stop dnsmasq
-logger --stderr -id --tag $LOGTAG "Starting the RaspberryPi as an access point"
-sudo systemctl start hostapd >> $LOG 2>&1
-sudo systemctl start dnsmasq >> $LOG 2>&1
+case $1 in
+  start)
+    logger --stderr -id --tag $LOGTAG "Starting the RaspberryPi as an access point"
+    sudo systemctl start hostapd >> $LOG 2>&1
+    sudo systemctl start dnsmasq >> $LOG 2>&1
+    ;;
+  stop)
+    echo "Stopping the access point" >> $LOG
+    sudo systemctl stop hostapd
+    sudo systemctl stop dnsmasq
+    ;;
+  *)
+    echo "Usage: /etc/init.d/network_reboot.sh {start|stop}"
+    exit 1
+esac
 
 exit 0
