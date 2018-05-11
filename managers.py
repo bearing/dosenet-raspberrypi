@@ -114,10 +114,13 @@ class Base_Manager(object):
                  sender_mode=DEFAULT_SENDER_MODE,
                  aeskey=None,
                  sensor_type=None,
+                 new_setup=None,
                  sensor=None,
                  sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
+                 cirtest=False,
                  ):
+        self.new_setup = new_setup
         self.sensor_type = sensor_type
 
         self.datalog = datalog
@@ -129,6 +132,8 @@ class Base_Manager(object):
         self.data_names = data_names
 
         self.test = test
+
+        self.cirtest = cirtest
 
         self.handle_input(log, logfile, verbosity,
                           test, interval, config, publickey, aeskey)
@@ -207,6 +212,8 @@ class Base_Manager(object):
                 verbosity = 2
             else:
                 verbosity = 1
+            if self.cirtest:
+                verbosity = 0
         self.v = verbosity
         set_verbosity(self, logfile=logfile)
 
@@ -282,12 +289,13 @@ class Base_Manager(object):
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
-                self.int_ID = int(self.config.ID)
-                if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
-                    self.int_ID == 33 or self.int_ID >= 39:
-                    self.new_setup = True
-                else:
-                    self.new_setup = False
+                if self.new_setup == None:
+                    self.int_ID = int(self.config.ID)
+                    if self.int_ID == 5 or self.int_ID == 29 or self.int_ID == 32 or \
+                        self.int_ID == 33 or self.int_ID >= 39:
+                        self.new_setup = True
+                    else:
+                        self.new_setup = False
             except IOError:
                 raise IOError(
                     'Unable to open config file {}!'.format(config))
@@ -562,9 +570,12 @@ class Base_Manager(object):
         if self.sensor_type == 1:
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
-            self.data_handler.main(
-                self.datalog, this_start, this_end,
-                cpm=cpm, cpm_err=cpm_err, counts=counts)
+            if not self.cirtest:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end,
+                    cpm=cpm, cpm_err=cpm_err, counts=counts)
+            else:
+                return counts, cpm, cpm_err
 
         if self.sensor_type == 2:
             self.data_handler.main(
@@ -598,8 +609,11 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            self.data_handler.main(
-                self.datalog, this_start, this_end, average_data=average_data)
+            if not self.cirtest:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end, average_data=average_data)
+            else:
+                return average_data
 
         if self.sensor_type == 4:
             co2_data_set = []
@@ -624,8 +638,11 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            self.data_handler.main(
-                self.datalog, this_start, this_end, average_data=average_data)
+            if not self.cirtest:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end, average_data=average_data)
+            else:
+                return average_data
 
         if self.sensor_type == 5:
             weather_data_set = []
@@ -649,8 +666,11 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            self.data_handler.main(
-                self.datalog, this_start, this_end, average_data=average_data)
+            if not self.cirtest:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end, average_data=average_data)
+            else:
+                return average_data
 
     def takedown(self):
         """
