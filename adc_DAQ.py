@@ -221,5 +221,9 @@ class adc_DAQ(object):
         if len(queue)>self.maxdata:
             queue.popleft()
 
+    def close_file(self):
+        global adc_file
+        adc_file.close()
+
     def close(self,plot_id):
          plt.close(plot_id)

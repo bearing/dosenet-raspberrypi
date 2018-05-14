@@ -118,6 +118,7 @@ def make_run_gui():
             aqdaq.close_file()
             top1.after_cancel(jobAir)
         if varCO2.get():
+            adcdaq.close_file()
             top1.after_cancel(jobCO2)
 
         jobd3s = None
