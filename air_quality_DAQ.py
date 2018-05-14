@@ -14,7 +14,7 @@ import serial
 import sys
 sys.stdout.flush()
 
-#sensor = entercodehere(morestuff) [Not sure if this is necessary] 
+#sensor = entercodehere(morestuff) [Not sure if this is necessary]
 
 class air_quality_DAQ(object):
     def __init__ (self, maxdata, n_merge):
@@ -26,7 +26,7 @@ class air_quality_DAQ(object):
         self.PM10_queue = deque()
         self.PM01_error = deque()
         self.PM25_error = deque()
-        self.PM10_error = deque()        
+        self.PM10_error = deque()
         self.P3_queue = deque()
         self.P5_queue = deque()
         self.P10_queue = deque()
@@ -49,7 +49,7 @@ class air_quality_DAQ(object):
         self.port = None
         self.first_data = True
         self.last_time = None
-            
+
     def close(self,plot_id):
         plt.close(plot_id)
 
@@ -68,14 +68,14 @@ class air_quality_DAQ(object):
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
         results.writerow(metadata)
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
-        
+
     def start(self):
         global results
         global f
         date_time = datetime.datetime.now()
         text = self.port.read(32)
         buffer = [ord(c) for c in text]
-        if buffer[0] == 66:   
+        if buffer[0] == 66:
             buf = buffer[1:32]
 
             # Get concentrations ug/m3
@@ -171,7 +171,7 @@ class air_quality_DAQ(object):
                         print('duplicated data.')
                 except IndexError:
                     print('No new data being written.')
-            else: 
+            else:
                 print('No data acquired yet.')
 
     def close_file(self):
@@ -179,10 +179,10 @@ class air_quality_DAQ(object):
         f.close()
 
 
-            
+
     def pmplot(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue,self.PM01_error,self.PM25_error,self.PM10_error)        
+            self.update_plot(1,self.time_queue,"Time","Particulate Concentration","Particulates vs. time",self.PM01_queue,self.PM25_queue,self.PM10_queue,self.PM01_error,self.PM25_error,self.PM10_error)
 
     def add_time(self, queue, timelist, data):
         timelist.append(data)
@@ -257,7 +257,7 @@ class air_quality_DAQ(object):
 
         else:
             ax2.text(0.5, 0.6,"PM 2.5: (ug/m^3)"+str(display2_5), fontsize = 14, ha = "center" , backgroundcolor = "maroon")
-        
+
 
         ax3.set(xlabel = xlabel, ylabel = ylabel, title = title)
         ax3.plot(xdata,ydata1,"-bo", label='1.0')
@@ -270,8 +270,3 @@ class air_quality_DAQ(object):
         ax3.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         fig.show()
         plt.pause(0.0005)
-        
-
-
-
-    

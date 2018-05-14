@@ -30,7 +30,7 @@ class adc_DAQ(object):
         self.last_time = None
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
         print('N MERGE: {}'.format(n_merge) )
-        
+
     def create_file(self):
     	import csv
         global adc_results
@@ -51,9 +51,9 @@ class adc_DAQ(object):
 
     def start(self):
         global adc_results
-        date_time = datetime.datetime.now()    
+        date_time = datetime.datetime.now()
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-    
+
         # Read all the ADC channel values in a list.
         values = [0]*8
         try:
@@ -71,15 +71,15 @@ class adc_DAQ(object):
             results.append(date_time)
             results.append(concentration)
             #results.append(uv_index)
-                
+
             #adc_results.writerow(results[:])
-            
+
             self.merge_test=False
             self.add_data(self.CO2_queue,self.CO2_error,self.CO2_list,concentration)
             #self.add_data(self.UV_queue,self.UV_list,uv_index)
             self.add_time(self.time_queue, self.time_list, date_time)
             #print(self.time_queue[-1])
-                          
+
             if self.merge_test==True:
                 self.CO2_list=[]
                 #self.UV_list=[]
@@ -111,10 +111,10 @@ class adc_DAQ(object):
                 except IndexError:
                     #print('No new data being written.')
                     pass
-            #else: 
+            #else:
                 #print('No data acquired yet.')
 
-                        
+
         except Exception as e:
             #print(e)
             #print("CO2 sensor error\n\n")
@@ -123,11 +123,11 @@ class adc_DAQ(object):
 
     def plot_CO2(self):
         if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.CO2_queue,self.CO2_error,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")    
+            self.update_plot(1,self.time_queue,self.CO2_queue,self.CO2_error,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")
 
     def plot_UV(self):
         if len(self.time_queue)>0:
-            self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")        
+            self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")
 
     def add_data(self, queue,queue_error, temp_list, data):
         temp_list.append(data)
@@ -150,8 +150,8 @@ class adc_DAQ(object):
         # print(temp_list)
         # print('MEAN:{}'.format(np.mean(np.asarray(temp_list))))
         if len(queue)>self.maxdata:
-            queue.popleft()  
-            queue_error.popleft()  
+            queue.popleft()
+            queue_error.popleft()
 
     def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
         plt.ion()
@@ -207,7 +207,7 @@ class adc_DAQ(object):
         ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
         plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
         fig.show()
-        plt.pause(0.0005)    
+        plt.pause(0.0005)
 
     def add_time(self, queue, timelist, data):
         timelist.append(data)
@@ -215,7 +215,7 @@ class adc_DAQ(object):
             self.merge_test=True
             queue.append(timelist[int((self.n_merge)/2)])
         if len(queue)>self.maxdata:
-            queue.popleft()    
+            queue.popleft()
 
     def close(self,plot_id):
          plt.close(plot_id)

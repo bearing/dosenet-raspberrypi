@@ -38,10 +38,10 @@ class weather_DAQ(object):
 
     def close(self,plot_id):
         plt.close(plot_id)
-        
+
     def create_file(self):
         global results
-        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)        
+        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         id_info = []
         with open ('/home/pi/config/server_config.csv') as f:
@@ -60,7 +60,7 @@ class weather_DAQ(object):
         pascals = self.sensor.read_pressure()
         hectopascals = pascals / 100
         humidity = self.sensor.read_humidity()
-    
+
         data=[]
 
         self.merge_test=False
@@ -68,13 +68,13 @@ class weather_DAQ(object):
         self.add_data(self.humid_queue,self.humid_err,self.humid_list,humidity)
         self.add_data(self.press_queue,self.press_err,self.press_list,hectopascals)
         self.add_time(self.time_queue,self.time_list, date_time)
-        
+
         # data.append(date_time)
         # data.append(degrees)
         # data.append(hectopascals)
         # data.append(humidity)
-    
-        # results.writerow(data)         
+
+        # results.writerow(data)
 
         if self.first_data and len(self.temp_queue) != 0:
             for i in range(len(self.temp_queue)):
@@ -109,22 +109,22 @@ class weather_DAQ(object):
                     print('duplicated data.')
             except IndexError:
                 print('No new data being written.')
-        else: 
+        else:
             print('No data acquired yet.')
 
         print ('Temp     = {0:0.3f} deg C'.format(degrees))
         print ('Pressure  = {0:0.2f} hPa'.format(hectopascals))
         print ('Humidity = {0:0.2f} %\n'.format(humidity))
-        
-        
+
+
     def press(self):
         if len(self.time_queue)>0:
             self.update_plot(3,self.time_queue,self.press_queue,self.press_err,"Time","Pressure(hPa)","Pressure vs. time")
-        
+
     def temp(self):
         if len(self.time_queue)>0:
             self.update_plot(1,self.time_queue,self.temp_queue,self.temp_err,"Time","Temperature(C)","Temperature vs. time")
-                
+
     def humid(self):
         if len(self.time_queue)>0:
             self.update_plot(2,self.time_queue,self.humid_queue,self.humid_err,"Time","Humidity(%)","Humidity vs.time")
@@ -142,7 +142,7 @@ class weather_DAQ(object):
                 timelist.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
-        
+
 
     def add_data(self, queue, queue_err,temp_list, data):
         temp_list.append(data)
@@ -153,14 +153,14 @@ class weather_DAQ(object):
                 temp_list.pop()
         if len(queue)>self.maxdata:
             queue.popleft()
-    
+
     def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylable,title):
         plt.ion()
         fig = plt.figure(plot_id)
         plt.clf()
         ax=fig.add_subplot(111)
         plt.xlabel(xlabel)
-        plt.ylabel(ylable) 
+        plt.ylabel(ylable)
         plt.title(title)
         plt.plot(xdata,ydata,"r.")
         fig.autofmt_xdate()
@@ -170,7 +170,7 @@ class weather_DAQ(object):
         plt.pause(0.0005)
 
     def plotdata(self):
-        
+
         times=[]
         degrees_list=[]
         pressure_list=[]
@@ -182,8 +182,8 @@ class weather_DAQ(object):
         humidity_ave=[]
         humidity_unc=[]
         merge_times = []
-        
-        app=gui("Weather Plot","800x400")   
+
+        app=gui("Weather Plot","800x400")
         app.addLabel("1","Please choose a following .csv file")
         file_name=[]
         for filename in os.listdir('.'):
@@ -195,10 +195,10 @@ class weather_DAQ(object):
         app.addLabel("2","Enter the number of data points to merge:")
         app.setLabelFont("20","Heletica")
         app.addNumericEntry("n")
-        app.setFocus("n")     
-    
+        app.setFocus("n")
+
         def ok(btn):
-            user_file=app.getOptionBox("Files") 
+            user_file=app.getOptionBox("Files")
             n_merge=int(app.getEntry("n"))
             row_counter=0
             results = csv.reader(open(user_file), delimiter=',')
@@ -210,7 +210,7 @@ class weather_DAQ(object):
                     degrees_list.append(float(r[1]))
                     pressure_list.append(float(r[2]))
                     humidity_list.append(float(r[3]))
-        
+
                 row_counter+=1
 
             ndata = int(len(degrees_list))
@@ -223,15 +223,15 @@ class weather_DAQ(object):
                 temp_sigma = np.sqrt(np.var(itemp_array))
                 temp_ave.append(temp_mean)
                 temp_unc.append(temp_sigma)
-    
+
             for i in range(nsum_data):
-                ipressure = pressure_list[i*n_merge:(i+1)*n_merge]   
+                ipressure = pressure_list[i*n_merge:(i+1)*n_merge]
                 ipressure_array = np.asarray(ipressure)
                 pressure_mean = np.mean(ipressure_array)
                 pressure_sigma = np.sqrt(np.var(ipressure_array))
                 pressure_ave.append(pressure_mean)
                 pressure_unc.append(pressure_sigma)
-    
+
             for i in range(nsum_data):
                 ihumid = humidity_list[i*n_merge:(i+1)*n_merge]
                 ihumid_array = np.asarray(ihumid)
@@ -245,7 +245,7 @@ class weather_DAQ(object):
                 itime = itimes[int(len(itimes)/2)]
                 merge_times.append(itime)
             fig=plt.figure()
-            ax=fig.add_subplot(111)   
+            ax=fig.add_subplot(111)
             plt.plot(merge_times, temp_ave, "b.")
             plt.errorbar(merge_times, temp_ave, yerr = temp_unc)
             plt.title("Temperature")
@@ -274,7 +274,7 @@ class weather_DAQ(object):
             fig.autofmt_xdate()
             ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
             plt.show()
-    
+
         app.addButton("OK",ok)
         app.setButtonWidth("OK","20")
         app.setButtonHeight("OK","4")
