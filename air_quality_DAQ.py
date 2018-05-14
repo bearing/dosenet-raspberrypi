@@ -55,7 +55,7 @@ class air_quality_DAQ(object):
 
     def create_file(self):
         global results
-        global f
+        global aq_file
         file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         id_info = []
         with open ('/home/pi/config/server_config.csv') as f:
@@ -63,15 +63,15 @@ class air_quality_DAQ(object):
             for row in reader:
                 id_info.append(row)
         filename =  "/home/pi/data/"+"_".join(row)+"_air_quality"+file_time+".csv"
-        f = open(filename, "ab+")
-        results = csv.writer(open(filename, "ab+"), delimiter = ",")
+        aq_file = open(filename, "ab+")
+        results = csv.writer(aq_file, delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um", "2.5 um", "5.0 um", "10 um", "PM 1.0", "PM 2.5", "PM 10"]
         results.writerow(metadata)
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
 
     def start(self):
         global results
-        global f
+        global aq_file
         date_time = datetime.datetime.now()
         text = self.port.read(32)
         buffer = [ord(c) for c in text]
@@ -146,6 +146,7 @@ class air_quality_DAQ(object):
                     data.append(self.P100_queue[i])
 
                     results.writerow(data)
+                    aq_file.flush()
 
                 self.last_time = data[0]
                 self.first_data = False
@@ -165,6 +166,7 @@ class air_quality_DAQ(object):
                         data.append(self.P50_queue[-1])
                         data.append(self.P100_queue[-1])
                         results.writerow(data)
+                        aq_file.flush()
 
                         self.last_time = self.time_queue[-1]
                     else:
