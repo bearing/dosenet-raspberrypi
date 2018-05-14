@@ -33,6 +33,7 @@ class adc_DAQ(object):
 
     def create_file(self):
     	import csv
+        global adc_file
         global adc_results
         file_time= time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
         id_info = []
@@ -41,8 +42,8 @@ class adc_DAQ(object):
         	for row in reader:
         		id_info.append(row)
         filename = "/home/pi/data/"+"_".join(row)+"_CO2"+file_time+".csv"
-        f = open(filename, "ab+")
-        adc_results=csv.writer(open(filename, "ab+"), delimiter = ",")
+        adc_file = open(filename, "ab+")
+        adc_results=csv.writer(adc_file, delimiter = ",")
         metadata = []
         metadata.append("Date and Time")
         metadata.append("CO2 (ppm)")
@@ -50,6 +51,7 @@ class adc_DAQ(object):
         adc_results.writerow(metadata[:])
 
     def start(self):
+        global adc_file
         global adc_results
         date_time = datetime.datetime.now()
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
@@ -91,6 +93,7 @@ class adc_DAQ(object):
                     data.append(self.CO2_queue[i])
                     data.append(self.CO2_error[i])
                     adc_results.writerow(data)
+                    adc_file.flush()
 
                 self.last_time = data[0]
                 self.first_data = False
@@ -103,6 +106,7 @@ class adc_DAQ(object):
                         data.append(self.CO2_queue[-1])
                         data.append(self.CO2_error[-1])
                         adc_results.writerow(data)
+                        adc_file.flush()
 
                         self.last_time = self.time_queue[-1]
                     #else:
