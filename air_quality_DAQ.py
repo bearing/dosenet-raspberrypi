@@ -177,10 +177,8 @@ class air_quality_DAQ(object):
                 print('No data acquired yet.')
 
     def close_file(self):
-        global f
-        f.close()
-
-
+        global aq_file
+        aq_file.close()
 
     def pmplot(self):
         if len(self.time_queue)>0:
