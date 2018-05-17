@@ -15,6 +15,7 @@
 case $1 in
   start)
     echo "Starting the RaspberryPi as an access point"
+    sudo rm /var/lib/misc/dnsmasq.leases
     sudo systemctl start hostapd
     sudo systemctl start dnsmasq
     ;;
