@@ -12,6 +12,7 @@ from matplotlib.gridspec import GridSpec
 from collections import deque
 import serial
 import sys
+import os
 sys.stdout.flush()
 
 #sensor = entercodehere(morestuff) [Not sure if this is necessary]
