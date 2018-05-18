@@ -109,10 +109,8 @@ def make_run_gui():
         global adcdaq
         global aqdaq
 
-        print('Copying data to mobile server')
-        os.system('scp /home/pi/data/*.csv pi@192.168.4.1:/home/pi/data')
-
         if varWeather.get():
+            weather_DAQ.close_file()
             top1.after_cancel(jobWeather)
         if varAir.get():
             aqdaq.close_file()

@@ -8,6 +8,9 @@ from matplotlib.gridspec import GridSpec
 from collections import deque
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
+import sys
+import os
+sys.stdout.flush()
 
 CLK  = 18
 MISO = 23
@@ -223,6 +226,9 @@ class adc_DAQ(object):
 
     def close_file(self):
         global adc_file
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(adc_file.name)
+        print(sys_cmd)
+        os.system(sys_cmd)
         adc_file.close()
 
     def close(self,plot_id):
