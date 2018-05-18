@@ -178,6 +178,11 @@ class air_quality_DAQ(object):
 
     def close_file(self):
         global aq_file
+
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(aq_file.name)
+        print(sys_cmd)
+        os.system(sys_cmd)
+        
         aq_file.close()
 
     def pmplot(self):
