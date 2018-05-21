@@ -177,28 +177,29 @@ class adc_DAQ(object):
         sd = np.std(np.asarray(ydata))
         mean = np.mean(np.asarray(ydata))
         print("Display:{}+/-{}".format(mean,sd))
+        display_text = "CO2 Concentration: "+ str(display)+" (ppm)"
         if display <= 400:
-            ax1.text(0.5, 1.2,"CO2 Concentration: "+ str(display), fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
+            ax1.text(0.5, 1.2,display_text, fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
             if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
             	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
         elif display > 400 and display <= 600:
-            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "yellow")
+            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center", backgroundcolor = "yellow")
             if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
             	ax2.set_ylim(mean-4*sd,mean+4*sd)
         elif display > 600 and display <= 1000:
-            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center", backgroundcolor = "orange")
+            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center", backgroundcolor = "orange")
             if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
             	ax2.set_ylim(mean-4*sd,mean+4*sd)
 
         elif display > 1000:
-            ax1.text(0.5, 1.2,"CO2 Concentration: "+str(display), fontsize = 14, ha = "center" , backgroundcolor = "red")
+            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center" , backgroundcolor = "red")
             if sd<25:
             	ax2.set_ylim(mean-100,mean+100)
             else:
