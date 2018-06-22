@@ -45,7 +45,6 @@ from globalvalues import DEFAULT_LOGFILES, DEFAULT_DATALOGS
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
 from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME, DEFAULT_D3STEST_TIME
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
 from globalvalues import AQ_VARIABLES, CO2_VARIABLES
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
@@ -118,12 +117,12 @@ class Base_Manager(object):
         self.datalog = datalog
         self.datalogflag = datalogflag
 
-        self.a_flag()
+        self.test = test
+
         self.d_flag()
+        self.f_flag()
         self.make_data_log(self.datalog)
         self.data_names = data_names
-
-        self.test = test
 
         self.cirtest = cirtest
 
@@ -135,23 +134,23 @@ class Base_Manager(object):
 
         self.sensor_names = sensor_names
 
-    def a_flag(self):
+    def d_flag(self):
         """
-        Checks if the -a from_argparse is called.
+        Checks if the -d from_argparse is called or if the device is in test_mode.
 
         If it is called, sets the path of the data-log to
         the particular datalog of the sensor that is being used.
         """
-        if self.datalogflag:
+        if self.datalogflag or self.test:
             if self.datalog is None:
                 for i in range(len(DEFAULT_DATALOGS)):
                     if self.sensor_type == i+1:
                         self.datalog = DEFAULT_DATALOGS[i]
                         break
 
-    def d_flag(self):
+    def f_flag(self):
         """
-        Checks if the -d from_argparse is called.
+        Checks if the -f from_argparse is called.
 
         If it is called, sets datalogflag to True.
         """
@@ -168,7 +167,7 @@ class Base_Manager(object):
 
         if verbosity is None:
             if test:
-                verbosity = 2
+                verbosity = 3
             else:
                 verbosity = 1
             if self.cirtest:
@@ -1047,16 +1046,16 @@ if __name__ == '__main__':
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
     parser.add_argument(
-        '--log', '-g', action='store_true', default=False,
+        '--log', '-l', action='store_true', default=False,
         help='Enable file logging of all verbose text (default off)')
     parser.add_argument(
-        '--logfile', '-l', type=str, default=None,
+        '--logfile', '-g', type=str, default=None,
         help='Specify file for logging (default {})'.format(DEFAULT_LOGFILES[sensor-1]))
     parser.add_argument(
-        '--datalogflag', '-f', action='store_true', default=False,
+        '--datalogflag', '-d', action='store_true', default=False,
         help='Enable logging local data (default off)')
     parser.add_argument(
-        '--datalog', '-d', default=None,
+        '--datalog', '-f', default=None,
         help='Specify a path for the datalog (default {})'.format(DEFAULT_DATALOGS[sensor-1]))
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
