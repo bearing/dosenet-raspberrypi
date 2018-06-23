@@ -55,7 +55,7 @@ For example, calling test with `--test` will store the test variable as True in 
 |  Argument   | Short Cut | Example Usage | Defaults |
 |-------------|:---------:|---------------|:--------:|
 |`--sensor`|`-s`|`python managers.py --sensor (sensor #)`|`None`|
-|`--interval`|`-i`|`python managers.py -s (#) --interval (time in seconds)`|`500`|
+|`--interval`|`-i`|`python managers.py -s (#) --interval (time in seconds)`|`300`|
 |`--config`|`-c`|`python managers.py -s (#) --config (path to config file)`|`'/home/pi/config/config.csv'`|
 |`--publickey`|`-k`|`python managers.py -s (#) --publickey (path to publickey file)`|`'/home/pi/config/id_rsa_lbl.pub'`|
 |`--hostname`|`-4`|`python managers.py -s (#) --hostname (hostname server)`|`'dosenet.dhcp.lbl.gov'`|
@@ -84,7 +84,7 @@ D3S (*Sensor #2*) specific variables that can be entered are:
 |-------------|:---------:|---------------|:--------:|
 |`--calibrationlog`|`-j`|`python managers.py -s 2 --calibrationlog (path to calibrationlog file)`|`'/home/pi/calibration-log_D3S.txt'`|
 |`--calibrationlogflag`|`-z`|`python managers.py -s 2 --calibrationlogflag`|`False`|
-|`--calibrationlogtime`|`-x`|`python managers.py -s 2 --calibrationlogtime (time in seconds)`|
+|`--calibrationlogtime`|`-x`|`python managers.py -s 2 --calibrationlogtime (time in seconds)`|`600`|
 |`--count`|`-0`|`python managers.py -s 2 --count (count #)`|`0`|
 |`--d3s_LED_pin`|`-3`|`python managers.py -s 2 --d3s_LED_pin (pin #)`|new:`13`, old:`19`|
 |`--d3s_LED_blink`|`-b`|`python managers.py -s 2 --d3s_LED_blink (blink True/False)`|`True`|
@@ -94,3 +94,21 @@ D3S (*Sensor #2*) specific variables that can be entered are:
 |`--device`|`-e`|`python managers.py -s 2 --device (all or specific D3S)`|`'all'`|
 |`--log-bytes`|`-y`|`python managers.py -s 2 --log-bytes`|`False`|
 |`--transport`|`-n`|`python managers.py -s 2 --transport (transport type)`|`'usb'`|
+
+Air Quality Sensor (*Sensor #3*) specific varibles that can be entered are:
+
+|  Argument   | Short Cut | Example Usage | Defaults |
+|-------------|:---------:|---------------|:--------:|
+|`--AQ_port`|`-a`|`python managers.py -s 3 --AQ_port (a Serial version of a port)`|`DEFAULT_AQ_PORT` (see `globalvalues.py`)|
+
+CO2 Sensor (*Sensor #4*) specific varibles that can be entered are:
+
+|  Argument   | Short Cut | Example Usage | Defaults |
+|-------------|:---------:|---------------|:--------:|
+|`--CO2_port`|`-a`|`python managers.py -s 4 --CO2_port (a port using Adafruit_MCP3008 package)`|`DEFAULT_CO2_PORT` (see `globalvalues.py`)|
+
+Weather Sensor (*Sensor #5*) specific varibles that can be entered are:
+
+|  Argument   | Short Cut | Example Usage | Defaults |
+|-------------|:---------:|---------------|:--------:|
+|`--Weather_Port`|`-a`|`python managers.py -s 5 --Weather_Port (a port using Adafruit_BME280 package)`|`DEFAULT_WEATHER_PORT` (see `globalvalues.py`)|
