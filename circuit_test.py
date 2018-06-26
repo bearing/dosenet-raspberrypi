@@ -89,19 +89,23 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
                     sys.exit()
             except AttributeError:
                 pass
-            try:
-                ans = int(round(float(ans)))
-                if restr and not def_choices:
-                    if ans not in ans_choices:
-                        print('{red}Please enter one of the following: {choices}{reset}'.format(
-                            red=ANSI_RED, choices=choices, reset=ANSI_RESET))
+            if ans.strip():
+                try:
+                    ans = int(round(float(ans)))
+                    if restr and not def_choices:
+                        if ans not in ans_choices:
+                            print('{red}Please enter one of the following: {choices}{reset}'.format(
+                                red=ANSI_RED, choices=choices, reset=ANSI_RESET))
+                        else:
+                            int_err = False
                     else:
                         int_err = False
-                else:
-                    int_err = False
-            except ValueError:
-                print('{red}Please enter a time in seconds as a number. {reset}'.format(
-                    red=ANSI_RED, reset=ANSI_RESET))
+                except ValueError:
+                    print('{red}Please enter a time in seconds as a number. {reset}'.format(
+                        red=ANSI_RED, reset=ANSI_RESET))
+            else:
+                ans = 30
+                int_err = False
     return ans
 
 sensors, ansr_err, int_err, new_setup = [], True, True, True

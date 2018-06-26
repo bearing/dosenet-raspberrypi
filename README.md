@@ -140,6 +140,13 @@ for any older devices, so if there is ever an old device that we get back becaus
 then it would be a good idea to run this test to make sure that the data collection is working. 
 
 Next the program will go through each of the 4 relevant sensors and ask if they are connected to the device. It will
-also ask if you would like to log the data from the testing session, meaning save the data collected in .txt files 
+also ask if you would like to log the data from the testing session for each of the sensors, meaning save the data collected in .txt files 
 in the `/home/pi/` directory. 
 
+Finally, it will ask you to in put the time in seconds (i.e 300sec = 5min) that you would like the testing interval to be. 
+If this question is left blank then the interval will be set to the default of 30 seconds. 
+
+Once all the questions have been asked, the program will test each of the sensors. If there are any errors or simple problems such as
+all zeros in the sensor data then the program will output the error along with any simple fixes. 
+
+(**Note:** All these simple fixes are suggestions that Chris Lamb wrote for what he has found to cause common problems, if you have any questions or have noticed some error that does not get caught by the `circuit_test.py` file then let Chris know and he can add in some suggestions/a fix for that error in the program)
