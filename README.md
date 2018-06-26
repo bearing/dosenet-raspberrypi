@@ -50,7 +50,7 @@ In regards to the example usages, replace anything in parentheses with the desir
 Also any argument who's default is False without a parenthesis next to the example usage option will automatically get set to True if the argument is used. 
 For example, calling test with `--test` will store the test variable as True in the execution of the `managers.py` program.
 
-**Second Important Note** Only the sensor argument is required, all the rest are set automatically if not used
+**Second Important Note:** Only the sensor argument is required, all the rest are set automatically if not used
 
 |  Argument   | Short Cut | Example Usage | Defaults |
 |-------------|:---------:|---------------|:--------:|

@@ -9,7 +9,7 @@ from managers import SleepError
 from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED, ANSI_CYAN, ANSI_YEL
 from globalvalues import CIRCUIT_SENSOR_NAMES
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
-from globalvalues import INTERVAL_QUESTION, SENSOR_CONNECTION_QUESTION
+from globalvalues import INTERVAL_QUESTION, SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 from globalvalues import CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
@@ -30,58 +30,128 @@ this testing code, along with giving a couple helpful hints to help determine
 possible things that could cause problems with sensors working properly.
 """
 
-sensors, question, ansr_err, int_err, new_setup = [], SENSOR_CONNECTION_QUESTION, True, True, True
+if not RPI:
+    print(SINGLE_BREAK_LINE)
+    print(('{red}This is not being executed on a RaspberryPi, none of the rest of {reset}' +
+        '{red}this program \nwill function properly. Please try executing this again {reset}' +
+        '{red}on an actual device.\n\nIf this is being run on a RaspberryPi and you {reset}' +
+        '{red}are seeing this error, \nmake sure the default package for the GPIO pins\n{reset}' +
+        '{red}has not been deleted for some strange reason.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+    print(SINGLE_BREAK_LINE)
+    sys.exit()
+
+def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','NO','EXIT')):
+    """
+    Can record answers in either string or integer format, also in string mode,
+    evaluates whether a given user input is a valid response based on either the
+    default answer choices or an optional inputted choice set.
+    If the default answer set is used, it converts the user answer to True/False
+    depending on whether they entered y/yes or n/no respectively.
+
+    In integer mode, validates the user input type to make sure it is a number,
+    then outputs the user answer.
+
+    At any point during any question, the user may enter "exit" which terminates
+    the program.
+    """
+    if ans_choices == default_answer_choices:
+        choices = str(ans_choices[:4])[1:-1]
+        def_choices = True
+    else:
+        choices = str(ans_choices)[1:-1]
+        def_choices = False
+    ansr_err, int_err = True, True
+    if not int_vers:
+        while ansr_err:
+            ans = raw_input(question).upper()
+            if restr:
+                if ans not in ans_choices:
+                    print('{red}Please enter one of the following: {choices}{reset}'.format(
+                        red=ANSI_RED, choices=choices, reset=ANSI_RESET))
+                else:
+                    ansr_err = False
+            else:
+                ansr_err = False
+        if restr and def_choices:
+            if ans == 'YES' or ans == 'Y':
+                ans = True
+            elif ans == 'EXIT':
+                sys.exit()
+            elif ans == 'NO' or ans == 'N':
+                ans = False
+    else:
+        while int_err:
+            ans = raw_input(question)
+            try:
+                if ans.upper() == 'EXIT':
+                    sys.exit()
+            except AttributeError:
+                pass
+            try:
+                ans = int(round(float(ans)))
+                if restr and not def_choices:
+                    if ans not in ans_choices:
+                        print('{red}Please enter one of the following: {choices}{reset}'.format(
+                            red=ANSI_RED, choices=choices, reset=ANSI_RESET))
+                    else:
+                        int_err = False
+                else:
+                    int_err = False
+            except ValueError:
+                print('{red}Please enter a time in seconds as a number. {reset}'.format(
+                    red=ANSI_RED, reset=ANSI_RESET))
+    return ans
+
+sensors, ansr_err, int_err, new_setup = [], True, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
+sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
+default_answer_choices = ('Y','YES','N','NO','EXIT')
+
 print(SINGLE_BREAK_LINE)
-while ansr_err:
-    confi = raw_input('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
-        green=ANSI_GR, reset=ANSI_RESET)).upper()
-    if confi not in ['YES', 'Y', 'NO', 'N']:
-        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-            red=ANSI_RED, reset=ANSI_RESET))
-    else:
-        ansr_err = False
-if confi == 'NO' or confi == 'N':
+if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
+    green=ANSI_GR, reset=ANSI_RESET)):
     new_setup = False
 print('\n')
 for sensor in range(4):
-    ansr_err = True
-    while ansr_err:
-        sensor_i = raw_input(question.format(sensor_name=names[sensor])).upper()
-        if sensor_i not in ['YES', 'Y', 'NO', 'N']:
-            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                red=ANSI_RED, reset=ANSI_RESET))
-        else:
-            ansr_err = False
-    sensors.append(sensor_i)
+    sensor_i, sensor_i2 = ques_conv(sensor_question.format(sensor_name=names[sensor])), None
+    if sensor_i:
+        sensor_i2 = ques_conv(data_question.format(sensor_name=names[sensor]))
+    sensors.append((sensor_i, sensor_i2))
 print('\n')
-if not any(ans=='YES' or ans=='Y' for ans in sensors):
+if not any(ans[0] for ans in sensors):
     print(('{red}Shutting down program since no sensors are connected.{reset}').format(
         red=ANSI_RED, reset=ANSI_RESET))
     print(SINGLE_BREAK_LINE)
     sys.exit()
-while int_err:
-    try:
-        interval = int(raw_input(INTERVAL_QUESTION))
-        int_err = False
-    except ValueError:
-        print('{red}Please enter a time in seconds as a number. {reset}'.format(red=ANSI_RED, reset=ANSI_RESET))
+interval = ques_conv(INTERVAL_QUESTION, True)
 print(DOUBLE_BREAK_LINE)
 
 pocket, AQ, CO2, Weather = False, False, False, False
-if sensors[0] == 'YES' or sensors[0] == 'Y':
-    sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
+if sensors[0][0]:
+    if sensors[0][1]:
+        sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup, datalogflag=True)
+    else:
+        sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
     pocket, pocket_data = True, False
-if sensors[1] == 'YES' or sensors[1] == 'Y':
-    sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup)
+if sensors[1][0]:
+    if sensors[1][1]:
+        sensor_pocket = Manager_AQ(cirtest=True, new_setup=new_setup, datalogflag=True)
+    else:
+        sensor_pocket = Manager_AQ(cirtest=True, new_setup=new_setup)
     AQ, AQ_data = True, False
-if sensors[2] == 'YES' or sensors[2] == 'Y':
-    sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
+if sensors[2][0]:
+    if sensors[2][1]:
+        sensor_pocket = Manager_CO2(cirtest=True, new_setup=new_setup, datalogflag=True)
+    else:
+        sensor_pocket = Manager_CO2(cirtest=True, new_setup=new_setup)
     CO2, CO2_data = True, False
-if sensors[3] == 'YES' or sensors[3] == 'Y':
+if sensors[3][0]:
     try:
-        sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
+        if sensors[3][1]:
+            sensor_pocket = Manager_Weather(cirtest=True, new_setup=new_setup, datalogflag=True)
+        else:
+            sensor_pocket = Manager_Weather(cirtest=True, new_setup=new_setup)
         Weather, weather_data = True, False
     except NameError:
         print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
@@ -127,51 +197,23 @@ if pocket:
                 print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                     '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                     '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-            ansr_err = True
-            while ansr_err:
-                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
-                    yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                if retry not in ['YES', 'Y', 'NO', 'N']:
-                    print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                        red=ANSI_RED, reset=ANSI_RESET))
-                else:
-                    ansr_err = False
-            if retry == 'NO' or retry == 'N':
+            retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
+                yellow=ANSI_YEL, reset=ANSI_RESET))
+            if not retry:
                 if AQ or CO2 or Weather:
-                    ansr_err = True
-                    while ansr_err:
-                        cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                            yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                        if cont not in ['YES', 'Y', 'NO', 'N']:
-                            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                                red=ANSI_RED, reset=ANSI_RESET))
-                        else:
-                            ansr_err = False
-                    if cont == 'NO' or cont == 'N':
+                    cont = ques_conv('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                        yellow=ANSI_YEL, reset=ANSI_RESET))
+                    if not cont:
                         AQ, CO2, Weather = False, False, False
                         AQ_data, CO2_data, weather_data = None, None, None
                         testing = False
                         break
                 testing = False
             else:
-                ansr_err = True
-                while ansr_err:
-                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if change_int not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if change_int == 'YES' or change_int == 'Y':
-                    int_err = True
-                    while int_err:
-                        try:
-                            interval_new = int(raw_input(INTERVAL_QUESTION))
-                            int_err = False
-                        except ValueError:
-                            print('{red}Please enter a time in seconds as a number. {reset}'.format(
-                                red=ANSI_RED, reset=ANSI_RESET))
+                change_int = ques_conv('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    yellow=ANSI_YEL, reset=ANSI_RESET))
+                if change_int:
+                    interval_new = ques_conv(INTERVAL_QUESTION, True)
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
@@ -223,51 +265,23 @@ if AQ:
                 print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                     '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                     '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-            ansr_err = True
-            while ansr_err:
-                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
-                    yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                if retry not in ['YES', 'Y', 'NO', 'N']:
-                    print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                        red=ANSI_RED, reset=ANSI_RESET))
-                else:
-                    ansr_err = False
-            if retry == 'NO' or retry == 'N':
+            retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
+                yellow=ANSI_YEL, reset=ANSI_RESET))
+            if not retry:
                 if CO2 or Weather:
-                    ansr_err = True
-                    while ansr_err:
-                        cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                            yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                        if cont not in ['YES', 'Y', 'NO', 'N']:
-                            print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                                red=ANSI_RED, reset=ANSI_RESET))
-                        else:
-                            ansr_err = False
-                    if cont == 'NO' or cont == 'N':
+                    cont = ques_conv('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                        yellow=ANSI_YEL, reset=ANSI_RESET))
+                    if not cont:
                         CO2, Weather = False, False
                         CO2_data, weather_data = None, None
                         testing = False
                         break
                 testing = False
             else:
-                ansr_err = True
-                while ansr_err:
-                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if change_int not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if change_int == 'YES' or change_int == 'Y':
-                    int_err = True
-                    while int_err:
-                        try:
-                            interval_new = int(raw_input(INTERVAL_QUESTION))
-                            int_err = False
-                        except ValueError:
-                            print('{red}Please enter a time in seconds as a number. {reset}'.format(
-                                red=ANSI_RED, reset=ANSI_RESET))
+                change_int = ques_conv('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    yellow=ANSI_YEL, reset=ANSI_RESET))
+                if change_int:
+                    interval_new = ques_conv(INTERVAL_QUESTION, True)
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
@@ -307,50 +321,22 @@ if CO2:
             print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                 '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                 '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-        ansr_err = True
-        while ansr_err:
-            retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
-                yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-            if retry not in ['YES', 'Y', 'NO', 'N']:
-                print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                    red=ANSI_RED, reset=ANSI_RESET))
-            else:
-                ansr_err = False
-        if retry == 'NO' or retry == 'N':
+        retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
+            yellow=ANSI_YEL, reset=ANSI_RESET))
+        if not retry:
             if Weather:
-                ansr_err = True
-                while ansr_err:
-                    cont = raw_input('{yellow}Would you like to continue to other sensors?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if cont not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if cont == 'NO' or cont == 'N':
+                cont = ques_conv('{yellow}Would you like to continue to other sensors?  {reset}'.format(
+                    yellow=ANSI_YEL, reset=ANSI_RESET))
+                if not cont:
                     Weather, weather_data = False, None
                     testing = False
                     break
             testing = False
         else:
-            ansr_err = True
-            while ansr_err:
-                change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
-                    yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                if change_int not in ['YES', 'Y', 'NO', 'N']:
-                    print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                        red=ANSI_RED, reset=ANSI_RESET))
-                else:
-                    ansr_err = False
-            if change_int == 'YES' or change_int == 'Y':
-                int_err = True
-                while int_err:
-                    try:
-                        interval_new = int(raw_input(INTERVAL_QUESTION))
-                        int_err = False
-                    except ValueError:
-                        print('{red}Please enter a time in seconds as a number. {reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
+            change_int = ques_conv('{yellow}Would you like to change the time interval?  {reset}'.format(
+                yellow=ANSI_YEL, reset=ANSI_RESET))
+            if change_int:
+                interval_new = ques_conv(INTERVAL_QUESTION, True)
                 start_time, end_time = time.time(), time.time() + interval_new
             else:
                 start_time, end_time = time.time(), time.time() + interval
@@ -382,37 +368,16 @@ if Weather:
             print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                 '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                 '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
-            ansr_err = True
-            while ansr_err:
-                retry = raw_input('{yellow}Would you like to try again?  {reset}'.format(
-                    yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                if retry not in ['YES', 'Y', 'NO', 'N']:
-                    print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                        red=ANSI_RED, reset=ANSI_RESET))
-                else:
-                    ansr_err = False
-            if retry == 'NO' or retry == 'N':
+            retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
+                yellow=ANSI_YEL, reset=ANSI_RESET))
+            if not retry:
                 testing = False
                 break
             else:
-                ansr_err = True
-                while ansr_err:
-                    change_int = raw_input('{yellow}Would you like to change the time interval?  {reset}'.format(
-                        yellow=ANSI_YEL, reset=ANSI_RESET)).upper()
-                    if change_int not in ['YES', 'Y', 'NO', 'N']:
-                        print('{red}Please enter one of the following: Yes, Y, No, or N{reset}'.format(
-                            red=ANSI_RED, reset=ANSI_RESET))
-                    else:
-                        ansr_err = False
-                if change_int == 'YES' or change_int == 'Y':
-                    int_err = True
-                    while int_err:
-                        try:
-                            interval_new = int(raw_input(INTERVAL_QUESTION))
-                            int_err = False
-                        except ValueError:
-                            print('{red}Please enter a time in seconds as a number. {reset}'.format(
-                                red=ANSI_RED, reset=ANSI_RESET))
+                change_int = ques_conv('{yellow}Would you like to change the time interval?  {reset}'.format(
+                    yellow=ANSI_YEL, reset=ANSI_RESET))
+                if change_int:
+                    interval_new = ques_conv(INTERVAL_QUESTION, True)
                     start_time, end_time = time.time(), time.time() + interval_new
                 else:
                     start_time, end_time = time.time(), time.time() + interval
