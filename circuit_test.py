@@ -34,9 +34,9 @@ if not RPI:
     print(SINGLE_BREAK_LINE)
     print(('{red}This is not being executed on a RaspberryPi, none of the rest of {reset}' +
         '{red}this program \nwill function properly. Please try executing this again {reset}' +
-        '{red}on an actual device.\n\nIf this is being run on a RaspberryPi and you {reset}' +
-        '{red}are seeing this error, \nmake sure the default package for the GPIO pins\n{reset}' +
-        '{red}has not been deleted for some strange reason.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+        '{red}on an actual device.\n\nHowever, if this is being run on a RaspberryPi and you {reset}' +
+        '{red}are seeing this \nerror, make sure the default package for the GPIO pins {reset}' +
+        '{red}has not been \ndeleted for some strange reason.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
     print(SINGLE_BREAK_LINE)
     sys.exit()
 
@@ -54,10 +54,12 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
     At any point during any question, the user may enter "exit" which terminates
     the program.
     """
+    default_answer_choices = ('Y','YES','N','NO','EXIT')
     if ans_choices == default_answer_choices:
         choices = str(ans_choices[:4])[1:-1]
         def_choices = True
     else:
+        ans_choices = [choice.upper() for choice in ans_choices]
         choices = str(ans_choices)[1:-1]
         def_choices = False
     ansr_err, int_err = True, True
@@ -106,7 +108,6 @@ sensors, ansr_err, int_err, new_setup = [], True, True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
-default_answer_choices = ('Y','YES','N','NO','EXIT')
 
 print(SINGLE_BREAK_LINE)
 if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(

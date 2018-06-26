@@ -2,7 +2,7 @@
 Raspberry Pi specific software for devices.
 ___
 ### Please take note
-This readme file may not be fully up to date. (*Last updated: 6/22/18*)
+This readme file may not be fully up to date. (*Last updated: 6/26/18*)
 ___
 ### Running the Devices
 Make sure that you are in the proper directory with `cd ~/dosenet-raspberrypi/` (Otherwise the files won't run!)
@@ -112,3 +112,34 @@ Weather Sensor (*Sensor #5*) specific varibles that can be entered are:
 |  Argument   | Short Cut | Example Usage | Defaults |
 |-------------|:---------:|---------------|:--------:|
 |`--Weather_Port`|`-a`|`python managers.py -s 5 --Weather_Port (a port using Adafruit_BME280 package)`|`DEFAULT_WEATHER_PORT` (see `globalvalues.py`)|
+
+___
+### Circuit Testing 
+
+Run in the same directory as normal: `~/dosenet-raspberrypi/` 
+
+		circuit_test.py
+> **Usage**
+>> `python circuit_test.py`
+>
+> Pretty simple usage, there are no extra options to add in like with 
+> the many options in `managers.py`
+
+Once this program is executed at the terminal, it will ask you many questions that
+are relevant for setting up the testing. 
+
+For example, the first question that gets asked is:
+*"Does this PiHat have the new LED configuration?"* 
+In this case, the "new" LED configuartion is referring to the pins that the 
+3-hole header for the LEDs is connected to on the PiHit. If it is connected across pin
+\#'s 13, 16 and 19 (i.e with two wires on the right side of the header to hook up the OLED screen) then 
+the PiHat has the new LED configuration. This will be the case for any newer or newly made PiHats. The
+old (or original) LED configuration has the 3-hole header for the LEDs connected across pin
+\#'s 19, 20, and 21 (i.e with no space on the right side of the header). This will be the case
+for any older devices, so if there is ever an old device that we get back because it is acting weirdly,
+then it would be a good idea to run this test to make sure that the data collection is working. 
+
+Next the program will go through each of the 4 relevant sensors and ask if they are connected to the device. It will
+also ask if you would like to log the data from the testing session, meaning save the data collected in .txt files 
+in the `/home/pi/` directory. 
+
