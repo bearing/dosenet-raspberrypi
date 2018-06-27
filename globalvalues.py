@@ -207,7 +207,7 @@ SENSOR_CONNECTION_QUESTION = (
 
 DATA_LOGGING_QUESTION = (
     '{green}Do you want to log data for the {reset}' + '{blue}{{sensor_name}}{reset}' +
-    '{green}?{reset}').format(green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
+    '{green}?  {reset}').format(green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
 
 INTERVAL_QUESTION = (
     '{green}How long do you want to test each sensor for?  {reset}').format(
