@@ -262,8 +262,7 @@ class Data_Handler(object):
                     self.queue.append([timestring, spectra])
                 os.remove(path)
 
-        if self.manager.sensor_type == 3 or \
-            self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+        if self.manager.sensor_type in (3, 4, 5):
             if path == None and self.manager.sensor_type == 3:
                 path = DEFAULT_DATA_BACKLOG_FILE_AQ
             if path == None and self.manager.sensor_type == 4:

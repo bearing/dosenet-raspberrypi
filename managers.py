@@ -517,6 +517,7 @@ class Base_Manager(object):
                     self.datalog, this_start, this_end,
                     cpm=cpm, cpm_err=cpm_err, counts=counts)
             else:
+                self.data_log(self.datalog, cpm=cpm, cpm_err=cpm_err)
                 return counts, cpm, cpm_err
 
         if self.sensor_type == 2:
@@ -555,6 +556,7 @@ class Base_Manager(object):
                 self.data_handler.main(
                     self.datalog, this_start, this_end, average_data=average_data)
             else:
+                self.data_log(self.datalog, average_data=average_data)
                 return average_data
 
         if self.sensor_type == 4:
@@ -584,6 +586,7 @@ class Base_Manager(object):
                 self.data_handler.main(
                     self.datalog, this_start, this_end, average_data=average_data)
             else:
+                self.data_log(self.datalog, average_data=average_data)
                 return average_data
 
         if self.sensor_type == 5:
@@ -612,6 +615,7 @@ class Base_Manager(object):
                 self.data_handler.main(
                     self.datalog, this_start, this_end, average_data=average_data)
             else:
+                self.data_log(self.datalog, average_data=average_data)
                 return average_data
 
     def takedown(self):

@@ -137,28 +137,28 @@ print(DOUBLE_BREAK_LINE)
 pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0][0]:
     if sensors[0][1]:
-        sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup, datalogflag=True)
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
     else:
-        sensor_pocket = Manager_Pocket(cirtest=True, new_setup=new_setup)
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup)
     pocket, pocket_data = True, False
 if sensors[1][0]:
     if sensors[1][1]:
-        sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup, datalogflag=True)
+        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
     else:
-        sensor_AQ = Manager_AQ(cirtest=True, new_setup=new_setup)
+        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup)
     AQ, AQ_data = True, False
 if sensors[2][0]:
     if sensors[2][1]:
-        sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup, datalogflag=True)
+        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
     else:
-        sensor_CO2 = Manager_CO2(cirtest=True, new_setup=new_setup)
+        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup)
     CO2, CO2_data = True, False
 if sensors[3][0]:
     try:
         if sensors[3][1]:
-            sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup, datalogflag=True)
+            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
         else:
-            sensor_weather = Manager_Weather(cirtest=True, new_setup=new_setup)
+            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup)
         Weather, weather_data = True, False
     except NameError:
         print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
