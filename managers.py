@@ -196,7 +196,7 @@ class Base_Manager(object):
 
         if self.test:
             if interval is None:
-                for i in range(len(DEFAULT_INTERVAL_TEST)):
+                for i in range(len(DEFAULT_TEST_INTERVALS)):
                     if self.sensor_type == i+1:
                         self.vprint(
                             2, "No interval given, using default for {}".format(TEST_INTERVAL_NAMES[i]))

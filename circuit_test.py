@@ -178,6 +178,7 @@ if pocket:
             print(running.format(sensor_name=names[0], interval=interval))
             first_run = False
         else:
+            print('\n')
             if interval_new != None:
                 print(retrying.format(sensor_name=names[0], interval=interval_new))
             else:
@@ -204,6 +205,7 @@ if pocket:
                 print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                     '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                     '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+            print('\n')
             retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
                 yellow=ANSI_YEL, reset=ANSI_RESET))
             if not retry:
@@ -234,6 +236,7 @@ if AQ:
             print(running.format(sensor_name=names[1], interval=interval))
             first_run = False
         else:
+            print('\n')
             if interval_new != None:
                 print(retrying.format(sensor_name=names[1], interval=interval_new))
             else:
@@ -256,6 +259,14 @@ if AQ:
                 '{red}If this continues, try restarting or checking the PiHat.{reset}').format(
                 red=ANSI_RED, reset=ANSI_RESET))
             ind_err = True
+        except serial.serialutil.SerialException:
+            print(('{red}SerialException error from the Air Quality Sensor. \n{reset}' +
+                '{red}This happens if the Air Quality Sensor is already running through some other \n{reset}' +
+                '{red}process on the device such as main.sh running the AQ.sh script which in turn runs\n{reset}' +
+                '{red}its own incident of the AQ manager. Since the Air Quality sensor uses the serial {reset}' +
+                '{red}port,\n then only one process can access that port. So shut down any other {reset}' +
+                '{red}process that is running the Air Quality sensor and try again.{reset}').format(
+                red=ANSI_RED, reset=ANSI_RESET))
         if any(data != 0 for data in average_data) and not ind_err:
             AQ_data = True
             print('{green}Found data from the {sensor}!{reset}'.format(
@@ -272,6 +283,7 @@ if AQ:
                 print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                     '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                     '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+            print('\n')
             retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
                 yellow=ANSI_YEL, reset=ANSI_RESET))
             if not retry:
@@ -302,6 +314,7 @@ if CO2:
             print(running.format(sensor_name=names[2], interval=interval))
             first_run = False
         else:
+            print('\n')
             if interval_new != None:
                 print(retrying.format(sensor_name=names[2], interval=interval_new))
             else:
@@ -328,6 +341,7 @@ if CO2:
             print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                 '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                 '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+        print('\n')
         retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
             yellow=ANSI_YEL, reset=ANSI_RESET))
         if not retry:
@@ -356,6 +370,7 @@ if Weather:
             print(running.format(sensor_name=names[3], interval=interval))
             first_run = False
         else:
+            print('\n')
             if interval_new != None:
                 print(retrying.format(sensor_name=names[3], interval=interval_new))
             else:
@@ -375,6 +390,7 @@ if Weather:
             print(('{red}Either the interval was too short, the sensor is not connected or no data\n{reset}' +
                 '{red}was found. Make sure the sensor is connected and try again to determine\n{reset}' +
                 '{red}whether it is the circuit or not.{reset}').format(red=ANSI_RED, reset=ANSI_RESET))
+            print('\n')
             retry = ques_conv('{yellow}Would you like to try again?  {reset}'.format(
                 yellow=ANSI_YEL, reset=ANSI_RESET))
             if not retry:
