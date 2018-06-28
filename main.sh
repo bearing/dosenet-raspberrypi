@@ -19,8 +19,6 @@ LOG=/tmp/manager.log
 
 case "$1" in
   start)
-    sudo ifup --force eth0 &
-    sudo ifup --force wlan1 &
     logger --stderr --id --tag $LOGTAG "Starting all DoseNet scripts"
     echo "Starting all DoseNet scripts" > $LOG
     sudo -u pi -E python $DOSENET/master_manager.py >> $LOG 2>&1
