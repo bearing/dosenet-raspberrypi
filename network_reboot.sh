@@ -18,6 +18,7 @@ case $1 in
     sudo rm /var/lib/misc/dnsmasq.leases
     sudo systemctl start hostapd
     sudo systemctl start dnsmasq
+    sudo ifup --force wlan1 &
     ;;
   stop)
     echo "Stopping the access point"
