@@ -13,7 +13,7 @@ case "$1" in
     ;;
   test)
     echo "Starting CO2 sensor script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 4 --test --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python $DOSENET/managers.py --sensor 4 --datalogflag -i 600 --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping CO2 sensor script" >> $LOG
