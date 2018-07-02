@@ -24,11 +24,11 @@ class OLED_Manager(object):
         displays a small message when complete
         """
         ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
-        types.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
-        types.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
-        types.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
-        types.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
-        types.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(28, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(14, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(12, 1)
+        ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(15, 3, "Pin Setup Complete!")
