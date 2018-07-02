@@ -59,4 +59,5 @@ class OLED_Manager(object):
 
     def Read_Data(self, file, sensor):
         """
-        This function is meant to read data from a CSV file and 
+        This function is meant to read data from a CSV file and
+        """

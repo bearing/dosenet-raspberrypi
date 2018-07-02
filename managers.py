@@ -119,6 +119,8 @@ class Base_Manager(object):
                  sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
                  cirtest=False,
+                 OLED_connect=False,
+                 OLED_data_log=None,
                  ):
         self.new_setup = new_setup
         self.sensor_type = sensor_type
