@@ -3,6 +3,7 @@ import datetime
 import time
 import argparse
 import sys
+import os
 
 class OLED_Manager(object):
     """
@@ -31,7 +32,7 @@ class OLED_Manager(object):
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(15, 3, "Pin Setup Complete!")
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(7, 3, "Pin Setup Complete!")
         print("Pin Setup Complete!")
         time.sleep(1.5)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -57,7 +58,20 @@ class OLED_Manager(object):
         """
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    def Read_Data(self, file, sensor):
+    def Recent_Data(self, file):
         """
-        This function is meant to read data from a CSV file and
+        This function is meant to read the most recent row from a CSV file
+        and delete that row then return the data read.
         """
+        with open(file_location, 'r') as input, open(file_location2, 'w') as output:
+		writer, reader, i = csv.writer(output), csv.reader(input), 0
+		for row in reader:
+			if i==1:
+				for j in range(len(row)):
+					data.append(row[j][1:-1].replace(' ', '').split(','))
+			else:
+				writer.writerow(row)
+			i+=1
+		os.remove(file_location)
+		os.rename(file_location2, file_location)
+		return data

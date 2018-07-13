@@ -55,6 +55,7 @@ from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
 from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
 from globalvalues import CO2_VARIABLES
 from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
+from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
 except ImportError:
@@ -119,8 +120,8 @@ class Base_Manager(object):
                  sensor_names=SENSOR_NAMES,
                  data_names=DATA_NAMES,
                  cirtest=False,
-                 OLED_connect=False,
-                 OLED_data_log=None,
+                 oled=False,
+                 oled_log=None,
                  ):
         self.new_setup = new_setup
         self.sensor_type = sensor_type
@@ -1116,11 +1117,17 @@ if __name__ == '__main__':
         '--aeskey', '-q', default=None,
         help='Specify the aes encription key, mainly used with the D3S ' +
         'because of the larger data packets (default {})'.format(DEFAULT_AESKEY))
+    parser.add_argument(
+        '--oled', '-o', action='store_true', default=False,
+        help='Indicates whether an OLED screen is present or not')
+    parser.add_argument(
+        '--oled_data', '-r', default=None,
+        help='Specify a path for the datalog (default {})'.format(DEFAULT_OLED_LOGS[sensor-1]))
 
     if sensor == 1:
         #Pocket Geiger specific variables.
         parser.add_argument(
-            '--counts_LED_pin', '-o', default=None,
+            '--counts_LED_pin', '-z', default=None,
             help='Specify which pin the counts LED is connected to.')
         parser.add_argument(
             '--network_LED_pin', '-e', default=None,
