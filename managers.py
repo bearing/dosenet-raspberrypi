@@ -513,18 +513,6 @@ class Base_Manager(object):
         if self.sensor_type == 1:
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end,
-                    cpm=cpm, cpm_err=cpm_err, counts=counts)
-            else:
-                self.data_log(self.datalog, cpm=cpm, cpm_err=cpm_err)
-                return counts, cpm, cpm_err
-
-        if self.sensor_type == 2:
-            self.data_handler.main(
-                self.datalog, this_start, this_end,
-                calibrationlog=self.calibrationlog, spectra=spectra)
 
         if self.sensor_type == 3:
             while time.time() < this_end:
@@ -551,12 +539,6 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end, average_data=average_data)
-            else:
-                self.data_log(self.datalog, average_data=average_data)
-                return average_data
 
         if self.sensor_type == 4:
             while time.time() < this_end:
@@ -579,12 +561,6 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end, average_data=average_data)
-            else:
-                self.data_log(self.datalog, average_data=average_data)
-                return average_data
 
         if self.sensor_type == 5:
             while time.time() < this_end:
@@ -606,10 +582,24 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
+
+        if not self.cirtest:
+            if self.sensor_type == 1:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end,
+                    cpm=cpm, cpm_err=cpm_err, counts=counts)
+            elif self.sensor_type == 2:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end,
+                    calibrationlog=self.calibrationlog, spectra=spectra)
+            elif self.sensor_type in [3,4,5]:
                 self.data_handler.main(
                     self.datalog, this_start, this_end, average_data=average_data)
-            else:
+        else:
+            if self.sensor_type == 1:
+                self.data_log(self.datalog, cpm=cpm, cpm_err=cpm_err)
+                return counts, cpm, cpm_err
+            elif self.sensor_type in [3,4,5]:
                 self.data_log(self.datalog, average_data=average_data)
                 return average_data
 
