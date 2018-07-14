@@ -509,6 +509,7 @@ class Base_Manager(object):
         Chooses the type of sensor that is being used and
         determines the data handling type to use.
         """
+        average_data, sensor_data_set = [], []
         if self.sensor_type == 1:
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
@@ -526,8 +527,6 @@ class Base_Manager(object):
                 calibrationlog=self.calibrationlog, spectra=spectra)
 
         if self.sensor_type == 3:
-            aq_data_set = []
-            average_data = []
             while time.time() < this_end:
                 text = self.AQ_port.read(32)
                 buffer = [ord(c) for c in text]
@@ -543,7 +542,7 @@ class Base_Manager(object):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                         current_second_data = ['%.2f' % i for i in list(map(float, current_second_data))]
                         current_second_data.insert(0,datetime.datetime.now())
-                        aq_data_set.append(current_second_data)
+                        sensor_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(aq_data_set)):
@@ -560,8 +559,6 @@ class Base_Manager(object):
                 return average_data
 
         if self.sensor_type == 4:
-            co2_data_set = []
-            average_data = []
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
@@ -573,7 +570,7 @@ class Base_Manager(object):
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%conc))
                 this_instant_data.append(float('%.2f'%uv_index))
-                co2_data_set.append(this_instant_data)
+                sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(co2_data_set)):
@@ -590,8 +587,6 @@ class Base_Manager(object):
                 return average_data
 
         if self.sensor_type == 5:
-            weather_data_set = []
-            average_data = []
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
@@ -602,7 +597,7 @@ class Base_Manager(object):
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
                 this_instant_data.append(float('%.2f'%humid))
-                weather_data_set.append(this_instant_data)
+                sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(weather_data_set)):
