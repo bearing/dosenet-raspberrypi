@@ -41,20 +41,13 @@ from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVI
 from globalvalues import NEW_SENSOR_DISPLAY_TEXT, OLD_SENSOR_DISPLAY_TEXT
 from globalvalues import RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
-from globalvalues import DEFAULT_LOGFILE
+from globalvalues import DEFAULT_LOGFILES, DEFAULT_DATALOGS
 from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
 from globalvalues import DEFAULT_SENDER_MODE
-from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
-from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
-from globalvalues import DEFAULT_HOSTNAME, DEFAULT_UDP_PORT, DEFAULT_TCP_PORT
-from globalvalues import DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_TEST
-from globalvalues import DEFAULT_INTERVAL_NORMAL_D3S, DEFAULT_INTERVAL_TEST_D3S, DEFAULT_D3STEST_TIME
-from globalvalues import DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_TEST_AQ
-from globalvalues import DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ
-from globalvalues import DEFAULT_LOGFILE_AQ, AQ_VARIABLES
-from globalvalues import DEFAULT_DATALOG_CO2, DEFAULT_LOGFILE_CO2
-from globalvalues import CO2_VARIABLES
-from globalvalues import DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_TEST_CO2
+from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME, DEFAULT_D3STEST_TIME
+from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
+from globalvalues import AQ_VARIABLES, CO2_VARIABLES
+from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
@@ -68,11 +61,9 @@ try:
     from globalvalues import DEFAULT_CO2_PORT
 except:
     pass
-from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
-from globalvalues import DEFAULT_INTERVAL_NORMAL_WEATHER, DEFAULT_INTERVAL_TEST_WEATHER
-from globalvalues import DEFAULT_DATALOG_WEATHER, DEFAULT_LOGFILE_WEATHER
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 from globalvalues import strf
+from globalvalues import ANSI_RED, ANSI_RESET
 
 def signal_term_handler(signal, frame):
     # If SIGTERM signal is intercepted, the SystemExit exception routines
@@ -129,12 +120,12 @@ class Base_Manager(object):
         self.datalog = datalog
         self.datalogflag = datalogflag
 
-        self.a_flag()
+        self.test = test
+
         self.d_flag()
+        self.f_flag()
         self.make_data_log(self.datalog)
         self.data_names = data_names
-
-        self.test = test
 
         self.cirtest = cirtest
 
@@ -146,27 +137,23 @@ class Base_Manager(object):
 
         self.sensor_names = sensor_names
 
-    def a_flag(self):
-        """
-        Checks if the -a from_argparse is called.
-
-        If it is called, sets the path of the data-log to
-        DEFAULT_DATALOG.
-        """
-        if self.datalogflag and self.sensor_type == 1:
-            self.datalog = DEFAULT_DATALOG
-        if self.datalogflag and self.sensor_type == 2:
-            self.datalog = DEFAULT_DATALOG_D3S
-        if self.datalogflag and self.sensor_type == 3:
-            self.datalog = DEFAULT_DATALOG_AQ
-        if self.datalogflag and self.sensor_type == 4:
-            self.datalog = DEFAULT_DATALOG_CO2
-        if self.datalogflag and self.sensor_type == 5:
-            self.datalog = DEFAULT_DATALOG_WEATHER
-
     def d_flag(self):
         """
-        Checks if the -d from_argparse is called.
+        Checks if the -d from_argparse is called or if the device is in test_mode.
+
+        If it is called, sets the path of the data-log to
+        the particular datalog of the sensor that is being used.
+        """
+        if self.datalogflag or self.test:
+            if self.datalog is None:
+                for i in range(len(DEFAULT_DATALOGS)):
+                    if self.sensor_type == i+1:
+                        self.datalog = DEFAULT_DATALOGS[i]
+                        break
+
+    def f_flag(self):
+        """
+        Checks if the -f from_argparse is called.
 
         If it is called, sets datalogflag to True.
         """
@@ -181,43 +168,28 @@ class Base_Manager(object):
     def handle_input(self, log, logfile, verbosity,
                          test, interval, config, publickey, aeskey):
 
-        if log and self.sensor_type == None:
-            self.vprint(1,
-                "No sensor running, try executing one of the subclasses to get a proper setup.")
-            self.takedown()
-        if log and self.sensor_type == 1 and logfile == None:
-            #If the sensor type is a pocket geiger use the pocket geiger log file
-            logfile = DEFAULT_LOGFILE
-
-        if log and self.sensor_type == 2 and logfile == None:
-            #If the sensor type is a D3S use the D3S log file
-            logfile = DEFAULT_LOGFILE_D3S
-
-        if log and self.sensor_type == 3 and logfile == None:
-            #If the sensor type is an air quality sensor use the air quality log file
-            logfile = DEFAULT_LOGFILE_AQ
-
-        if log and self.sensor_type == 4 and logfile == None:
-            #If the sensor type is a CO2 sensor, use the CO2 log file
-            logfile = DEFAULT_LOGFILE_CO2
-
-        if log and self.sensor_type == 5 and logfile == None:
-            #If the sensor type is a weather sensor, use the weather log file
-            logfile = DEFAULT_LOGFILE_WEATHER
-
-        if log:
-            self.logfile = logfile
-        else:
-            self.logfile = None
-
         if verbosity is None:
             if test:
-                verbosity = 2
+                verbosity = 3
             else:
                 verbosity = 1
             if self.cirtest:
                 verbosity = 0
         self.v = verbosity
+
+        if log:
+            if logfile is None:
+                if self.sensor_type > 5 or self.sensor_type < 1:
+                    print("No sensor running, try running through one of the subclasses to get a proper setup.")
+                    self.takedown()
+                for i in range(len(DEFAULT_LOGFILES)):
+                    if self.sensor_type == i+1:
+                        logfile = DEFAULT_LOGFILES[i]
+                        break
+            self.logfile = logfile
+        else:
+            self.logfile = None
+
         set_verbosity(self, logfile=logfile)
 
         if log:
@@ -225,52 +197,22 @@ class Base_Manager(object):
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = True
 
-        if self.test and self.sensor_type == 1:
+        if self.test:
             if interval is None:
-                self.vprint(
-                    2, "No interval given, using default for TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST
-        if self.test and self.sensor_type == 2:
-            if interval is None:
-                self.vprint(
-                    2, "No interval given, using default for D3S TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST_D3S
-        if self.test and self.sensor_type == 3:
-            if interval is None:
-                self.vprint(
-                    2, "No interval given, using default for AQ TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST_AQ
-        if self.test and self.sensor_type == 4:
-            if interval is None:
-                self.vprint(
-                    2, "No interval given, using default for CO2 TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST_CO2
-        if self.test and self.sensor_type == 5:
-            if interval is None:
-                self.vprint(
-                    2, "No interval given, using default for WEATHER TEST MODE")
-                interval = DEFAULT_INTERVAL_TEST_WEATHER
+                for i in range(len(DEFAULT_TEST_INTERVALS)):
+                    if self.sensor_type == i+1:
+                        self.vprint(
+                            2, "No interval given, using default for {}".format(TEST_INTERVAL_NAMES[i]))
+                        interval = DEFAULT_TEST_INTERVALS[i]
+                        break
 
-        if interval is None and self.sensor_type == 1:
-            self.vprint(
-                2, "No interval given, using interval at 5 minutes")
-            interval = DEFAULT_INTERVAL_NORMAL
-        if interval is None and self.sensor_type == 2:
-            self.vprint(
-                2, "No interval given, using interval at 5 minutes")
-            interval = DEFAULT_INTERVAL_NORMAL_D3S
-        if interval is None and self.sensor_type == 3:
-            self.vprint(
-                2, "No interval given, using interval at 5 minutes")
-            interval = DEFAULT_INTERVAL_NORMAL_AQ
-        if interval is None and self.sensor_type == 4:
-            self.vprint(
-                2, "No interval given, using interval at 5 minutes")
-            interval = DEFAULT_INTERVAL_NORMAL_CO2
-        if interval is None and self.sensor_type == 5:
-            self.vprint(
-                2, "No interval given, using interval at 5 minutes")
-            interval = DEFAULT_INTERVAL_NORMAL_WEATHER
+        if interval is None:
+            for i in range(len(DEFAULT_INTERVALS)):
+                if self.sensor_type == i+1:
+                    self.vprint(
+                        2, "No interval given, using interval at 5 minutes")
+                    interval = DEFAULT_INTERVALS[i]
+                    break
 
         if config is None:
             self.vprint(2, "No config file given, " +
@@ -570,24 +512,12 @@ class Base_Manager(object):
         Chooses the type of sensor that is being used and
         determines the data handling type to use.
         """
+        average_data, sensor_data_set = [], []
         if self.sensor_type == 1:
             cpm, cpm_err = self.sensor.get_cpm(this_start, this_end)
             counts = int(round(cpm * self.interval / 60))
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end,
-                    cpm=cpm, cpm_err=cpm_err, counts=counts)
-            else:
-                return counts, cpm, cpm_err
-
-        if self.sensor_type == 2:
-            self.data_handler.main(
-                self.datalog, this_start, this_end,
-                calibrationlog=self.calibrationlog, spectra=spectra)
 
         if self.sensor_type == 3:
-            aq_data_set = []
-            average_data = []
             while time.time() < this_end:
                 text = self.AQ_port.read(32)
                 buffer = [ord(c) for c in text]
@@ -603,7 +533,7 @@ class Base_Manager(object):
                             current_second_data.append(repr(((buf[(2*n)+13]<<8) + buf[(2*n)+14])))
                         current_second_data = ['%.2f' % i for i in list(map(float, current_second_data))]
                         current_second_data.insert(0,datetime.datetime.now())
-                        aq_data_set.append(current_second_data)
+                        sensor_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(aq_data_set)):
@@ -612,15 +542,8 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end, average_data=average_data)
-            else:
-                return average_data
 
         if self.sensor_type == 4:
-            co2_data_set = []
-            average_data = []
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
@@ -632,7 +555,7 @@ class Base_Manager(object):
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%conc))
                 this_instant_data.append(float('%.2f'%uv_index))
-                co2_data_set.append(this_instant_data)
+                sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(co2_data_set)):
@@ -641,15 +564,8 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
-                self.data_handler.main(
-                    self.datalog, this_start, this_end, average_data=average_data)
-            else:
-                return average_data
 
         if self.sensor_type == 5:
-            weather_data_set = []
-            average_data = []
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
@@ -660,7 +576,7 @@ class Base_Manager(object):
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
                 this_instant_data.append(float('%.2f'%humid))
-                weather_data_set.append(this_instant_data)
+                sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
                 for i in range(len(weather_data_set)):
@@ -669,10 +585,25 @@ class Base_Manager(object):
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
                 average_data.append(avg_c)
-            if not self.cirtest:
+
+        if not self.cirtest:
+            if self.sensor_type == 1:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end,
+                    cpm=cpm, cpm_err=cpm_err, counts=counts)
+            elif self.sensor_type == 2:
+                self.data_handler.main(
+                    self.datalog, this_start, this_end,
+                    calibrationlog=self.calibrationlog, spectra=spectra)
+            elif self.sensor_type in [3,4,5]:
                 self.data_handler.main(
                     self.datalog, this_start, this_end, average_data=average_data)
-            else:
+        else:
+            if self.sensor_type == 1:
+                self.data_log(self.datalog, cpm=cpm, cpm_err=cpm_err)
+                return counts, cpm, cpm_err
+            elif self.sensor_type in [3,4,5]:
+                self.data_log(self.datalog, average_data=average_data)
                 return average_data
 
     def takedown(self):
@@ -1074,6 +1005,10 @@ if __name__ == '__main__':
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
         '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
     sensor = parser.parse_known_args()[0].sensor
+    if sensor > 5 or sensor < 1:
+        print('{red}{value} is not a valid sensor choice, try entering any #1-5{reset}'.format(
+            red=ANSI_RED, value=sensor, reset=ANSI_RESET))
+        sys.exit()
 
     #Generic Manager control variables.
     parser.add_argument(
@@ -1103,11 +1038,17 @@ if __name__ == '__main__':
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
     parser.add_argument(
-        '--log', '-g', action='store_true', default=False,
+        '--log', '-l', action='store_true', default=False,
         help='Enable file logging of all verbose text (default off)')
     parser.add_argument(
-        '--datalogflag', '-f', action='store_true', default=False,
+        '--logfile', '-g', type=str, default=None,
+        help='Specify file for logging (default {})'.format(DEFAULT_LOGFILES[sensor-1]))
+    parser.add_argument(
+        '--datalogflag', '-d', action='store_true', default=False,
         help='Enable logging local data (default off)')
+    parser.add_argument(
+        '--datalog', '-f', default=None,
+        help='Specify a path for the datalog (default {})'.format(DEFAULT_DATALOGS[sensor-1]))
     parser.add_argument(
         '--sender-mode', '-m', type=str, default=DEFAULT_SENDER_MODE,
         choices=['udp', 'tcp', 'UDP', 'TCP', 'udp_test', 'tcp_test'],
@@ -1140,17 +1081,6 @@ if __name__ == '__main__':
             '--signal_pin', '-u', default=SIGNAL_PIN,
             help='Specify which pin the signal is coming in from ' +
             '(default {})'.format(SIGNAL_PIN))
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG))
 
         args = parser.parse_args()
         arg_dict = vars(args)
@@ -1198,17 +1128,6 @@ if __name__ == '__main__':
             '--log-bytes', '-y', dest='log_bytes', default=False,
             action='store_true')
         parser.add_argument('--transport', '-n', default='usb')
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE_D3S))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG_D3S))
 
         args = parser.parse_args()
         arg_dict = vars(args)
@@ -1223,17 +1142,6 @@ if __name__ == '__main__':
             help='Specify which port the Air Quality sensor is sending ' +
             'data through \n[note, this is a Serial Port so be sure to use ' +
             'Serial port notation] (default {})'.format(DEFAULT_AQ_PORT))
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE_AQ))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG_AQ))
 
         args = parser.parse_args()
         arg_dict = vars(args)
@@ -1248,17 +1156,6 @@ if __name__ == '__main__':
             help='Specify which port the CO2 sensor is sending ' +
             'data through \n[Note this is an Adafruit MCP port so be sure ' +
             'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE_CO2))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG_CO2))
 
         args = parser.parse_args()
         arg_dict = vars(args)
@@ -1273,17 +1170,6 @@ if __name__ == '__main__':
             help='Specify which port the Weather sensor is sending ' +
             'data through \n[Note this is an I2C port so be sure ' +
             'to use that notation] (default {})'.format(DEFAULT_WEATHER_PORT))
-        #Put these last in each subclass argparse
-        #These specify the default datalog/logfile for which
-        #the help is unique to each sensor
-        parser.add_argument(
-            '--logfile', '-l', type=str, default=None,
-            help='Specify file for logging (default {})'.format(
-                DEFAULT_LOGFILE_WEATHER))
-        parser.add_argument(
-            '--datalog', '-d', default=None,
-            help='Specify a path for the datalog (default {})'.format(
-                DEFAULT_DATALOG_WEATHER))
 
         args = parser.parse_args()
         arg_dict = vars(args)

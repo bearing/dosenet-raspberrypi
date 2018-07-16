@@ -2,7 +2,10 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import serial
+try:
+    import serial
+except Exception as e:
+    print("An error occured when trying to import serial: ", e)
 try:
     import Adafruit_MCP3008
 except:
@@ -44,6 +47,7 @@ DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_LOGFILE_AQ = '/home/pi/debug.log_AQ'
 DEFAULT_LOGFILE_CO2 = '/home/pi/debug.log_CO2'
 DEFAULT_LOGFILE_WEATHER = '/home/pi/debug.log_weather'
+DEFAULT_LOGFILES = [DEFAULT_LOGFILE, DEFAULT_LOGFILE_D3S, DEFAULT_LOGFILE_AQ, DEFAULT_LOGFILE_CO2, DEFAULT_LOGFILE_WEATHER]
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
 TESTING_UDP_PORT = 5006
@@ -56,11 +60,13 @@ DEFAULT_DATALOG_D3S = '/home/pi/data-log_D3S.txt'
 DEFAULT_DATALOG_AQ = '/home/pi/data-log_AQ.txt'
 DEFAULT_DATALOG_CO2 = '/home/pi/data-log_CO2.txt'
 DEFAULT_DATALOG_WEATHER = '/home/pi/data-log_weather.txt'
+DEFAULT_DATALOGS = [DEFAULT_DATALOG, DEFAULT_DATALOG_D3S, DEFAULT_DATALOG_AQ, DEFAULT_DATALOG_CO2, DEFAULT_DATALOG_WEATHER]
 DEFAULT_DATA_BACKLOG_FILE = '/home/pi/data_backlog_file.txt'
 DEFAULT_DATA_BACKLOG_FILE_D3S = '/home/pi/data_backlog_file_D3S.csv'
 DEFAULT_DATA_BACKLOG_FILE_AQ = '/home/pi/data_backlog_file_AQ.txt'
 DEFAULT_DATA_BACKLOG_FILE_CO2 = '/home/pi/data_backlog_file_CO2.txt'
 DEFAULT_DATA_BACKLOG_FILE_WEATHER = '/home/pi/data_backlog_file_weather.txt'
+DEFAULT_DATA_BACKLOG_FILES = [DEFAULT_DATA_BACKLOG_FILE, DEFAULT_DATA_BACKLOG_FILE_D3S, DEFAULT_DATA_BACKLOG_FILE_AQ, DEFAULT_DATA_BACKLOG_FILE_CO2, DEFAULT_DATA_BACKLOG_FILE_WEATHER]
 DEFAULT_OLED_DATA_FILE_PG = '/home/pi/oled_pg.csv'
 DEFAULT_OLED_DATA_FILE_D3S = '/home/pi/oled_d3s.csv'
 DEFAULT_OLED_DATA_FILE_AQ = '/home/pi/oled_aq.csv'
@@ -108,6 +114,11 @@ DEFAULT_INTERVAL_NORMAL_AQ = 300
 DEFAULT_INTERVAL_TEST_AQ = 30
 AQ_VARIABLES = ['PM 1.0', 'PM 2.5', 'PM 10', '0.3 um', '0.5 um',
             '1.0 um', '2.5 um', '5.0 um', '10 um']
+
+DEFAULT_INTERVALS = [DEFAULT_INTERVAL_NORMAL, DEFAULT_INTERVAL_NORMAL_D3S, DEFAULT_INTERVAL_NORMAL_AQ, DEFAULT_INTERVAL_NORMAL_CO2, DEFAULT_INTERVAL_NORMAL_WEATHER]
+DEFAULT_TEST_INTERVALS = [DEFAULT_INTERVAL_TEST, DEFAULT_INTERVAL_TEST_D3S, DEFAULT_INTERVAL_TEST_AQ, DEFAULT_INTERVAL_TEST_CO2, DEFAULT_INTERVAL_TEST_WEATHER]
+TEST_INTERVAL_NAMES = ['TEST MODE', 'D3S TEST MODE', 'AQ TEST MODE', 'CO2 TEST MODE', 'WEATHER TEST MODE']
+
 # ANSI color codes
 ANSI_RESET = '\033[0m'
 ANSI_BOLD = '\033[1m'
@@ -199,6 +210,10 @@ SENSOR_CONNECTION_QUESTION = (
     '{green}Is the {reset}' + '{blue}{{sensor_name}}{reset}' +
     '{green} connected to the PiHat you are testing?  {reset}').format(
     green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
+
+DATA_LOGGING_QUESTION = (
+    '{green}Do you want to log data for the {reset}' + '{blue}{{sensor_name}}{reset}' +
+    '{green}?  {reset}').format(green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
 
 INTERVAL_QUESTION = (
     '{green}How long do you want to test each sensor for?  {reset}').format(
