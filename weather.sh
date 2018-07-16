@@ -13,7 +13,7 @@ case "$1" in
     ;;
   test)
     echo "Starting weather sensor script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 5 --sender-mode tcp_test --interval 30 --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python $DOSENET/managers.py --sensor 5 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping weather sensor script" >> $LOG

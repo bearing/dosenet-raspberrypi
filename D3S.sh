@@ -13,7 +13,7 @@ case "$1" in
     ;;
   test)
     echo "Starting D3S script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 2 --log --sender-mode tcp_test --interval 30 --logfile $LOG >> $LOG 2>&1
+    sudo -E python $DOSENET/managers.py --sensor 2 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping D3S script" >> $LOG

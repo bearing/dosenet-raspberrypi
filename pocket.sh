@@ -14,11 +14,7 @@ case "$1" in
     ;;
   test)
     echo "Starting pocket Geiger script in test mode" > $LOG
-    sudo python $DOSENET/managers.py --sensor 1 --test --datalogflag --logfile $LOG >> $LOG 2>&1
-    ;;
-  test)
-    echo "Starting pocket Geiger script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 1 --interval 30 --verbosity 3 --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python $DOSENET/managers.py --sensor 1 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping pocket Geiger script" >> $LOG

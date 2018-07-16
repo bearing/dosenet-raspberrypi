@@ -11,13 +11,16 @@
 ### END INIT INFO
 #This script runs at startup to boot up the hostapd
 #so that the RaspberryPi can act as a reliable standalone network
+LOG=/tmp/network-boot.log
 
 case $1 in
   start)
-    echo "Starting the RaspberryPi as an access point"
+    echo "Starting the RaspberryPi as an access point" > $LOG
     sudo rm /var/lib/misc/dnsmasq.leases
-    sudo systemctl start hostapd
-    sudo systemctl start dnsmasq
+    sudo systemctl start hostapd >> $LOG 2>&1
+    sudo systemctl start dnsmasq >> $LOG 2>&1
+    sudo ifup --force wlan1 >> $LOG 2>&1
+    sudo ifup --force eth0 >> $LOG 2>&1 
     ;;
   stop)
     echo "Stopping the access point"
