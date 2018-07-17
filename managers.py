@@ -536,8 +536,8 @@ class Base_Manager(object):
                         sensor_data_set.append(current_second_data)
             for c in range(len(self.variables)):
                 c_data = []
-                for i in range(len(aq_data_set)):
-                    c_data.append(aq_data_set[i][c+1])
+                for i in range(len(sensor_data_set)):
+                    c_data.append(sensor_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
@@ -558,8 +558,8 @@ class Base_Manager(object):
                 sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
-                for i in range(len(co2_data_set)):
-                    c_data.append(co2_data_set[i][c+1])
+                for i in range(len(sensor_data_set)):
+                    c_data.append(sensor_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
@@ -579,8 +579,8 @@ class Base_Manager(object):
                 sensor_data_set.append(this_instant_data)
             for c in range(len(self.variables)):
                 c_data = []
-                for i in range(len(weather_data_set)):
-                    c_data.append(weather_data_set[i][c+1])
+                for i in range(len(sensor_data_set)):
+                    c_data.append(sensor_data_set[i][c+1])
                 c_data_int = list(map(float, c_data))
                 avg_f = sum(c_data_int)/len(c_data_int)
                 avg_c = float('%.2f'%avg_f)
