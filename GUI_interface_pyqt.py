@@ -3,14 +3,15 @@ import numpy as np
 import math
 import datetime as dt
 import time
-import D3S_pyqt_DAQ as D3S
-import air_quality_DAQ as AQ
+#import D3S_pyqt_DAQ as D3S
+#import air_quality_DAQ as AQ
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout
 from PyQt5.QtWidgets import QCheckBox
-from pyqtgraph import QtCore, QtGui
+from pyqtgraph import QtGui
+from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPalette, QFont, QTabWidget, QTabBar, QComboBox
 from PyQt5.QtGui import QStyleFactory
@@ -292,12 +293,12 @@ class App(QWidget):
             tplot.showGrid(x=True, y=True)
             tplot.setLabel('left', '<h3>CPM</h3>')
             tplot.setLabel('bottom', '<h3>Time</h3>')
-            err = pg.ErrorBarItem()
-            tplot.addItem(err)
+            #err = pg.ErrorBarItem()
+            #tplot.addItem(err)
             curve2 = tplot.plot(symbolBrush=(255,0,0), symbolPen='k',
                                 pen=(255, 0, 0))
             self.plot_list[sensor] = [curve1,curve2]
-            self.err_list[sensor] = err
+            #self.err_list[sensor] = err
             layout.addWidget(splotwin,1,0,1,8)
             layout.setRowStretch(1,15)
             layout.addWidget(tplotwin,2,0,1,8)
@@ -320,13 +321,13 @@ class App(QWidget):
 
             self.plot_list[sensor] = []
             for idx in range(len(self.data[sensor])):
-                err = pg.ErrorBarItem()
-                iplot.addItem(err)
+                #err = pg.ErrorBarItem()
+                #iplot.addItem(err)
                 curve = iplot.plot(self.time_data[sensor],
                                    self.data[sensor][idx],
                                    symbolBrush=colors[idx], symbolPen='k',
                                    pen=colors[idx], name=names[idx])
-                self.err_list[sensor].append(err)
+                #self.err_list[sensor].append(err)
                 self.plot_list[sensor].append(curve)
                 legend.addItem(curve,names[idx])
             layout.addWidget(plotwin,1,0,1,8)
@@ -357,13 +358,13 @@ class App(QWidget):
     def initSensorData(self,sensor):
         self.time_data[sensor] = []
         if sensor==RAD:
-            self.d3s_daq = D3S.DAQThread()
-            self.d3s_daq.spectrum_signal.connect(updateD3S)
+            #self.d3s_daq = D3S.DAQThread()
+            #self.d3s_daq.spectrum_signal.connect(updateD3S)
             self.data[sensor] = np.zeros(self.nbins, dtype=float)
             self.ave_data = [[],[]]
 
         if sensor==AIR:
-            self.aq_daq = AQ.air_quality_DAQ(self.interval*5)
+            #self.aq_daq = AQ.air_quality_DAQ(self.interval*5)
             self.aq_daq.data_signal.connect(updateAirData)
             if self.saveData:
                 fname = "/home/pi/data/AQ_G" + self.group_id + "_P" + \
@@ -402,7 +403,8 @@ class App(QWidget):
             self.time_data[sensor].pop(0)
 
         if sensor==RAD:
-            self.data[sensor] += self.d3s_data
+            #self.data[sensor] += self.d3s_data
+            self.data[sensor] += np.random.normal(size=self.nbins)
             self.plot_list[sensor][0].setData(self.channels, self.data[sensor])
             cpm = np.mean(self.data[sensor])
             err = np.std(self.data[sensor])
@@ -411,14 +413,22 @@ class App(QWidget):
             if len(self.ave_data) > self.ndata:
                 self.ave_data[0].pop(0)
                 self.ave_data[1].pop(0)
-            self.err_list[sensor].setData(x=self.time_data[sensor],
-                                          y=self.ave_data[0],
-                                          height=self.ave_data[1],
-                                          beam=0.2)
+            #self.err_list[sensor].setData(x=self.time_data[sensor],
+            #                              y=self.ave_data[0],
+            #                              height=self.ave_data[1],
+            #                              beam=0.2)
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               self.ave_data[0])
 
         if sensor==AIR:
+            data = np.random.random()
+            err = data*0.1
+            self.data[sensor][0][0].append(data)
+            self.data[sensor][0][1].append(err)
+            self.data[sensor][0][0].append(2.5*data)
+            self.data[sensor][0][1].append(2.5*err)
+            self.data[sensor][0][0].append(10*data)
+            self.data[sensor][0][1].append(10*err)
             if len(self.data[sensor][0][0]) > self.ndata:
                 self.data[sensor][0][0].pop(0)
                 self.data[sensor][0][1].pop(0)
@@ -427,22 +437,22 @@ class App(QWidget):
                 self.data[sensor][2][0].pop(0)
                 self.data[sensor][2][1].pop(0)
 
-            self.err_list[sensor][0].setData(x=self.time_data[sensor],
-                                             y=self.data[sensor][0][0],
-                                             height=self.data[sensor][0][1],
-                                             beam=0.2)
+            #self.err_list[sensor][0].setData(x=self.time_data[sensor],
+            #                                 y=self.data[sensor][0][0],
+            #                                 height=self.data[sensor][0][1],
+            #                                 beam=0.2)
             self.plot_list[sensor][0].setData(self.time_data[sensor],
                                               self.data[sensor][0][0])
-            self.err_list[sensor][1].setData(x=self.time_data[sensor],
-                                             y=self.data[sensor][1][0],
-                                             height=self.data[sensor][1][1],
-                                             beam=0.2)
+            #self.err_list[sensor][1].setData(x=self.time_data[sensor],
+            #                                 y=self.data[sensor][1][0],
+            #                                 height=self.data[sensor][1][1],
+            #                                 beam=0.2)
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               self.data[sensor][1][0])
-            self.err_list[sensor][2].setData(x=self.time_data[sensor],
-                                             y=self.data[sensor][2][0],
-                                             height=self.data[sensor][2][1],
-                                             beam=0.2)
+            #self.err_list[sensor][2].setData(x=self.time_data[sensor],
+            #                                 y=self.data[sensor][2][0],
+            #                                 height=self.data[sensor][2][1],
+            #                                 beam=0.2)
             self.plot_list[sensor][2].setData(self.time_data[sensor],
                                               self.data[sensor][2][0])
         self.updateText(sensor)
