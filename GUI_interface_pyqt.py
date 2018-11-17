@@ -1,3 +1,10 @@
+"""
+Created on Fri Nov 9 2018
+
+@author: Ali Hanks
+"""
+
+
 import sys
 import numpy as np
 import math
@@ -9,9 +16,7 @@ import os
 import pika
 import json
 import atexit
-
-#import D3S_pyqt_DAQ as D3S
-#import air_quality_DAQ as AQ
+import traceback
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
@@ -48,7 +53,7 @@ class App(QWidget):
 
     def __init__(self, nbins=4096):
         super().__init__()
-        self.title = 'PyQt5 simple window'
+        self.title = 'DoseNet Sensor GUI'
         self.left = 0
         self.top = 20
         self.width = 1280
@@ -72,6 +77,7 @@ class App(QWidget):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setLayout(self.layout)
+
 
     def initLayout(self):
         # Create Grid layout
@@ -116,6 +122,14 @@ class App(QWidget):
 
 
     def addButton(self,label,method,top,left,height,width,color="white"):
+        '''
+        Add a button to the main layout
+        Inputs: label,
+                method: button action function,
+                location: top,left
+                size: height,width
+                color: background color for the button
+        '''
         button = QPushButton(label, self)
         style_sheet_text = "background-color: "+color+";"+\
                            "border-style: outset;"+\
@@ -132,12 +146,16 @@ class App(QWidget):
 
 
     def addCheckBox(self, label, top, left):
+        '''
+        Add a checkbox to the main layout in the specified location (top,left)
+        '''
         checkbox = QCheckBox(label)
         textfont = QFont("Times", 18, QFont.Bold)
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
         self.layout.addWidget(checkbox,top,left,1,1,Qt.AlignHCenter)
+
 
     def startSensor(self, sensor):
         if sensor==AIR:
@@ -146,6 +164,7 @@ class App(QWidget):
             cmd = 'sudo python D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
         print(cmd)
         os.system(cmd)
+
 
     def sensorButtonState(self,b):
      if b.isChecked() == True:
@@ -156,12 +175,17 @@ class App(QWidget):
         print("{} is deselected".format(b.text()))
 
 
-    def set_display_text(self, sensor):
+    def setDisplayText(self, sensor):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
 
     def setSelectionTab(self):
+        '''
+        Fill out the tab providing all of the user input
+            - user inputs include parameters for data acquisition
+            - option to save data with user info for setting a unique file-name
+        '''
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
         self.config_layout = QFormLayout()
@@ -276,6 +300,9 @@ class App(QWidget):
 
 
     def setSensorTab(self, sensor):
+        '''
+        Setup the tab and layout for the selected sensor, initialize plots, etc.
+        '''
         # Create canvas for plots
         itab = QWidget()
         self.tabs.addTab(itab, sensor)
@@ -297,6 +324,9 @@ class App(QWidget):
 
 
     def setPlots(self,sensor,layout):
+        '''
+        Set the initial plot layout, initialize plot curves, error bars, etc.
+        '''
         if sensor==RAD:
             splotwin = pg.GraphicsWindow()
             splotwin.setContentsMargins(0,0,0,0)
@@ -345,7 +375,8 @@ class App(QWidget):
             for idx in range(len(self.data[sensor])):
                 err = pg.ErrorBarItem(x=self.time_data[sensor],
 									  y=self.data[sensor][idx][0],
-									  height=np.asarray(self.data[sensor][idx][1]))
+									  height=np.asarray(
+                                                self.data[sensor][idx][1]))
                 iplot.addItem(err)
                 curve = iplot.plot(self.time_data[sensor],
                                    self.data[sensor][idx][0],
@@ -359,6 +390,9 @@ class App(QWidget):
 
 
     def setSensorText(self, sensor):
+        '''
+        Set initial text/display above data graphs for the sensor
+        '''
         if sensor==RAD:
             cps = "{:.1f}".format(np.mean(self.data[sensor]))
             usv = "{:.3f}".format(np.mean(self.data[sensor]))
@@ -376,10 +410,13 @@ class App(QWidget):
                            "ug/L     PM 2.5 =",pm25,
                            "ug/L     PM 10 =",pm10,"ug/L"]
             self.sensor_list[sensor] = sensor_text
-        self.set_display_text(sensor)
+        self.setDisplayText(sensor)
 
 
     def initSensorData(self,sensor):
+        '''
+        Initialize the relevant sensor data lists
+        '''
         self.time_data[sensor] = []
         if sensor==RAD:
             self.data[sensor] = np.zeros(self.nbins, dtype=float)
@@ -393,11 +430,14 @@ class App(QWidget):
                         str(dt.datetime.today()).split()[0]+".csv"
                 #self.aq_daq.create_file(fname)
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
-    
+
 
     def updatePlot(self, sensor, data):
-        # Make sure start_time is defined
-        #  - if it's not restart the time count now
+        '''
+        Update plots with newest data from the sensor
+        '''
+        # For robustness: make sure start_time is defined
+        #  - if it's not restart the time count here
         if self.start_time is None:
             self.start_time = float(format(float(time.time()), '.2f'))
         itime = float(format(float(time.time()), '.2f')) - self.start_time
@@ -463,6 +503,9 @@ class App(QWidget):
 
 
     def updateText(self, sensor):
+        '''
+        Determine new values for text above the graph and update the display
+        '''
         if sensor==RAD:
             cps = np.sum(self.spectra[-1])/float(self.integration_time)
             usv = cps * 0.0000427*60
@@ -481,10 +524,13 @@ class App(QWidget):
             self.sensor_list[sensor][5] = pm10
             self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
 
-        self.set_display_text(sensor);
+        self.setDisplayText(sensor);
 
 
     def setDisplayBackground(self, sensor, val):
+        '''
+        Sets background color according to newest reading(val) from the sensor
+        '''
         if sensor==RAD:
             if val < 1.0:
                 self.data_display[sensor].setStyleSheet(good_background)
@@ -509,40 +555,12 @@ class App(QWidget):
                 self.data_display[sensor].setStyleSheet(verybad_background)
 
 
-    def send_cmd(self, cmd):
-        '''
-        Send commands for sensor DAQs
-            - valid commands: START, STOP, EXIT
-        '''
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        channel = connection.channel()
-        channel.queue_declare(queue='fromGUI')
-        for sensor in self.sensor_list:
-            print("Sending cmd: {} for {}".format(cmd,sensor))
-            message = {'id': sensor, 'cmd': cmd}
-            channel.basic_publish(exchange='',routing_key='fromGUI',body=json.dumps(message))
-        connection.close()
-		
-    def receive_data(self):
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        channel = connection.channel()
-        channel.queue_declare(queue='toGUI')
-        method_frame, header_frame, body = channel.basic_get(queue='toGUI')
-        if body is not None:
-            message = json.loads(body)
-            channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-            connection.close()
-            return message
-        else:
-            connection.close()
-            return None
-
     @pyqtSlot()
     def updatePlots(self):
-        message = self.receive_data()
+        message = receive_queue_data()
         while message is not None:
             self.updatePlot(message['id'],message['data'])
-            message = self.receive_data()
+            message = receive_queue_data()
 
     @pyqtSlot()
     def run(self):
@@ -550,39 +568,55 @@ class App(QWidget):
         # Only set start time the first time user clicks start
         if self.start_time is None:
             self.start_time = float(format(float(time.time()), '.2f'))
-        self.send_cmd('START')
+        send_queue_cmd('START',self.sensor_list)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updatePlots)
         self.timer.start(50)
 
     @pyqtSlot()
     def stop(self):
-        self.send_cmd('STOP')
+        '''
+        Send STOP command to all sensors
+            - functionally a pause in displaying/recording data
+        '''
+        send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
 
     @pyqtSlot()
     def clear(self):
-        # Reset start time to None to reset time axis
-        self.send_cmd('STOP')
+        '''
+        Send STOP command to all sensors and clear current data
+        '''
+        # TODO: Automaticaly save data to file here and/or add 'Save' button?
+        #    - maybe produce a pop-up prompting user to chose to save or not
+        send_queue_cmd('STOP',self.sensor_list)
         self.start_time = None
         for sensor in self.sensor_list:
-            self.time_data[sensor] = []
+            self.time_data[sensor][:] = []
             if sensor==RAD:
+                self.spectra[:] = []
                 self.data[sensor] = np.zeros(self.nbins, dtype=float)
-                self.ave_data = []
+                self.ave_data[:] = []
             if sensor==AIR:
                 self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
 
     def exit(self):
-        self.send_cmd('EXIT')
+        '''
+        Send EXIT command to all sensors
+        '''
+        send_queue_cmd('EXIT',self.sensor_list)
 
 
+
+#-------------------------------------------------------------------------------
+# Class for handling writing data to files/sending to RPi server
+#-------------------------------------------------------------------------------
 class FileManager():
     def __init__(self):
         # Define basic stuff here
         self.out_file = None
         self.results = None
-	
+
 
     def create_file(self, fname = None):
         file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
@@ -607,20 +641,58 @@ class FileManager():
     def close_file(self):
 
         self.out_file.close()
-    
-    
+
+
     def write_data(self, data):
         self.results.writerow(data)
-        
+
     def send_files(self):
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
                                                         self.aq_file.name)
         print(sys_cmd)
         os.system(sys_cmd)
 
+#-------------------------------------------------------------------------------
+# Methods for communication with the shared queue
+#   - allows commmunication between GUI and sensor DAQs
+#   - send commands and receive sensor data
+#-------------------------------------------------------------------------------
+def send_queue_cmd(cmd, daq_list):
+    '''
+    Send commands for sensor DAQs
+        - valid commands: START, STOP, EXIT
+    '''
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='fromGUI')
+    for sensor in daq_list:
+        print("Sending cmd: {} for {}".format(cmd,sensor))
+        message = {'id': sensor, 'cmd': cmd}
+        channel.basic_publish(exchange='',
+                              routing_key='fromGUI',
+                              body=json.dumps(message))
+    connection.close()
+
+def receive_queue_data(self):
+    '''
+    Receive data from sensor DAQs
+    '''
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='toGUI')
+    method_frame, header_frame, body = channel.basic_get(queue='toGUI')
+    if body is not None:
+        message = json.loads(body)
+        channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+        connection.close()
+        return message
+    else:
+        connection.close()
+        return None
+
 
 def clear_queue():
-    print("Initializing queue... clearing out old data")
+    print("Initializing queues... clearing out old data")
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='toGUI')
@@ -635,16 +707,19 @@ def clear_queue():
 
 
 if __name__ == '__main__':
-    # Enable antialiasing for prettier plots
-    app = QApplication(sys.argv)
-    QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    nbins = 1024
-    ex = App(nbins=nbins)
-    clear_queue()
-    ex.show()
+    # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    try:
+        app = QApplication(sys.argv)
+        QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+        nbins = 1024
+        ex = App(nbins=nbins)
+        clear_queue()
+        ex.show()
 
-    atexit.register(ex.exit)
-    #ex.update_plot(data)
-    #app.processEvents()
-    ret = app.exec_()
-    sys.exit(ret)
+        atexit.register(ex.exit)
+        ret = app.exec_()
+        sys.exit(ret)
+    except:
+        send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
+        # Still want to see traceback for debugging
+        traceback.print_exc()

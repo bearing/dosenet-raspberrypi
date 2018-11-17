@@ -58,19 +58,23 @@ class air_quality_DAQ():
             self.P100_list.append(int(P100))
 
             if len(self.PM25_list)>=self.n_merge:
-				data1 = [np.mean(np.asarray(self.PM01_list)),np.std(np.asarray(self.PM01_list))]
-				data2 = [np.mean(np.asarray(self.PM25_list)),np.std(np.asarray(self.PM25_list))]
-				data3 = [np.mean(np.asarray(self.PM10_list)),np.std(np.asarray(self.PM10_list))]
+				data1 = [np.mean(np.asarray(self.PM01_list)),
+                         np.std(np.asarray(self.PM01_list))]
+				data2 = [np.mean(np.asarray(self.PM25_list)),
+                         np.std(np.asarray(self.PM25_list))]
+				data3 = [np.mean(np.asarray(self.PM10_list)),
+                         np.std(np.asarray(self.PM10_list))]
 				self.send_data([data1,data2,data3])
 				self.clear_data()
-    
+
 
     def send_data(self, data):
-		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+		connection = pika.BlockingConnection(
+                          pika.ConnectionParameters('localhost'))
 		channel = connection.channel()
 		channel.queue_declare(queue='toGUI')
 		message = {'id': 'Air Quality', 'data': data}
-		
+
 		channel.basic_publish(exchange='',
 							  routing_key='toGUI',
 							  body=json.dumps(message))
@@ -128,14 +132,14 @@ class air_quality_DAQ():
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Error: air_quality_DAQ expects input argument")
-        print("    - arg = number of times to query sensor before posting to GUI")
+        print("  - arg = number of times to query sensor before posting to GUI")
     daq = air_quality_DAQ(int(sys.argv[1]))
     while True:
         # Look for messages from GUI every 10 ms
         msg = daq.receive()
         print("received msg: {}".format(msg))
         sys.stdout.flush()
-        
+
         # If START is sent, begin running daq
 		#    - collect data every second
 		#    - re-check for message from GUI
@@ -153,7 +157,7 @@ if __name__ == '__main__':
         if msg == 'EXIT':
             print('exiting program')
             break
-            
+
         time.sleep(.2)
 
 	exit
