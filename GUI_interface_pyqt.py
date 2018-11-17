@@ -673,7 +673,7 @@ def send_queue_cmd(cmd, daq_list):
                               body=json.dumps(message))
     connection.close()
 
-def receive_queue_data(self):
+def receive_queue_data():
     '''
     Receive data from sensor DAQs
     '''
@@ -717,9 +717,11 @@ if __name__ == '__main__':
         ex.show()
 
         atexit.register(ex.exit)
-        ret = app.exec_()
-        sys.exit(ret)
     except:
         send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
         # Still want to see traceback for debugging
         traceback.print_exc()
+        pass
+
+    ret = app.exec_()
+    sys.exit(ret)
