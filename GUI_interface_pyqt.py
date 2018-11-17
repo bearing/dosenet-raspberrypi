@@ -3,6 +3,13 @@ import numpy as np
 import math
 import datetime as dt
 import time
+import csv
+import sys
+import os
+import pika
+import json
+import atexit
+
 #import D3S_pyqt_DAQ as D3S
 #import air_quality_DAQ as AQ
 
@@ -31,17 +38,22 @@ AIR = "Air Quality"
 CO2 = "CO2"
 PTH = "P/T/H"
 
+good_background = "background-color:#33FF99;"
+okay_background = "background-color:#FFFF00;"
+med_background = "background-color:#FF8000;"
+bad_background = "background-color:#FF0000;"
+verybad_background = "background-color:#FF66B2;"
+
 class App(QWidget):
 
     def __init__(self, nbins=4096):
         super().__init__()
         self.title = 'PyQt5 simple window'
         self.left = 0
-        self.top = 0
+        self.top = 20
         self.width = 1280
         self.height = 720
         self.nbins = nbins
-        self.ndata = 25
         self.start_time = None
         self.plot_list = {}
         self.err_list = {}
@@ -98,7 +110,6 @@ class App(QWidget):
         #self.textbox.setAlignment(Qt.AlignCenter)
 
         # Create push button
-        #self.addButton('Update Plot',self.on_click,ptop+2,pleft+pwidth+1,1,1)
         self.addButton('Start',self.run,ptop+8,pleft+pwidth+1,1,1,"#66B2FF")
         self.addButton('Stop',self.stop,ptop+9,pleft+pwidth+1,1,1,"#FF6666")
         self.addButton('Clear',self.clear,ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
@@ -128,13 +139,20 @@ class App(QWidget):
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
         self.layout.addWidget(checkbox,top,left,1,1,Qt.AlignHCenter)
 
+    def startSensor(self, sensor):
+        if sensor==AIR:
+            cmd = 'python air_quality_DAQ.py {} > /tmp/AQ.log 2>&1 &'.format(self.integration_time)
+        if sensor==RAD:
+            cmd = 'sudo python D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
+        print(cmd)
+        os.system(cmd)
 
     def sensorButtonState(self,b):
      if b.isChecked() == True:
         print("{} is selected".format(b.text()))
         self.addSensor(b.text())
      else:
-        #TODO add method to delete sensor from sensor list dict
+        #TODO add method to delete sensor from sensor list dict and remove tab
         print("{} is deselected".format(b.text()))
 
 
@@ -154,6 +172,7 @@ class App(QWidget):
         integration_text.setAlignment(Qt.AlignCenter)
         integration_box = QComboBox()
         item_list = ["1","2","3","4","5","10","15","20","30","60"]
+        self.integration_time = 2
         integration_box.addItems(item_list)
         integration_box.setCurrentIndex(1)
         integration_box.currentIndexChanged.connect(
@@ -165,6 +184,7 @@ class App(QWidget):
         ndata_text.setAlignment(Qt.AlignCenter)
         ndata_box = QComboBox()
         item_list = ["5","10","15","20","25","30","40","50","60"]
+        self.ndata = 25
         ndata_box.addItems(item_list)
         ndata_box.setCurrentIndex(4)
         ndata_box.currentIndexChanged.connect(
@@ -249,6 +269,7 @@ class App(QWidget):
         self.location = text
 
     def addSensor(self, sensor):
+        self.startSensor(sensor)
         self.initSensorData(sensor)
         self.setSensorTab(sensor)
         self.setSensorText(sensor)
@@ -266,7 +287,7 @@ class App(QWidget):
         self.data_display[sensor] = QLabel("")
         textfont = QFont("Times", 20, QFont.Bold)
         self.data_display[sensor].setFont(textfont)
-        self.data_display[sensor].setStyleSheet("background-color:#33FF99;")
+        self.data_display[sensor].setStyleSheet(good_background)
         self.data_display[sensor].setAlignment(Qt.AlignCenter)
         tablayout.addWidget(self.data_display[sensor],0,2,1,4)
         tablayout.setRowStretch(0,2)
@@ -284,21 +305,22 @@ class App(QWidget):
             splot.setLabel('left', '<h3>Counts/Channel</h3>')
             splot.setLabel('bottom', '<h3>Channel</h3>')
             curve1 = splot.plot(self.channels, self.data[sensor],
-                                symbolBrush=(255,0,0), symbolPen='k',
                                 pen=(255, 0, 0))
 
             tplotwin = pg.GraphicsWindow()
             tplotwin.setContentsMargins(0,0,0,0)
             tplot = tplotwin.addPlot()
             tplot.showGrid(x=True, y=True)
-            tplot.setLabel('left', '<h3>CPM</h3>')
+            tplot.setLabel('left', '<h3>CPS</h3>')
             tplot.setLabel('bottom', '<h3>Time</h3>')
-            #err = pg.ErrorBarItem()
-            #tplot.addItem(err)
+            err = pg.ErrorBarItem(x=self.time_data[sensor],
+								  y=self.ave_data[0],
+                                  height=np.asarray(self.ave_data[1]))
+            tplot.addItem(err)
             curve2 = tplot.plot(symbolBrush=(255,0,0), symbolPen='k',
                                 pen=(255, 0, 0))
             self.plot_list[sensor] = [curve1,curve2]
-            #self.err_list[sensor] = err
+            self.err_list[sensor] = err
             layout.addWidget(splotwin,1,0,1,8)
             layout.setRowStretch(1,15)
             layout.addWidget(tplotwin,2,0,1,8)
@@ -311,7 +333,6 @@ class App(QWidget):
             iplot.showGrid(x=True, y=True)
             legend = pg.LegendItem(size=(110,90), offset=(100,10))
             legend.setParentItem(iplot)
-            #iplot.addLegend()
             iplot.setLabel('left', '<h2>Particulate Concentration</h2>')
             iplot.setLabel('bottom', '<h2>Time</h2>')
             colors = [(255,0,0),(0,255,0),(0,0,255)]
@@ -320,14 +341,17 @@ class App(QWidget):
                      '<h4>PM 10</h4>']
 
             self.plot_list[sensor] = []
+            self.err_list[sensor] = []
             for idx in range(len(self.data[sensor])):
-                #err = pg.ErrorBarItem()
-                #iplot.addItem(err)
+                err = pg.ErrorBarItem(x=self.time_data[sensor],
+									  y=self.data[sensor][idx][0],
+									  height=np.asarray(self.data[sensor][idx][1]))
+                iplot.addItem(err)
                 curve = iplot.plot(self.time_data[sensor],
-                                   self.data[sensor][idx],
+                                   self.data[sensor][idx][0],
                                    symbolBrush=colors[idx], symbolPen='k',
                                    pen=colors[idx], name=names[idx])
-                #self.err_list[sensor].append(err)
+                self.err_list[sensor].append(err)
                 self.plot_list[sensor].append(curve)
                 legend.addItem(curve,names[idx])
             layout.addWidget(plotwin,1,0,1,8)
@@ -336,9 +360,9 @@ class App(QWidget):
 
     def setSensorText(self, sensor):
         if sensor==RAD:
-            cpm = "{:.1f}".format(np.mean(self.data[sensor]))
-            usv = "{:.3f}".format(np.mean(self.data[sensor]) * 0.005)
-            sensor_text = ["CPM =",cpm,"                  uSv/hr =",usv]
+            cps = "{:.1f}".format(np.mean(self.data[sensor]))
+            usv = "{:.3f}".format(np.mean(self.data[sensor]))
+            sensor_text = ["CPS =",cps,"                  &mu Sv/hr =",usv]
             self.sensor_list[sensor] = sensor_text
 
         if sensor==AIR:
@@ -358,41 +382,20 @@ class App(QWidget):
     def initSensorData(self,sensor):
         self.time_data[sensor] = []
         if sensor==RAD:
-            #self.d3s_daq = D3S.DAQThread()
-            #self.d3s_daq.spectrum_signal.connect(updateD3S)
             self.data[sensor] = np.zeros(self.nbins, dtype=float)
+            self.spectra = []
             self.ave_data = [[],[]]
 
         if sensor==AIR:
-            #self.aq_daq = AQ.air_quality_DAQ(self.interval*5)
-            self.aq_daq.data_signal.connect(updateAirData)
             if self.saveData:
                 fname = "/home/pi/data/AQ_G" + self.group_id + "_P" + \
                         self.period_id + "_" + self.location + "_" + \
-                        str(datetime.datetime.today()).split()[0]+".csv"
-                self.aq_daq.create_file(fname)
+                        str(dt.datetime.today()).split()[0]+".csv"
+                #self.aq_daq.create_file(fname)
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+    
 
-
-    def updateD3S(self, data):
-        self.d3s_data += data
-        updatePlot(RAD)
-
-
-    def updateAirData(self, data):
-        data1, err1 = data[0][0], data[0][1]
-        data2, err2 = data[1][0], data[1][1]
-        data3, err3 = data[2][0], data[2][1]
-        self.data[AIR][0][0].append(data1)
-        self.data[AIR][0][1].append(err1)
-        self.data[AIR][1][0].append(data2)
-        self.data[AIR][1][1].append(err2)
-        self.data[AIR][2][0].append(data3)
-        self.data[AIR][2][1].append(err3)
-        updatePlot(AIR)
-
-
-    def updatePlot(self, sensor):
+    def updatePlot(self, sensor, data):
         # Make sure start_time is defined
         #  - if it's not restart the time count now
         if self.start_time is None:
@@ -403,32 +406,33 @@ class App(QWidget):
             self.time_data[sensor].pop(0)
 
         if sensor==RAD:
-            #self.data[sensor] += self.d3s_data
-            self.data[sensor] += np.random.normal(size=self.nbins)
-            self.plot_list[sensor][0].setData(self.channels, self.data[sensor])
-            cpm = np.mean(self.data[sensor])
-            err = np.std(self.data[sensor])
-            self.ave_data[0].append(cpm)
+            data = np.asarray(data).reshape(self.nbins,int(len(data)/self.nbins)).sum(axis=1)
+            self.spectra.append(data)
+            self.data[sensor] += data
+            self.plot_list[sensor][0].setData(self.channels, np.asarray(self.spectra).sum(axis=0))
+            cps = np.sum(data)/float(self.integration_time)
+            err = np.sqrt(np.sum(data))/float(self.integration_time)
+            self.ave_data[0].append(cps)
             self.ave_data[1].append(err)
-            if len(self.ave_data) > self.ndata:
+            if len(self.ave_data[0]) > self.ndata:
+                self.spectra.pop(0)
                 self.ave_data[0].pop(0)
                 self.ave_data[1].pop(0)
-            #self.err_list[sensor].setData(x=self.time_data[sensor],
-            #                              y=self.ave_data[0],
-            #                              height=self.ave_data[1],
-            #                              beam=0.2)
+            self.err_list[sensor].setData(x=np.asarray(self.time_data[sensor]),
+                                          y=np.asarray(self.ave_data[0]),
+                                          height=np.asarray(self.ave_data[1]),
+                                          beam=0.15)
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               self.ave_data[0])
 
         if sensor==AIR:
-            data = np.random.random()
-            err = data*0.1
-            self.data[sensor][0][0].append(data)
-            self.data[sensor][0][1].append(err)
-            self.data[sensor][0][0].append(2.5*data)
-            self.data[sensor][0][1].append(2.5*err)
-            self.data[sensor][0][0].append(10*data)
-            self.data[sensor][0][1].append(10*err)
+            self.data[AIR][0][0].append(data[0][0])
+            self.data[AIR][0][1].append(data[0][1])
+            self.data[AIR][1][0].append(data[1][0])
+            self.data[AIR][1][1].append(data[1][1])
+            self.data[AIR][2][0].append(data[2][0])
+            self.data[AIR][2][1].append(data[2][1])
+
             if len(self.data[sensor][0][0]) > self.ndata:
                 self.data[sensor][0][0].pop(0)
                 self.data[sensor][0][1].pop(0)
@@ -437,22 +441,22 @@ class App(QWidget):
                 self.data[sensor][2][0].pop(0)
                 self.data[sensor][2][1].pop(0)
 
-            #self.err_list[sensor][0].setData(x=self.time_data[sensor],
-            #                                 y=self.data[sensor][0][0],
-            #                                 height=self.data[sensor][0][1],
-            #                                 beam=0.2)
+            self.err_list[sensor][0].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][0][0]),
+                                             height=np.asarray(self.data[sensor][0][1]),
+                                             beam=0.15)
             self.plot_list[sensor][0].setData(self.time_data[sensor],
                                               self.data[sensor][0][0])
-            #self.err_list[sensor][1].setData(x=self.time_data[sensor],
-            #                                 y=self.data[sensor][1][0],
-            #                                 height=self.data[sensor][1][1],
-            #                                 beam=0.2)
+            self.err_list[sensor][1].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][1][0]),
+                                             height=np.asarray(self.data[sensor][1][1]),
+                                             beam=0.15)
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               self.data[sensor][1][0])
-            #self.err_list[sensor][2].setData(x=self.time_data[sensor],
-            #                                 y=self.data[sensor][2][0],
-            #                                 height=self.data[sensor][2][1],
-            #                                 beam=0.2)
+            self.err_list[sensor][2].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][2][0]),
+                                             height=np.asarray(self.data[sensor][2][1]),
+                                             beam=0.15)
             self.plot_list[sensor][2].setData(self.time_data[sensor],
                                               self.data[sensor][2][0])
         self.updateText(sensor)
@@ -460,10 +464,13 @@ class App(QWidget):
 
     def updateText(self, sensor):
         if sensor==RAD:
-            cpm = "{:.1f}".format(np.mean(self.data[sensor]))
-            usv = "{:.3f}".format(np.mean(self.data[sensor]) * 0.005)
-            self.sensor_list[sensor][1] = cpm
-            self.sensor_list[sensor][3] = usv
+            cps = np.sum(self.spectra[-1])/float(self.integration_time)
+            usv = cps * 0.0000427*60
+            cps_str = "{:.1f}".format(cps)
+            usv_str = "{:.3f}".format(usv)
+            self.sensor_list[sensor][1] = cps_str
+            self.sensor_list[sensor][3] = usv_str
+            self.setDisplayBackground(sensor,usv)
 
         if sensor==AIR:
             pm1 = "{:.1f}".format(np.mean(self.data[sensor][0][0]))
@@ -472,14 +479,70 @@ class App(QWidget):
             self.sensor_list[sensor][1] = pm1
             self.sensor_list[sensor][3] = pm25
             self.sensor_list[sensor][5] = pm10
+            self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
 
         self.set_display_text(sensor);
 
 
+    def setDisplayBackground(self, sensor, val):
+        if sensor==RAD:
+            if val < 1.0:
+                self.data_display[sensor].setStyleSheet(good_background)
+            elif val < 2.0:
+                self.data_display[sensor].setStyleSheet(okay_background)
+            elif val < 25.0:
+                self.data_display[sensor].setStyleSheet(med_background)
+            elif val < 200.0:
+                self.data_display[sensor].setStyleSheet(bad_background)
+            else:
+                self.data_display[sensor].setStyleSheet(verybad_background)
+        if sensor==AIR:
+            if val < 12.1:
+                self.data_display[sensor].setStyleSheet(good_background)
+            elif val < 35.5:
+                self.data_display[sensor].setStyleSheet(okay_background)
+            elif val < 55.5:
+                self.data_display[sensor].setStyleSheet(med_background)
+            elif val < 150.5:
+                self.data_display[sensor].setStyleSheet(bad_background)
+            else:
+                self.data_display[sensor].setStyleSheet(verybad_background)
+
+
+    def send_cmd(self, cmd):
+        '''
+        Send commands for sensor DAQs
+            - valid commands: START, STOP, EXIT
+        '''
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='fromGUI')
+        for sensor in self.sensor_list:
+            print("Sending cmd: {} for {}".format(cmd,sensor))
+            message = {'id': sensor, 'cmd': cmd}
+            channel.basic_publish(exchange='',routing_key='fromGUI',body=json.dumps(message))
+        connection.close()
+		
+    def receive_data(self):
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='toGUI')
+        method_frame, header_frame, body = channel.basic_get(queue='toGUI')
+        if body is not None:
+            message = json.loads(body)
+            channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+            connection.close()
+            return message
+        else:
+            connection.close()
+            return None
+
     @pyqtSlot()
     def updatePlots(self):
-        for sensor in self.sensor_list:
-            self.updatePlot(sensor)
+        message = self.receive_data()
+        while message is not None:
+            self.updatePlot(message['id'],message['data'])
+            message = self.receive_data()
 
     @pyqtSlot()
     def run(self):
@@ -487,17 +550,20 @@ class App(QWidget):
         # Only set start time the first time user clicks start
         if self.start_time is None:
             self.start_time = float(format(float(time.time()), '.2f'))
+        self.send_cmd('START')
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updatePlots)
-        self.timer.start(500)
+        self.timer.start(50)
 
     @pyqtSlot()
     def stop(self):
+        self.send_cmd('STOP')
         self.timer.stop()
 
     @pyqtSlot()
     def clear(self):
         # Reset start time to None to reset time axis
+        self.send_cmd('STOP')
         self.start_time = None
         for sensor in self.sensor_list:
             self.time_data[sensor] = []
@@ -505,17 +571,80 @@ class App(QWidget):
                 self.data[sensor] = np.zeros(self.nbins, dtype=float)
                 self.ave_data = []
             if sensor==AIR:
-                self.data[sensor] = [[],[],[]]
+                self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+
+    def exit(self):
+        self.send_cmd('EXIT')
+
+
+class FileManager():
+    def __init__(self):
+        # Define basic stuff here
+        self.out_file = None
+        self.results = None
+	
+
+    def create_file(self, fname = None):
+        file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+        id_info = []
+        with open ('/home/pi/config/server_config.csv') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                id_info.append(row)
+        if fname is None:
+            filename =  "/home/pi/data/"+\
+                        "_".join(row)+"_air_quality"+file_time+".csv"
+        else:
+            filename = fname
+        self.out_file = open(filename, "ab+")
+        self.results = csv.writer(out_file, delimiter = ",")
+        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
+                    "2.5 um", "5.0 um", "10 um",
+                    "PM 1.0", "PM 2.5", "PM 10"]
+        self.results.writerow(metadata)
+
+
+    def close_file(self):
+
+        self.out_file.close()
+    
+    
+    def write_data(self, data):
+        self.results.writerow(data)
+        
+    def send_files(self):
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
+                                                        self.aq_file.name)
+        print(sys_cmd)
+        os.system(sys_cmd)
+
+
+def clear_queue():
+    print("Initializing queue... clearing out old data")
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='toGUI')
+    channel.queue_delete(queue='toGUI')
+    connection.close()
+
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='fromGUI')
+    channel.queue_delete(queue='fromGUI')
+    connection.close()
 
 
 if __name__ == '__main__':
     # Enable antialiasing for prettier plots
     app = QApplication(sys.argv)
     QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    nbins = 4096
+    nbins = 1024
     ex = App(nbins=nbins)
+    clear_queue()
     ex.show()
 
+    atexit.register(ex.exit)
     #ex.update_plot(data)
     #app.processEvents()
-    sys.exit(app.exec_())
+    ret = app.exec_()
+    sys.exit(ret)

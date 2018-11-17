@@ -1,22 +1,19 @@
-import csv
 import time
 import numpy as np
 from collections import deque
 import serial
 import sys
 import os
-from pyqtgraph.Qt import QtGui, QtCore
-import pyqtgraph as pg
+import pika
+import json
 
 sys.stdout.flush()
 
-class air_quality_DAQ(QtCore.QThread):
+class air_quality_DAQ():
     def __init__ (self, n_merge):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
-        self.data_signal = pg.QtCore.Signal(object)
 
-        self.running = False
         self.n_merge = int(n_merge)
         self.PM01_list = []
         self.PM25_list = []
@@ -27,32 +24,7 @@ class air_quality_DAQ(QtCore.QThread):
         self.P25_list = []
         self.P50_list = []
         self.P100_list = []
-        self.port = None
-        self.aq_file = None
-        self.results = None
-        self.send_data = False
 
-    def close(self,plot_id):
-        plt.close(plot_id)
-
-    def create_file(self, fname = None):
-        file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        id_info = []
-        with open ('/home/pi/config/server_config.csv') as f:
-            reader = csv.reader(f)
-            for row in reader:
-                id_info.append(row)
-        if fname is None:
-            filename =  "/home/pi/data/"+\
-                        "_".join(row)+"_air_quality"+file_time+".csv"
-        else:
-            filename = fname
-        self.aq_file = open(filename, "ab+")
-        self.results = csv.writer(aq_file, delimiter = ",")
-        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
-                    "2.5 um", "5.0 um", "10 um",
-                    "PM 1.0", "PM 2.5", "PM 10"]
-        self.results.writerow(metadata)
 
     def run(self):
         text = self.port.read(32)
@@ -73,7 +45,7 @@ class air_quality_DAQ(QtCore.QThread):
             P50 =repr((buf[23]<<8) + buf[24])
             P100=repr((buf[25]<<8) + buf[26])
 
-            self.print_data(PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100)
+            #self.print_data(PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100)
 
             self.PM01_list.append(int(PM01Val))
             self.PM25_list.append(int(PM25Val))
@@ -85,36 +57,25 @@ class air_quality_DAQ(QtCore.QThread):
             self.P50_list.append(int(P50))
             self.P100_list.append(int(P100))
 
-            if len(PM25_list)>=n_merge:
-                data = [time.time(),
-                        np.mean(np.asarray(P3_list)),
-                        np.mean(np.asarray(P5_list)),
-                        np.mean(np.asarray(P10_list)),
-                        np.mean(np.asarray(P25_list)),
-                        np.mean(np.asarray(P50_list)),
-                        np.mean(np.asarray(P100_list)),
-                        np.mean(np.asarray(PM01_list)),
-                        np.mean(np.asarray(PM25_list)),
-                        np.mean(np.asarray(PM10_list))]
-                self.results.writerow(data)
+            if len(self.PM25_list)>=self.n_merge:
+				data1 = [np.mean(np.asarray(self.PM01_list)),np.std(np.asarray(self.PM01_list))]
+				data2 = [np.mean(np.asarray(self.PM25_list)),np.std(np.asarray(self.PM25_list))]
+				data3 = [np.mean(np.asarray(self.PM10_list)),np.std(np.asarray(self.PM10_list))]
+				self.send_data([data1,data2,data3])
+				self.clear_data()
+    
 
-                data1 = [np.mean(np.asarray(PM01_list)),
-                         np.std(np.asarray(PM01_list))]
-                data2 = [np.mean(np.asarray(PM25_list)),
-                         np.std(np.asarray(PM25_list))]
-                data3 = [np.mean(np.asarray(PM10_list)),
-                         np.std(np.asarray(PM10_list))]
+    def send_data(self, data):
+		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+		channel = connection.channel()
+		channel.queue_declare(queue='toGUI')
+		message = {'id': 'Air Quality', 'data': data}
+		
+		channel.basic_publish(exchange='',
+							  routing_key='toGUI',
+							  body=json.dumps(message))
+		connection.close()
 
-            self.data_signal.emit([data1,data2,data3])
-            self.clear_data()
-
-    def close_file(self):
-        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
-                                                        self.aq_file.name)
-        print(sys_cmd)
-        os.system(sys_cmd)
-
-        self.aq_file.close()
 
     def clear_data(self):
         self.P3_list[:] = []
@@ -127,19 +88,72 @@ class air_quality_DAQ(QtCore.QThread):
         self.PM25_list[:] = []
         self.PM10_list[:] = []
 
+
     def print_data(self,PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100):
         print('Concentration of Particulate Matter [ug/m3]')
         print('PM 1.0 = {} ug/m3'.format(PM01Val))
         print('PM 2.5 = {} ug/m3'.format(PM25Val))
         print('PM 10  = {} ug/m3\n'.format(PM25Val))
+        print('')
+        print('')
+        #print('Number of particles in 0.1 L of air with specific diameter\n')
+        #print('#Particles, diameter over 0.3 um = {}'.format(P3))
+        #print('#Particles, diameter over 0.5 um = {}'.format(P5))
+        #print('#Particles, diameter over 1.0 um = {}'.format(P10))
+        #print('#Particles, diameter over 2.5 um = {}'.format(P25))
+        #print('#Particles, diameter over 5.0 um = {}'.format(P50))
+        #print('#Particles, diameter over 10  um = {}'.format(P100))
+        sys.stdout.flush()
 
-        # Print number of particles in 0.1 L of air over specific diamaters
-        '''
-        print('Number of particles in 0.1 L of air with specific diameter\n')
-        print('#Particles, diameter over 0.3 um = {}'.format(P3))
-        print('#Particles, diameter over 0.5 um = {}'.format(P5))
-        print('#Particles, diameter over 1.0 um = {}'.format(P10))
-        print('#Particles, diameter over 2.5 um = {}'.format(P25))
-        print('#Particles, diameter over 5.0 um = {}'.format(P50))
-        print('#Particles, diameter over 10  um = {}'.format(P100))
-		'''
+
+    def receive(self):
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='fromGUI')
+        method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
+        if body is not None:
+            message = json.loads(body)
+            if message['id']=='Air Quality':
+                channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                connection.close()
+                return message['cmd']
+            else:
+                connection.close()
+                return None
+        else:
+            connection.close()
+            return None
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Error: air_quality_DAQ expects input argument")
+        print("    - arg = number of times to query sensor before posting to GUI")
+    daq = air_quality_DAQ(int(sys.argv[1]))
+    while True:
+        # Look for messages from GUI every 10 ms
+        msg = daq.receive()
+        print("received msg: {}".format(msg))
+        sys.stdout.flush()
+        
+        # If START is sent, begin running daq
+		#    - collect data every second
+		#    - re-check for message from GUI
+        if msg == 'START':
+            print("Inside START")
+            while msg is None or msg=='START':
+                print("running daq")
+                daq.run()
+                time.sleep(1)
+                msg = daq.receive()
+        # If EXIT is sent, break out of while loop and exit program
+        if msg == 'STOP':
+            print("stopping and entering exterior while loop.")
+
+        if msg == 'EXIT':
+            print('exiting program')
+            break
+            
+        time.sleep(.2)
+
+	exit
