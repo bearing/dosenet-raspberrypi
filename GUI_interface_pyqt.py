@@ -336,7 +336,7 @@ class App(QWidget):
             splot.setLabel('bottom', '<h3>Channel</h3>')
             curve1 = splot.plot(self.channels, self.data[sensor],
                                 pen=(255, 0, 0))
-            splot.setLogMode(False, True)
+            curve1.setParentItem(splot)
 
             tplotwin = pg.GraphicsWindow()
             tplotwin.setContentsMargins(0,0,0,0)
@@ -452,6 +452,8 @@ class App(QWidget):
             self.data[sensor] += data
             self.plot_list[sensor][0].setData(self.channels,
                                               np.asarray(self.data[sensor]))
+            self.plot_list[sensor][0].parent().setLogMode(False,True)
+
             cps = np.sum(data)/float(self.integration_time)
             err = np.sqrt(np.sum(data))/float(self.integration_time)
             self.ave_data[0].append(cps)
