@@ -336,6 +336,7 @@ class App(QWidget):
             splot.setLabel('bottom', '<h3>Channel</h3>')
             curve1 = splot.plot(self.channels, self.data[sensor],
                                 pen=(255, 0, 0))
+            splot.setLogMode(False, True)
 
             tplotwin = pg.GraphicsWindow()
             tplotwin.setContentsMargins(0,0,0,0)
@@ -449,7 +450,8 @@ class App(QWidget):
             data = np.asarray(data).reshape(self.nbins,int(len(data)/self.nbins)).sum(axis=1)
             self.spectra.append(data)
             self.data[sensor] += data
-            self.plot_list[sensor][0].setData(self.channels, np.asarray(self.spectra).sum(axis=0))
+            self.plot_list[sensor][0].setData(self.channels,
+                                              np.asarray(self.data[sensor]))
             cps = np.sum(data)/float(self.integration_time)
             err = np.sqrt(np.sum(data))/float(self.integration_time)
             self.ave_data[0].append(cps)
@@ -507,7 +509,7 @@ class App(QWidget):
         Determine new values for text above the graph and update the display
         '''
         if sensor==RAD:
-            cps = np.sum(self.spectra[-1])/float(self.integration_time)
+            cps = self.ave_data[0][-1]
             usv = cps * 0.0000427*60
             cps_str = "{:.1f}".format(cps)
             usv_str = "{:.3f}".format(usv)
