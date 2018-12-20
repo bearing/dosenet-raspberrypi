@@ -17,6 +17,7 @@ import pika
 import json
 import atexit
 import traceback
+import argparse
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
@@ -51,10 +52,11 @@ verybad_background = "background-color:#FF66B2;"
 
 class App(QWidget):
 
-    def __init__(self, nbins=4096):
+    def __init__(self, nbins=4096, test=False, **kwargs):
         super().__init__()
         self.title = 'DoseNet Sensor GUI'
         self.left = 0
+        self.test_mode = test
         self.top = 20
         self.width = 1280
         self.height = 720
@@ -277,6 +279,7 @@ class App(QWidget):
             self.location_text.close()
             self.location_box.close()
 
+
     def setIntegrationTime(self,):
         self.integration_time = int(text)
 
@@ -336,7 +339,7 @@ class App(QWidget):
             splot.setLabel('bottom', '<h3>Channel</h3>')
             curve1 = splot.plot(self.channels, self.data[sensor],
                                 pen=(255, 0, 0))
-            curve1.setParentItem(splot)
+            splot.setLogMode(False,True)
 
             tplotwin = pg.GraphicsWindow()
             tplotwin.setContentsMargins(0,0,0,0)
@@ -433,6 +436,22 @@ class App(QWidget):
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
 
 
+    def makeTestData(self,sensor):
+        '''
+        Make dummy data for testing
+        '''
+        if sensor==RAD:
+            data = np.random.random(self.nbins)
+        if sensor==AIR:
+            base_data = np.random.random(1)[0]
+            base_err = 0.05*np.random.random(3)
+            data = [[base_data,base_err[0]],
+                    [base_data*1.5,base_err[1]],
+                    [base_data*5.0,base_err[2]]]
+        if sensor==CO2:
+            data = [np.random.random(1)[0],0.05*np.random.random(1)[0]]
+        return data
+
     def updatePlot(self, sensor, data):
         '''
         Update plots with newest data from the sensor
@@ -452,7 +471,6 @@ class App(QWidget):
             self.data[sensor] += data
             self.plot_list[sensor][0].setData(self.channels,
                                               np.asarray(self.data[sensor]))
-            self.plot_list[sensor][0].parent().setLogMode(False,True)
 
             cps = np.sum(data)/float(self.integration_time)
             err = np.sqrt(np.sum(data))/float(self.integration_time)
@@ -561,21 +579,30 @@ class App(QWidget):
 
     @pyqtSlot()
     def updatePlots(self):
-        message = receive_queue_data()
-        while message is not None:
-            self.updatePlot(message['id'],message['data'])
+        if self.test_mode:
+            for sensor in self.sensor_list:
+                data = self.makeTestData(sensor)
+                self.updatePlot(sensor,data)
+        else:
             message = receive_queue_data()
+            while message is not None:
+                self.updatePlot(message['id'],message['data'])
+                message = receive_queue_data()
 
     @pyqtSlot()
     def run(self):
+        time_sample = 50
+        if self.test_mode:
+            time_sample = 1000*self.integration_time
         print("Starting data collection")
         # Only set start time the first time user clicks start
         if self.start_time is None:
             self.start_time = float(format(float(time.time()), '.2f'))
-        send_queue_cmd('START',self.sensor_list)
+        if not self.test_mode:
+            send_queue_cmd('START',self.sensor_list)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updatePlots)
-        self.timer.start(50)
+        self.timer.start(time_sample)
 
     @pyqtSlot()
     def stop(self):
@@ -583,7 +610,8 @@ class App(QWidget):
         Send STOP command to all sensors
             - functionally a pause in displaying/recording data
         '''
-        send_queue_cmd('STOP',self.sensor_list)
+        if not self.test_mode:
+            send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
 
     @pyqtSlot()
@@ -593,7 +621,8 @@ class App(QWidget):
         '''
         # TODO: Automaticaly save data to file here and/or add 'Save' button?
         #    - maybe produce a pop-up prompting user to chose to save or not
-        send_queue_cmd('STOP',self.sensor_list)
+        if not self.test_mode:
+            send_queue_cmd('STOP',self.sensor_list)
         self.start_time = None
         for sensor in self.sensor_list:
             self.time_data[sensor][:] = []
@@ -608,7 +637,8 @@ class App(QWidget):
         '''
         Send EXIT command to all sensors
         '''
-        send_queue_cmd('EXIT',self.sensor_list)
+        if not self.test_mode:
+            send_queue_cmd('EXIT',self.sensor_list)
 
 
 
@@ -711,18 +741,30 @@ def clear_queue():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--test", "-t",
+        action='store_true',
+        default=False,
+    )
+
+    args = parser.parse_args()
+    arg_dict = vars(args)
+
     # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
     try:
         app = QApplication(sys.argv)
         QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         nbins = 1024
-        ex = App(nbins=nbins)
-        clear_queue()
+        ex = App(nbins=nbins, **arg_dict)
+        if not arg_dict['test']:
+            clear_queue()
         ex.show()
 
         atexit.register(ex.exit)
     except:
-        send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
+        if not arg_dict['test']:
+            send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
         # Still want to see traceback for debugging
         traceback.print_exc()
         pass
