@@ -61,7 +61,7 @@ class Manager_D3S(object):
                  ):
 
         self.running = running
-        self.post_data = False
+        self.post_data = True
 
         self.total = None
         self.lst = None
@@ -102,7 +102,7 @@ class Manager_D3S(object):
 
         self.data_handler = Data_Handler_D3S(
             manager=self,
-            verbosity=self.v,
+            verbosity=verbosity,
             logfile=self.logfile)
 
 
@@ -245,6 +245,7 @@ class Manager_D3S(object):
                             this_start, this_end = self.get_interval(
                                 time.time() - self.interval)
 
+                            print('Checking post status')
                             self.handle_spectra(
                                 this_start, this_end, reading[4])
                             self.post_spectra(reading[4])
@@ -254,10 +255,10 @@ class Manager_D3S(object):
                         if len(done_devices) >= len(devs):
                             break
         except KeyboardInterrupt:
-            self.vprint(1, '\nKeyboardInterrupt: stopping Manager run')
+            print('\nKeyboardInterrupt: stopping Manager run')
             self.takedown()
         except SystemExit:
-            self.vprint(1, '\nSystemExit: taking down Manager')
+            print('\nSystemExit: taking down Manager')
             self.takedown()
 
     def get_interval(self, start_time):
@@ -309,7 +310,10 @@ class Manager_D3S(object):
         if msg=='EXIT':
             self.takedown()
 
-        if msg is None or self.post_data:
+        print('Post data status: {}'.format(self.post_data))
+        sys.stdout.flush()
+        if self.post_data:
+            print('Sending data to GUI')
             self.send_data(spectra)
 
 

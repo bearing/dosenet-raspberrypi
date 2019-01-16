@@ -417,22 +417,25 @@ class App(QWidget):
         self.setDisplayText(sensor)
 
 
-    def initSensorData(self,sensor):
-        '''
-        Initialize the relevant sensor data lists
-        '''
-        self.time_data[sensor] = []
-        if sensor==RAD:
-            self.data[sensor] = np.zeros(self.nbins, dtype=float)
-            self.spectra = []
-            self.ave_data = [[],[]]
-
+    def setOutputFile(self, sensor):
         if sensor==AIR:
             if self.saveData:
                 fname = "/home/pi/data/AQ_G" + self.group_id + "_P" + \
                         self.period_id + "_" + self.location + "_" + \
                         str(dt.datetime.today()).split()[0]+".csv"
                 #self.aq_daq.create_file(fname)
+
+    def initSensorData(self,sensor):
+        '''
+        Initialize the relevant sensor data lists
+        '''
+        self.time_data[sensor] = []
+        if sensor==RAD:
+            self.data[sensor] = np.ones(self.nbins, dtype=float)
+            self.spectra = []
+            self.ave_data = [[],[]]
+
+        if sensor==AIR:
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
 
 
@@ -452,9 +455,9 @@ class App(QWidget):
             data = [np.random.random(1)[0],0.05*np.random.random(1)[0]]
         return data
 
-    def updatePlot(self, sensor, data):
+    def addData(self, sensor, data):
         '''
-        Update plots with newest data from the sensor
+        Add newest data from the sensor to data lists
         '''
         # For robustness: make sure start_time is defined
         #  - if it's not restart the time count here
@@ -469,9 +472,6 @@ class App(QWidget):
             data = np.asarray(data).reshape(self.nbins,int(len(data)/self.nbins)).sum(axis=1)
             self.spectra.append(data)
             self.data[sensor] += data
-            self.plot_list[sensor][0].setData(self.channels,
-                                              np.asarray(self.data[sensor]))
-
             cps = np.sum(data)/float(self.integration_time)
             err = np.sqrt(np.sum(data))/float(self.integration_time)
             self.ave_data[0].append(cps)
@@ -480,12 +480,6 @@ class App(QWidget):
                 self.spectra.pop(0)
                 self.ave_data[0].pop(0)
                 self.ave_data[1].pop(0)
-            self.err_list[sensor].setData(x=np.asarray(self.time_data[sensor]),
-                                          y=np.asarray(self.ave_data[0]),
-                                          height=np.asarray(self.ave_data[1]),
-                                          beam=0.15)
-            self.plot_list[sensor][1].setData(self.time_data[sensor],
-                                              self.ave_data[0])
 
         if sensor==AIR:
             self.data[AIR][0][0].append(data[0][0])
@@ -503,6 +497,22 @@ class App(QWidget):
                 self.data[sensor][2][0].pop(0)
                 self.data[sensor][2][1].pop(0)
 
+    def updatePlot(self, sensor):
+        '''
+        Update plots with newest data from the sensor
+        '''
+        if sensor==RAD:
+            self.plot_list[sensor][0].setData(self.channels,
+                                              np.asarray(self.data[sensor]))
+
+            self.err_list[sensor].setData(x=np.asarray(self.time_data[sensor]),
+                                          y=np.asarray(self.ave_data[0]),
+                                          height=np.asarray(self.ave_data[1]),
+                                          beam=0.15)
+            self.plot_list[sensor][1].setData(self.time_data[sensor],
+                                              self.ave_data[0])
+
+        if sensor==AIR:
             self.err_list[sensor][0].setData(x=np.asarray(self.time_data[sensor]),
                                              y=np.asarray(self.data[sensor][0][0]),
                                              height=np.asarray(self.data[sensor][0][1]),
@@ -521,6 +531,7 @@ class App(QWidget):
                                              beam=0.15)
             self.plot_list[sensor][2].setData(self.time_data[sensor],
                                               self.data[sensor][2][0])
+
         self.updateText(sensor)
 
 
@@ -529,7 +540,10 @@ class App(QWidget):
         Determine new values for text above the graph and update the display
         '''
         if sensor==RAD:
-            cps = self.ave_data[0][-1]
+            if len(self.ave_data[0]) > 0:
+                cps = self.ave_data[0][-1]
+            else:
+                cps = np.mean(self.data[sensor])
             usv = cps * 0.0000427*60
             cps_str = "{:.1f}".format(cps)
             usv_str = "{:.3f}".format(usv)
@@ -582,11 +596,13 @@ class App(QWidget):
         if self.test_mode:
             for sensor in self.sensor_list:
                 data = self.makeTestData(sensor)
-                self.updatePlot(sensor,data)
+                self.addData(sensor,data)
+                self.updatePlot(sensor)
         else:
             message = receive_queue_data()
             while message is not None:
-                self.updatePlot(message['id'],message['data'])
+                self.addData(message['id'],message['data'])
+                self.updatePlot(message['id'])
                 message = receive_queue_data()
 
     @pyqtSlot()
@@ -621,17 +637,25 @@ class App(QWidget):
         '''
         # TODO: Automaticaly save data to file here and/or add 'Save' button?
         #    - maybe produce a pop-up prompting user to chose to save or not
-        if not self.test_mode:
-            send_queue_cmd('STOP',self.sensor_list)
-        self.start_time = None
-        for sensor in self.sensor_list:
-            self.time_data[sensor][:] = []
-            if sensor==RAD:
-                self.spectra[:] = []
-                self.data[sensor] = np.zeros(self.nbins, dtype=float)
-                self.ave_data[:] = []
-            if sensor==AIR:
-                self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+        try:
+            if not self.test_mode:
+                send_queue_cmd('STOP',self.sensor_list)
+            self.start_time = None
+            for sensor in self.sensor_list:
+                self.time_data[sensor][:] = []
+                if sensor==RAD:
+                    self.spectra[:] = []
+                    self.data[sensor] = np.ones(self.nbins, dtype=float)
+                    self.ave_data = [[],[]]
+                if sensor==AIR:
+                    self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+                self.updatePlot(sensor)
+        except:
+            if not arg_dict['test']:
+                send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
+            # Still want to see traceback for debugging
+            print('ERROR: GUI quit unexpectedly!')
+            traceback.print_exc()
 
     def exit(self):
         '''
@@ -753,12 +777,12 @@ if __name__ == '__main__':
 
     # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
     try:
+        if not arg_dict['test']:
+            clear_queue()
         app = QApplication(sys.argv)
         QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         nbins = 1024
         ex = App(nbins=nbins, **arg_dict)
-        if not arg_dict['test']:
-            clear_queue()
         ex.show()
 
         atexit.register(ex.exit)
@@ -766,8 +790,10 @@ if __name__ == '__main__':
         if not arg_dict['test']:
             send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
         # Still want to see traceback for debugging
+        print('ERROR: GUI quit unexpectedly!')
         traceback.print_exc()
         pass
 
     ret = app.exec_()
+    print(ret)
     sys.exit(ret)
