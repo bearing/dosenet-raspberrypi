@@ -69,7 +69,7 @@ class App(QWidget):
         self.data = {}
         self.time_data = {}
         self.saveData = True
-        self.channels = np.arange(self.nbins, dtype=int)
+        self.channels = np.arange(self.nbins, dtype=float) * 2.55
         self.initUI()
 
     def initUI(self):
