@@ -177,9 +177,9 @@ class App(QWidget):
 
     def startSensor(self, sensor):
         if sensor==AIR:
-            cmd = 'python air_quality_DAQ.py {} > /tmp/AQ.log 2>&1 &'.format(self.integration_time)
+            cmd = 'python /home/pi/dosenet-raspberrypi/air_quality_DAQ.py {} > /tmp/AQ.log 2>&1 &'.format(self.integration_time)
         if sensor==RAD:
-            cmd = 'sudo python D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
+            cmd = 'sudo python /home/pi/dosenet-raspberrypi/D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
         print(cmd)
         os.system(cmd)
 
