@@ -109,9 +109,9 @@ class App(QWidget):
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
                 "QTabBar {font-size: 14pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 50px; width: 120px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 40px; width: 120px;}")
         self.tabs.setTabBar(tab_bar)
-        ptop, pleft, pheight, pwidth = 0, 0, 12, 10
+        ptop, pleft, pheight, pwidth = 0, 0, 12, 11
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
 
@@ -168,7 +168,7 @@ class App(QWidget):
         Add a checkbox to the main layout in the specified location (top,left)
         '''
         checkbox = QCheckBox(label)
-        textfont = QFont("Times", 18, QFont.Bold)
+        textfont = QFont("Times", 14, QFont.Bold)
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
