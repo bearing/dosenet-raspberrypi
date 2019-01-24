@@ -75,7 +75,7 @@ class App(QWidget):
         self.test_mode = test
         self.top = 20
         self.width = 800
-        self.height = 480
+        self.height = 460
         self.nbins = nbins
         self.start_time = None
         self.plot_list = {}
@@ -107,17 +107,17 @@ class App(QWidget):
         self.tabs = QTabWidget(self)
         self.tabs.setStyleSheet("QTabWidget::tab-bar { alignment: left; } "+\
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
-                "QTabBar {font-size: 18pt;}");
+                "QTabBar {font-size: 14pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 80px; width: 150px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 50px; width: 120px;}")
         self.tabs.setTabBar(tab_bar)
-        ptop, pleft, pheight, pwidth = 0, 0, 12, 9
+        ptop, pleft, pheight, pwidth = 0, 0, 12, 10
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
 
         # Create text label
         label = QLabel('Select sensors', self)
-        textfont = QFont("Times", 20, QFont.Bold)
+        textfont = QFont("Times", 16, QFont.Bold)
         label.setFont(textfont)
         self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
         label.setAlignment(Qt.AlignCenter)
