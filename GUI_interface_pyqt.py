@@ -74,8 +74,8 @@ class App(QWidget):
         self.left = 0
         self.test_mode = test
         self.top = 20
-        self.width = 1280
-        self.height = 720
+        self.width = 800
+        self.height = 480
         self.nbins = nbins
         self.start_time = None
         self.plot_list = {}
