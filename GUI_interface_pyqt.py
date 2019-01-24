@@ -117,7 +117,7 @@ class App(QWidget):
 
         # Create text label
         label = QLabel('Select sensors', self)
-        textfont = QFont("Times", 16, QFont.Bold)
+        textfont = QFont("Times", 14, QFont.Bold)
         label.setFont(textfont)
         self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
         label.setAlignment(Qt.AlignCenter)
@@ -154,7 +154,7 @@ class App(QWidget):
                            "border-width: 3px;"+\
                            "border-radius: 2px;"+\
                            "border-color: beige;"+\
-                           "font: bold 14px;"+\
+                           "font: bold 12px;"+\
                            "min-width: 10em;"+\
                            "padding: 3px;"
 
@@ -168,7 +168,7 @@ class App(QWidget):
         Add a checkbox to the main layout in the specified location (top,left)
         '''
         checkbox = QCheckBox(label)
-        textfont = QFont("Times", 14, QFont.Bold)
+        textfont = QFont("Times", 12, QFont.Bold)
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
