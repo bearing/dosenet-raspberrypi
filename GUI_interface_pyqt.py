@@ -50,6 +50,22 @@ med_background = "background-color:#FF8000;"
 bad_background = "background-color:#FF0000;"
 verybad_background = "background-color:#FF66B2;"
 
+vLine = pg.InfiniteLine(angle=90, movable=False)
+hLine = pg.InfiniteLine(angle=0, movable=False)
+global ex
+global proxy
+
+def mouseMoved(evt):
+    global ex
+    pos = evt[0]  ## using signal proxy turns arguments into a tuple
+    if ex.splot.sceneBoundingRect().contains(pos):
+        mousePoint = ex.splot.vb.mapSceneToView(pos)
+        index = int(mousePoint.x()/2.55)
+        if index > 0 and index < len(ex.data[RAD]):
+            ex.cursor_label.setText("<span style='font-size: 12pt'>Energy [keV] = %0.1f,   <span style='color: red'>Counts = %0.1f</span>" % (mousePoint.x(), ex.data[RAD][index]))
+        vLine.setPos(mousePoint.x())
+        hLine.setPos(mousePoint.y())
+
 class App(QWidget):
 
     def __init__(self, nbins=4096, test=False, **kwargs):
@@ -283,23 +299,29 @@ class App(QWidget):
     def setIntegrationTime(self,):
         self.integration_time = int(text)
 
+
     def setNData(self,text):
         self.ndata = int(text)
+
 
     def setGroupID(self,text):
         self.group_id = text
 
+
     def setPeriodID(self,text):
         self.period_id = text
+
 
     def setLocation(self,text):
         self.location = text
 
+
     def addSensor(self, sensor):
-        self.startSensor(sensor)
         self.initSensorData(sensor)
         self.setSensorTab(sensor)
         self.setSensorText(sensor)
+        if not self.test_mode:
+            self.startSensor(sensor)
 
 
     def setSensorTab(self, sensor):
@@ -331,16 +353,26 @@ class App(QWidget):
         Set the initial plot layout, initialize plot curves, error bars, etc.
         '''
         if sensor==RAD:
+            global proxy
             splotwin = pg.GraphicsWindow()
             splotwin.setContentsMargins(0,0,0,0)
-            splot = splotwin.addPlot(title="<h2> {} Data </h2>".format(sensor))
-            splot.showGrid(x=True, y=True)
-            splot.setLabel('left', '<h3>Counts/Channel</h3>')
-            splot.setLabel('bottom', '<h3>Channel</h3>')
-            curve1 = splot.plot(self.channels, self.data[sensor],
+            self.cursor_label = pg.LabelItem(justify='right')
+            splotwin.addItem(self.cursor_label)
+            self.splot = splotwin.addPlot(
+                            #title="<h2> {} Data </h2>".format(sensor),
+                            row=1, col=0)
+            self.splot.showGrid(x=True, y=True)
+            self.splot.setLabel('left', '<h3>Counts/Energy [1/keV]</h3>')
+            self.splot.setLabel('bottom', '<h3>Energy [keV]</h3>')
+            curve1 = self.splot.plot(self.channels, self.data[sensor],
                                 pen=(255, 0, 0))
-            splot.setLogMode(False,True)
-
+            self.splot.setLogMode(False,True)
+            #cross hair
+            self.splot.addItem(vLine, ignoreBounds=True)
+            self.splot.addItem(hLine, ignoreBounds=True)
+            proxy = pg.SignalProxy(self.splot.scene().sigMouseMoved,
+                                   rateLimit=60,
+                                   slot=mouseMoved)
             tplotwin = pg.GraphicsWindow()
             tplotwin.setContentsMargins(0,0,0,0)
             tplot = tplotwin.addPlot()
@@ -400,7 +432,7 @@ class App(QWidget):
         if sensor==RAD:
             cps = "{:.1f}".format(np.mean(self.data[sensor]))
             usv = "{:.3f}".format(np.mean(self.data[sensor]))
-            sensor_text = ["CPS =",cps,"                  &mu Sv/hr =",usv]
+            sensor_text = ["CPS =",cps,"                  uSv/hr =",usv]
             self.sensor_list[sensor] = sensor_text
 
         if sensor==AIR:
@@ -424,6 +456,7 @@ class App(QWidget):
                         self.period_id + "_" + self.location + "_" + \
                         str(dt.datetime.today()).split()[0]+".csv"
                 #self.aq_daq.create_file(fname)
+
 
     def initSensorData(self,sensor):
         '''
@@ -454,6 +487,7 @@ class App(QWidget):
         if sensor==CO2:
             data = [np.random.random(1)[0],0.05*np.random.random(1)[0]]
         return data
+
 
     def addData(self, sensor, data):
         '''
@@ -496,6 +530,7 @@ class App(QWidget):
                 self.data[sensor][1][1].pop(0)
                 self.data[sensor][2][0].pop(0)
                 self.data[sensor][2][1].pop(0)
+
 
     def updatePlot(self, sensor):
         '''
@@ -775,6 +810,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
+    global ex
     # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
     try:
         if not arg_dict['test']:
