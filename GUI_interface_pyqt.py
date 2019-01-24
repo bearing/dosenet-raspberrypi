@@ -75,7 +75,7 @@ class App(QWidget):
         self.test_mode = test
         self.top = 20
         self.width = 800
-        self.height = 460
+        self.height = 440
         self.nbins = nbins
         self.start_time = None
         self.plot_list = {}
@@ -111,7 +111,7 @@ class App(QWidget):
         tab_bar = QTabBar()
         tab_bar.setStyleSheet("QTabBar::tab { height: 40px; width: 120px;}")
         self.tabs.setTabBar(tab_bar)
-        ptop, pleft, pheight, pwidth = 0, 0, 12, 11
+        ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
 
@@ -156,7 +156,7 @@ class App(QWidget):
                            "border-color: beige;"+\
                            "font: bold 14px;"+\
                            "min-width: 10em;"+\
-                           "padding: 6px;"
+                           "padding: 3px;"
 
         button.setStyleSheet(style_sheet_text)
         button.clicked.connect(method)
