@@ -135,6 +135,7 @@ class Base_Manager(object):
         if self.datalog:
             self.datalogflag = True
 
+        #test for timing from data to see what
         if self.oled:
             if self.oled_log is None:
                 for i in range(len(DEFAULT_OLED_LOGS)):
