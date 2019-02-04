@@ -120,11 +120,33 @@ class Base_Manager(object):
         self.datalog = datalog
         self.datalogflag = datalogflag
 
+        self.oled = oled
+        self.oled_log = oled_log
+
         self.test = test
 
-        self.d_flag()
-        self.f_flag()
+        # Replacing the original d_flag and f_flag functions for
+        if self.datalogflag or self.test:
+            if self.datalog is None:
+                for i in range(len(DEFAULT_DATALOGS)):
+                    if self.sensor_type == i+1:
+                        self.datalog = DEFAULT_DATALOGS[i]
+                        break
+        if self.datalog:
+            self.datalogflag = True
+
+        if self.oled:
+            if self.oled_log is None:
+                for i in range(len(DEFAULT_OLED_LOGS)):
+                    if self.sensor_type == i+1:
+                        self.oled_log = DEFAULT_OLED_LOGS[i]
+                        break
+        if self.oled_log:
+            self.oled = True
+
         self.make_data_log(self.datalog)
+        self.make_oled_log(self.oled_log)
+
         self.data_names = data_names
 
         self.cirtest = cirtest
@@ -137,31 +159,17 @@ class Base_Manager(object):
 
         self.sensor_names = sensor_names
 
-    def d_flag(self):
-        """
-        Checks if the -d from_argparse is called or if the device is in test_mode.
-
-        If it is called, sets the path of the data-log to
-        the particular datalog of the sensor that is being used.
-        """
-        if self.datalogflag or self.test:
-            if self.datalog is None:
-                for i in range(len(DEFAULT_DATALOGS)):
-                    if self.sensor_type == i+1:
-                        self.datalog = DEFAULT_DATALOGS[i]
-                        break
-
-    def f_flag(self):
-        """
-        Checks if the -f from_argparse is called.
-
-        If it is called, sets datalogflag to True.
-        """
-        if self.datalog:
-            self.datalogflag = True
-
     def make_data_log(self, file):
         if self.datalogflag:
+            with open(file, 'a') as f:
+                pass
+    def make_oled_log(self, file):
+        """
+        Works the same as make_data_log but is separate
+        so that the oled_log isn't created when data logging is on
+        but an OLED screen is not connected.
+        """
+        if self.oled:
             with open(file, 'a') as f:
                 pass
 
@@ -1062,7 +1070,7 @@ if __name__ == '__main__':
         '--oled', '-o', action='store_true', default=False,
         help='Indicates whether an OLED screen is present or not')
     parser.add_argument(
-        '--oled_data', '-r', default=None,
+        '--oled_log', '-r', default=None,
         help='Specify a path for the datalog (default {})'.format(DEFAULT_OLED_LOGS[sensor-1]))
 
     if sensor == 1:
