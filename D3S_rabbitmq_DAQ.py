@@ -16,7 +16,8 @@ sys.stdout.flush()
 
 from auxiliaries import set_verbosity
 #from sender import ServerSender
-from data_handler_d3s import Data_Handler_D3S
+#from data_handler_d3s import Data_Handler_D3S
+from data_handlers import Data_Handler_D3S
 # import spectra_fitter
 
 from globalvalues import DEFAULT_LOGFILE_D3S
@@ -229,13 +230,19 @@ class Manager_D3S(object):
                 self.vprint(
                     2, 'Writing spectra to data log at {}'.format(file))
 
+    def calibration_log(self, file, spectra):
+        """
+        Dummy method for compatibility.
+        """
+
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to log.
         """
 
         self.data_handler.main(
-            self.datalog, None, spectra, this_start, this_end)
+            self.datalog, this_start, this_end,
+            calibrationlog=None, spectra= spectra)
 
     def post_spectra(self, spectra):
         # Check for server commands and change local state var accordingly
