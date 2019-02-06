@@ -19,8 +19,7 @@ from auxiliaries import set_verbosity
 from data_handler_d3s import Data_Handler_D3S
 # import spectra_fitter
 
-from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_LOGFILE_D3S
-from globalvalues import DEFAULT_CALIBRATIONLOG_TIME
+from globalvalues import DEFAULT_LOGFILE_D3S
 from globalvalues import DEFAULT_DATALOG_D3S
 
 def signal_term_handler(signal, frame):
@@ -51,9 +50,6 @@ class Manager_D3S(object):
                  verbosity=None,
                  datalog=None,
                  datalogflag=False,
-                 calibrationlog=None,
-                 calibrationlogflag=False,
-                 calibrationlogtime=None,
                  test=None,
                  logfile=None,
                  log=False,
@@ -78,16 +74,6 @@ class Manager_D3S(object):
         self.device = device
         self.log_bytes = log_bytes
 
-        self.calibrationlog = calibrationlog
-        self.calibrationlogflag = calibrationlogflag
-        self.c_timer = 0
-        self.calibrationlogtime = calibrationlogtime
-
-        self.z_flag()
-        self.y_flag()
-        self.x_flag()
-        self.make_calibration_log(self.calibrationlog)
-
         self.datalog = datalog
         self.datalogflag = datalogflag
 
@@ -105,41 +91,6 @@ class Manager_D3S(object):
             verbosity=verbosity,
             logfile=self.logfile)
 
-
-    def z_flag(self):
-        """
-        Checks if the -z from_argparse is called.
-        If it is called, sets the path of the calibration-log to
-        DEFAULT_CALIBRATIONLOG_D3S.
-        """
-        if self.calibrationlogflag:
-            self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
-
-    def y_flag(self):
-        """
-        Checks if the -y from_argparse is called.
-        If it is called, sets calibrationlogflag to True.
-        Also sets calibrationlogtime to DEFAULT_CALIBRATIONLOG_TIME.
-        """
-        if self.calibrationlog:
-            self.calibrationlogflag = True
-            self.calibrationlogtime = DEFAULT_CALIBRATIONLOG_TIME
-
-    def x_flag(self):
-        """
-        Checks if -x is called.
-        If it is called, sets calibrationlogflag to True.
-        Also sets calibrationlog to DEFAULT_CALIBRATIONLOG_D3S.
-        """
-        if self.calibrationlogtime and (
-                self.calibrationlogtime != DEFAULT_CALIBRATIONLOG_TIME):
-            self.calibrationlog = DEFAULT_CALIBRATIONLOG_D3S
-            self.calibrationlogflag = True
-
-    def make_calibration_log(self, file):
-        if self.calibrationlogflag:
-            with open(file, 'a') as f:
-                pass
 
     def a_flag(self):
         """
@@ -278,27 +229,13 @@ class Manager_D3S(object):
                 self.vprint(
                     2, 'Writing spectra to data log at {}'.format(file))
 
-    def calibration_log(self, file, spectra):
-        """
-        Writes spectra to calibration-log.
-        """
-        if self.calibrationlogflag:
-            with open(file, 'a') as f:
-                f.write('{0}, '.format(spectra))
-                self.vprint(
-                    2, 'Writing spectra to calibration log at {}'.format(file))
-            self.c_timer += self.interval
-            if self.c_timer >= self.calibrationlogtime:
-                self.vprint(1, 'Calibration Complete')
-                self.takedown()
-
     def handle_spectra(self, this_start, this_end, spectra):
         """
         Get spectra from sensor, display text, send to log.
         """
 
         self.data_handler.main(
-            self.datalog, self.calibrationlog, spectra, this_start, this_end)
+            self.datalog, None, spectra, this_start, this_end)
 
     def post_spectra(self, spectra):
         # Check for server commands and change local state var accordingly
@@ -363,7 +300,7 @@ class Manager_D3S(object):
         parser = argparse.ArgumentParser()
         parser.add_argument('--datalog', '-d', default=None)
         parser.add_argument(
-            '--datalogflag', '-a', action='store_true', default=True)
+            '--datalogflag', '-a', action='store_true', default=False)
         parser.add_argument('--verbosity', '-v', type=int, default=None)
         parser.add_argument('--test', '-t', action='store_true', default=None)
         parser.add_argument('--transport', '-n', default= 'usb')
@@ -375,10 +312,6 @@ class Manager_D3S(object):
             action='store_true')
         parser.add_argument('--log', '-l', action='store_true', default=False)
         parser.add_argument('--logfile', '-f', type=str, default=None)
-        parser.add_argument('--calibrationlogtime', '-x', type=int, default=None)
-        parser.add_argument('--calibrationlog', '-y', default=None)
-        parser.add_argument(
-            '--calibrationlogflag', '-z', action='store_true', default=False)
 
         args = parser.parse_args()
         arg_dict = vars(args)

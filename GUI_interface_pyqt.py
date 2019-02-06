@@ -179,22 +179,23 @@ class App(QWidget):
         fname = "/home/pi/data/" + self.file_prefix + '_' + \
                 str(dt.datetime.today()).split()[0]
         if sensor==AIR:
-            cmd_script = 'air_quality_DAQ.py'
-            sensor_log = 'AQ.log'
+            py = 'python'
+            script = 'air_quality_DAQ.py'
+            log = 'AQ.log'
             if self.saveData:
                 fname = fname + "_AQ.csv"
         if sensor==RAD:
-            cmd_script = 'D3S_rabbitmq_DAQ.py'
-            cmd_options = '-i {}'.format(self.integration_time)
-            sensor_log = 'rad.log'
+            py = 'sudo python'
+            script = 'D3S_rabbitmq_DAQ.py'
+            log = 'rad.log'
             if self.saveData:
                 fname = fname + "_D3S.csv"
 
-        cmd_head = 'python /home/pi/dosenet-raspberrypi/{}'.format(cmd_script)
+        cmd_head = '{} /home/pi/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format(self.integration_time)
         if self.saveData:
             cmd_options = cmd_options + ' -d {}'.format(fname)
-        cmd_log = ' > /tmp/{} 2>&1 &'.format(sensor_log)
+        cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
         cmd = cmd_head + cmd_options + cmd_log
 
         print(cmd)
