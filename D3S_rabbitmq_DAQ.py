@@ -354,10 +354,10 @@ class Manager_D3S(object):
 
         self.running = False
         self.data_handler.send_all_to_backlog()
-        
+
         del(self)
         sys.exit(0)
-        
+
     @classmethod
     def from_argparse(cls):
         parser = argparse.ArgumentParser()
@@ -397,7 +397,7 @@ def main():
         print("received msg {}: {}".format(idx, msg))
         sys.stdout.flush()
         idx = idx + 1
-        
+
         # If START is sent, begin running daq
 		#    - collect data every second
 		#    - re-check for message from GUI
