@@ -57,6 +57,7 @@ class Manager_D3S(object):
                  running=False
                  ):
 
+        self.sensor_type = 2
         self.running = running
         self.post_data = True
 
