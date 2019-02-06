@@ -84,8 +84,6 @@ class Manager_D3S(object):
         self.d_flag()
         self.make_data_log(self.datalog)
 
-        self.test = test
-
         self.handle_input(
             log, logfile, verbosity, interval)
 
