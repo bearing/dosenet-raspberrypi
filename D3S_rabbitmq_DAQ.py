@@ -60,6 +60,7 @@ class Manager_D3S(object):
         self.sensor_type = 2
         self.running = running
         self.post_data = True
+        self.test = True
 
         self.total = None
         self.lst = None
