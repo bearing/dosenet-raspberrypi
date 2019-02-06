@@ -6,15 +6,16 @@ import sys
 import os
 import pika
 import json
+import argparse
 
 sys.stdout.flush()
 
 class air_quality_DAQ():
-    def __init__ (self, n_merge):
+    def __init__ (self, interval=1, datalog=None):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
 
-        self.n_merge = int(n_merge)
+        self.n_merge = int(interval)
         self.PM01_list = []
         self.PM25_list = []
         self.PM10_list = []
@@ -129,11 +130,61 @@ class air_quality_DAQ():
             return None
 
 
+#-------------------------------------------------------------------------------
+# Class for handling writing data to files/sending to RPi server
+#-------------------------------------------------------------------------------
+class FileManager():
+    def __init__(self):
+        # Define basic stuff here
+        self.out_file = None
+        self.results = None
+
+
+    def create_file(self, fname = None):
+        file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
+        id_info = []
+        with open ('/home/pi/config/server_config.csv') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                id_info.append(row)
+        if fname is None:
+            filename =  "/home/pi/data/"+\
+                        "_".join(row)+"_air_quality"+file_time+".csv"
+        else:
+            filename = fname
+        self.out_file = open(filename, "ab+")
+        self.results = csv.writer(out_file, delimiter = ",")
+        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
+                    "2.5 um", "5.0 um", "10 um",
+                    "PM 1.0", "PM 2.5", "PM 10"]
+        self.results.writerow(metadata)
+
+
+    def close_file(self):
+
+        self.out_file.close()
+
+
+    def write_data(self, data):
+        self.results.writerow(data)
+
+    def send_files(self):
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
+                                                        self.aq_file.name)
+        print(sys_cmd)
+        os.system(sys_cmd)
+
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Error: air_quality_DAQ expects input argument")
-        print("  - arg = number of times to query sensor before posting to GUI")
-    daq = air_quality_DAQ(int(sys.argv[1]))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--interval", "-i", type=int, default=1
+    )
+    parser.add_argument('--datalog', '-d', default=None)
+
+    args = parser.parse_args()
+    arg_dict = vars(args)
+
+    daq = air_quality_DAQ(**arg_dict)
     while True:
         # Look for messages from GUI every 10 ms
         msg = daq.receive()

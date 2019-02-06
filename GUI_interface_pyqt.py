@@ -176,10 +176,27 @@ class App(QWidget):
 
 
     def startSensor(self, sensor):
+        fname = "/home/pi/data/" + self.file_prefix + '_' + \
+                str(dt.datetime.today()).split()[0]
         if sensor==AIR:
-            cmd = 'python /home/pi/dosenet-raspberrypi/air_quality_DAQ.py {} > /tmp/AQ.log 2>&1 &'.format(self.integration_time)
+            cmd_script = 'air_quality_DAQ.py'
+            sensor_log = 'AQ.log'
+            if self.saveData:
+                fname = fname + "_AQ.csv"
         if sensor==RAD:
-            cmd = 'sudo python /home/pi/dosenet-raspberrypi/D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
+            cmd_script = 'D3S_rabbitmq_DAQ.py'
+            cmd_options = '-i {}'.format(self.integration_time)
+            sensor_log = 'rad.log'
+            if self.saveData:
+                fname = fname + "_D3S.csv"
+
+        cmd_head = 'python /home/pi/dosenet-raspberrypi/{}'.format(cmd_script)
+        cmd_options = ' -i {}'.format(self.integration_time)
+        if self.saveData:
+            cmd_options = cmd_options + ' -d {}'.format(fname)
+        cmd_log = ' > /tmp/{} 2>&1 &'.format(sensor_log)
+        cmd = cmd_head + cmd_options + cmd_log
+
         print(cmd)
         os.system(cmd)
 
@@ -273,6 +290,11 @@ class App(QWidget):
                 lambda:self.setLocation(str(self.location_box.currentText())))
         self.config_layout.addRow(self.location_text,self.location_box)
 
+        self.textbox = QLineEdit()
+        self.setFilename()
+        self.textbox.textChanged.connect(self.updateFilename)
+        self.config_layout.addWidget(self.textbox)
+
         self.selection_tab.setLayout(self.config_layout)
 
 
@@ -306,14 +328,28 @@ class App(QWidget):
 
     def setGroupID(self,text):
         self.group_id = text
+        self.setFilename()
 
 
     def setPeriodID(self,text):
         self.period_id = text
+        self.setFilename()
 
 
     def setLocation(self,text):
         self.location = text
+        self.setFilename()
+
+
+    def updateFilename(self,text):
+        self.file_prefix = self.textbox.text()
+
+
+    def setFilename(self):
+        self.file_prefix = '{}_p{}_g{}'.format(self.location,
+                                               self.period_id,
+                                               self.group_id)
+        self.textbox.setText(self.file_prefix)
 
 
     def addSensor(self, sensor):
@@ -447,15 +483,6 @@ class App(QWidget):
                            "ug/L     PM 10 =",pm10,"ug/L"]
             self.sensor_list[sensor] = sensor_text
         self.setDisplayText(sensor)
-
-
-    def setOutputFile(self, sensor):
-        if sensor==AIR:
-            if self.saveData:
-                fname = "/home/pi/data/AQ_G" + self.group_id + "_P" + \
-                        self.period_id + "_" + self.location + "_" + \
-                        str(dt.datetime.today()).split()[0]+".csv"
-                #self.aq_daq.create_file(fname)
 
 
     def initSensorData(self,sensor):
@@ -701,49 +728,6 @@ class App(QWidget):
 
 
 
-#-------------------------------------------------------------------------------
-# Class for handling writing data to files/sending to RPi server
-#-------------------------------------------------------------------------------
-class FileManager():
-    def __init__(self):
-        # Define basic stuff here
-        self.out_file = None
-        self.results = None
-
-
-    def create_file(self, fname = None):
-        file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        id_info = []
-        with open ('/home/pi/config/server_config.csv') as f:
-            reader = csv.reader(f)
-            for row in reader:
-                id_info.append(row)
-        if fname is None:
-            filename =  "/home/pi/data/"+\
-                        "_".join(row)+"_air_quality"+file_time+".csv"
-        else:
-            filename = fname
-        self.out_file = open(filename, "ab+")
-        self.results = csv.writer(out_file, delimiter = ",")
-        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
-                    "2.5 um", "5.0 um", "10 um",
-                    "PM 1.0", "PM 2.5", "PM 10"]
-        self.results.writerow(metadata)
-
-
-    def close_file(self):
-
-        self.out_file.close()
-
-
-    def write_data(self, data):
-        self.results.writerow(data)
-
-    def send_files(self):
-        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
-                                                        self.aq_file.name)
-        print(sys_cmd)
-        os.system(sys_cmd)
 
 #-------------------------------------------------------------------------------
 # Methods for communication with the shared queue
