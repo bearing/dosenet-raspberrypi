@@ -231,7 +231,7 @@ class App(QWidget):
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignCenter)
         integration_box = QComboBox()
-        item_list = ["1","2","3","4","5","10","15","20","30","60"]
+        item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
         integration_box.addItems(item_list)
         integration_box.setCurrentIndex(1)
