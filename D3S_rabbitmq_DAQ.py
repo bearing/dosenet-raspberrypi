@@ -11,6 +11,7 @@ import signal
 import pika
 import sys
 import json
+import csv
 
 sys.stdout.flush()
 
@@ -226,7 +227,8 @@ class Manager_D3S(object):
         """
         if self.datalogflag:
             with open(file, 'a') as f:
-                f.write('{0}, '.format(spectra))
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow(spectra)
                 self.vprint(
                     2, 'Writing spectra to data log at {}'.format(file))
 
