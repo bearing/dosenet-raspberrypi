@@ -13,7 +13,6 @@ import time
 import csv
 import sys
 import os
-import pika
 import json
 import atexit
 import traceback
@@ -68,14 +67,25 @@ def mouseMoved(evt):
 
 class App(QWidget):
 
-    def __init__(self, nbins=4096, test=False, **kwargs):
+    def __init__(self, nbins=4096, test=False, windows=False, **kwargs):
         super().__init__()
         self.title = 'DoseNet Sensor GUI'
         self.left = 0
         self.test_mode = test
-        self.top = 20
-        self.width = 800
-        self.height = 440
+        self.windows = windows
+        if not self.test_mode:
+            import pika
+        
+        if windows:
+            self.top = 80
+            self.width = 1280
+            self.height = 720
+    
+        else:
+            self.top = 20
+            self.width = 800
+            self.height = 440
+            
         self.nbins = nbins
         self.start_time = None
         self.plot_list = {}
@@ -107,17 +117,22 @@ class App(QWidget):
         self.tabs = QTabWidget(self)
         self.tabs.setStyleSheet("QTabWidget::tab-bar { alignment: left; } "+\
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
-                "QTabBar {font-size: 14pt;}");
+                "QTabBar {font-size: 10pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 40px; width: 120px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 50px; width: 260px;}")
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
 
         # Create text label
-        label = QLabel('Select sensors', self)
-        textfont = QFont("Times", 14, QFont.Bold)
+        label = QLabel('Select Sensors', self)
+        
+        if self.windows:
+            textfont = QFont("Times", 18, QFont.Bold)
+        else:
+            textfont = QFont("Times", 14, QFont.Bold)
+        
         label.setFont(textfont)
         self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
         label.setAlignment(Qt.AlignCenter)
@@ -154,7 +169,7 @@ class App(QWidget):
                            "border-width: 3px;"+\
                            "border-radius: 2px;"+\
                            "border-color: beige;"+\
-                           "font: bold 12px;"+\
+                           "font: bold 40px;"+\
                            "min-width: 10em;"+\
                            "padding: 3px;"
 
@@ -169,6 +184,7 @@ class App(QWidget):
         '''
         checkbox = QCheckBox(label)
         textfont = QFont("Times", 12, QFont.Bold)
+
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
@@ -180,6 +196,8 @@ class App(QWidget):
             cmd = 'python /home/pi/dosenet-raspberrypi/air_quality_DAQ.py {} > /tmp/AQ.log 2>&1 &'.format(self.integration_time)
         if sensor==RAD:
             cmd = 'sudo python /home/pi/dosenet-raspberrypi/D3S_rabbitmq_DAQ.py -i {} > /tmp/rad.log 2>&1 &'.format(self.integration_time)
+        if sensor==CO2:
+            cmd = 'python /home/pi/dosenet-raspberrypi/'.format(self.integration_time)
         print(cmd)
         os.system(cmd)
 
@@ -209,7 +227,7 @@ class App(QWidget):
         self.config_layout = QFormLayout()
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
         integration_text = QLabel("Integration time (sec):")
-        textfont = QFont("Times", 22, QFont.Bold)
+        textfont = QFont("Times", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignCenter)
         integration_box = QComboBox()
@@ -240,7 +258,7 @@ class App(QWidget):
         self.config_layout.addWidget(checkbox)
 
         self.group_text = QLabel("Group Number:")
-        textfont = QFont("Times", 22, QFont.Bold)
+        textfont = QFont("Times", 16, QFont.Bold)
         self.group_text.setFont(textfont)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
@@ -337,7 +355,7 @@ class App(QWidget):
 
         # Create value display
         self.data_display[sensor] = QLabel("")
-        textfont = QFont("Times", 20, QFont.Bold)
+        textfont = QFont("Times", 16, QFont.Bold)
         self.data_display[sensor].setFont(textfont)
         self.data_display[sensor].setStyleSheet(good_background)
         self.data_display[sensor].setAlignment(Qt.AlignCenter)
@@ -422,7 +440,25 @@ class App(QWidget):
                 self.plot_list[sensor].append(curve)
                 legend.addItem(curve,names[idx])
             layout.addWidget(plotwin,1,0,1,8)
-            layout.setRowStretch(1,20)
+            layout.setRowStretch(1,15)
+         
+        if sensor==CO2:
+            plotwin = pg.GraphicsWindow()
+            plotwin.setContentsMargins(0,0,0,0)
+            iplot = plotwin.addPlot(title="<h1> {} Data </h1>".format(sensor))
+            iplot.showGrid(x=True, y=True)
+            iplot.setLabel('left', '<h2>Parts per Million</h2>')
+            iplot.setLabel('bottom', '<h2>Time</h2>')
+            err = pg.ErrorBarItem(x=self.time_data[sensor],
+                                  y=self.data[sensor][0],
+                                  height=np.asarray(self.data[sensor][1]))
+            iplot.addItem(err)
+            curve = iplot.plot(symbolBrush=(255,0,0), symbolPen='k',
+                               pen=(255,0,0))
+            self.plot_list[sensor] = curve
+            self.err_list[sensor] = err
+            layout.addWidget(plotwin,1,0,1,8)
+            layout.setRowStretch(1,15)
 
 
     def setSensorText(self, sensor):
@@ -446,7 +482,15 @@ class App(QWidget):
                            "ug/L     PM 2.5 =",pm25,
                            "ug/L     PM 10 =",pm10,"ug/L"]
             self.sensor_list[sensor] = sensor_text
+        
+        if sensor==CO2:
+            ppm = "{:.1f}".format(np.mean(self.data[sensor]))
+            sensor_text = ["PPM =",ppm]
+            self.sensor_list[sensor] = sensor_text
+            
         self.setDisplayText(sensor)
+        
+        
 
 
     def setOutputFile(self, sensor):
@@ -470,6 +514,9 @@ class App(QWidget):
 
         if sensor==AIR:
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+            
+        if sensor==CO2:
+            self.data[sensor] = [[],[]]
 
 
     def makeTestData(self,sensor):
@@ -531,6 +578,13 @@ class App(QWidget):
                 self.data[sensor][2][0].pop(0)
                 self.data[sensor][2][1].pop(0)
 
+        if sensor==CO2:
+            self.data[CO2][0].append(data[0])
+            self.data[CO2][1].append(data[1])
+            
+            if len(self.data[sensor][0]) > self.ndata:
+                self.data[sensor][0].pop(0)
+                self.data[sensor][1].pop(0)
 
     def updatePlot(self, sensor):
         '''
@@ -566,6 +620,15 @@ class App(QWidget):
                                              beam=0.15)
             self.plot_list[sensor][2].setData(self.time_data[sensor],
                                               self.data[sensor][2][0])
+            
+        if sensor==CO2:
+            self.plot_list[sensor].setData(self.time_data[sensor],
+                                           self.data[sensor][0])
+            
+            self.err_list[sensor].setData(x=np.asarray(self.time_data[sensor]),
+                                          y=np.asarray(self.data[sensor][0]),
+                                          height=np.asarray(self.data[sensor][1]),
+                                          beam=0.15)
 
         self.updateText(sensor)
 
@@ -594,6 +657,10 @@ class App(QWidget):
             self.sensor_list[sensor][3] = pm25
             self.sensor_list[sensor][5] = pm10
             self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
+            
+        if sensor==CO2:
+            ppm = "{:.1f}".format(np.mean(self.data[sensor][0][0]))
+            self.sensor_list[sensor][1] = ppm
 
         self.setDisplayText(sensor);
 
@@ -621,6 +688,17 @@ class App(QWidget):
             elif val < 55.5:
                 self.data_display[sensor].setStyleSheet(med_background)
             elif val < 150.5:
+                self.data_display[sensor].setStyleSheet(bad_background)
+            else:
+                self.data_display[sensor].setStyleSheet(verybad_background)
+        if sensor==CO2:
+            if val < 1000:
+                self.data_display[sensor].setStyleSheet(good_background)
+            elif val < 2000:
+                self.data_display[sensor].setStyleSheet(okay_background)
+            elif val < 5000:
+                self.data_display[sensor].setStyleSheet(med_background)
+            elif val < 40000:
                 self.data_display[sensor].setStyleSheet(bad_background)
             else:
                 self.data_display[sensor].setStyleSheet(verybad_background)
@@ -684,6 +762,9 @@ class App(QWidget):
                     self.ave_data = [[],[]]
                 if sensor==AIR:
                     self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+                self.updatePlot(sensor)
+                if sensor==CO2:
+                    self.data[sensor] = [[],[]]
                 self.updatePlot(sensor)
         except:
             if not arg_dict['test']:
@@ -806,6 +887,12 @@ if __name__ == '__main__':
         action='store_true',
         default=False,
     )
+    parser.add_argument(
+        "--windows", "-w",
+        action = 'store_true',
+        default = False,
+    )
+    
 
     args = parser.parse_args()
     arg_dict = vars(args)
