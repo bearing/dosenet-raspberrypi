@@ -116,9 +116,23 @@ pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 
 print(SINGLE_BREAK_LINE)
-if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
+if ques_conv(('{green}Do you need help setting up the LEDs?{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)):
-    new_setup = False
+        print('\n')
+        print(('{yellow}For the D3S LED (red): \n{reset}'+
+            '{green}Plug the postive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 13\n{reset}'+
+            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.\n{reset}'+
+            '{yellow}For the Network LED (green): \n{reset}'+
+            '{green}Plug the positive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 16\n{reset}'+
+            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.\n{reset}'+
+            '{yellow}For the Counts LED (blue): \n{reset}'+
+            '{green}Plug the positive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 19\n{reset}'+
+            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.{reset}'+
+            ))
+else:
+    if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
+        green=ANSI_GR, reset=ANSI_RESET)):
+        new_setup = False
 print('\n')
 for sensor in range(4):
     sensor_i, sensor_i2 = ques_conv(sensor_question.format(sensor_name=names[sensor])), None
