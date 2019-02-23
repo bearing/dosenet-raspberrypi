@@ -128,7 +128,7 @@ if ques_conv(('{green}Do you need help setting up the LEDs?{reset}').format(
             '{yellow}For the Counts LED (blue): \n{reset}'+
             '{green}Plug the positive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 19\n{reset}'+
             '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.{reset}'+
-            ))
+            ).format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET))
 else:
     if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
         green=ANSI_GR, reset=ANSI_RESET)):
