@@ -116,7 +116,7 @@ pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 
 print(SINGLE_BREAK_LINE)
-if ques_conv(('{green}Do you need help setting up the LEDs?{reset}').format(
+if ques_conv(('{green}Do you need help setting up the LEDs? {reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)):
         print('\n')
         print(('{yellow}For the D3S LED (red): \n{reset}'+
