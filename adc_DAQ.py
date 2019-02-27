@@ -113,14 +113,6 @@ class adc_DAQ(object):
             pass
 
 
-    def plot_CO2(self):
-        if len(self.time_queue)>0:
-            self.update_plot(1,self.time_queue,self.CO2_queue,self.CO2_error,"Time","CO2 Concentration (ppm)","CO2 Concentration vs. time")
-
-    def plot_UV(self):
-        if len(self.time_queue)>0:
-            self.update_plot(2,self.time_queue,self.UV_queue,"Time","UV Index","UV vs.time")
-
     def add_data(self, queue, queue_error, temp_list, data):
         temp_list.append(data)
         if len(temp_list)>=self.n_merge:
@@ -145,67 +137,6 @@ class adc_DAQ(object):
             queue.popleft()
             queue_error.popleft()
 
-    def update_plot(self,plot_id,xdata,ydata,yerr,xlabel,ylabel,title):
-        plt.ion()
-        fig = plt.figure(plot_id)
-        plt.clf()
-
-        gs = GridSpec(6,1)
-        ax1 = fig.add_subplot(gs[0,:])
-        ax2 = fig.add_subplot(gs[1:5,:])
-
-        ax1.set_axis_off()
-        display = ydata[-1]
-        sd = np.std(np.asarray(ydata))
-        mean = np.mean(np.asarray(ydata))
-        print("Display:{}+/-{}".format(mean,sd))
-        display_text = "CO2 Concentration: "+ str(display)+" (ppm)"
-        if display <= 400:
-            ax1.text(0.5, 1.2,display_text, fontsize = 14 , ha = "center", backgroundcolor = "lightgreen")
-            if sd<25:
-            	ax2.set_ylim(mean-100,mean+100)
-            else:
-            	ax2.set_ylim(mean-4*sd,mean+4*sd)
-
-        elif display > 400 and display <= 600:
-            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center", backgroundcolor = "yellow")
-            if sd<25:
-            	ax2.set_ylim(mean-100,mean+100)
-            else:
-            	ax2.set_ylim(mean-4*sd,mean+4*sd)
-        elif display > 600 and display <= 1000:
-            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center", backgroundcolor = "orange")
-            if sd<25:
-            	ax2.set_ylim(mean-100,mean+100)
-            else:
-            	ax2.set_ylim(mean-4*sd,mean+4*sd)
-
-        elif display > 1000:
-            ax1.text(0.5, 1.2,display_text, fontsize = 14, ha = "center" , backgroundcolor = "red")
-            if sd<25:
-            	ax2.set_ylim(mean-100,mean+100)
-            else:
-            	ax2.set_ylim(mean-4*sd,mean+4*sd)
-
-
-        ax2.set(xlabel = xlabel, ylabel = ylabel, title = title)
-
-        ax2.plot(xdata,ydata,"r.-")
-        ax2.errorbar(xdata, ydata, yerr=yerr, fmt='o')
-        #fig.autofmt_xdate()
-        ax2.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-        plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
-        fig.show()
-        plt.pause(0.0005)
-
-    def add_time(self, queue, timelist, data):
-        timelist.append(data)
-        if len(timelist)>=self.n_merge:
-            self.merge_test=True
-            queue.append(timelist[int((self.n_merge)/2)])
-        if len(queue)>self.maxdata:
-            queue.popleft()
-
     def close_file(self):
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
                                                         self.adc_file.name)
@@ -213,5 +144,47 @@ class adc_DAQ(object):
         os.system(sys_cmd)
         self.adc_file.close()
 
-    def close(self,plot_id):
-         plt.close(plot_id)
+    def send_data(self, data):
+		connection = pika.BlockingConnection(
+                          pika.ConnectionParameters('localhost'))
+		channel = connection.channel()
+		channel.queue_declare(queue='toGUI')
+		message = {'id': 'Air Quality', 'data': data}
+
+		channel.basic_publish(exchange='',
+							  routing_key='toGUI',
+							  body=json.dumps(message))
+		connection.close()
+
+
+    def clear_data(self):
+
+
+    def print_data(self,PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100):
+        print('Concentration of Particulate Matter [ug/m3]')
+        print('PM 1.0 = {} ug/m3'.format(PM01Val))
+        print('PM 2.5 = {} ug/m3'.format(PM25Val))
+        printt('#Particles, diameter over 5.0 um = {}'.format(P50))
+        #print('#Particles, diameter over 10  um = {}'.format(P100))
+        sys.stdout.flush()
+
+
+    def receive(self):
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='fromGUI')
+        method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
+        if body is not None:
+            message = json.loads(body)
+            if message['id']=='Air Quality':
+                channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                connection.close()
+                return message['cmd']
+            else:
+                connection.close()
+                return None
+        else:
+            connection.close()
+            return None
+
+
