@@ -147,7 +147,7 @@ class ServerSender(object):
         else:
             self.aes = aes
 
-    def construct_packet(self, cpm, cpm_error, error_code=0):
+    def construct_packet(self, sensor_type, cpm, cpm_error, error_code=0):
         """
         Construct the raw packet string. (basically copied from old code)
 
@@ -158,6 +158,7 @@ class ServerSender(object):
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(cpm),
                  str(cpm_error),
                  str(error_code)]
@@ -168,7 +169,7 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new(self, timestamp, cpm, cpm_error, error_code=0):
+    def construct_packet_new(self, sensor_type, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol version of construct packet.
 
@@ -179,6 +180,7 @@ class ServerSender(object):
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(timestamp),
                  str(cpm),
                  str(cpm_error),
@@ -190,7 +192,7 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_D3S(self, timestamp, spectra, error_code=0):
+    def construct_packet_new_D3S(self, sensor_type, timestamp, spectra, error_code=0):
         """
         TCP version of construct packet.
         """
@@ -202,6 +204,7 @@ class ServerSender(object):
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(timestamp),
                  spectra_str,
                  str(error_code)]
@@ -212,12 +215,13 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_AQ(self, timestamp, average_data, error_code=0):
+    def construct_packet_new_AQ(self, sensor_type, timestamp, average_data, error_code=0):
         avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(timestamp),
                  avgdata_str,
                  str(error_code)]
@@ -228,12 +232,13 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_CO2(self, timestamp, average_data, error_code=0):
+    def construct_packet_new_CO2(self, sensor_type, timestamp, average_data, error_code=0):
         avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(timestamp),
                  avgdata_str,
                  str(error_code)]
@@ -244,12 +249,13 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_weather(self, timestamp, average_data, error_code=0):
+    def construct_packet_new_weather(self, sensor_type, timestamp, average_data, error_code=0):
         avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
                 [str(self.config.hash),
                  str(self.config.ID),
+                 str(sensor_type),
                  str(timestamp),
                  avgdata_str,
                  str(error_code)]
@@ -363,19 +369,19 @@ class ServerSender(object):
             else:
                 self.vprint(2, 'Bad or missing return packet!')
             self.vprint(3, 'TCP packet sent successfully')
-    def send_cpm(self, cpm, cpm_error, error_code=0):
+    def send_cpm(self, sensor_type, cpm, cpm_error, error_code=0):
         """Construct, encrypt, and send the packet"""
 
-        packet = self.construct_packet(cpm, cpm_error, error_code=error_code)
+        packet = self.construct_packet(sensor_type, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
-    def send_cpm_new(self, timestamp, cpm, cpm_error, error_code=0):
+    def send_cpm_new(self, sensor_type, timestamp, cpm, cpm_error, error_code=0):
         """
         New protocol for send_cpm
         """
         packet = self.construct_packet_new(
-            timestamp, cpm, cpm_error, error_code=error_code)
+            sensor_type, timestamp, cpm, cpm_error, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
@@ -387,39 +393,39 @@ class ServerSender(object):
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
-    def send_spectra_new_D3S(self, timestamp, spectra, error_code=0):
+    def send_spectra_new_D3S(self, sensor_type, timestamp, spectra, error_code=0):
         """
         TCP for sending spectra
         """
         packet = self.construct_packet_new_D3S(
-            timestamp, spectra, error_code=error_code)
+            sensor_type, timestamp, spectra, error_code=error_code)
         encrypted = self.encrypt_packet_aes(packet)
         self.send_data(encrypted)
 
-    def send_data_new_AQ(self, timestamp, average_data, error_code=0):
+    def send_data_new_AQ(self, sensor_type, timestamp, average_data, error_code=0):
         """
         Protocol for sending average air quality data
         """
         packet = self.construct_packet_new_AQ(
-            timestamp, average_data, error_code=error_code)
+            sensor_type, timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
-    def send_data_new_CO2(self, timestamp, average_data, error_code=0):
+    def send_data_new_CO2(self, sensor_type, timestamp, average_data, error_code=0):
         """
         Protocol for sending the average CO2 data
         """
         packet = self.construct_packet_new_CO2(
-            timestamp, average_data, error_code=error_code)
+            sensor_type, timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
-    def send_data_new_weather(self, timestamp, average_data, error_code=0):
+    def send_data_new_weather(self, sensor_type, timestamp, average_data, error_code=0):
         """
         Protocol for sending the average CO2 data
         """
         packet = self.construct_packet_new_weather(
-            timestamp, average_data, error_code=error_code)
+            sensor_type, timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
