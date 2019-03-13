@@ -221,10 +221,10 @@ class Data_Handler(object):
         """
         time_string = time.time()
         if self.stype == 1:
-            print("Testing, sending to the queue")
+            self.vprint(1,"Testing, sending to the queue")
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             self.queue.append([self.stype, time_string, cpm, cpm_err])
-            print(self.queue)
+            self.vprint(1,self.queue)
         if self.stype == 2:
             spectra = kwargs.get('spectra')
             self.queue.append([self.stype, time_string, spectra])
