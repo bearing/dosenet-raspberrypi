@@ -1,4 +1,4 @@
-stypeimport socket
+import socket
 import datetime
 import time
 import ast
