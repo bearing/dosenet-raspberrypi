@@ -51,10 +51,10 @@ class Data_Handler(object):
 
         self.first_run = True
 
-        self.stype = self.manager.sensor_type
-
         self.manager = manager
         self.queue = deque('')
+
+        self.stype = self.manager.sensor_type
 
     def test_send(self, **kwargs):
         """
