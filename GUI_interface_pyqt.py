@@ -8,8 +8,8 @@ Created on Fri Nov 9 2018
 import sys
 import numpy as np
 import math
-import datetime as dt
 import time
+import datetime as dt
 import csv
 import sys
 import os
@@ -91,6 +91,7 @@ class App(QWidget):
         self.plot_list = {}
         self.err_list = {}
         self.sensor_list = {}
+        self.sensor_tab = {}
         self.data_display = {}
         self.data = {}
         self.time_data = {}
@@ -119,7 +120,7 @@ class App(QWidget):
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
                 "QTabBar {font-size: 10pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 50px; width: 260px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 20px; width: 100px;}")
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
@@ -169,7 +170,7 @@ class App(QWidget):
                            "border-width: 3px;"+\
                            "border-radius: 2px;"+\
                            "border-color: beige;"+\
-                           "font: bold 40px;"+\
+                           "font: bold 20px;"+\
                            "min-width: 10em;"+\
                            "padding: 3px;"
 
@@ -189,6 +190,13 @@ class App(QWidget):
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
         self.layout.addWidget(checkbox,top,left,1,1,Qt.AlignHCenter)
+        
+    def rmvSensorTab(self, sensor):
+        '''
+        Remove Sensor Tab from GUI
+        '''
+        self.tabs.removeTab(self.sensor_tab[sensor][0])
+        self.kill_sensor(sensor)
 
 
     def startSensor(self, sensor):
@@ -197,16 +205,22 @@ class App(QWidget):
         if sensor==AIR:
             py = 'python'
             script = 'air_quality_DAQ.py'
-            log = 'AQ.log'
+            log = 'AQ_gui.log'
             if self.saveData:
                 fname = fname + "_AQ.csv"
         if sensor==RAD:
             py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
-            log = 'rad.log'
+            log = 'rad_gui.log'
             if self.saveData:
                 fname = fname + "_D3S.csv"
-
+        if sensor==CO2:
+            py = 'python'
+            script = 'adc_DAQ.py'
+            log = 'CO2_gui.log'
+            if self.saveData:
+                fname = fname + "_CO2.csv"
+ 
         cmd_head = '{} /home/pi/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format(self.integration_time)
         if self.saveData:
@@ -223,8 +237,8 @@ class App(QWidget):
         print("{} is selected".format(b.text()))
         self.addSensor(b.text())
      else:
-        #TODO add method to delete sensor from sensor list dict and remove tab
         print("{} is deselected".format(b.text()))
+        self.rmvSensorTab(b.text())
 
 
     def setDisplayText(self, sensor):
@@ -313,6 +327,13 @@ class App(QWidget):
         self.config_layout.addWidget(self.textbox)
 
         self.selection_tab.setLayout(self.config_layout)
+        self.group_text.close()
+        self.group_box.close()
+        self.ptext.close()
+        self.pbox.close()
+        self.textbox.close()
+        self.location_text.close()
+        self.location_box.close()
 
 
     def setSaveData(self,b):
@@ -325,6 +346,7 @@ class App(QWidget):
             self.pbox.show()
             self.location_text.show()
             self.location_box.show()
+            self.textbox.show()
         else:
             self.saveData = False
             self.group_text.close()
@@ -333,6 +355,7 @@ class App(QWidget):
             self.pbox.close()
             self.location_text.close()
             self.location_box.close()
+            self.textbox.close()
 
 
     def setIntegrationTime(self,text):
@@ -382,8 +405,12 @@ class App(QWidget):
         Setup the tab and layout for the selected sensor, initialize plots, etc.
         '''
         # Create canvas for plots
+        if sensor in self.sensor_tab:
+            self.tabs.insertTab(self.sensor_tab[sensor][0],self.sensor_tab[sensor][1])
+            return
         itab = QWidget()
-        self.tabs.addTab(itab, sensor)
+        index = self.tabs.addTab(itab, sensor)
+        self.sensor_tab[sensor] = [index,itab]
         tablayout = QGridLayout()
         tablayout.setSpacing(0.)
         tablayout.setContentsMargins(0.,0.,0.,0.)
@@ -525,8 +552,6 @@ class App(QWidget):
             
         self.setDisplayText(sensor)
         
-        
-
 
     def initSensorData(self,sensor):
         '''
@@ -798,6 +823,9 @@ class App(QWidget):
             # Still want to see traceback for debugging
             print('ERROR: GUI quit unexpectedly!')
             traceback.print_exc()
+
+    def kill_sensor(self, sensor):
+        send_queue_cmd('EXIT',sensor)
 
     def exit(self):
         '''
