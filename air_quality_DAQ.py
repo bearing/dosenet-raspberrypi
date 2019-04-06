@@ -7,6 +7,7 @@ import os
 import pika
 import json
 import argparse
+import csv
 
 sys.stdout.flush()
 
@@ -14,6 +15,8 @@ class air_quality_DAQ():
     def __init__ (self, interval=1, datalog=None):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
+        
+        self.outfile_name = datalog
 
         self.n_merge = int(interval)
         self.PM01_list = []
@@ -25,6 +28,11 @@ class air_quality_DAQ():
         self.P25_list = []
         self.P50_list = []
         self.P100_list = []
+        
+        self.out_file = None
+        
+        if datalog is not None:
+            self.create_file(datalog)
 
 
     def run(self):
@@ -46,7 +54,7 @@ class air_quality_DAQ():
             P50 =repr((buf[23]<<8) + buf[24])
             P100=repr((buf[25]<<8) + buf[26])
 
-            #self.print_data(PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100)
+            self.print_data(PM01Val,PM25Val,PM10Val,P3,P5,P10,P25,P50,P100)
 
             self.PM01_list.append(int(PM01Val))
             self.PM25_list.append(int(PM25Val))
@@ -59,14 +67,18 @@ class air_quality_DAQ():
             self.P100_list.append(int(P100))
 
             if len(self.PM25_list)>=self.n_merge:
-				data1 = [np.mean(np.asarray(self.PM01_list)),
+                data1 = [np.mean(np.asarray(self.PM01_list)),
                          np.std(np.asarray(self.PM01_list))]
-				data2 = [np.mean(np.asarray(self.PM25_list)),
+                data2 = [np.mean(np.asarray(self.PM25_list)),
                          np.std(np.asarray(self.PM25_list))]
-				data3 = [np.mean(np.asarray(self.PM10_list)),
+                data3 = [np.mean(np.asarray(self.PM10_list)),
                          np.std(np.asarray(self.PM10_list))]
-				self.send_data([data1,data2,data3])
-				self.clear_data()
+                self.send_data([data1,data2,data3])
+                print("sent data to GUI")
+                if self.out_file is not None:
+                    self.write_data(data1, data2, data3)
+                self.clear_data()
+                sys.stdout.flush()
 
 
     def send_data(self, data):
@@ -129,56 +141,25 @@ class air_quality_DAQ():
             connection.close()
             return None
 
-
-#-------------------------------------------------------------------------------
-# Class for handling writing data to files/sending to RPi server
-#-------------------------------------------------------------------------------
-class FileManager():
-    def __init__(self):
-        # Define basic stuff here
-        self.out_file = None
-        self.results = None
-
-
     def create_file(self, fname = None):
-        file_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
-        id_info = []
-        with open ('/home/pi/config/server_config.csv') as f:
-            reader = csv.reader(f)
-            for row in reader:
-                id_info.append(row)
-        if fname is None:
-            filename =  "/home/pi/data/"+\
-                        "_".join(row)+"_air_quality"+file_time+".csv"
-        else:
-            filename = fname
-        self.out_file = open(filename, "ab+")
-        self.results = csv.writer(out_file, delimiter = ",")
+        self.out_file = open(fname, "ab+")
+        self.results = csv.writer(self.out_file, delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
                     "2.5 um", "5.0 um", "10 um",
                     "PM 1.0", "PM 2.5", "PM 10"]
         self.results.writerow(metadata)
 
+    def write_data(self, data1, data2, data3):
+        this_time = time.time()
+        self.results.writerow([this_time] + data1[:] + data2[:] + data3[:])
 
     def close_file(self):
-
         self.out_file.close()
-
-
-    def write_data(self, data):
-        self.results.writerow(data)
-
-    def send_files(self):
-        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data'.format(
-                                                        self.aq_file.name)
-        print(sys_cmd)
-        os.system(sys_cmd)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--interval", "-i", type=int, default=1
-    )
+        "--interval", "-i", type=int, default=1)
     parser.add_argument('--datalog', '-d', default=None)
 
     args = parser.parse_args()
@@ -201,12 +182,15 @@ if __name__ == '__main__':
                 daq.run()
                 time.sleep(1)
                 msg = daq.receive()
+                sys.stdout.flush()
         # If EXIT is sent, break out of while loop and exit program
         if msg == 'STOP':
             print("stopping and entering exterior while loop.")
 
         if msg == 'EXIT':
             print('exiting program')
+            if arg_dict['datalog'] is not None:
+                daq.close_file()
             break
 
         time.sleep(.2)
