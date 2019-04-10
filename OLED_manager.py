@@ -12,10 +12,13 @@ class OLED_Manager(object):
     """
     def __init__(self,
                  sensor_type=None,
-                 wait_time=None):
+                 display_time=None,
+                 data_file=None):
 
         self.sensor_type = sensor_type
-        self.wait_time = wait_time
+        self.display_time = display_time
+
+        self.data_file = data_file
 
         self.OLED_Pin_Setup()
 
