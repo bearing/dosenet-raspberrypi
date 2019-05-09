@@ -34,7 +34,7 @@ class adc_DAQ(object):
 
     def create_file(self, fname):
         self.out_file = open(fname, "ab+")
-        self.adc_results=csv.writer(self.adc_file, delimiter = ",")
+        self.adc_results=csv.writer(self.out_file, delimiter = ",")
         self.adc_results.writerow(["Date and Time", "CO2 (ppm)", "unc."])
 
     def write_data(self, data):
@@ -59,7 +59,7 @@ class adc_DAQ(object):
             if len(self.CO2_list)>=self.n_merge:
                 data = self.merge_data(self.CO2_list)
                 #print("Data being sent to GUI: {}".format(data))
-                if self.adc_file is not None:
+                if self.out_file is not None:
                     self.write_data(data)
                 self.send_data(data)
                 self.clear_data()
