@@ -10,6 +10,7 @@ import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 import sys
 import os
+import subprocess
 import argparse
 import pika
 import json
@@ -131,7 +132,8 @@ class adc_DAQ(object):
                                 self.out_file.name)
         print("System cmd {}".format(sys_cmd))
         sys.stdout.flush()
-        err = os.system(sys_cmd)
+        #err = os.system(sys_cmd)
+        err = subprocess.call(sys_cmd,stdout=sys.stdout)
         print("system command returned {}".format(err))
         sys.stdout.flush()
 
