@@ -261,7 +261,6 @@ class Manager_D3S(object):
 
         print('Post data status: {}'.format(self.post_data))
         sys.stdout.flush()
-        if not self.post_data:
         if self.post_data:
             print('Sending data to GUI')
             sys.stdout.flush()
