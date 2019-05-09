@@ -263,6 +263,12 @@ class Manager_D3S(object):
         if self.post_data:
             print('Sending data to GUI')
             self.send_data(spectra)
+        else:
+            print("Copying data from {} to server".format(self.datalog))
+            if self.datalogflag:
+                sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                                        self.datalog)
+                os.system(sys_cmd)
 
 
     def send_data(self, data):
@@ -300,11 +306,6 @@ class Manager_D3S(object):
         """
         #GPIO.cleanup()
 
-        print("Copying data from {} to server".format(self.datalog))
-        if self.datalogflag:
-            sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
-                                    self.datalog)
-            os.system(sys_cmd)
         self.running = False
         #self.data_handler.send_all_to_backlog()
 
