@@ -172,7 +172,7 @@ class App(QWidget):
                            "border-radius: 2px;"+\
                            "border-color: beige;"+\
                            "font: bold 20px;"+\
-                           "min-width: 6em;"+\
+                           "min-width: 4em;"+\
                            "padding: 2px;"
 
         button.setStyleSheet(style_sheet_text)
