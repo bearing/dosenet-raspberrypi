@@ -142,7 +142,7 @@ class air_quality_DAQ():
             return None
 
     def create_file(self, fname = None):
-        self.out_file = open(fname, "ab+")
+        self.out_file = open(fname, "ab+", buffering=0)
         self.results = csv.writer(self.out_file, delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
                     "2.5 um", "5.0 um", "10 um",
@@ -155,10 +155,11 @@ class air_quality_DAQ():
 
     def close_file(self):
         print("Copying data from {} to server.".format(self.out_file.name))
-        sys.stdout.flush()
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
-        os.system(sys_cmd)
+        err = os.system(sys_cmd)
+        print("system command returned {}".format(err))
+        sys.stdout.flush()
         #self.out_file.close()
 
 if __name__ == '__main__':

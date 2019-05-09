@@ -33,7 +33,7 @@ class adc_DAQ(object):
         print('N MERGE: {}'.format(interval) )
 
     def create_file(self, fname):
-        self.out_file = open(fname, "ab+")
+        self.out_file = open(fname, "ab+", buffering=0)
         self.adc_results=csv.writer(self.out_file, delimiter = ",")
         self.adc_results.writerow(["Date and Time", "CO2 (ppm)", "unc."])
 
@@ -129,8 +129,9 @@ class adc_DAQ(object):
         sys.stdout.flush()
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
-        os.system(sys_cmd)
-        self.out_file.close()
+        err = os.system(sys_cmd)
+        print("system command returned {}".format(err))
+        sys.stdout.flush()
 
 
 if __name__ == '__main__':
