@@ -158,7 +158,7 @@ class air_quality_DAQ():
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
         os.system(sys_cmd)
-        self.out_file.close()
+        #self.out_file.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -198,6 +198,7 @@ if __name__ == '__main__':
             sys.stdout.flush()
             if arg_dict['datalog'] is not None:
                 print("Closing log file and sending to server...")
+                sys.stdout.flush()
                 daq.close_file()
                 sys.stdout.flush()
             break
