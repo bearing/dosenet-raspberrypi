@@ -194,8 +194,10 @@ if __name__ == '__main__':
 
         if msg == 'EXIT':
             print('exiting program')
+            print('logging data flag is {}'.format(arg_dict['datalog']))
             sys.stdout.flush()
             if arg_dict['datalog'] is not None:
+                print("Closing log file and sending to server...")
                 daq.close_file()
                 sys.stdout.flush()
             break
