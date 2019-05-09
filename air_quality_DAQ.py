@@ -154,6 +154,7 @@ class air_quality_DAQ():
         self.results.writerow([this_time] + data1[:] + data2[:] + data3[:])
 
     def close_file(self):
+        print("Copying data from {} to server.".format(self.out_file.name))
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
         os.system(sys_cmd)
