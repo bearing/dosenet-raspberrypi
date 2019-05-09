@@ -298,6 +298,7 @@ class Manager_D3S(object):
         """
         #GPIO.cleanup()
 
+        print("Copying data from {} to server".format(self.datalog))
         if self.datalogflag:
             sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                     self.datalog)
