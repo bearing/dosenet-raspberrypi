@@ -838,7 +838,9 @@ class App(QWidget):
         '''
         Send EXIT command to all sensors
         '''
+        print("Exiting GUI")
         if not self.test_mode:
+            print("Sending EXIT command to all active sensors")
             send_queue_cmd('EXIT',self.sensor_list)
 
 
@@ -884,7 +886,6 @@ def receive_queue_data():
     else:
         connection.close()
         return None
-
 
 def clear_queue():
     print("Initializing queues... clearing out old data")
