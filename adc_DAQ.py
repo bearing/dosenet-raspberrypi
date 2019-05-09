@@ -98,6 +98,17 @@ class adc_DAQ(object):
 
     def clear_data(self):
         self.CO2_list[:] = []
+        print("Copying data from {} to server.".format(self.out_file.name))
+        sys.stdout.flush()
+        sys_cmd = ["scp",
+                   "{}".format(self.out_file.name),
+                   "pi@192.168.4.1:/home/pi/data/"]
+        #print("System cmd: {}".format(sys_cmd))
+        sys.stdout.flush()
+        #err = os.system(sys_cmd)
+        err = subprocess.call(sys_cmd)
+        print("system command returned {}".format(err))
+        sys.stdout.flush()
 
 
     def print_data(self,CO2_list):
