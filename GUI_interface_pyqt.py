@@ -121,7 +121,7 @@ class App(QWidget):
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
                 "QTabBar {font-size: 18pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 100px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 120px;}")
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
@@ -172,7 +172,7 @@ class App(QWidget):
                            "border-radius: 2px;"+\
                            "border-color: beige;"+\
                            "font: bold 20px;"+\
-                           "min-width: 4em;"+\
+                           "min-width: 6em;"+\
                            "padding: 2px;"
 
         button.setStyleSheet(style_sheet_text)
