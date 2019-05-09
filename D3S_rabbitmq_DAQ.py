@@ -256,19 +256,22 @@ class Manager_D3S(object):
             self.post_data = True
         if msg=='EXIT':
             print("EXIT command received: taking down D3S")
+            sys.stdout.flush()
             self.takedown()
 
         print('Post data status: {}'.format(self.post_data))
+        sys.stdout.flush()
         if not self.post_data:
             print("Copying data from {} to server".format(self.datalog))
+            sys.stdout.flush()
             if self.datalogflag:
                 sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                         self.datalog)
                 os.system(sys_cmd)
         if self.post_data:
             print('Sending data to GUI')
+            sys.stdout.flush()
             self.send_data(spectra)
-        sys.stdout.flush()
 
 
     def send_data(self, data):
