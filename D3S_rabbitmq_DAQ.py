@@ -264,7 +264,7 @@ class Manager_D3S(object):
         if not self.post_data:
             if self.datalogflag:
                 print("Copying data from {} to server".format(self.datalog))
-                sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                sys_cmd = 'sudo scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                         self.datalog)
                 err = os.system(sys_cmd)
                 print("system command returned {}".format(err))
