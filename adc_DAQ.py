@@ -125,6 +125,8 @@ class adc_DAQ(object):
 
 
     def close_file(self):
+        print("Copying data from {} to server.".format(self.out_file.name))
+        sys.stdout.flush()
         sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
         os.system(sys_cmd)
