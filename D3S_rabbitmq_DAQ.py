@@ -12,6 +12,7 @@ import pika
 import sys
 import json
 import csv
+import os
 
 sys.stdout.flush()
 
