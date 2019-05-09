@@ -254,6 +254,7 @@ class Manager_D3S(object):
         if msg=='START':
             self.post_data = True
         if msg=='EXIT':
+            print("EXIT command received: taking down D3S")
             self.takedown()
 
         print('Post data status: {}'.format(self.post_data))
@@ -359,9 +360,6 @@ def main():
                 # regardless, re-raise the error which will print to stderr
                 raise
 
-        if msg == 'EXIT':
-            print("EXIT command received: taking down D3S")
-            mgr.takedown()
         time.sleep(.5)
 
 if __name__ == '__main__':
