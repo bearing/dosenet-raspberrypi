@@ -360,6 +360,7 @@ def main():
                 raise
 
         if msg == 'EXIT':
+            print("EXIT command received: taking down D3S")
             mgr.takedown()
         time.sleep(.5)
 
