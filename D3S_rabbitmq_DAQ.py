@@ -259,7 +259,6 @@ class Manager_D3S(object):
             self.takedown()
 
         print('Post data status: {}'.format(self.post_data))
-        sys.stdout.flush()
         if self.post_data:
             print('Sending data to GUI')
             self.send_data(spectra)
@@ -269,6 +268,7 @@ class Manager_D3S(object):
                 sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                         self.datalog)
                 os.system(sys_cmd)
+        sys.stdout.flush()
 
 
     def send_data(self, data):
