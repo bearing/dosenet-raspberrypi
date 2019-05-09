@@ -155,7 +155,7 @@ class air_quality_DAQ():
 
     def close_file(self):
         print("Copying data from {} to server.".format(self.out_file.name))
-        sys_cmd = 'sudo scp {} pi@192.168.4.1:/home/pi/data/'.format(
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                 self.out_file.name)
         err = os.system(sys_cmd)
         print("system command returned {}".format(err))
