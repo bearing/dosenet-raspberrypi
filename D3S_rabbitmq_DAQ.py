@@ -259,15 +259,15 @@ class Manager_D3S(object):
             self.takedown()
 
         print('Post data status: {}'.format(self.post_data))
-        if self.post_data:
-            print('Sending data to GUI')
-            self.send_data(spectra)
-        else:
+        if not self.post_data:
             print("Copying data from {} to server".format(self.datalog))
             if self.datalogflag:
                 sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
                                         self.datalog)
                 os.system(sys_cmd)
+        if self.post_data:
+            print('Sending data to GUI')
+            self.send_data(spectra)
         sys.stdout.flush()
 
 

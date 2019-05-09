@@ -190,11 +190,14 @@ if __name__ == '__main__':
         # If EXIT is sent, break out of while loop and exit program
         if msg == 'STOP':
             print("stopping and entering exterior while loop.")
+            sys.stdout.flush()
 
         if msg == 'EXIT':
             print('exiting program')
+            sys.stdout.flush()
             if arg_dict['datalog'] is not None:
                 daq.close_file()
+                sys.stdout.flush()
             break
 
         time.sleep(.2)
