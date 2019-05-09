@@ -130,10 +130,10 @@ class adc_DAQ(object):
         sys.stdout.flush()
         sys_cmd = "scp {} pi@192.168.4.1:/home/pi/data/".format(
                                 self.out_file.name)
-        print("System cmd {}".format(sys_cmd))
+        print("System cmd: {}".format(sys_cmd))
         sys.stdout.flush()
         #err = os.system(sys_cmd)
-        err = subprocess.call(sys_cmd,stdout=sys.stdout)
+        err = subprocess.call(sys_cmd)
         print("system command returned {}".format(err))
         sys.stdout.flush()
 
