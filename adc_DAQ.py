@@ -174,6 +174,7 @@ if __name__ == '__main__':
         if msg == 'EXIT':
             print('exiting program')
             if arg_dict['datalog'] is not None:
+                sys.stdout.flush()
                 daq.close_file()
             break
 
