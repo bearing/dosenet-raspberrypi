@@ -121,7 +121,7 @@ class App(QWidget):
                 "QTabWidget::pane { border: 2px solid #404040; } "+\
                 "QTabBar {font-size: 18pt;}");
         tab_bar = QTabBar()
-        tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 120px;}")
+        tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 150px;}")
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
@@ -284,13 +284,12 @@ class App(QWidget):
         self.config_layout.addRow(ndata_text,ndata_box)
 
         checkbox = QCheckBox("Save Data")
-        checkbox.setFont(textfont)
+        checkbox.setFont(QFont("Times", 18, QFont.Bold))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox)
 
         self.group_text = QLabel("Group Number:")
-        textfont = QFont("Times", 16, QFont.Bold)
         self.group_text.setFont(textfont)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
