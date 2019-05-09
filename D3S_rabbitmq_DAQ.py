@@ -296,10 +296,14 @@ class Manager_D3S(object):
         """
         Sets self.running to False and deletes self. Also turns off LEDs
         """
-        GPIO.cleanup()
+        #GPIO.cleanup()
 
+        if self.datalogflag:
+            sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                                    self.datalog)
+            os.system(sys_cmd)
         self.running = False
-        self.data_handler.send_all_to_backlog()
+        #self.data_handler.send_all_to_backlog()
 
         del(self)
         sys.exit(0)
@@ -354,6 +358,8 @@ def main():
                 # regardless, re-raise the error which will print to stderr
                 raise
 
+        if msg == 'EXIT':
+            mgr.takedown()
         time.sleep(.5)
 
 if __name__ == '__main__':

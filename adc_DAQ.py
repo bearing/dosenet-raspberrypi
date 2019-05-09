@@ -27,13 +27,13 @@ class adc_DAQ(object):
         self.n_merge=int(NRUN*interval)
         self.CO2_list=[]
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-        self.adc_file = None
+        self.out_file = None
         if datalog is not None:
             self.create_file(datalog)
         print('N MERGE: {}'.format(interval) )
 
     def create_file(self, fname):
-        self.adc_file = open(fname, "ab+")
+        self.out_file = open(fname, "ab+")
         self.adc_results=csv.writer(self.adc_file, delimiter = ",")
         self.adc_results.writerow(["Date and Time", "CO2 (ppm)", "unc."])
 
@@ -53,7 +53,7 @@ class adc_DAQ(object):
                 values[i] = self.mcp.read_adc(i)
             concentration = 5000/496*values[0] - 1250
             self.CO2_list.append(concentration)
-            
+
             #self.print_data(self.CO2_list)
 
             if len(self.CO2_list)>=self.n_merge:
@@ -122,11 +122,15 @@ class adc_DAQ(object):
         else:
             connection.close()
             return None
-            
+
+
     def close_file(self):
-        self.adc_file.close()
-        
-        
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                                self.out_file.name)
+        os.system(sys_cmd)
+        self.out_file.close()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -167,7 +171,3 @@ if __name__ == '__main__':
         time.sleep(.2)
 
 	exit
-
-  
-
-

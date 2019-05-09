@@ -15,7 +15,7 @@ class air_quality_DAQ():
     def __init__ (self, interval=1, datalog=None):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
-        
+
         self.outfile_name = datalog
 
         self.n_merge = int(interval)
@@ -28,9 +28,9 @@ class air_quality_DAQ():
         self.P25_list = []
         self.P50_list = []
         self.P100_list = []
-        
+
         self.out_file = None
-        
+
         if datalog is not None:
             self.create_file(datalog)
 
@@ -154,6 +154,9 @@ class air_quality_DAQ():
         self.results.writerow([this_time] + data1[:] + data2[:] + data3[:])
 
     def close_file(self):
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                                self.out_file.name)
+        os.system(sys_cmd)
         self.out_file.close()
 
 if __name__ == '__main__':
