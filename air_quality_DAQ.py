@@ -15,7 +15,7 @@ class air_quality_DAQ():
     def __init__ (self, interval=1, datalog=None):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
-        
+
         self.outfile_name = datalog
 
         self.n_merge = int(interval)
@@ -28,9 +28,9 @@ class air_quality_DAQ():
         self.P25_list = []
         self.P50_list = []
         self.P100_list = []
-        
+
         self.out_file = None
-        
+
         if datalog is not None:
             self.create_file(datalog)
 
@@ -142,7 +142,7 @@ class air_quality_DAQ():
             return None
 
     def create_file(self, fname = None):
-        self.out_file = open(fname, "ab+")
+        self.out_file = open(fname, "ab+", buffering=0)
         self.results = csv.writer(self.out_file, delimiter = ",")
         metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
                     "2.5 um", "5.0 um", "10 um",
@@ -155,6 +155,12 @@ class air_quality_DAQ():
 
     def close_file(self):
         self.out_file.close()
+        print("Copying data from {} to server.".format(self.out_file.name))
+        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
+                                self.out_file.name)
+        err = os.system(sys_cmd)
+        print("system command returned {}".format(err))
+        sys.stdout.flush()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -186,10 +192,15 @@ if __name__ == '__main__':
         # If EXIT is sent, break out of while loop and exit program
         if msg == 'STOP':
             print("stopping and entering exterior while loop.")
+            sys.stdout.flush()
 
         if msg == 'EXIT':
             print('exiting program')
+            print('logging data flag is {}'.format(arg_dict['datalog']))
+            sys.stdout.flush()
             if arg_dict['datalog'] is not None:
+                print("Closing log file and sending to server...")
+                sys.stdout.flush()
                 daq.close_file()
             break
 

@@ -10,6 +10,7 @@ import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 import sys
 import os
+import subprocess
 import argparse
 import pika
 import json
@@ -27,14 +28,14 @@ class adc_DAQ(object):
         self.n_merge=int(NRUN*interval)
         self.CO2_list=[]
         self.mcp=Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-        self.adc_file = None
+        self.out_file = None
         if datalog is not None:
             self.create_file(datalog)
         print('N MERGE: {}'.format(interval) )
 
     def create_file(self, fname):
-        self.adc_file = open(fname, "ab+")
-        self.adc_results=csv.writer(self.adc_file, delimiter = ",")
+        self.out_file = open(fname, "ab+", buffering=0)
+        self.adc_results=csv.writer(self.out_file, delimiter = ",")
         self.adc_results.writerow(["Date and Time", "CO2 (ppm)", "unc."])
 
     def write_data(self, data):
@@ -53,13 +54,13 @@ class adc_DAQ(object):
                 values[i] = self.mcp.read_adc(i)
             concentration = 5000/496*values[0] - 1250
             self.CO2_list.append(concentration)
-            
+
             #self.print_data(self.CO2_list)
 
             if len(self.CO2_list)>=self.n_merge:
                 data = self.merge_data(self.CO2_list)
                 #print("Data being sent to GUI: {}".format(data))
-                if self.adc_file is not None:
+                if self.out_file is not None:
                     self.write_data(data)
                 self.send_data(data)
                 self.clear_data()
@@ -97,6 +98,7 @@ class adc_DAQ(object):
 
     def clear_data(self):
         self.CO2_list[:] = []
+        self.send_file()
 
 
     def print_data(self,CO2_list):
@@ -122,11 +124,27 @@ class adc_DAQ(object):
         else:
             connection.close()
             return None
-            
+
+
+    def send_file(self):
+        print("Copying data from {} to server.".format(self.out_file.name))
+        sys.stdout.flush()
+        sys_cmd = ["scp",
+                   "{}".format(self.out_file.name),
+                   "pi@192.168.4.1:/home/pi/data/"]
+        #print("System cmd: {}".format(sys_cmd))
+        sys.stdout.flush()
+        #err = os.system(sys_cmd)
+        err = subprocess.call(sys_cmd)
+        print("system command returned {}".format(err))
+        sys.stdout.flush()
+
+
     def close_file(self):
-        self.adc_file.close()
-        
-        
+        self.out_file.close()
+        self.send_file()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -161,13 +179,10 @@ if __name__ == '__main__':
         if msg == 'EXIT':
             print('exiting program')
             if arg_dict['datalog'] is not None:
+                sys.stdout.flush()
                 daq.close_file()
             break
 
         time.sleep(.2)
 
 	exit
-
-  
-
-
