@@ -867,6 +867,9 @@ def receive_queue_data():
     channel.queue_declare(queue='toGUI')
     method_frame, header_frame, body = channel.basic_get(queue='toGUI')
     if body is not None:
+        # message from d3s seems to come back as bytes...
+        if type(body) is bytes:
+            body = body.decode("utf-8")
         message = json.loads(body)
         channel.basic_ack(delivery_tag=method_frame.delivery_tag)
         connection.close()
