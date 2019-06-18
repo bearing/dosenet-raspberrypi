@@ -4,6 +4,7 @@ import time
 import argparse
 import sys
 import os
+import pika
 
 class OLED_Manager(object):
     """
@@ -21,6 +22,10 @@ class OLED_Manager(object):
         self.data_file = data_file
 
         self.OLED_Pin_Setup()
+
+        self.sensor_names = ["Pocket Geiger", "D3S", "Air Quality", "CO2", "Weather"]
+
+
 
     def OLED_Pin_Setup(self):
         """
@@ -78,3 +83,10 @@ class OLED_Manager(object):
 		os.remove(file_location)
 		os.rename(file_location2, file_location)
 		return data
+
+    def Receive_Data(self):
+        """
+        Pulls data from the running rabbitmq server and then converts
+        the data to something easy to deal with
+        """
+        
