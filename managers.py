@@ -139,7 +139,7 @@ class Base_Manager(object):
         if self.datalog:
             self.datalogflag = True
 
-        if self.oled_log:
+        if self.oled_test:
             self.oled = True
 
         self.make_data_log(self.datalog)
