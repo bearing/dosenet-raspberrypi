@@ -114,6 +114,7 @@ class Base_Manager(object):
                  cirtest=False,
                  oled=False,
                  oled_log=None,
+                 oled_test=False,
                  ):
         self.new_setup = new_setup
         self.sensor_type = sensor_type
@@ -126,6 +127,7 @@ class Base_Manager(object):
         self.oled_names = OLED_DATA_NAMES
 
         self.test = test
+        self.oled_test = oled_test
 
         # Replacing the original d_flag and f_flag functions for
         if self.datalogflag or self.test:
@@ -191,7 +193,7 @@ class Base_Manager(object):
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = True
 
-        if self.test:
+        if self.test or self.oled_test:
             if interval is None:
                 for i in range(len(DEFAULT_TEST_INTERVALS)):
                     if self.sensor_type == i+1:
@@ -1040,6 +1042,9 @@ if __name__ == '__main__':
     parser.add_argument(
         '--test', '-t', action='store_true', default=False,
         help='Start in test mode (no config, 30s intervals)')
+    parser.add_argument(
+        '--oled_test', '-w', action='store_true', default=False,
+        help='Mode used for testing the oled screen (30s intervals)')
     parser.add_argument(
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
