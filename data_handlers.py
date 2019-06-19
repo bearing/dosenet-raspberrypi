@@ -286,6 +286,7 @@ class Data_Handler(object):
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
         date = str(datetime.date.today())
+        display_data = [self.manager.sensor_type]
         if self.manager.sensor_type == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             counts = kwargs.get('counts')
@@ -304,12 +305,7 @@ class Data_Handler(object):
             self.vprint(
                 1, SINGLE_BREAK_LINE)
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
-            if self.manager.test:
-                self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
-            elif not self.manager.config:
-                self.no_config_send(cpm=cpm, cpm_err=cpm_err)
-            elif not self.manager.publickey:
-                self.no_publickey_send(cpm=cpm, cpm_err=cpm_err)
+            display_data.append([cpm, cpm_err])
 
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
@@ -329,12 +325,7 @@ class Data_Handler(object):
 
             self.manager.data_log(datalog, spectra=spectra)
             self.manager.calibration_log(calibrationlog, spectra)
-            if self.manager.test:
-                self.send_to_memory(spectra=spectra)
-            elif not self.manager.config:
-                self.no_config_send(spectra=spectra)
-            elif not self.manager.publickey:
-                self.no_publickey_send(spectra=spectra)
+            display_data.append([spectra])
 
         if self.manager.sensor_type == 3:
             average_data = kwargs.get('average_data')
@@ -359,13 +350,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
-
-            if self.manager.test:
-                self.send_to_memory(average_data=average_data)
-            elif not self.manager.config:
-                self.no_config_send(average_data=average_data)
-            elif not self.manager.publickey:
-                self.no_publickey_send(average_data=average_data)
+            display_data.append(average_data)
 
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
@@ -385,13 +370,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
-
-            if self.manager.test:
-                self.send_to_memory(average_data=average_data)
-            elif not self.manager.config:
-                self.no_config_send(average_data=average_data)
-            elif not self.manager.publickey:
-                self.no_publickey_send(average_data=average_data)
+            display_data.append(average_data)
 
         if self.manager.sensor_type == 5:
             average_data = kwargs.get('average_data')
@@ -412,12 +391,31 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
+            display_data.append(average_data)
 
-            if self.manager.test:
+        if self.manager.oled:
+            self.manager.oled_send(display_data)
+
+        if self.manager.test:
+            if self.manager.sensor_type == 1:
+                self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
+            elif self.manager.sensor_type == 2:
+                self.send_to_memory(spectra=spectra)
+            elif self.manager.sensor_type in [3,4,5]:
                 self.send_to_memory(average_data=average_data)
-            elif not self.manager.config:
+        elif not self.manager.config:
+            if self.manager.sensor_type == 1:
+                self.no_config_send(cpm=cpm, cpm_err=cpm_err)
+            elif self.manager.sensor_type == 2:
+                self.no_config_send(spectra=spectra)
+            elif self.manager.sensor_type in [3,4,5]:
                 self.no_config_send(average_data=average_data)
-            elif not self.manager.publickey:
+        elif not self.manager.publickey:
+            if self.manager.sensor_type == 1:
+                self.no_publickey_send(cpm=cpm, cpm_err=cpm_err)
+            elif self.manager.sensor_type == 2:
+                self.no_publickey_send(spectra=spectra)
+            elif self.manager.sensor_type in [3,4,5]:
                 self.no_publickey_send(average_data=average_data)
 
         if not self.manager.test:

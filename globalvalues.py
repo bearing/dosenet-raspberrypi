@@ -203,6 +203,8 @@ DOUBLE_BREAK_LINE = (
 
 strf = '%H:%M:%S'
 
+OLED_DATA_NAMES = ['PG', 'D3S', 'AQ', 'CO2', 'W']
+
 CIRCUIT_SENSOR_NAMES = ['Pocket Geiger Counter', 'Air Quality Sensor',
     'CO2 Sensor', 'Weather Sensor']
 

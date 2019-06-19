@@ -48,6 +48,7 @@ from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
 from globalvalues import AQ_VARIABLES, CO2_VARIABLES
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
+from globalvalues import OLED_DATA_NAMES
 from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
@@ -122,6 +123,7 @@ class Base_Manager(object):
 
         self.oled = oled
         self.oled_log = oled_log
+        self.oled_names = OLED_DATA_NAMES
 
         self.test = test
 
@@ -135,18 +137,10 @@ class Base_Manager(object):
         if self.datalog:
             self.datalogflag = True
 
-        #test for timing from data to see what
-        if self.oled:
-            if self.oled_log is None:
-                for i in range(len(DEFAULT_OLED_LOGS)):
-                    if self.sensor_type == i+1:
-                        self.oled_log = DEFAULT_OLED_LOGS[i]
-                        break
         if self.oled_log:
             self.oled = True
 
         self.make_data_log(self.datalog)
-        self.make_oled_log(self.oled_log)
 
         self.data_names = data_names
 
@@ -162,15 +156,6 @@ class Base_Manager(object):
 
     def make_data_log(self, file):
         if self.datalogflag:
-            with open(file, 'a') as f:
-                pass
-    def make_oled_log(self, file):
-        """
-        Works the same as make_data_log but is separate
-        so that the oled_log isn't created when data logging is on
-        but an OLED screen is not connected.
-        """
-        if self.oled:
             with open(file, 'a') as f:
                 pass
 
@@ -515,6 +500,17 @@ class Base_Manager(object):
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
                     self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
+
+    def oled_send(self, data):
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='toOLED')
+        message = {'id': self.oled_names[self.sensor_type-1], 'data': data}
+        channel.basic_publish(exchange='',routing_key='toOLED',body=json.dumps(message))
+        connection.close()
+
+    def oled_receive(self):
+        pass
 
     def handle_data(self, this_start, this_end, spectra):
         """
