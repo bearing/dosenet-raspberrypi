@@ -508,7 +508,7 @@ class Base_Manager(object):
         channel = connection.channel()
         channel.queue_declare(queue='toOLED')
         message = {'id': self.oled_names[self.sensor_type-1], 'data': data}
-        print(message)
+        self.vprint(1, message)
         channel.basic_publish(exchange='',routing_key='toOLED',body=json.dumps(message))
         connection.close()
 
