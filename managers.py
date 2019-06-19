@@ -10,6 +10,7 @@ import os
 import subprocess
 import socket
 import pika
+import json
 try:
     import kromek
 except:
