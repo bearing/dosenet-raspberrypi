@@ -5,6 +5,7 @@ import argparse
 import sys
 import os
 import pika
+import json
 
 class OLED_Manager(object):
     """
@@ -25,7 +26,7 @@ class OLED_Manager(object):
 
         self.sensor_names = ["Pocket Geiger", "D3S", "Air Quality", "CO2", "Weather"]
 
-
+        #self.receiver_setup()
 
     def OLED_Pin_Setup(self):
         """
@@ -44,6 +45,16 @@ class OLED_Manager(object):
         print("Pin Setup Complete!")
         time.sleep(1.5)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+
+    def receiver_setup(self):
+        """
+        This function sets up this manager as a consumer on the
+        rabbitmq queue chain
+        """
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host='localhost')
+        )
+        channel = connection.channel()
 
     def oprint(self, x, y, print_text, display_time=None):
         """
@@ -66,27 +77,8 @@ class OLED_Manager(object):
         """
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    def Recent_Data(self, file):
-        """
-        This function is meant to read the most recent row from a CSV file
-        and delete that row then return the data read.
-        """
-        with open(file_location, 'r') as input, open(file_location2, 'w') as output:
-		writer, reader, i = csv.writer(output), csv.reader(input), 0
-		for row in reader:
-			if i==1:
-				for j in range(len(row)):
-					data.append(row[j][1:-1].replace(' ', '').split(','))
-			else:
-				writer.writerow(row)
-			i+=1
-		os.remove(file_location)
-		os.rename(file_location2, file_location)
-		return data
-
     def Receive_Data(self):
         """
         Pulls data from the running rabbitmq server and then converts
         the data to something easy to deal with
         """
-        
