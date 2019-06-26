@@ -24,7 +24,12 @@ class OLED_Manager(object):
 
         self.OLED_Pin_Setup()
 
-        self.sensor_names = ["Pocket Geiger", "D3S", "Air Quality", "CO2", "Weather"]
+        self.sdisp_names = ["Pocket Geiger Counter", "D3S", "Air Quality Sensor", "CO2 Sensor", "Weather Sensor"]
+        self.dispcol = [0,54,9,33,21]
+        #In form of: "at HH:MM:SSAM"
+        self.time_dispcol = [24]
+        #In form of: "Data received from:"
+        self.basic_dispcol = [6]
 
         #self.receiver_setup()
 
@@ -41,7 +46,7 @@ class OLED_Manager(object):
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(29, 1)
 
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(7, 3, "Pin Setup Complete!")
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(6, 3, "Pin Setup Complete!")
         print("Pin Setup Complete!")
         time.sleep(1.5)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
@@ -77,8 +82,7 @@ class OLED_Manager(object):
         """
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
 
-    def Receive_Data(self):
+    def run():
         """
-        Pulls data from the running rabbitmq server and then converts
-        the data to something easy to deal with
+        Runs the OLED as a consumer and displays data as it receives it
         """

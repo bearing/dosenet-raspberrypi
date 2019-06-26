@@ -50,7 +50,6 @@ from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
 from globalvalues import AQ_VARIABLES, CO2_VARIABLES
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
-from globalvalues import OLED_DATA_NAMES
 from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
@@ -126,7 +125,6 @@ class Base_Manager(object):
 
         self.oled = oled
         self.oled_log = oled_log
-        self.oled_names = OLED_DATA_NAMES
 
         self.test = test
         self.oled_test = oled_test
@@ -509,8 +507,8 @@ class Base_Manager(object):
         connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toOLED')
-        message = {'id': self.oled_names[self.sensor_type-1], 'data': data}
-        self.vprint(1, message)
+        message = {'id': self.sensor_type, 'data': data}
+        self.vprint(2, message)
         channel.basic_publish(exchange='',routing_key='toOLED',body=json.dumps(message))
         connection.close()
 

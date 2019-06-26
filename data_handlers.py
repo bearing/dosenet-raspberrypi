@@ -286,7 +286,7 @@ class Data_Handler(object):
         start_text = datetime_from_epoch(this_start).strftime(strf)
         end_text = datetime_from_epoch(this_end).strftime(strf)
         date = str(datetime.date.today())
-        display_data = [self.manager.sensor_type]
+        display_data = []
         if self.manager.sensor_type == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             counts = kwargs.get('counts')
@@ -305,7 +305,7 @@ class Data_Handler(object):
             self.vprint(
                 1, SINGLE_BREAK_LINE)
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
-            display_data.append([cpm, cpm_err])
+            display_data = [cpm, cpm_err]
 
         if self.manager.sensor_type == 2:
             spectra = kwargs.get('spectra')
@@ -325,7 +325,7 @@ class Data_Handler(object):
 
             self.manager.data_log(datalog, spectra=spectra)
             self.manager.calibration_log(calibrationlog, spectra)
-            display_data.append([spectra])
+            display_data = [total_counts]
 
         if self.manager.sensor_type == 3:
             average_data = kwargs.get('average_data')
@@ -350,7 +350,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
-            display_data.append(average_data)
+            display_data = average_data
 
         if self.manager.sensor_type == 4:
             average_data = kwargs.get('average_data')
@@ -370,7 +370,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
-            display_data.append(average_data)
+            display_data = average_data
 
         if self.manager.sensor_type == 5:
             average_data = kwargs.get('average_data')
@@ -391,7 +391,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
 
             self.manager.data_log(datalog, average_data=average_data)
-            display_data.append(average_data)
+            display_data = average_data
 
         if self.manager.oled:
             self.manager.oled_send(display_data)
