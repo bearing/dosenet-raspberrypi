@@ -261,7 +261,7 @@ class App(QWidget):
         integration_text = QLabel("Integration time (sec):")
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
-        integration_text.setAlignment(Qt.AlignCenter)
+        integration_text.setAlignment(Qt.AlignLeft)
         integration_box = QComboBox()
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
@@ -273,7 +273,7 @@ class App(QWidget):
 
         ndata_text = QLabel("# of Data Points to display:")
         ndata_text.setFont(textfont)
-        ndata_text.setAlignment(Qt.AlignCenter)
+        ndata_text.setAlignment(Qt.AlignLeft)
         ndata_box = QComboBox()
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
