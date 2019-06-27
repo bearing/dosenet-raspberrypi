@@ -4,7 +4,6 @@ Created on Fri Nov 9 2018
 @author: Ali Hanks
 """
 
-
 import sys
 import numpy as np
 import math
@@ -131,9 +130,9 @@ class App(QWidget):
         label = QLabel('Select Sensors', self)
 
         if self.windows:
-            textfont = QFont("Times", 18, QFont.Bold)
+            textfont = QFont("Helvetica Neue", 18, QFont.Bold)
         else:
-            textfont = QFont("Times", 20, QFont.Bold)
+            textfont = QFont("Helvetica Neue", 20, QFont.Bold)
 
         label.setFont(textfont)
         self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
@@ -186,7 +185,7 @@ class App(QWidget):
         Add a checkbox to the main layout in the specified location (top,left)
         '''
         checkbox = QCheckBox(label)
-        textfont = QFont("Times", 18, QFont.Bold)
+        textfont = QFont("Helvetica Neue", 18, QFont.Bold)
 
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
@@ -260,7 +259,7 @@ class App(QWidget):
         self.config_layout = QFormLayout()
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
         integration_text = QLabel("Integration time (sec):")
-        textfont = QFont("Times", 16, QFont.Bold)
+        textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignCenter)
         integration_box = QComboBox()
