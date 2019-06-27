@@ -124,7 +124,7 @@ class App(QWidget):
         tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 150px;}")
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
-        self.layout.addWidget(self.tabs,ptop,pleft,pheight,pwidth)
+        self.layout.addWidget(self.tabs,1,1,1,3) #ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
 
         # Create text label
@@ -151,9 +151,9 @@ class App(QWidget):
         #self.textbox.setAlignment(Qt.AlignCenter)
 
         # Create push button
-        self.addButton('Start',self.run,ptop+8,pleft+pwidth+1,1,1,"#66B2FF")
-        self.addButton('Stop',self.stop,ptop+9,pleft+pwidth+1,1,1,"#FF6666")
-        self.addButton('Clear',self.clear,ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
+        self.addButton('Start',self.run,2,1,1,1 "#39c43e")#ptop+8,pleft+pwidth+1,1,1,"#66B2FF")
+        self.addButton('Stop',self.stop, 2,2,1,1,"#de4545")#ptop+9,pleft+pwidth+1,1,1,"#FF6666")
+        self.addButton('Clear',self.clear, 2,3,1,1, "#a3d1ff")#ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
 
 
     def addButton(self,label,method,top,left,height,width,color="white"):
@@ -173,7 +173,8 @@ class App(QWidget):
                            "border-color: beige;"+\
                            "font: bold 20px;"+\
                            "min-width: 6em;"+\
-                           "padding: 2px;"
+	                   "color: black"
+                           #"padding: 2px;"
 
         button.setStyleSheet(style_sheet_text)
         button.clicked.connect(method)
