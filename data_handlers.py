@@ -325,7 +325,7 @@ class Data_Handler(object):
 
             self.manager.data_log(datalog, spectra=spectra)
             self.manager.calibration_log(calibrationlog, spectra)
-            display_data = [total_counts]
+            display_data = [sum(spectra)/self.manager.interval]
 
         if self.manager.sensor_type == 3:
             average_data = kwargs.get('average_data')

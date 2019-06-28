@@ -244,6 +244,7 @@ class Base_Manager(object):
             self.vprint(
                 1, 'WARNING: no config file given. Not posting to server')
             self.config = None
+            self.new_setup = True
 
         if publickey:
             try:

@@ -49,7 +49,7 @@ class OLED_Manager(object):
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(6, 3, "Pin Setup Complete!")
         print("Pin Setup Complete!")
         time.sleep(1.5)
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
 
     def receiver_setup(self):
         """
@@ -71,7 +71,7 @@ class OLED_Manager(object):
             ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(x, y, print_text)
             if display_time:
                 time.sleep(display_time)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
         else:
             print("Trying to display something that wasn't a string! Try making it a string.")
 
@@ -80,7 +80,7 @@ class OLED_Manager(object):
         This function is meant to shorten the code needed to clear the
         OLED screen.
         """
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Init()
+        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
 
     def run():
         """
