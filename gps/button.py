@@ -70,6 +70,8 @@ class Radiodemo(QWidget):
 		
 		layout = QVBoxLayout()
 		
+		layout.addWidget(QLabel("Sensor to plot:"))
+		
 		self.buttons = []
 		
 		for i in range(0, len(sensors)):
@@ -93,16 +95,21 @@ def main():
 	app = QApplication(sys.argv)
 	window = QWidget()
    
-	start = QPushButton('Start')
+	start = QPushButton('Start Plotting')
 	start.clicked.connect(start_gps)
-	stop = QPushButton('Stop')
+	start.setStyleSheet('QPushButton {background-color:#66B2FF}')
+	stop = QPushButton('Stop Plotting')
 	stop.clicked.connect(stop_gps)
+	stop.setStyleSheet('QPushButton {background-color:#FF6666}')
 	ex = Radiodemo(getmsg())
+	label = QLabel()
+	label.setPixmap(QPixmap('dosenet.png'))
 	
 	layout = QVBoxLayout()
 	layout.addWidget(start)
 	layout.addWidget(stop)
 	layout.addWidget(ex)
+	layout.addWidget(label)
 	
 	window.setLayout(layout)
 	window.setWindowTitle("GPS GUI")
