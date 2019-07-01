@@ -11,9 +11,13 @@ import sys
 from Adafruit_BME280 import *
 import json
 import gps
+import datetime
+import traceback
+from PIL import Image
+import csv
 
-#session = gps.gps("localhost","2947")
-#session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE) Uncomment this when you want to actually start collecting gps data
+session = gps.gps("localhost","2947")
+session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE) #Uncomment this when you want to actually start collecting gps data
 
 print("mapplot.py is up and running :) ")
 
@@ -48,16 +52,16 @@ def get_queued_data(queue, sensor, time_delay):
 	
 	temp = getlastmsg(queue, data)
 	
-	print(temp)
+	#print(temp)
 	
 	if not temp:
 		print("It's empty!")
 	
 	data = json.loads(temp)
 	
-	print data
+	#print data
 	
-	print(data) # Edit this to format data from each new sensor added from queue
+	#print(data) # Edit this to format data from each new sensor added from queue
 	if sensor == 'Air Quality':
 		return data['data'][1][0]
 	elif sensor == "CO2":
@@ -124,7 +128,7 @@ def establish_dict(time_delay):
 ######################################################################################################################################## Add code here for new sensor
 	if sensor_array[0] in sensors:
 		sensor_dict[sensor_array[0]] = [0, 100, 0] # Air Quality
-		os.system('python aq_daq.py -i ' + str(time_delay) + ' &')
+		os.system('python aq_daq.py -i ' + str(int(time_delay * 0.5)) + ' &')
 		clear_queue('toGUI_aq')
 		clear_queue('fromGUI_aq')
 		start_sensor('fromGUI_aq', 'Air Quality')
@@ -160,7 +164,7 @@ def makecolormap(label,minvalue,maxvalue,filename):
 	'''
 	Makes a color map with given maximum and minimum values.
 	'''
-	fig, ax = plt.subplots(figsize=(3,1))
+	fig, ax = plt.subplots(figsize=(6,1))
 	fig.subplots_adjust(bottom=0.5)
 
 	cmap = mpl.cm.spectral
@@ -177,6 +181,11 @@ def makecolormap(label,minvalue,maxvalue,filename):
 	
 	
 	fig.savefig(filename)
+	
+
+def cropcolorbar(filename):
+	colorbar = Image.open(filename)
+	colorbar.crop((50, 0, 560, 100)).save(filename)
 
 def twodigits(num):
 	if len(str(num)) == 1:
@@ -184,11 +193,14 @@ def twodigits(num):
 	return str(num)
 
 def localtime():
-	current_time = time.localtime(time.time())
-	days_of_the_week = ['Monday', 'Tuesday', 'It is Wednesday my dudes', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-	months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-	return days_of_the_week[current_time.tm_wday-1] + ' ' + months[current_time.tm_mon-1] + ' ' + str(current_time.tm_mday) + ', ' + str(current_time.tm_year) + ' @ ' + twodigits(current_time.tm_hour) + ':' + twodigits(current_time.tm_min) + ':' + twodigits(current_time.tm_sec)
-
+	# current_time = time.localtime(time.time())
+	# days_of_the_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+	# months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+	# print(str(current_time.tm_wday) + '|| soidjfoisdjfoisdjfo')
+	# return days_of_the_week[current_time.tm_wday-1] + ' ' + months[current_time.tm_mon-1] + ' ' + str(current_time.tm_mday) + ', ' + str(current_time.tm_year) + ' @ ' + twodigits(current_time.tm_hour) + ':' + twodigits(current_time.tm_min) + ':' + twodigits(current_time.tm_sec)
+	current_time = datetime.datetime.now()
+	return current_time.strftime('%A') + ' ' + current_time.strftime('%B') + ' ' + current_time.strftime('%d') + ', ' + current_time.strftime('%Y') + ' @ ' + current_time.strftime('%H') + ':' + current_time.strftime('%M') + ':' + current_time.strftime('%S') + ' ' + current_time.strftime('%Z')
+	
 def sendmsg(s,queue):
 	'''
 	Sends a message through the selected queue.
@@ -223,118 +235,158 @@ def getlastmsg(queue, text):
 			break
 		print("Setting text=body")
 		text=str(body)
-	print("Returning text as: " + text)
 	return text
+def create_file(fn, slist):
+	out_file = open('../../data/'+fn+'.csv', "ab+", buffering=0)
+	results = csv.writer(out_file, delimiter = ",")
+	results.writerow(['Epoch time', 'Latitude', 'Longitude'] + slist[:])
+	return out_file, results
+def write_data(results, epoch_time, lat, lon, sdict):
+	row = [epoch_time, lat, lon]
+	for sensor in sorted(list(sdict)):
+		row.append(sdict[sensor][2])
+	results.writerow(row)
+def close_file(out_file):
+	out_file.close()
+	print("Copying data from {} to server.".format(out_file.name))
+#	sys_cmd = 'scp {} pi@192.168.4.1:/home/dosenet-raspberrypi/gps/data/'.format(out_file.name)
+#	err = os.system(sys_cmd)
+#	print("system command returned {}".format(err))
+	sys.stdout.flush()
 
-time_delay = 5
-time_delay = int(getlastmsg('time', time_delay))
+try:
+	time_delay = 5
+	time_delay = int(getlastmsg('time', time_delay))
 
-sensor_dict = establish_dict(time_delay)
+	sensor_dict = establish_dict(time_delay)
+	
+	recording_file = ''
+	recording_file = getlastmsg('filename', recording_file)
+	out_file, results = create_file(recording_file, sorted(list(sensor_dict)))
 
-location = folium.Map(location=[37.875830,-122.268459],zoom_start = 15) # Fetches chunk
-location.save('testmap.html')
+	location = folium.Map(location=[37.875830,-122.268459],zoom_start = 15) # Fetches chunk
+	location.save('testmap.html')
 
-os.system('xdg-open testmap.html')
-time.sleep(5)
-os.system('xdotool windowsize `xdotool search --onlyvisible --name firefox` 560 440')
+	os.system('xdg-open testmap.html')
+	time.sleep(5)
+	os.system('xdotool windowsize `xdotool search --onlyvisible --name firefox` 560 440')
 
-
-for key in sensor_dict:
-	
-	sensor_dict[key].append(folium.FeatureGroup(name=key)) # Establishes Feature Groups
-	
-	makecolormap(key,sensor_dict[key][0],sensor_dict[key][1],'colormap'+key) # Creates Colormap that will be used as a legend
-	
-	print('colormap'+key)
-	
-	sensor_dict[key][3].add_to(location) # Adds colormap to map
-
-
-folium.LayerControl().add_to(location)
-
-text = '' # Initializing text
-
-
-while True: # Starts collecting and plotting data
-	
-	# Gets most recent command and sets the value of text equal to it
-	
-	text = getlastmsg('button', text)
-	
-	#####################################################################################################################################
-	if text == 'stop':
-		stop_sensor('fromGUI_aq', 'Air Quality')
-		stop_sensor('fromGUI_d3s', 'Radiation')
-		stop_sensor('fromGUI_CO2', 'CO2')
-		
-		print("Stopped")
-		sys.exit(0)
-	
-	value = text
-	value = value.replace(" ", "_").replace("/", "_")
-	
-	url = ('/home/pi/dosenet-raspberrypi/gps/colormap'+str(value)+'.png')
-	FloatImage(url, bottom = 5, left = 30).add_to(location) 
-	
-	lat = uniform(37.875830,37.878)
-	lon = uniform(-122.268459,-122.278)
-	
-	# Uncomment the following block and delete the preceeding when it is time to incorporate actual gps data
-	
-	# try:
-		# report = session.next()
-		# if report['class'] == "TPV":
-			# lat = report.lat
-			# lon = report.lon
-	# except KeyError:
-		# pass
-	# except KeyboardInterrupt:
-		# quit()
-	# except StopIteration:
-		# session = None
-		# print "Gpsd has terminated"
-	
-	print(""" 
- (         )   (            )               
- )\ )   ( /(   )\ )      ( /(        *   )  
-(()/(   )\()) (()/( (    )\()) (   ` )  /(  
- /(_)) ((_)\   /(_)))\  ((_)\  )\   ( )(_)) 
-(_))_    ((_) (_)) ((_)  _((_)((_) (_(_())  
- |   \  / _ \ / __|| __|| \| || __||_   _|  
- | |) || (_) |\__ \| _| |  ` || _|   | |    
- |___/  \___/ |___/|___||_|\_||___|  |_|                          
-	""")
-	
-	
-	for key in sensor_dict:
-		sensor_dict[key][2] = read_data(key)
 
 	for key in sensor_dict:
-		sensor_dict[key][3].show = (text == key)
 		
-		popupv = ["Time: " + localtime() + '<br>'] # List for popup label (current time and values)
+		sensor_dict[key].append(folium.FeatureGroup(name=key)) # Establishes Feature Groups
 		
-		for i in sorted(list(sensor_dict)): 
-			if i==key:
-				popupv.append(i+" (shown): ")
-			else:
-				popupv.append(i+": ")
+		makecolormap(key,sensor_dict[key][0],sensor_dict[key][1],'colormap'+key) # Creates Colormap that will be used as a legend
+		
+		print('colormap'+key)
+		
+		sensor_dict[key][3].add_to(location) # Adds colormap to map
+		
+		cropcolorbar(('colormap'+key).replace(" ", "_").replace("/", "_")+'.png')
 
-			popupv.append(str(sensor_dict[i][2]) + "<br>")
-				
-		popuptext = ''.join(popupv) # Joins the list of popup labels into a string
-		
-		cmap = cm.get_cmap('spectral',sensor_dict[key][1]-sensor_dict[key][0])
-		
-		markercolor = (matplotlib.colors.rgb2hex(cmap(int(sensor_dict[key][2]-sensor_dict[key][0]))[:3]))
-		
-		folium.Circle(radius = 20, location=[lat,lon], popup = popuptext, fill_color = markercolor,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key][3]) # Plot Circle
-		
-		location.save('testmap.html') # Saves map as html
 
-	os.system('xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+r') # Reloads the page
+	folium.LayerControl().add_to(location)
+
+	text = '' # Initializing text
+
+
+	while True: # Starts collecting and plotting data
+		
+		# Gets most recent command and sets the value of text equal to it
+		
+		text = getlastmsg('button', text)
+		
+		#####################################################################################################################################
+		if text == 'stop':
+			close_file(out_file)
+			
+			stop_sensor('fromGUI_aq', 'Air Quality')
+			stop_sensor('fromGUI_d3s', 'Radiation')
+			stop_sensor('fromGUI_CO2', 'CO2')
+			
+			print("Stopped")
+			sys.exit(0)
+		
+		value = text
+		value = value.replace(" ", "_").replace("/", "_")
+		
+		url = ('/home/pi/dosenet-raspberrypi/gps/colormap'+str(value)+'.png')
+		FloatImage(url, bottom = 5, left = 4).add_to(location) 
+		
+		#lat = uniform(37.875830,37.878)
+		#lon = uniform(-122.268459,-122.278)
+		
+		# Uncomment the following block and delete the preceeding when it is time to incorporate actual gps data
+		
+		
+		try:
+			report = session.next()
+			#if report['class'] == "TPV":
+			lat = getattr(report, 'lat', 0.0) #report.lat
+			lon = getattr(report, 'lon', 0.0) #report.lon
+			print("Success")
+			print(lat, lon)
+		except KeyError:
+			print("KeyError")
+			pass
+		except KeyboardInterrupt:
+			quit()
+		except StopIteration:
+			session = None
+			print "Gpsd has terminated"
+		
+		print(""" 
+	 (         )   (            )               
+	 )\ )   ( /(   )\ )      ( /(        *   )  
+	(()/(   )\()) (()/( (    )\()) (   ` )  /(  
+	 /(_)) ((_)\   /(_)))\  ((_)\  )\   ( )(_)) 
+	(_))_    ((_) (_)) ((_)  _((_)((_) (_(_())  
+	 |   \  / _ \ / __|| __|| \| || __||_   _|  
+	 | |) || (_) |\__ \| _| |  ` || _|   | |    
+	 |___/  \___/ |___/|___||_|\_||___|  |_|                          
+		""")
+		
+		
+		for key in sensor_dict:
+			sensor_dict[key][2] = read_data(key)
+
+		for key in sensor_dict:
+			sensor_dict[key][3].show = (text == key)
+			
+			popupv = ["Time: " + localtime() + '<br>'] # List for popup label (current time and values)
+			
+			for i in sorted(list(sensor_dict)): 
+				if i==key:
+					popupv.append(i+" (shown): ")
+				else:
+					popupv.append(i+": ")
+
+				popupv.append(str(sensor_dict[i][2]) + "<br>")
+					
+			popuptext = ''.join(popupv) # Joins the list of popup labels into a string
+			
+			cmap = cm.get_cmap('spectral',sensor_dict[key][1]-sensor_dict[key][0])
+			
+			markercolor = (matplotlib.colors.rgb2hex(cmap(int(sensor_dict[key][2]-sensor_dict[key][0]))[:3]))
+			
+			folium.Circle(radius = 20, location=[lat,lon], popup = popuptext, fill_color = markercolor,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key][3]) # Plot Circle
+			
+			location.save('testmap.html') # Saves map as html
+
+		os.system('xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+r') # Reloads the page
+		
+		write_data(results, time.time(), lat, lon, sensor_dict)
+		
+		time.sleep(time_delay)
+except:
+	stop_sensor('fromGUI_aq', 'Air Quality')
+	stop_sensor('fromGUI_d3s', 'Radiation')
+	stop_sensor('fromGUI_CO2', 'CO2')
+	print("Something went wrong:")
+	traceback.print_exc()
 	
-	time.sleep(time_delay)
+	sys.exit(0)
+	
 	
 # Brought to you by big Al and Edward Lee
  
