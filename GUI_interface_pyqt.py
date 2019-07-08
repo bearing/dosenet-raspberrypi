@@ -297,10 +297,10 @@ class App(QWidget):
 
         self.group_text = QLabel("Group Number:")
         self.group_text.setFont(textfont)
-        self.config_layout.addWidget(self.group_text, 4, 1)
+        self.config_layout.addWidget(self.group_text, 3, 1)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
-        self.config_layout.addWidget(self.group_box, 4, 2)
+        self.config_layout.addWidget(self.group_box, 3, 2)
         item_list = ["1","2","3","4","5","6","7","8","9","10"]
         self.group_id = "1"
         self.group_box.addItems(item_list)
@@ -311,10 +311,10 @@ class App(QWidget):
 
         self.ptext = QLabel("Period:")
         self.ptext.setFont(textfont)
-        self.config_layout.addWidget(self.ptext, 5, 1)
+        self.config_layout.addWidget(self.ptext, 4, 1)
         self.ptext.setAlignment(Qt.AlignCenter)
         self.pbox = QComboBox()
-        self.config_layout.addWidget(self.pbox, 5, 2)
+        self.config_layout.addWidget(self.pbox, 4, 2)
         item_list = ["1","2","3","4","5","6","7","8"]
         self.period_id = "1"
         self.pbox.addItems(item_list)
@@ -325,10 +325,10 @@ class App(QWidget):
 
         self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
-        self.config_layout.addWidget(self.location_text, 6, 1)
+        self.config_layout.addWidget(self.location_text, 5, 1)
         self.location_text.setAlignment(Qt.AlignCenter)
         self.location_box = QComboBox()
-        self.config_layout.addWidget(self.location_box, 6, 2)
+        self.config_layout.addWidget(self.location_box, 5, 2)
         item_list = ["Inside","Outside","Test_1","Test_2","Test_3"]
         self.location = "Inside"
         self.location_box.addItems(item_list)
