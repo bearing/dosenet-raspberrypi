@@ -151,7 +151,7 @@ class App(QWidget):
 
         # Create push button
         self.addButton('Start',self.run, 2,1,1,1) #"#39c43e") #ptop+8,pleft+pwidth+1,1,1,"#66B2FF")
-        self.addButton('Stop',self.stop, 2,2,1,) #"#de4545") #ptop+9,pleft+pwidth+1,1,1,"#FF6666")
+        self.addButton('Stop',self.stop, 2,2,1,1) #"#de4545") #ptop+9,pleft+pwidth+1,1,1,"#FF6666")
         self.addButton('Clear',self.clear, 2,3,1,1) #"#a3d1ff") #ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
 
 
