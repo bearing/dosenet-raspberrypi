@@ -155,7 +155,7 @@ class App(QWidget):
         self.addButton('Clear',self.clear, 2,3,1,1) #"#a3d1ff") #ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
 
 
-    def addButton(self,label,method,top,left,height,width,color="white"):
+    def addButton(self,label,method,top,left,height,width,color="green"):
         '''
         Add a button to the main layout
         Inputs: label,
