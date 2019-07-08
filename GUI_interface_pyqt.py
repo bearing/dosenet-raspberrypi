@@ -180,9 +180,9 @@ class App(QWidget):
         self.layout.addWidget(button,top,left,height,width,Qt.AlignHCenter)
 
 
-    def addCheckBox(self, label, top, left):
+    def addCheckBox(self, label, row, column):
         '''
-        Add a checkbox to the main layout in the specified location (top,left)
+        Add a checkbox to the main layout in the specified location (row,column)
         '''
         checkbox = QCheckBox(label)
         textfont = QFont("Helvetica Neue", 18, QFont.Bold)
@@ -190,7 +190,7 @@ class App(QWidget):
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
-        self.config_layout.addWidget(checkbox)
+        self.config_layout.addWidget(checkbox, row, column)
 
     def rmvSensorTab(self, sensor):
         '''
