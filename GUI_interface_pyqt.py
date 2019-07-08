@@ -139,7 +139,7 @@ class App(QWidget):
         #label.setAlignment(Qt.AlignCenter)
 
         # Create checkboxes for each sensor
-        self.addCheckBox(RAD,ptop+1,pleft+pwidth+1)
+        self.addCheckBox(RAD, 1, 2)
         self.addCheckBox(AIR,ptop+2,pleft+pwidth+1)
         self.addCheckBox(CO2,ptop+3,pleft+pwidth+1)
         self.addCheckBox(PTH,ptop+4,pleft+pwidth+1)
@@ -258,7 +258,7 @@ class App(QWidget):
         self.tabs.addTab(self.selection_tab, "Configure")
         self.config_layout = QFormLayout()
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
-        integration_text = QLabel("Integration time (sec):")
+        integration_text = QLabel("Integration time (sec):", 1, 1)
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
@@ -271,7 +271,7 @@ class App(QWidget):
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
         self.config_layout.addRow(integration_text,integration_box)
 
-        ndata_text = QLabel("# of Data Points to display:")
+        ndata_text = QLabel("# of Data Points to display:", 2, 1)
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
         ndata_box = QComboBox()
@@ -283,35 +283,35 @@ class App(QWidget):
                 lambda:self.setNData(str(ndata_box.currentText())))
         self.config_layout.addRow(ndata_text,ndata_box)
 
-        checkbox = QCheckBox("Save Data")
-        checkbox.setFont(QFont("Times", 18, QFont.Bold))
+        checkbox = QCheckBox("Save Data", 3, 1)
+        checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox)
 
-        self.group_text = QLabel("Group Number:")
-        self.group_text.setFont(textfont)
-        self.group_text.setAlignment(Qt.AlignCenter)
-        self.group_box = QComboBox()
-        item_list = ["1","2","3","4","5","6","7","8","9","10"]
-        self.group_id = "1"
-        self.group_box.addItems(item_list)
-        self.group_box.currentIndexChanged.connect(
-                lambda:self.setGroupID(str(self.group_box.currentText())))
-        self.config_layout.addRow(self.group_text,self.group_box)
+        #self.group_text = QLabel("Group Number:")
+        #self.group_text.setFont(textfont)
+        #self.group_text.setAlignment(Qt.AlignCenter)
+        #self.group_box = QComboBox()
+        #item_list = ["1","2","3","4","5","6","7","8","9","10"]
+        #self.group_id = "1"
+        #self.group_box.addItems(item_list)
+        #self.group_box.currentIndexChanged.connect(
+        #        lambda:self.setGroupID(str(self.group_box.currentText())))
+        #self.config_layout.addRow(self.group_text,self.group_box)
 
-        self.ptext = QLabel("Period:")
-        self.ptext.setFont(textfont)
-        self.ptext.setAlignment(Qt.AlignCenter)
-        self.pbox = QComboBox()
-        item_list = ["1","2","3","4","5","6","7","8"]
-        self.period_id = "1"
-        self.pbox.addItems(item_list)
-        self.pbox.currentIndexChanged.connect(
-                lambda:self.setPeriodID(str(self.pbox.currentText())))
-        self.config_layout.addRow(self.ptext,self.pbox)
+        #self.ptext = QLabel("Period:")
+        #self.ptext.setFont(textfont)
+        #self.ptext.setAlignment(Qt.AlignCenter)
+        #self.pbox = QComboBox()
+        #item_list = ["1","2","3","4","5","6","7","8"]
+        #self.period_id = "1"
+        #self.pbox.addItems(item_list)
+        #self.pbox.currentIndexChanged.connect(
+        #        lambda:self.setPeriodID(str(self.pbox.currentText())))
+        #self.config_layout.addRow(self.ptext,self.pbox)
 
-        self.location_text = QLabel("Location:")
+        self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
         self.location_text.setAlignment(Qt.AlignCenter)
         self.location_box = QComboBox()
