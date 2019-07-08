@@ -155,7 +155,7 @@ class App(QWidget):
         self.addButton('Clear',self.clear, 2,3,1,1) #"#a3d1ff") #ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
 
 
-    def addButton(self,label,method,top,left,height,width,color="green"):
+    def addButton(self,label,method,top,left,height,width,color):
         '''
         Add a button to the main layout
         Inputs: label,
@@ -172,7 +172,7 @@ class App(QWidget):
                            "border-color: beige;"+\
                            "font: bold 20px;"+\
                            "min-width: 6em;"+\
-	                   "color: black"
+	                   "color: color"
                            #"padding: 2px;"
 
         button.setStyleSheet(style_sheet_text)
