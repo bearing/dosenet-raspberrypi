@@ -127,16 +127,16 @@ class App(QWidget):
         self.setSelectionTab()
 
         # Create text label
-        label = QLabel('Select Sensors', self)
+        #label = QLabel('Select Sensors', self)
 
-        if self.windows:
-            textfont = QFont("Helvetica Neue", 18, QFont.Bold)
-        else:
-            textfont = QFont("Helvetica Neue", 20, QFont.Bold)
+        #if self.windows:
+        #    textfont = QFont("Helvetica Neue", 18, QFont.Bold)
+        #else:
+        #    textfont = QFont("Helvetica Neue", 20, QFont.Bold)
 
-        label.setFont(textfont)
-        self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
-        label.setAlignment(Qt.AlignCenter)
+        #label.setFont(textfont)
+        #self.layout.addWidget(label,ptop,pleft+pwidth+1,1,1)
+        #label.setAlignment(Qt.AlignCenter)
 
         # Create checkboxes for each sensor
         self.addCheckBox(RAD,ptop+1,pleft+pwidth+1)
