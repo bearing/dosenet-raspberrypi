@@ -186,11 +186,6 @@ class App(QWidget):
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
-<<<<<<< HEAD
-        self.config_layout.addWidget(checkbox, row, column)
-=======
-        self.config_layout.addWidget(checkbox, top, left) #top, left
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
 
     def rmvSensorTab(self, sensor):
         '''
