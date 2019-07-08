@@ -251,15 +251,12 @@ class App(QWidget):
         '''
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
-<<<<<<< HEAD
         self.config_layout = QGridLayout()
-=======
         self.config_layout =  QGridLayout() #QVBoxLayout() #QFormLayout()
 
         self.spaceItem = QSpacerItem(150,10,QSizePolicy.Expanding)
         self.config_layout.addItem(self.spaceItem, 1,2) #QSpacerItem(1,1)
 
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
         integration_text = QLabel("Integration time (sec):")
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
@@ -268,23 +265,21 @@ class App(QWidget):
         integration_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(integration_text, 0,0) #1 
         integration_box = QComboBox()
-<<<<<<< HEAD
+
         self.config_layout.addWidget(integration_box, 1, 2)
-=======
+
         self.config_layout.addWidget(integration_box, 0,1) #2
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
         integration_box.addItems(item_list)
         integration_box.setCurrentIndex(1)
         integration_box.currentIndexChanged.connect(
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
-<<<<<<< HEAD
+
         self.config_layout.addWidget(integration_text)
         self.config_layout.addWidget(integration_box)
-=======
+
         #self.config_layout.addRow(integration_text,integration_box)
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
 
         ndata_text = QLabel("# of Data Points to display:")
         ndata_text.setFont(textfont)
@@ -292,23 +287,15 @@ class App(QWidget):
         ndata_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(ndata_text, 1,0) #3
         ndata_box = QComboBox()
-<<<<<<< HEAD
-        self.config_layout.addWidget(ndata_box, 2, 2)
-=======
-        self.config_layout.addWidget(ndata_box, 1,1) #4
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
         ndata_box.addItems(item_list)
         ndata_box.setCurrentIndex(4)
         ndata_box.currentIndexChanged.connect(
                 lambda:self.setNData(str(ndata_box.currentText())))
-<<<<<<< HEAD
         self.config_layout.addWidget(ndata_text)
         self.config_layout.addWidget(ndata_box)
-=======
         #self.config_layout.addRow(ndata_text,ndata_box)
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
 
         checkbox = QCheckBox("Save Data")
         checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
@@ -327,15 +314,12 @@ class App(QWidget):
         self.group_box.addItems(item_list)
         self.group_box.currentIndexChanged.connect(
                 lambda:self.setGroupID(str(self.group_box.currentText())))
-<<<<<<< HEAD
         self.config_layout.addWidget(self.group_text)
         self.config_layout.addWidget(self.group_box)
-=======
         #self.config_layout.addRow(self.group_text,self.group_box)
         self.config_layout.addWidget(self.group_text, 3,0) #6
         self.config_layout.addWidget(self.group_box, 3,1) #7  
         self.group_text.setAlignment(Qt.AlignLeft)
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
 
         self.ptext = QLabel("Period:")
         self.ptext.setFont(textfont)
@@ -348,16 +332,13 @@ class App(QWidget):
         self.pbox.addItems(item_list)
         self.pbox.currentIndexChanged.connect(
                 lambda:self.setPeriodID(str(self.pbox.currentText())))
-<<<<<<< HEAD
         self.config_layout.addWidget(self.ptext)
         self.config_layout.addWidget(self.pbox)
-=======
         #self.config_layout.addRow(self.ptext,self.pbox)
         self.config_layout.addWidget(self.ptext, 4,0) #8 
         self.config_layout.addWidget(self.pbox, 4,1) #9
         self.ptext.setAlignment(Qt.AlignLeft) #extra
-        #self.config6.addWidget(self.ptext)
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
+        #self.config_layout.addWidget(self.ptext)
 
         self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
@@ -370,10 +351,8 @@ class App(QWidget):
         self.location_box.addItems(item_list)
         self.location_box.currentIndexChanged.connect(
                 lambda:self.setLocation(str(self.location_box.currentText())))
-<<<<<<< HEAD
         self.config_layout.addWidget(self.location_text)
         self.config_layout.addWidget(self.location_box)
-=======
         #self.config_layout.addRow(self.location_text,self.location_box)
         self.config_layout.addWidget(self.location_text, 5,0) #10
         self.config_layout.addWidget(self.location_box, 5,1) #11
@@ -382,7 +361,6 @@ class App(QWidget):
         self.sensorLabel = QLabel("Select Sensors") 
         self.sensorLabel.setFont(textfont)
         self.config_layout.addWidget(self.sensorLabel, 0, 4) 
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
 
         self.textbox = QLineEdit()
         self.setFilename()
