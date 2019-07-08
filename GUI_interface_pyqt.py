@@ -20,7 +20,8 @@ import argparse
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
-from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout
+from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
+from PyQt5.Qt import QHBoxLayout, QVBoxLayout # new imports
 from PyQt5.QtWidgets import QCheckBox
 from pyqtgraph import QtGui
 from PyQt5 import QtCore
@@ -139,10 +140,10 @@ class App(QWidget):
         #label.setAlignment(Qt.AlignCenter)
 
         # Create checkboxes for each sensor
-        self.addCheckBox(RAD, 1, 2)
-        self.addCheckBox(AIR, 2, 2)
-        self.addCheckBox(CO2, 3, 2)
-        self.addCheckBox(PTH, 4, 2)
+        self.addCheckBox(RAD, 1, 4) #1, 2)
+        self.addCheckBox(AIR, 2, 4) #2, 2)
+        self.addCheckBox(CO2, 3, 4) #3, 2)
+        self.addCheckBox(PTH, 4, 4) #4, 2)
 
         # Create textbox
         #self.textbox = QLineEdit(self)
@@ -190,7 +191,7 @@ class App(QWidget):
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
-        self.config_layout.addWidget(checkbox)
+        self.config_layout.addWidget(checkbox, top, left) #top, left
 
     def rmvSensorTab(self, sensor):
         '''
@@ -256,38 +257,46 @@ class App(QWidget):
         '''
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
-        self.config_layout = QFormLayout()
+        self.config_layout =  QGridLayout() #QVBoxLayout() #QFormLayout()
+
+        self.spaceItem = QSpacerItem(150,10,QSizePolicy.Expanding)
+        self.config_layout.addItem(self.spaceItem, 1,2) #QSpacerItem(1,1)
+
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
         integration_text = QLabel("Integration time (sec):")
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
+        self.config_layout.addWidget(integration_text, 0,0) #1 
         integration_box = QComboBox()
+        self.config_layout.addWidget(integration_box, 0,1) #2
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
         integration_box.addItems(item_list)
         integration_box.setCurrentIndex(1)
         integration_box.currentIndexChanged.connect(
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
-        self.config_layout.addRow(integration_text,integration_box)
+        #self.config_layout.addRow(integration_text,integration_box)
 
         ndata_text = QLabel("# of Data Points to display:")
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
+        self.config_layout.addWidget(ndata_text, 1,0) #3
         ndata_box = QComboBox()
+        self.config_layout.addWidget(ndata_box, 1,1) #4
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
         ndata_box.addItems(item_list)
         ndata_box.setCurrentIndex(4)
         ndata_box.currentIndexChanged.connect(
                 lambda:self.setNData(str(ndata_box.currentText())))
-        self.config_layout.addRow(ndata_text,ndata_box)
+        #self.config_layout.addRow(ndata_text,ndata_box)
 
         checkbox = QCheckBox("Save Data")
         checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
-        self.config_layout.addWidget(checkbox)
+        self.config_layout.addWidget(checkbox, 2, 0) #5 
 
         self.group_text = QLabel("Group Number:")
         self.group_text.setFont(textfont)
@@ -298,7 +307,10 @@ class App(QWidget):
         self.group_box.addItems(item_list)
         self.group_box.currentIndexChanged.connect(
                 lambda:self.setGroupID(str(self.group_box.currentText())))
-        self.config_layout.addRow(self.group_text,self.group_box)
+        #self.config_layout.addRow(self.group_text,self.group_box)
+        self.config_layout.addWidget(self.group_text, 3,0) #6
+        self.config_layout.addWidget(self.group_box, 3,1) #7  
+        self.group_text.setAlignment(Qt.AlignLeft)
 
         self.ptext = QLabel("Period:")
         self.ptext.setFont(textfont)
@@ -309,7 +321,11 @@ class App(QWidget):
         self.pbox.addItems(item_list)
         self.pbox.currentIndexChanged.connect(
                 lambda:self.setPeriodID(str(self.pbox.currentText())))
-        self.config_layout.addRow(self.ptext,self.pbox)
+        #self.config_layout.addRow(self.ptext,self.pbox)
+        self.config_layout.addWidget(self.ptext, 4,0) #8 
+        self.config_layout.addWidget(self.pbox, 4,1) #9
+        self.ptext.setAlignment(Qt.AlignLeft) #extra
+        #self.config6.addWidget(self.ptext)
 
         self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
@@ -320,12 +336,19 @@ class App(QWidget):
         self.location_box.addItems(item_list)
         self.location_box.currentIndexChanged.connect(
                 lambda:self.setLocation(str(self.location_box.currentText())))
-        self.config_layout.addRow(self.location_text,self.location_box)
+        #self.config_layout.addRow(self.location_text,self.location_box)
+        self.config_layout.addWidget(self.location_text, 5,0) #10
+        self.config_layout.addWidget(self.location_box, 5,1) #11
+        self.location_text.setAlignment(Qt.AlignLeft)
+
+        self.sensorLabel = QLabel("Select Sensors") 
+        self.sensorLabel.setFont(textfont)
+        self.config_layout.addWidget(self.sensorLabel, 0, 4) 
 
         self.textbox = QLineEdit()
         self.setFilename()
         self.textbox.textChanged.connect(self.updateFilename)
-        self.config_layout.addWidget(self.textbox)
+        self.config_layout.addWidget(self.textbox, 6,1) #here
 
         self.selection_tab.setLayout(self.config_layout)
         self.group_text.close()
