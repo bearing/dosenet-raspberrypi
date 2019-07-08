@@ -1,6 +1,5 @@
 """
 Created on Fri Nov 9 2018
-
 @author: Ali Hanks
 """
 
@@ -140,6 +139,11 @@ class App(QWidget):
         #label.setAlignment(Qt.AlignCenter)
 
         # Create checkboxes for each sensor
+        self.addCheckBox(RAD, 1, 4) #1, 2)
+        self.addCheckBox(AIR, 2, 4) #2, 2)
+        self.addCheckBox(CO2, 3, 4) #3, 2)
+        self.addCheckBox(PTH, 4, 4) #4, 2)
+
         # Create textbox
         #self.textbox = QLineEdit(self)
         #self.layout.addWidget(self.textbox,ptop+1,pleft+pwidth+1,1,1)
@@ -176,9 +180,9 @@ class App(QWidget):
         self.layout.addWidget(button,top,left,height,width,Qt.AlignHCenter)
 
 
-    def addCheckBox(self, label, row, column):
+    def addCheckBox(self, label, top, left):
         '''
-        Add a checkbox to the main layout in the specified location (row,column)
+        Add a checkbox to the main layout in the specified location (top,left)
         '''
         checkbox = QCheckBox(label)
         textfont = QFont("Helvetica Neue", 18, QFont.Bold)
@@ -186,6 +190,7 @@ class App(QWidget):
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
+        self.config_layout.addWidget(checkbox, top, left) #top, left
 
     def rmvSensorTab(self, sensor):
         '''
@@ -251,7 +256,6 @@ class App(QWidget):
         '''
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
-        self.config_layout = QGridLayout()
         self.config_layout =  QGridLayout() #QVBoxLayout() #QFormLayout()
 
         self.spaceItem = QSpacerItem(150,10,QSizePolicy.Expanding)
@@ -261,13 +265,9 @@ class App(QWidget):
         integration_text = QLabel("Integration time (sec):")
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
-        self.config_layout.addWidget(integration_text, 1, 1)
         integration_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(integration_text, 0,0) #1 
         integration_box = QComboBox()
-
-        self.config_layout.addWidget(integration_box, 1, 2)
-
         self.config_layout.addWidget(integration_box, 0,1) #2
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
@@ -275,26 +275,20 @@ class App(QWidget):
         integration_box.setCurrentIndex(1)
         integration_box.currentIndexChanged.connect(
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
-
-        self.config_layout.addWidget(integration_text)
-        self.config_layout.addWidget(integration_box)
-
         #self.config_layout.addRow(integration_text,integration_box)
 
         ndata_text = QLabel("# of Data Points to display:")
         ndata_text.setFont(textfont)
-        self.config_layout.addWidget(ndata_text, 2, 1)
         ndata_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(ndata_text, 1,0) #3
         ndata_box = QComboBox()
+        self.config_layout.addWidget(ndata_box, 1,1) #4
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
         ndata_box.addItems(item_list)
         ndata_box.setCurrentIndex(4)
         ndata_box.currentIndexChanged.connect(
                 lambda:self.setNData(str(ndata_box.currentText())))
-        self.config_layout.addWidget(ndata_text)
-        self.config_layout.addWidget(ndata_box)
         #self.config_layout.addRow(ndata_text,ndata_box)
 
         checkbox = QCheckBox("Save Data")
@@ -305,17 +299,13 @@ class App(QWidget):
 
         self.group_text = QLabel("Group Number:")
         self.group_text.setFont(textfont)
-        self.config_layout.addWidget(self.group_text, 3, 1)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
-        self.config_layout.addWidget(self.group_box, 3, 2)
         item_list = ["1","2","3","4","5","6","7","8","9","10"]
         self.group_id = "1"
         self.group_box.addItems(item_list)
         self.group_box.currentIndexChanged.connect(
                 lambda:self.setGroupID(str(self.group_box.currentText())))
-        self.config_layout.addWidget(self.group_text)
-        self.config_layout.addWidget(self.group_box)
         #self.config_layout.addRow(self.group_text,self.group_box)
         self.config_layout.addWidget(self.group_text, 3,0) #6
         self.config_layout.addWidget(self.group_box, 3,1) #7  
@@ -323,36 +313,28 @@ class App(QWidget):
 
         self.ptext = QLabel("Period:")
         self.ptext.setFont(textfont)
-        self.config_layout.addWidget(self.ptext, 4, 1)
         self.ptext.setAlignment(Qt.AlignCenter)
         self.pbox = QComboBox()
-        self.config_layout.addWidget(self.pbox, 4, 2)
         item_list = ["1","2","3","4","5","6","7","8"]
         self.period_id = "1"
         self.pbox.addItems(item_list)
         self.pbox.currentIndexChanged.connect(
                 lambda:self.setPeriodID(str(self.pbox.currentText())))
-        self.config_layout.addWidget(self.ptext)
-        self.config_layout.addWidget(self.pbox)
         #self.config_layout.addRow(self.ptext,self.pbox)
         self.config_layout.addWidget(self.ptext, 4,0) #8 
         self.config_layout.addWidget(self.pbox, 4,1) #9
         self.ptext.setAlignment(Qt.AlignLeft) #extra
-        #self.config_layout.addWidget(self.ptext)
+        #self.config6.addWidget(self.ptext)
 
         self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
-        self.config_layout.addWidget(self.location_text, 5, 1)
         self.location_text.setAlignment(Qt.AlignCenter)
         self.location_box = QComboBox()
-        self.config_layout.addWidget(self.location_box, 5, 2)
         item_list = ["Inside","Outside","Test_1","Test_2","Test_3"]
         self.location = "Inside"
         self.location_box.addItems(item_list)
         self.location_box.currentIndexChanged.connect(
                 lambda:self.setLocation(str(self.location_box.currentText())))
-        self.config_layout.addWidget(self.location_text)
-        self.config_layout.addWidget(self.location_box)
         #self.config_layout.addRow(self.location_text,self.location_box)
         self.config_layout.addWidget(self.location_text, 5,0) #10
         self.config_layout.addWidget(self.location_box, 5,1) #11
