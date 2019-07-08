@@ -140,9 +140,9 @@ class App(QWidget):
 
         # Create checkboxes for each sensor
         self.addCheckBox(RAD, 1, 2)
-        self.addCheckBox(AIR,ptop+2,pleft+pwidth+1)
-        self.addCheckBox(CO2,ptop+3,pleft+pwidth+1)
-        self.addCheckBox(PTH,ptop+4,pleft+pwidth+1)
+        self.addCheckBox(AIR, 2, 2)
+        self.addCheckBox(CO2, 3, 2)
+        self.addCheckBox(PTH, 4, 2)
 
         # Create textbox
         #self.textbox = QLineEdit(self)
@@ -258,11 +258,13 @@ class App(QWidget):
         self.tabs.addTab(self.selection_tab, "Configure")
         self.config_layout = QFormLayout()
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
-        integration_text = QLabel("Integration time (sec):", 1, 1)
+        integration_text = QLabel("Integration time (sec):")
+        integration_text.setAlignment(1, 1)
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
         integration_box = QComboBox()
+        integration_box.setAlignment(1, 1)
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
         integration_box.addItems(item_list)
@@ -271,10 +273,12 @@ class App(QWidget):
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
         self.config_layout.addRow(integration_text,integration_box)
 
-        ndata_text = QLabel("# of Data Points to display:", 2, 1)
+        ndata_text = QLabel("# of Data Points to display:")
+        ndata_text.setAlignment(2, 1)
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
         ndata_box = QComboBox()
+        ndata_box.setAlignment(2, 1)
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
         ndata_box.addItems(item_list)
