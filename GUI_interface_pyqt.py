@@ -140,18 +140,6 @@ class App(QWidget):
         #label.setAlignment(Qt.AlignCenter)
 
         # Create checkboxes for each sensor
-<<<<<<< HEAD
-        self.addCheckBox(RAD, 1, 3)
-        self.addCheckBox(AIR, 2, 3)
-        self.addCheckBox(CO2, 3, 3)
-        self.addCheckBox(PTH, 4, 3)
-=======
-        self.addCheckBox(RAD, 1, 4) #1, 2)
-        self.addCheckBox(AIR, 2, 4) #2, 2)
-        self.addCheckBox(CO2, 3, 4) #3, 2)
-        self.addCheckBox(PTH, 4, 4) #4, 2)
->>>>>>> 4abe10f14d296e88ac2e582fe0c658b8e5eff4d5
-
         # Create textbox
         #self.textbox = QLineEdit(self)
         #self.layout.addWidget(self.textbox,ptop+1,pleft+pwidth+1,1,1)
