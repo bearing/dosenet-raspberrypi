@@ -289,27 +289,27 @@ class App(QWidget):
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox)
 
-        #self.group_text = QLabel("Group Number:")
-        #self.group_text.setFont(textfont)
-        #self.group_text.setAlignment(Qt.AlignCenter)
-        #self.group_box = QComboBox()
-        #item_list = ["1","2","3","4","5","6","7","8","9","10"]
-        #self.group_id = "1"
-        #self.group_box.addItems(item_list)
-        #self.group_box.currentIndexChanged.connect(
-        #        lambda:self.setGroupID(str(self.group_box.currentText())))
-        #self.config_layout.addRow(self.group_text,self.group_box)
+        self.group_text = QLabel("Group Number:")
+        self.group_text.setFont(textfont)
+        self.group_text.setAlignment(Qt.AlignCenter)
+        self.group_box = QComboBox()
+        item_list = ["1","2","3","4","5","6","7","8","9","10"]
+        self.group_id = "1"
+        self.group_box.addItems(item_list)
+        self.group_box.currentIndexChanged.connect(
+                lambda:self.setGroupID(str(self.group_box.currentText())))
+        self.config_layout.addRow(self.group_text,self.group_box)
 
-        #self.ptext = QLabel("Period:")
-        #self.ptext.setFont(textfont)
-        #self.ptext.setAlignment(Qt.AlignCenter)
-        #self.pbox = QComboBox()
-        #item_list = ["1","2","3","4","5","6","7","8"]
-        #self.period_id = "1"
-        #self.pbox.addItems(item_list)
-        #self.pbox.currentIndexChanged.connect(
-        #        lambda:self.setPeriodID(str(self.pbox.currentText())))
-        #self.config_layout.addRow(self.ptext,self.pbox)
+        self.ptext = QLabel("Period:")
+        self.ptext.setFont(textfont)
+        self.ptext.setAlignment(Qt.AlignCenter)
+        self.pbox = QComboBox()
+        item_list = ["1","2","3","4","5","6","7","8"]
+        self.period_id = "1"
+        self.pbox.addItems(item_list)
+        self.pbox.currentIndexChanged.connect(
+                lambda:self.setPeriodID(str(self.pbox.currentText())))
+        self.config_layout.addRow(self.ptext,self.pbox)
 
         self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
