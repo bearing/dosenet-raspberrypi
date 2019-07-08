@@ -259,12 +259,10 @@ class App(QWidget):
         self.config_layout = QFormLayout()
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
         integration_text = QLabel("Integration time (sec):")
-        integration_text.setAlignment(1, 1)
         textfont = QFont("Helvetica Neue", 16, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
         integration_box = QComboBox()
-        integration_box.setAlignment(1, 1)
         item_list = ["1","2","3","4","5","10","15","20","30","60","120","300"]
         self.integration_time = 2
         integration_box.addItems(item_list)
@@ -274,11 +272,9 @@ class App(QWidget):
         self.config_layout.addRow(integration_text,integration_box)
 
         ndata_text = QLabel("# of Data Points to display:")
-        ndata_text.setAlignment(2, 1)
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
         ndata_box = QComboBox()
-        ndata_box.setAlignment(2, 1)
         item_list = ["5","10","15","20","25","30","40","50","60"]
         self.ndata = 25
         ndata_box.addItems(item_list)
@@ -287,7 +283,7 @@ class App(QWidget):
                 lambda:self.setNData(str(ndata_box.currentText())))
         self.config_layout.addRow(ndata_text,ndata_box)
 
-        checkbox = QCheckBox("Save Data", 3, 1)
+        checkbox = QCheckBox("Save Data")
         checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
