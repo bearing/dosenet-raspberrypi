@@ -125,6 +125,7 @@ class App(QWidget):
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,1,1,1,3) #ptop,pleft,pheight,pwidth)
+        self.setCompTab()
         self.setSelectionTab()
         self.tabs.setCurrentIndex(1)
 
@@ -187,7 +188,7 @@ class App(QWidget):
         Add a checkbox to the main layout in the specified location (top,left)
         '''
         checkbox = QCheckBox(label)
-        textfont = QFont("Helvetica Neue", 18, QFont.Bold)
+        textfont = QFont("Helvetica Neue", 18)
 
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
@@ -249,6 +250,20 @@ class App(QWidget):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
+    def setCompTab(self):
+        self.comp_tab = QWidget()
+        self.tabs.addTab(self.comp_tab, "Compare")
+        self.comp_layout = QGridLayout()
+        self.comp_layout.setContentsMargins(30.,50.,30.,20.)
+
+        data_text = QLabel("What datasets would you like to compare?")
+        textfont = QFont("Helvetica Neue", 18)
+        data_text.setFont(textfont)
+        data_text.setAlignment(Qt.AlignLeft)
+        self.comp_layout.addWidget(data_text, 0, 0)
+
+        self.comp_tab.setLayout(self.comp_layout)
+
 
     def setSelectionTab(self):
         '''
@@ -256,22 +271,16 @@ class App(QWidget):
             - user inputs include parameters for data acquisition
             - option to save data with user info for setting a unique file-name
         '''
-
-        self.comp_tab = QWidget()
-        self.tabs.addTab(self.comp_tab, "Compare")
-        self.comp_layout = QGridLayout()
-        self.comp_layout.setContentsMargins(30.,50.,30.,20.)
-
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
-        self.config_layout =  QGridLayout() #QVBoxLayout() #QFormLayout()
+        self.config_layout = QGridLayout() #QVBoxLayout() #QFormLayout()
 
         self.spaceItem = QSpacerItem(150,10,QSizePolicy.Expanding)
         self.config_layout.addItem(self.spaceItem, 1,2) #QSpacerItem(1,1)
 
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
-        integration_text = QLabel("integration time (seconds):")
-        textfont = QFont("Helvetica Neue", 18, QFont.Bold)
+        integration_text = QLabel("Integration time (seconds):")
+        textfont = QFont("Helvetica Neue", 18)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(integration_text, 0,0) #1 
@@ -285,7 +294,7 @@ class App(QWidget):
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
         #self.config_layout.addRow(integration_text,integration_box)
 
-        ndata_text = QLabel("data points to display:")
+        ndata_text = QLabel("Data points to display:")
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(ndata_text, 1,0) #3
@@ -299,13 +308,13 @@ class App(QWidget):
                 lambda:self.setNData(str(ndata_box.currentText())))
         #self.config_layout.addRow(ndata_text,ndata_box)
 
-        checkbox = QCheckBox("save data?")
-        checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
+        checkbox = QCheckBox("Save data?")
+        checkbox.setFont(QFont("Helvetica Neue", 18))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox, 2, 0) #5 
 
-        self.group_text = QLabel("group number:")
+        self.group_text = QLabel("Group number:")
         self.group_text.setFont(textfont)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
@@ -319,7 +328,7 @@ class App(QWidget):
         self.config_layout.addWidget(self.group_box, 3,1) #7  
         self.group_text.setAlignment(Qt.AlignLeft)
 
-        self.ptext = QLabel("period:")
+        self.ptext = QLabel("Period:")
         self.ptext.setFont(textfont)
         self.ptext.setAlignment(Qt.AlignCenter)
         self.pbox = QComboBox()
@@ -334,7 +343,7 @@ class App(QWidget):
         self.ptext.setAlignment(Qt.AlignLeft) #extra
         #self.config6.addWidget(self.ptext)
 
-        self.location_text = QLabel("taking data inside or outside?")
+        self.location_text = QLabel("Taking data inside or outside?")
         self.location_text.setFont(textfont)
         self.location_text.setAlignment(Qt.AlignCenter)
         self.location_box = QComboBox()
@@ -348,8 +357,9 @@ class App(QWidget):
         self.config_layout.addWidget(self.location_box, 5,1) #11
         self.location_text.setAlignment(Qt.AlignLeft)
 
-        self.sensorLabel = QLabel("select sensors:") 
-        self.sensorLabel.setFont(textfont)
+        self.sensorLabel = QLabel("Select sensors:")
+        headerfont = QFont("Helvetica Neue", 18, QFont.Bold)
+        self.sensorLabel.setFont(headerfont)
         self.config_layout.addWidget(self.sensorLabel, 0, 4) 
 
         self.textbox = QLineEdit()
