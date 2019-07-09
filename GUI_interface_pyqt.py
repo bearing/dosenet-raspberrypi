@@ -16,6 +16,7 @@ import json
 import atexit
 import traceback
 import argparse
+import fnmatch
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
@@ -257,14 +258,39 @@ class App(QWidget):
         self.comp_layout = QGridLayout()
         self.comp_layout.setContentsMargins(30.,50.,30.,20.)
 
-        data_text = QLabel("What datasets would you like to compare?")
+        data_text1 = QLabel("I want to compare ")
         textfont = QFont("Helvetica Neue", 18)
-        data_text.setFont(textfont)
-        data_text.setAlignment(Qt.AlignLeft)
-        self.comp_layout.addWidget(data_text, 0, 0)
+        data_text1.setFont(textfont)
+        data_text1.setAlignment(Qt.AlignLeft)
+        self.comp_layout.addWidget(data_text1, 0, 0)
+        data_text2 = QLabel(" data taken in ")
+        data_text2.setFont(textfont)
+        data_text2.setAlignment(Qt.AlignLeft)
+        self.comp_layout.addWidget(data_text2, 0, 2)
 
+        data_types = ["air quality", "radiation", "carbon dioxide"]
+        months = ["January", "February", "March", "April", "May",
+                  "June", "July", "August", "September", "October", "November",
+                  "December"]
+        years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017",
+                 "2018", "2019"]
+
+        types_box = QComboBox()
+        self.comp_layout.addWidget(types_box, 0, 1)
+        types_box.addItems(data_types)
+        types_box.setCurrentIndex(0)
+
+        months_box = QComboBox()
+        self.comp_layout.addWidget(months_box, 0, 3)
+        months_box.addItems(months)
+        types_box.setCurrentIndex(0)
+
+        years_box = QComboBox()
+        self.comp_layout.addWidget(years_box, 0, 4)
+        years_box.addItems(years)
+        years_box.setCurrentIndex(0)
+    
         self.comp_tab.setLayout(self.comp_layout)
-
 
     def setSelectionTab(self):
         '''
