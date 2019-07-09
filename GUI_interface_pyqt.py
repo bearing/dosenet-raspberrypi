@@ -121,10 +121,12 @@ class App(QWidget):
                 "QTabBar {font-size: 18pt;}");
         tab_bar = QTabBar()
         tab_bar.setStyleSheet("QTabBar::tab { height: 25px; width: 150px;}")
+        
         self.tabs.setTabBar(tab_bar)
         ptop, pleft, pheight, pwidth = 0, 0, 12, 12
         self.layout.addWidget(self.tabs,1,1,1,3) #ptop,pleft,pheight,pwidth)
         self.setSelectionTab()
+        self.tabs.setCurrentIndex(1)
 
         # Create text label
         #label = QLabel('Select Sensors', self)
@@ -254,6 +256,12 @@ class App(QWidget):
             - user inputs include parameters for data acquisition
             - option to save data with user info for setting a unique file-name
         '''
+
+        self.comp_tab = QWidget()
+        self.tabs.addTab(self.comp_tab, "Compare")
+        self.comp_layout = QGridLayout()
+        self.comp_layout.setContentsMargins(30.,50.,30.,20.)
+
         self.selection_tab = QWidget()
         self.tabs.addTab(self.selection_tab, "Configure")
         self.config_layout =  QGridLayout() #QVBoxLayout() #QFormLayout()
@@ -262,8 +270,8 @@ class App(QWidget):
         self.config_layout.addItem(self.spaceItem, 1,2) #QSpacerItem(1,1)
 
         self.config_layout.setContentsMargins(30.,50.,30.,20.)
-        integration_text = QLabel("Integration time (sec):")
-        textfont = QFont("Helvetica Neue", 16, QFont.Bold)
+        integration_text = QLabel("integration time (seconds):")
+        textfont = QFont("Helvetica Neue", 18, QFont.Bold)
         integration_text.setFont(textfont)
         integration_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(integration_text, 0,0) #1 
@@ -277,7 +285,7 @@ class App(QWidget):
             lambda:self.setIntegrationTime(str(integration_box.currentText())))
         #self.config_layout.addRow(integration_text,integration_box)
 
-        ndata_text = QLabel("# of Data Points to display:")
+        ndata_text = QLabel("data points to display:")
         ndata_text.setFont(textfont)
         ndata_text.setAlignment(Qt.AlignLeft)
         self.config_layout.addWidget(ndata_text, 1,0) #3
@@ -291,13 +299,13 @@ class App(QWidget):
                 lambda:self.setNData(str(ndata_box.currentText())))
         #self.config_layout.addRow(ndata_text,ndata_box)
 
-        checkbox = QCheckBox("Save Data")
+        checkbox = QCheckBox("save data?")
         checkbox.setFont(QFont("Helvetica Neue", 18, QFont.Bold))
         checkbox.setChecked(False)
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox, 2, 0) #5 
 
-        self.group_text = QLabel("Group Number:")
+        self.group_text = QLabel("group number:")
         self.group_text.setFont(textfont)
         self.group_text.setAlignment(Qt.AlignCenter)
         self.group_box = QComboBox()
@@ -311,7 +319,7 @@ class App(QWidget):
         self.config_layout.addWidget(self.group_box, 3,1) #7  
         self.group_text.setAlignment(Qt.AlignLeft)
 
-        self.ptext = QLabel("Period:")
+        self.ptext = QLabel("period:")
         self.ptext.setFont(textfont)
         self.ptext.setAlignment(Qt.AlignCenter)
         self.pbox = QComboBox()
@@ -326,11 +334,11 @@ class App(QWidget):
         self.ptext.setAlignment(Qt.AlignLeft) #extra
         #self.config6.addWidget(self.ptext)
 
-        self.location_text = QLabel("Taking data inside or outside?")
+        self.location_text = QLabel("taking data inside or outside?")
         self.location_text.setFont(textfont)
         self.location_text.setAlignment(Qt.AlignCenter)
         self.location_box = QComboBox()
-        item_list = ["Inside","Outside","Test_1","Test_2","Test_3"]
+        item_list = ["Inside","Outside"]
         self.location = "Inside"
         self.location_box.addItems(item_list)
         self.location_box.currentIndexChanged.connect(
@@ -340,7 +348,7 @@ class App(QWidget):
         self.config_layout.addWidget(self.location_box, 5,1) #11
         self.location_text.setAlignment(Qt.AlignLeft)
 
-        self.sensorLabel = QLabel("Select Sensors") 
+        self.sensorLabel = QLabel("select sensors:") 
         self.sensorLabel.setFont(textfont)
         self.config_layout.addWidget(self.sensorLabel, 0, 4) 
 
@@ -357,7 +365,6 @@ class App(QWidget):
         self.textbox.close()
         self.location_text.close()
         self.location_box.close()
-
 
     def setSaveData(self,b):
         if b.isChecked() == True:
@@ -441,7 +448,7 @@ class App(QWidget):
 
         # Create value display
         self.data_display[sensor] = QLabel("")
-        textfont = QFont("Times", 16, QFont.Bold)
+        textfont = QFont("Helvetica Neue", 18, QFont.Bold)
         self.data_display[sensor].setFont(textfont)
         self.data_display[sensor].setStyleSheet(good_background)
         self.data_display[sensor].setAlignment(Qt.AlignCenter)
