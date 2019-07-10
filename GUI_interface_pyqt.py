@@ -288,6 +288,11 @@ class App(QWidget):
         self.comp_layout.addWidget(years_box, 0, 4)
         years_box.addItems(years)
         years_box.setCurrentIndex(0)
+
+        go_button = QPushButton("Go")
+        self.comp_layout.addWidget(go_button, 0, 5)
+        go_button_style = "background-color: #39c43e"
+        go_button.setStyleSheet(go_button_style)
     
         self.comp_tab.setLayout(self.comp_layout)
 
