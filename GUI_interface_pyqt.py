@@ -250,7 +250,7 @@ class App(QWidget):
     def setDisplayText(self, sensor):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
-
+        
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -290,7 +290,7 @@ class App(QWidget):
         years_box.setCurrentIndex(0)
 
         go_button = QPushButton("Go")
-        self.comp_layout.addWidget(go_button, 0, 5)
+        self.comp_layout.addWidget(go_button, 1,4)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
     
