@@ -257,7 +257,7 @@ class App(QWidget):
         self.comp_layout = QGridLayout()
         self.comp_layout.setContentsMargins(30.,50.,30.,20.)
 
-        data_text1 = QLabel("I want to compare ")
+        data_text1 = QLabel("I want to find ")
         textfont = QFont("Helvetica Neue", 18)
         data_text1.setFont(textfont)
         data_text1.setAlignment(Qt.AlignLeft)
