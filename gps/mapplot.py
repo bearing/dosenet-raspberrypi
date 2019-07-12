@@ -18,9 +18,9 @@ import time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pika
-from pylab import *
 from PyQt5.QtWidgets import *
 import sys
+from pylab import cm
 from Adafruit_BME280 import *
 import json
 import gps
@@ -43,7 +43,7 @@ def start_sensor(queue, sensor):
 	'''
 	Starts collecting air quality data.
 	'''
-	sendmsg(json.dumps({'id':sensor, 'cmd': "START"}), queue)
+	sendmsg(json.dumps({'id':sensor, 'cmd': 'START'}), queue)
 
 def get_queued_data(queue, sensor, time_delay):
 	'''
@@ -56,6 +56,8 @@ def get_queued_data(queue, sensor, time_delay):
 		return data['data'][1][0]
 	elif sensor == "CO2":
 		return data['data'][0]
+	elif sensor == 'GPS':
+		return [data['lat'], data['lon']]
 	elif sensor == 'Radiation':
 		counts = 0
 		for value in data['data']:
@@ -253,13 +255,12 @@ def get_coordinates(session):
 	'''
 	try:
 		report = session.next()
-		#if report['class'] == "TPV":
+#		if report['class'] == "TPV":
 		lat = getattr(report, 'lat', 0.0) #report.lat
 		lon = getattr(report, 'lon', 0.0) #report.lon
-		print("Success")
 		return lat, lon
 	except KeyError:
-		print("KeyError")
+		#print("KeyError")
 		pass
 	except KeyboardInterrupt:
 		quit()
@@ -289,6 +290,7 @@ def stop_systems(): ############################################################
 	stop_sensor('fromGUI_aq', 'Air Quality')
 	stop_sensor('fromGUI_d3s', 'Radiation')
 	stop_sensor('fromGUI_CO2', 'CO2')
+	stop_sensor('fromGUI_GPS','GPS')
 
 def popuptext(sensor_dict, sensor_chosen):
 	'''
@@ -304,24 +306,30 @@ def popuptext(sensor_dict, sensor_chosen):
 
 		popupv.append(str(sensor_dict[sensor][2]) + "<br>")
 			
-	popuptext = ''.join(popupv) # Joins the list of popup labels into a string
+	return ''.join(popupv) # Joins the list of popup labels into a string
 
 def markercolor(sensor_dict, sensor):
 	'''
 	Fetches color of marker corresponding to the colorbar
 	'''
 	cmap = cm.get_cmap('spectral',sensor_dict[sensor][1]-sensor_dict[sensor][0])
-	return matplotlib.colors.rgb2hex(cmap(int(sensor_dict[sensor][2]-sensor_dict[sensor][0]))[:3])
-
+	return mpl.colors.rgb2hex(cmap(int(sensor_dict[sensor][2]-sensor_dict[sensor][0]))[:3])
+	
 if __name__ == '__main__':
 	try: # needed so that in the case of an error, it doesn't take a lot of work to kill loose processes
 		#session = initialize_gps()
+		
+		#session = gps.gps("localhost","2947")
+		#session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+		
+		os.system('python gps_daq.py &')
+		
 		sensor_array = ('Air Quality PM 2.5 (ug/m3)','CO2 (ppm)', 'Humidity (%)', 'Pressure (Pa)','Radiation (cps)', 'Temperature (C)')
 		time_delay = get_time()
 		sensor_dict = establish_dict(time_delay)
 		out_file, results = create_file()
 		
-		location = folium.Map(location=[37.875830,-122.268459],zoom_start = 15) # Fetches chunk
+		location = folium.Map(location=[37.875381,-122.259019],zoom_start = 15) # Fetches chunk
 		location.save('testmap.html')
 
 		open_and_resize_window()
@@ -348,21 +356,22 @@ if __name__ == '__main__':
 			url = ('/home/pi/dosenet-raspberrypi/gps/colormap'+text.replace(" ", "_").replace("/", "_")+'.png')
 			FloatImage(url, bottom = 5, left = 4).add_to(location) 
 			
-			lat, lon = uniform(37.875830,37.878), uniform(-122.268459,-122.278)
+			#lat, lon = uniform(37.875830,37.878), uniform(-122.268459,-122.278)
 			
 			# Uncomment the following block and delete the preceeding when it is time to incorporate actual gps data
-			#lat, lon = get_coordinates(session)
+
+			coords = get_queued_data('toGUI_GPS', 'GPS', time_delay)
 			
 			for key in sensor_dict:
 				sensor_dict[key][2] = read_data(key)
 
 			for key in sensor_dict:
 				sensor_dict[key][3].show = (text == key)
-				folium.Circle(radius = 20, location=[lat,lon], popup = popuptext(sensor_dict, key), fill_color = markercolor(sensor_dict, key),color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key][3]) # Plot Circle
+				folium.Circle(radius = 20, location=coords, popup = popuptext(sensor_dict, key), fill_color = markercolor(sensor_dict, key),color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key][3]) # Plot Circle
 				location.save('testmap.html') # Saves map as html
 
 			os.system('xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+r') # Reloads the page
-			write_data(results, time.time(), lat, lon, sensor_dict)
+			write_data(results, time.time(), coords[0], coords[1], sensor_dict)
 			time.sleep(time_delay)
 	except:
 		stop_systems()
