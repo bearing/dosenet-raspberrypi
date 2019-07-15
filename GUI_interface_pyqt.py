@@ -251,11 +251,17 @@ class App(QWidget):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
-    def searchData(location, data_type, loc, month, year):
+    def searchData(self, location, data_type, loc, month, year):
+        found_files = QListWidget()
+
         for file in os.listdir(location):
-            if fnmatch.fnmatch(file, loc + '*') and fnmatch.fnmatch(file, "*" + year + "-" + month + "-" + data_type):
+            if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "*" + data_type + ".csv"):
                 found_files.addItem(file)
-  
+        if found_files.count() == 0:
+            found_files.addItem("no files found")
+
+        self.comp_layout.addWidget(found_files, 1, 0)
+
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -306,16 +312,13 @@ class App(QWidget):
         years_box.setCurrentIndex(0)
 
         go_button = QPushButton("Go")
-        self.comp_layout.addWidget(go_button, 1,4)
+        self.comp_layout.addWidget(go_button, 0, 7)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
-        go_button.clicked.connect(lambda:self.searchData('/home/pi/dosenet-raspberrypi/',
-                                                 data_types[types_box.currentText()],
-                                                 months[months_box.currentText()],
-                                                     years_box.currentText()))  
-        found_files = QListWidget()
-        self.comp_layout.addWidget(found_files, 0, 7)
-        #found_files.setRowStretch(0, 1)
+        go_button.clicked.connect(lambda:self.searchData('/Users/vaughnluthringer/Desktop/dosenet/newdata/',
+                                                 data_types[types_box.currentText()], loc_box.currentText(),
+                                                 str(months[months_box.currentText()]),
+                                                     str(years_box.currentText())))  
 
         self.comp_tab.setLayout(self.comp_layout)
 
