@@ -238,7 +238,6 @@ class App(QWidget):
         os.system(cmd)
 
 
-
     def sensorButtonState(self,b):
      if b.isChecked() == True:
         print("{} is selected".format(b.text()))
@@ -254,6 +253,13 @@ class App(QWidget):
 
     def searchData(self, location, data_type, loc, month, year):
         found_files = QListWidget()
+        comp_files = QListWidget()
+
+        textfont = QFont("Helvetica Neue", 18)
+        found_text = QLabel("Found files:")
+        comp_text = QLabel("Compare:")
+        found_text.setFont(textfont)
+        found_text.setFont(textfont)
 
         for file in os.listdir(location):
             if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "*" + data_type + ".csv"):
@@ -261,7 +267,8 @@ class App(QWidget):
         if found_files.count() == 0:
             found_files.addItem("no files found")
 
-        self.comp_layout.addWidget(found_files, 1, 0)
+        self.comp_layout.addWidget(found_text, 1, 0)
+        self.comp_layout.addWidget(found_files, 2, 0, 1, 2)
 
     def setCompTab(self):
         self.comp_tab = QWidget()
@@ -810,7 +817,6 @@ class App(QWidget):
             self.sensor_list[sensor][1] = pm1
             self.sensor_list[sensor][3] = pm25
             self.sensor_list[sensor][5] = pm10
-            #print(self.sensor_list[sensor])  
             self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
 
         if sensor==CO2:
