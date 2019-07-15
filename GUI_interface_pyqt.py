@@ -255,11 +255,11 @@ class App(QWidget):
         found_files = QListWidget()
         comp_files = QListWidget()
 
-        textfont = QFont("Helvetica Neue", 18)
+        #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
-        found_text.setFont(textfont)
-        found_text.setFont(textfont)
+        #found_text.setFont(textfont)
+        #found_text.setFont(textfont)
 
         for file in os.listdir(location):
             if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "*" + data_type + ".csv"):
@@ -269,6 +269,11 @@ class App(QWidget):
 
         self.comp_layout.addWidget(found_text, 1, 0)
         self.comp_layout.addWidget(found_files, 2, 0, 1, 2)
+
+        self.comp_layout.addWidget(comp_text, 1, 3)
+        self.comp_layout.addWidget(comp_files, 2, 3, 1, 3)
+
+        found_files.itemDoubleClicked.connect(lambda:comp_files.addItem(found_files.currentItem().text()))
 
     def setCompTab(self):
         self.comp_tab = QWidget()
@@ -323,6 +328,7 @@ class App(QWidget):
         self.comp_layout.addWidget(go_button, 0, 7)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
+        #pathway not applicable on DoseNet Device!!!
         go_button.clicked.connect(lambda:self.searchData('/Users/vaughnluthringer/Desktop/dosenet/newdata/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]),
