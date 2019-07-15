@@ -18,7 +18,7 @@ import traceback
 import argparse
 import fnmatch
 
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QListWidget
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
 from PyQt5.Qt import QHBoxLayout, QVBoxLayout # new imports
@@ -251,7 +251,12 @@ class App(QWidget):
     def setDisplayText(self, sensor):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
-        
+
+    def searchData(location, data_type, loc, month, year):
+        for file in os.listdir(location):
+            if fnmatch.fnmatch(file, loc + '*') and fnmatch.fnmatch(file, "*" + year + "-" + month + "-" + data_type):
+                found_files.addItem(file)
+  
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -263,30 +268,41 @@ class App(QWidget):
         data_text1.setFont(textfont)
         data_text1.setAlignment(Qt.AlignLeft)
         self.comp_layout.addWidget(data_text1, 0, 0)
-        data_text2 = QLabel(" data taken in ")
+        data_text2 = QLabel(" data taken ")
         data_text2.setFont(textfont)
         data_text2.setAlignment(Qt.AlignLeft)
         self.comp_layout.addWidget(data_text2, 0, 2)
+        data_text3 = QLabel(" in ")
+        data_text3.setFont(textfont)
+        data_text3.setAlignment(Qt.AlignLeft)
+        self.comp_layout.addWidget(data_text3, 0, 4)
 
-        data_types = ["air quality", "radiation", "carbon dioxide"]
-        months = ["January", "February", "March", "April", "May",
-                  "June", "July", "August", "September", "October", "November",
-                  "December"]
+        data_types = {"air quality": "DAQ", "radiation": "D3S", "carbon dioxide": "CO2"}
+        months = {"January": 1, "February": 2, "February": 3, "April": 4,
+                  "May": 5, "June": 6, "July": 7, "August": 8,
+                  "September": 9, "October": 10, "November": 11,
+                  "December": 12}
         years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017",
                  "2018", "2019"]
+        locs = ["Inside", "Outside"]
 
         types_box = QComboBox()
         self.comp_layout.addWidget(types_box, 0, 1)
-        types_box.addItems(data_types)
+        types_box.addItems(data_types.keys())
         types_box.setCurrentIndex(0)
 
+        loc_box = QComboBox()
+        self.comp_layout.addWidget(loc_box, 0, 3)
+        loc_box.addItems(locs)
+        loc_box.setCurrentIndex(0)
+
         months_box = QComboBox()
-        self.comp_layout.addWidget(months_box, 0, 3)
-        months_box.addItems(months)
+        self.comp_layout.addWidget(months_box, 0, 5)
+        months_box.addItems(months.keys())
         types_box.setCurrentIndex(0)
 
         years_box = QComboBox()
-        self.comp_layout.addWidget(years_box, 0, 4)
+        self.comp_layout.addWidget(years_box, 0, 6)
         years_box.addItems(years)
         years_box.setCurrentIndex(0)
 
@@ -294,7 +310,14 @@ class App(QWidget):
         self.comp_layout.addWidget(go_button, 1,4)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
-    
+        go_button.clicked.connect(lambda:self.searchData('/home/pi/dosenet-raspberrypi/',
+                                                 data_types[types_box.currentText()],
+                                                 months[months_box.currentText()],
+                                                     years_box.currentText()))  
+        found_files = QListWidget()
+        self.comp_layout.addWidget(found_files, 0, 7)
+        #found_files.setRowStretch(0, 1)
+
         self.comp_tab.setLayout(self.comp_layout)
 
     def setSelectionTab(self):
