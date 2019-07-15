@@ -150,7 +150,8 @@ class air_quality_DAQ():
         self.results.writerow(metadata)
 
     def write_data(self, data1, data2, data3):
-        this_time = time.time()
+        epoch_time = time.time()
+        this_time = time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(epoch_time))
         self.results.writerow([this_time] + data1[:] + data2[:] + data3[:])
 
     def close_file(self):
