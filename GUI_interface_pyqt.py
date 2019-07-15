@@ -238,6 +238,7 @@ class App(QWidget):
         os.system(cmd)
 
 
+
     def sensorButtonState(self,b):
      if b.isChecked() == True:
         print("{} is selected".format(b.text()))
@@ -809,6 +810,7 @@ class App(QWidget):
             self.sensor_list[sensor][1] = pm1
             self.sensor_list[sensor][3] = pm25
             self.sensor_list[sensor][5] = pm10
+            #print(self.sensor_list[sensor])  
             self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
 
         if sensor==CO2:
