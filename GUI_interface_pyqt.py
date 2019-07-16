@@ -314,7 +314,7 @@ class App(QWidget):
         #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
-        #howto_text = QLabel("Double-click items \n to move/remove them \n to/from the 'Compare' list")
+        howto_text = QLabel("Double-click items move/remove them")
 
         #found_text.setFont(textfont)
         #found_text.setFont(textfont)
@@ -328,6 +328,8 @@ class App(QWidget):
 
         self.comp_layout.addWidget(comp_text, 1, 3)
         self.comp_layout.addWidget(comp_files, 2, 3, 1, 3)
+
+        self.comp_layout.addWidget(howto_text, 3, 0, 1, 3)
 
         #self.comp_layout.addWidget(howto_text, 2, 7)
 
@@ -351,7 +353,7 @@ class App(QWidget):
             lambda:comp_files.addItem(found_files.currentItem().text()))
 
         comp_files.itemDoubleClicked.connect(
-            lambda:comp_files.removeItem(comp_files.currentItem().text()))
+            lambda:comp_files.takeItem(comp_files.currentRow()))
 
         self.comp_tab.setLayout(self.comp_layout)
 
