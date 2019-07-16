@@ -252,8 +252,9 @@ class App(QWidget):
         self.data_display[sensor].setText(full_text)
 
     def searchData(self, found, location, data_type, loc, month, year):
+        found.clear()
         for file in os.listdir(location):
-            if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "*" + data_type + ".csv"):
+            if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "-*" + data_type + ".csv"):
                 found.addItem(file)
         if found.count() == 0:
             found.addItem("no files found")
@@ -337,7 +338,7 @@ class App(QWidget):
         #pathway not applicable on DoseNet Device!!!
         go_button.clicked.connect(lambda:self.searchData(found_files, '/Users/vaughnluthringer/Desktop/dosenet/newdata/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
-                                                 str(months[months_box.currentText()]),
+                                                 str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
 
         #comp_cutton = QPushButton("Compare")
