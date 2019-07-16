@@ -16,6 +16,9 @@ import matplotlib.pyplot as plt
 
 import random
 
+import time
+graphtime = []
+
 class App(QMainWindow):
 
     def __init__(self):
@@ -51,12 +54,18 @@ class PlotCanvas(FigureCanvas):
 
         data = pd.read_csv('Outside_p1_g1_2019-06-14_AQ.csv')
         x_values = data.loc[:, 'Time']
+        for value in x_values:
+           newtime = time.strftime("%H:%M:%S", time.localtime(value))
+           graphtime.append(newtime)
         PM1 = data.loc[:, 'PM 1.0']
         PM2 = data.loc[:, 'PM 2.5']
         PM10 = data.loc[:, 'PM 10']
-        self.axes.plot(x_values, PM1, 'o')
-        self.axes.plot(x_values, PM2)
-        self.axes.plot(x_values, PM10)
+        self.axes.plot(graphtime, PM1, 'o')
+        self.axes.plot(graphtime, PM2)
+        self.axes.plot(graphtime, PM10)  
+       
+        #major_ticks = np.arange(0,101,20)
+        #self.axes.xticks(major_ticks)
 
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
