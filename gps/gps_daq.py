@@ -1,6 +1,7 @@
 import json
 import gps
 import pika
+import sys
 
 def sendmsgcoords(coords):
 	'''
@@ -23,7 +24,7 @@ def getmsg(queue):
 	channel = connection.channel()
 	channel.queue_declare(queue=queue)
 	
-	return channel.basic_get(queue=queue, auto_ack=True)[2]
+	return str(channel.basic_get(queue=queue, auto_ack=True)[2])
 
 def getlastmsg(queue, text):
 	'''
@@ -47,17 +48,23 @@ if __name__ == '__main__':
 		lat = 0
 		lon = 0
 		
-		text = getlastmsg('fromGUI_GPS', None)
+		text = ""
+		text = getmsg('fromGUI_GPS')
 		
-		if text == 'EXIT':
+		print text 
+
+		
+		if text == '{"cmd": "EXIT", "id": "GPS"}' or text == 'STOP':
+			print ("GPS daq has received command to exit")
 			break
 		
 		try:
 			report = session.next()
-			print report
+			#print report
 			if report['class'] == "TPV":
-				lat = report.lat #getattr(report, 'lat', 0.0) #report.lat
-				lon = report.lon #getattr(report, 'lon', 0.0) #report.lon
+				if hasattr(report,'lat'):
+					lat = report.lat #getattr(report, 'lat', 0.0) #report.lat
+					lon = report.lon #getattr(report, 'lon', 0.0) #report.lon
 		except KeyError:
 			pass
 		except KeyboardInterrupt:
