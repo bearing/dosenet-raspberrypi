@@ -49,7 +49,7 @@ class startbutton(QWidget):
 				self.fn = 'GPS_Data_'
 				for sensor in selected_sensors:
 					self.fn = self.fn + sensor[0]
-				self.fn = self.fn + '_' + str(int(time.time()))
+				self.fn = self.fn + '_' + str(time.ctime(time.time()))
 			sendmsg(self.fn, 'filename')
 			sendmsg(time_delay, 'time')
 			sendmsg(','.join(selected_sensors),'master_button') # Sends list of selected_sensors as comma seperated string
