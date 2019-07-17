@@ -51,6 +51,15 @@ class PlotCanvas(FigureCanvas):
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
 
+        data = pd.read_csv('Outside_p1_p1_2019-06-14_AQ.csv')
+        x_values = data.loc[:, 'Time']
+        PM1 = data.loc[:, 'PM 1.0']
+        PM2 = data.loc[: 'PM 2.5']
+        PM10 = data.loc[:, 'PM 10']
+        self.axes.plot(x_values, PM1, 'o')
+        self.axes.plot(x_values, PM2)
+        self.axes.plot(x_values, PM10)
+
         FigureCanvas.setSizePolicy(self,
                 QSizePolicy.Expanding,
                 QSizePolicy.Expanding)
@@ -59,7 +68,7 @@ class PlotCanvas(FigureCanvas):
 
 
     def plot(self):
-        data = pd.read_csv('Inside_p5_g5_2019-07-15_AQ.csv')
+        data = pd.read_csv('Outside_p1_g1_2019-07-14_AQ.csv')
         x_values = data.loc[:, 'Time']
         PM1 = data.loc[:, 'PM 1.0']
         PM2 = data.loc[:, 'PM 2.5']
@@ -75,10 +84,11 @@ class PlotCanvas(FigureCanvas):
         df.plot(kind = 'line', x = 'Time', y = 'PM 2.5', color = 'green', ax=ax)
         df.plot(kind = 'line', x = 'Time', y = 'PM 10', color = 'red', ax=ax)
         plt.show()
-        ax = self.figure.add_subplot(111)
-        ax.plot(data, 'r-')
+
+        #ax = self.figure.add_subplot(111)
+        #ax.plot(data, 'r-')
         #ax.set_title('PyQt Matplotlib Example')
-        self.draw()
+        #self.draw()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
