@@ -77,6 +77,8 @@ class App(QWidget):
         if not self.test_mode:
             import pika
 
+        self.setFixedSize(800,458)
+
         if windows:
             self.top = 80
             self.width = 1280
