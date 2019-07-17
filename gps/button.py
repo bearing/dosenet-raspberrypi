@@ -29,7 +29,7 @@ def start_gps():
 		running[0] = True
 		os.system('python mapplot.py &')
 	else:
-		print("How is this even possible") # funny
+		print("How is this even possible") # funny ha ha ha ha ha ha ha ha ha ha ha ha ...
 	
 
 def stop_gps():
@@ -49,7 +49,7 @@ def stop_gps():
 	elif not running[0]:
 		print("Already stopping")
 	else:
-		print("How is this even possible") # funny
+		print("How is this even possible") # low effort meme
 		
 def getmsg():
 	'''
