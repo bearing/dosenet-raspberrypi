@@ -18,7 +18,7 @@ import traceback
 import argparse
 import fnmatch
 
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QListWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QListWidget, QMessageBox
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
 from PyQt5.Qt import QHBoxLayout, QVBoxLayout # new imports
@@ -271,9 +271,27 @@ class App(QWidget):
 
         if b == False:
             comp.addItem(file)
-        
-    #def compData(comp_files, data_type):
-        #for (int i = 0; i < comp_files.count(); i++):
+
+    def getDataType(self, file):
+        dt = file.text()[len(file.text()) - 5:]
+
+        if dt == "O2":
+            dt = "CO2"
+        elif dt == "3S":
+            dt = "D3S"
+
+        return dt
+                  
+    def compData(self, comp, dt):
+        b = True
+        if comp.count() > 0:
+            for i in range(comp.count()):
+                if self.getDataType(comp.item(i)) != dt:
+                    b = False
+
+        if b == False:
+            self.cant_comp = QMessageBox.about(self, "Can't compare data",
+                                               "Please select files of the same data type")
             
     def setCompTab(self):
         self.comp_tab = QWidget()
@@ -344,7 +362,7 @@ class App(QWidget):
 
         self.comp_layout.addWidget(howto_text, 3, 0, 1, 3)
 
-        #self.comp_layout.addWidget(howto_text, 2, 7)
+        self.comp_layout.addWidget(howto_text, 2, 7)
 
         go_button = QPushButton("Go")
         self.comp_layout.addWidget(go_button, 1, 6)
@@ -356,11 +374,12 @@ class App(QWidget):
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
 
-        #comp_cutton = QPushButton("Compare")
-        #self.comp_layout.addWidget(comp_button, 3, 6)
-        #comp_button_style = "background-color: #a3d1ff"
-        #comp_button.setStyleSheet(comp_button_style)
-        #comp_button.clicked.connect(lambda:self.compData(comp_files, ))
+        comp_button = QPushButton("Compare")
+        self.comp_layout.addWidget(comp_button, 3, 6)
+        comp_button_style = "background-color: #D3D3D3"
+        comp_button.setStyleSheet(comp_button_style)
+        comp_button.clicked.connect(lambda:self.compData(comp_files,
+                                                         self.getDataType(comp_files.item(0))))
 
         found_files.itemDoubleClicked.connect(
             lambda:self.addFile(found_files.currentItem().text(), comp_files))
@@ -946,15 +965,6 @@ class App(QWidget):
         if not self.test_mode:
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
-
-        stopmsg = QMessageBox()
-        stopmsg.setIcon(QMessageBox.Information)
-        stopmsg.setWindowTitle("Stop")
-        stopmsg.setText("Data collection stopped")
-        if self.saveData == True:
-            stopmsg.setInformativeText("Data saved")
-        stopmsg.setStandardButtons(QMessageBox.Ok)
-        retval = stopmsg.exec_()
 
     @pyqtSlot()
     def clear(self):
