@@ -934,6 +934,15 @@ class App(QWidget):
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
 
+        stopmsg = QMessageBox()
+        stopmsg.setIcon(QMessageBox.Information)
+        stopmsg.setWindowTitle("Stop")
+        stopmsg.setText("Data collection stopped")
+        if self.saveData == True:
+            stopmsg.setInformativeText("Data saved")
+        stopmsg.setStandardButtons(QMessageBox.Ok)
+        retval = stopmsg.exec_()
+
     @pyqtSlot()
     def clear(self):
         '''
