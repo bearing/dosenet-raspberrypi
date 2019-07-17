@@ -74,7 +74,8 @@ def read_data (sensor):
 		return get_queued_data('toGUI_aq', 'Air Quality', time_delay)
 	elif sensor == sensor_array[1]:
 		return get_queued_data('toGUI_CO2','CO2',time_delay)
-	# All three values are read in for each value because the sensor is incapable of gathering pressure or humidity data before gathering temperature
+	# All three values are read in for each value because the sensor is incapable of gathering pressure or humidity data before gathering temperature data
+	
 	elif sensor == sensor_array[2]:
 		weather_port = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 		temp_data = weather_port.read_temperature() 
@@ -371,7 +372,7 @@ if __name__ == '__main__':
 				location.save('testmap.html') # Saves map as html
 
 			os.system('xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+r') # Reloads the page
-			write_data(results, time.time(), coords[0], coords[1], sensor_dict)
+			write_data(results, time.ctime(time.time()), coords[0], coords[1], sensor_dict) ##########################################################
 			time.sleep(time_delay)
 	except:
 		stop_systems()
@@ -379,4 +380,4 @@ if __name__ == '__main__':
 		traceback.print_exc()
 
 # Brought to you by big Al and Edward Lee
- 
+# Yo hit me up for that collab 
