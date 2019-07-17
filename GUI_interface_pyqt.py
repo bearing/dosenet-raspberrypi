@@ -259,9 +259,22 @@ class App(QWidget):
         if found.count() == 0:
             found.addItem("no files found")
 
-    #def compData(comp_data):
-        
+    def addFile(self, file, comp):
+        if comp.count() > 0:
+            for i in range(comp.count()):
+                if comp.item(i).text() == file:
+                    b = True
+                else:
+                    b = False
+        else:
+            b = False
 
+        if b == False:
+            comp.addItem(file)
+        
+    #def compData(comp_files, data_type):
+        #for (int i = 0; i < comp_files.count(); i++):
+            
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -345,12 +358,12 @@ class App(QWidget):
 
         #comp_cutton = QPushButton("Compare")
         #self.comp_layout.addWidget(comp_button, 3, 6)
-        #comp_button_style = "backgrounf-color: #a3d1ff"
+        #comp_button_style = "background-color: #a3d1ff"
         #comp_button.setStyleSheet(comp_button_style)
-        #comp_button.clicked.connect(lambda:self.compData(comp_files))
+        #comp_button.clicked.connect(lambda:self.compData(comp_files, ))
 
         found_files.itemDoubleClicked.connect(
-            lambda:comp_files.addItem(found_files.currentItem().text()))
+            lambda:self.addFile(found_files.currentItem().text(), comp_files))
 
         comp_files.itemDoubleClicked.connect(
             lambda:comp_files.takeItem(comp_files.currentRow()))
