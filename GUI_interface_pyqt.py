@@ -251,29 +251,16 @@ class App(QWidget):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
-    def searchData(self, location, data_type, loc, month, year):
-        found_files = QListWidget()
-        comp_files = QListWidget()
-
-        #textfont = QFont("Helvetica Neue", 18)
-        found_text = QLabel("Found files:")
-        comp_text = QLabel("Compare:")
-        #found_text.setFont(textfont)
-        #found_text.setFont(textfont)
-
+    def searchData(self, found, location, data_type, loc, month, year):
+        found.clear()
         for file in os.listdir(location):
-            if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "*" + data_type + ".csv"):
-                found_files.addItem(file)
-        if found_files.count() == 0:
-            found_files.addItem("no files found")
+            if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "-*" + data_type + ".csv"):
+                found.addItem(file)
+        if found.count() == 0:
+            found.addItem("no files found")
 
-        self.comp_layout.addWidget(found_text, 1, 0)
-        self.comp_layout.addWidget(found_files, 2, 0, 1, 2)
-
-        self.comp_layout.addWidget(comp_text, 1, 3)
-        self.comp_layout.addWidget(comp_files, 2, 3, 1, 3)
-
-        found_files.itemDoubleClicked.connect(lambda:comp_files.addItem(found_files.currentItem().text()))
+    #def compData(comp_data):
+        
 
     def setCompTab(self):
         self.comp_tab = QWidget()
@@ -324,15 +311,49 @@ class App(QWidget):
         years_box.addItems(years)
         years_box.setCurrentIndex(0)
 
+        #textfont = QFont("Helvetica Neue", 18)
+        found_text = QLabel("Found files:")
+        comp_text = QLabel("Compare:")
+        howto_text = QLabel("Double-click items move/remove them")
+
+        #found_text.setFont(textfont)
+        #found_text.setFont(textfont)
+        #howto_text.setFont(textfont)
+
+        comp_files = QListWidget()
+        found_files = QListWidget()
+
+        self.comp_layout.addWidget(found_text, 1, 0)
+        self.comp_layout.addWidget(found_files, 2, 0, 1, 2)
+
+        self.comp_layout.addWidget(comp_text, 1, 3)
+        self.comp_layout.addWidget(comp_files, 2, 3, 1, 3)
+
+        self.comp_layout.addWidget(howto_text, 3, 0, 1, 3)
+
+        #self.comp_layout.addWidget(howto_text, 2, 7)
+
         go_button = QPushButton("Go")
-        self.comp_layout.addWidget(go_button, 0, 7)
+        self.comp_layout.addWidget(go_button, 1, 6)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
         #pathway not applicable on DoseNet Device!!!
-        go_button.clicked.connect(lambda:self.searchData('/Users/vaughnluthringer/Desktop/dosenet/newdata/',
+        go_button.clicked.connect(lambda:self.searchData(found_files, '/Users/vaughnluthringer/Desktop/dosenet/newdata/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
-                                                 str(months[months_box.currentText()]),
-                                                     str(years_box.currentText())))  
+                                                 str(months[months_box.currentText()]).zfill(2),
+                                                     str(years_box.currentText())))
+
+        #comp_cutton = QPushButton("Compare")
+        #self.comp_layout.addWidget(comp_button, 3, 6)
+        #comp_button_style = "backgrounf-color: #a3d1ff"
+        #comp_button.setStyleSheet(comp_button_style)
+        #comp_button.clicked.connect(lambda:self.compData(comp_files))
+
+        found_files.itemDoubleClicked.connect(
+            lambda:comp_files.addItem(found_files.currentItem().text()))
+
+        comp_files.itemDoubleClicked.connect(
+            lambda:comp_files.takeItem(comp_files.currentRow()))
 
         self.comp_tab.setLayout(self.comp_layout)
 
@@ -912,6 +933,15 @@ class App(QWidget):
         if not self.test_mode:
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
+
+        stopmsg = QMessageBox()
+        stopmsg.setIcon(QMessageBox.Information)
+        stopmsg.setWindowTitle("Stop")
+        stopmsg.setText("Data collection stopped")
+        if self.saveData == True:
+            stopmsg.setInformativeText("Data saved")
+        stopmsg.setStandardButtons(QMessageBox.Ok)
+        retval = stopmsg.exec_()
 
     @pyqtSlot()
     def clear(self):

@@ -16,13 +16,16 @@ import matplotlib.pyplot as plt
 
 import random
 
+import time
+graphtime = []
+
 class App(QMainWindow):
 
     def __init__(self):
         super().__init__()
         self.left = 10
         self.top = 10
-        self.title = 'PyQt5 matplotlib example - pythonspot.com'
+        self.title = 'Test Graph'
         self.width = 640
         self.height = 400
         self.initUI()
@@ -34,8 +37,8 @@ class App(QMainWindow):
         m = PlotCanvas(self, width=5, height=4)
         m.move(0,0)
 
-        button = QPushButton('PyQt5 button', self)
-        button.setToolTip('This s an example button')
+        button = QPushButton('Analzye Data!', self)
+        button.setToolTip('This is an example button')
         button.move(500,0)
         button.resize(140,100)
 
@@ -45,30 +48,37 @@ class App(QMainWindow):
 class PlotCanvas(FigureCanvas):
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
+        self.plot()
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
 
+        data = pd.read_csv('Outside_p1_g1_2019-06-14_AQ.csv')
+        x_values = data.loc[:, 'Time']
+        for value in x_values:
+           newtime = time.strftime("%H:%M:%S", time.localtime(value))
+           graphtime.append(newtime)
+        PM1 = data.loc[:, 'PM 1.0']
+        PM2 = data.loc[:, 'PM 2.5']
+        PM10 = data.loc[:, 'PM 10']
+        self.axes.plot(graphtime, PM1, 'o')
+        self.axes.plot(graphtime, PM2)
+        self.axes.plot(graphtime, PM10)  
+       
+        #major_ticks = np.arange(0,101,20)
+        #self.axes.xticks(major_ticks)
+
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
-
-        data = pd.read_csv('Outside_p1_p1_2019-06-14_AQ.csv')
-        x_values = data.loc[:, 'Time']
-        PM1 = data.loc[:, 'PM 1.0']
-        PM2 = data.loc[: 'PM 2.5']
-        PM10 = data.loc[:, 'PM 10']
-        self.axes.plot(x_values, PM1, 'o')
-        self.axes.plot(x_values, PM2)
-        self.axes.plot(x_values, PM10)
 
         FigureCanvas.setSizePolicy(self,
                 QSizePolicy.Expanding,
                 QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
-        self.plot()
+        #self.plot()
 
 
     def plot(self):
-        data = pd.read_csv('Outside_p1_g1_2019-07-14_AQ.csv')
+        data = pd.read_csv('Outside_p1_g1_2019-06-14_AQ.csv')
         x_values = data.loc[:, 'Time']
         PM1 = data.loc[:, 'PM 1.0']
         PM2 = data.loc[:, 'PM 2.5']
