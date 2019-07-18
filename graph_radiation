@@ -1,4 +1,4 @@
-# test
+#graph radiation
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -46,6 +46,7 @@ class App(QMainWindow):
         self.show()
 
 test = []
+i = 0
 class PlotCanvas(FigureCanvas):
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -82,19 +83,17 @@ class PlotCanvas(FigureCanvas):
 
 
     def plot(self):
-        data = pd.read_csv('Outside_p1_g1_2019-06-14_AQ.csv')
-        x_values = data.loc[:, 'Time']
-        for value in x_values:
-          newtime = time.strftime("%H:%M:%S", time.localtime(value))
-          graphtime1.append(newtime)
-        PM1 = data.loc[:, 'PM 1.0']
-        PM2 = data.loc[:, 'PM 2.5']
-        PM10 = data.loc[:, 'PM 10']
+        data = pd.read_csv('Outside_p1_g1_2019-06-14_D3S.csv')
+        #x_values = data.loc[:, 'Time']
+        # CPS = 
+        print(data[0])
+        for i in range(10):
+          #newtime = time.strftime("%H:%M:%S", time.localtime(value))
+          graphtime1.append(i)
+          i = i + 1
         df = pd.DataFrame({
             'Time': graphtime1,
-            'PM 1.0': PM1,
-            'PM 2.5': PM2,
-            'PM 10': PM10
+            'CPS' : CPS
         })
         ax = plt.gca()
         df.plot(kind = 'line', x = 'Time', y = 'PM 1.0', color = 'blue', ax=ax)
@@ -111,5 +110,3 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())
-dosenetGUI
-# dosenetGUInew

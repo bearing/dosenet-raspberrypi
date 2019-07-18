@@ -149,7 +149,7 @@ class App(QWidget):
         self.addCheckBox(AIR, 2, 4) #2, 2)
         self.addCheckBox(CO2, 3, 4) #3, 2)
         self.addCheckBox(PTH, 4, 4) #4, 2)
-
+ 
         # Create textbox
         #self.textbox = QLineEdit(self)
         #self.layout.addWidget(self.textbox,ptop+1,pleft+pwidth+1,1,1)
@@ -329,7 +329,7 @@ class App(QWidget):
         self.comp_layout.setContentsMargins(30.,50.,30.,20.)
 
         data_text1 = QLabel("I want to find ")
-        textfont = QFont("Helvetica Neue", 18)
+        textfont = QFont("Helvetica Neue", 18) 
         data_text1.setFont(textfont)
         data_text1.setAlignment(Qt.AlignLeft)
         self.comp_layout.addWidget(data_text1, 0, 0)
@@ -995,7 +995,15 @@ class App(QWidget):
         if not self.test_mode:
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
-
+        stopmsg = QMessageBox()
+        stopmsg.setIcon(QMessageBox.Information)
+        stopmsg.setText('Data Collection Stopped')
+        if self.saveData:
+            stopmsg.setInformativeText('Data Saved')
+        stopmsg.setWindowTitle('Stop')
+        stopmsg.setStandardButtons(QMessageBox.Ok)
+        retval = stopmsg.exec_()
+ 
     @pyqtSlot()
     def clear(self):
         '''
