@@ -17,17 +17,19 @@ import atexit
 import traceback
 import argparse
 import fnmatch
+import pandas as pd
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QListWidget, QMessageBox
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
-from PyQt5.Qt import QHBoxLayout, QVBoxLayout # new imports
+from PyQt5.Qt import QHBoxLayout, QVBoxLayout #new imports
 from PyQt5.QtWidgets import QCheckBox
 from pyqtgraph import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QPalette, QFont, QTabWidget, QTabBar, QComboBox
 from PyQt5.QtGui import QStyleFactory
+import matplotlib.pyplot as plt
 
 import pyqtgraph as pg
 
@@ -273,7 +275,7 @@ class App(QWidget):
             comp.addItem(file)
 
     def getDataType(self, file):
-        dt = file.text()[len(file.text()) - 5:]
+        dt = file.text()[len(file.text()) - 6:len(file.text()) - 4]
 
         if dt == "O2":
             dt = "CO2"
@@ -281,6 +283,7 @@ class App(QWidget):
             dt = "D3S"
 
         return dt
+        print(dt)
                   
     def compData(self, comp, dt):
         b = True
@@ -292,7 +295,33 @@ class App(QWidget):
         if b == False:
             self.cant_comp = QMessageBox.about(self, "Can't compare data",
                                                "Please select files of the same data type")
-            
+        else:
+            if dt == "CO2":
+                self.plotCO2(comp)
+            #elif dt == "D3S":
+                #self.plotRAD(comp)
+            #else:
+                #self.plotAQ(comp)
+
+    
+    def plotCO2(self, datasets):
+
+        plt.title("Carbon Dioxide")
+        plt.xlabel("date and dime")
+        plt.ylabel("carbon dioxide (parts per million)")
+
+        for i in range(datasets.count()):
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + datasets.item(i).text()) as csv_file:
+                ds = pd.read_csv(csv_file, delimiter = ",")
+                
+                datetime = ds.loc[:, "Date and Time"]
+                co2 = ds.loc[:, "CO2 (ppm)"]
+
+                plt.plot(datetime, co2)
+
+        return plt.show()
+    
+
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -368,8 +397,9 @@ class App(QWidget):
         self.comp_layout.addWidget(go_button, 1, 6)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
-        #pathway not applicable on DoseNet Device!!!
-        go_button.clicked.connect(lambda:self.searchData(found_files, '/Users/vaughnluthringer/Desktop/dosenet/newdata/',
+        #pathway only applicable on Vaughn's laptop!!!
+        go_button.clicked.connect(lambda:self.searchData(found_files,
+                                                '/Users/vaughnluthringer/Desktop/dosenet/newdata/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
