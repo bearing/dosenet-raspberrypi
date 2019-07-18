@@ -1,1 +1,112 @@
 #graph radiation
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import sys
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, QPushButton
+from PyQt5.QtGui import QIcon
+
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+
+import random
+
+import time
+graphtime = []
+graphtime1 = []
+
+class App(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.left = 10
+        self.top = 10
+        self.title = 'Test Graph'
+        self.width = 640
+        self.height = 400
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        m = PlotCanvas(self, width=5, height=4)
+        m.move(0,0)
+
+        button = QPushButton('Analzye Data!', self)
+        button.setToolTip('This is an example button')
+        button.move(500,0)
+        button.resize(140,100)
+
+        self.show()
+
+test = []
+i = 0
+class PlotCanvas(FigureCanvas):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        self.plot()
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+
+        data = pd.read_csv('Outside_p1_g1_2019-06-14_AQ.csv')
+        x_values = data.loc[:, 'Time']
+        for value in x_values:
+           newtime = time.strftime("%H:%M:%S", time.localtime(value))
+           graphtime.append(newtime)
+           test.append(1)
+        PM1 = data.loc[:, 'PM 1.0']
+        PM2 = data.loc[:, 'PM 2.5']
+        PM10 = data.loc[:, 'PM 10']
+        self.axes.plot(graphtime, PM1, 'o')
+        self.axes.plot(graphtime, PM2)
+        self.axes.plot(graphtime, PM10)
+
+        #self.axes.set_xticks(graphtime) 
+        #self.axes.set_xticklabels(test)
+        #plt.setp(self.axes.get_xticklabels(), rotation = 30, horizontalalignment = 'right')      
+        self.axes.xaxis.set_major_locator(plt.MaxNLocator(6))
+
+        FigureCanvas.__init__(self, fig)
+        self.setParent(parent)
+
+        FigureCanvas.setSizePolicy(self,
+                QSizePolicy.Expanding,
+                QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+        #self.plot()
+
+
+    def plot(self):
+        data = pd.read_csv('Outside_p1_g1_2019-06-14_D3S.csv')
+        #x_values = data.loc[:, 'Time']
+        # CPS = 
+        print(data[0])
+        for i in range(10):
+          #newtime = time.strftime("%H:%M:%S", time.localtime(value))
+          graphtime1.append(i)
+          i = i + 1
+        df = pd.DataFrame({
+            'Time': graphtime1,
+            'CPS' : CPS
+        })
+        ax = plt.gca()
+        df.plot(kind = 'line', x = 'Time', y = 'PM 1.0', color = 'blue', ax=ax)
+        df.plot(kind = 'line', x = 'Time', y = 'PM 2.5', color = 'green', ax=ax)
+        df.plot(kind = 'line', x = 'Time', y = 'PM 10', color = 'red', ax=ax)
+        plt.show()
+
+        #ax = self.figure.add_subplot(111)
+        #ax.plot(data, 'r-')
+        #ax.set_title('PyQt Matplotlib Example')
+        #self.draw()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
