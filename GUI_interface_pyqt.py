@@ -100,6 +100,8 @@ class App(QWidget):
         self.time_data = {}
         self.saveData = False
         self.channels = np.arange(self.nbins, dtype=float) * 2.55
+
+        self.setFixedSize(800, 440)
         self.initUI()
 
     def initUI(self):
