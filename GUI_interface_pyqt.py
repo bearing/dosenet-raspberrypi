@@ -331,7 +331,7 @@ class App(QWidget):
         self.comp_layout.setContentsMargins(30.,50.,30.,20.)
 
         data_text1 = QLabel("I want to find ")
-        textfont = QFont("Helvetica Neue", 16) 
+        textfont = QFont("Helvetica Neue", 15) 
         data_text1.setFont(textfont)
         data_text1.setAlignment(Qt.AlignLeft)
         self.comp_layout.addWidget(data_text1, 0, 0)
