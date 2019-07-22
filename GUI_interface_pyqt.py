@@ -208,7 +208,7 @@ class App(QWidget):
 
 
     def startSensor(self, sensor):
-        fname = "/home/pi/data/" + self.file_prefix + '_' + \
+        fname = "/home/pi/data/" + self.file_name + '_' + \
                 str(dt.datetime.today()).split()[0]
         if sensor==AIR:
             py = 'python'
@@ -468,33 +468,33 @@ class App(QWidget):
         checkbox.stateChanged.connect(lambda:self.setSaveData(checkbox))
         self.config_layout.addWidget(checkbox, 2, 0) #5 
 
-        self.group_text = QLabel("Group number:")
-        self.group_text.setFont(textfont)
-        self.group_text.setAlignment(Qt.AlignCenter)
-        self.group_box = QComboBox()
-        item_list = ["1","2","3","4","5","6","7","8","9","10"]
-        self.group_id = "1"
-        self.group_box.addItems(item_list)
-        self.group_box.currentIndexChanged.connect(
-                lambda:self.setGroupID(str(self.group_box.currentText())))
+        #self.group_text = QLabel("Group number:")
+        #self.group_text.setFont(textfont)
+        #self.group_text.setAlignment(Qt.AlignCenter)
+        #self.group_box = QComboBox()
+        #item_list = ["1","2","3","4","5","6","7","8","9","10"]
+        #self.group_id = "1"
+        #self.group_box.addItems(item_list)
+        #self.group_box.currentIndexChanged.connect(
+                #lambda:self.setGroupID(str(self.group_box.currentText())))
         #self.config_layout.addRow(self.group_text,self.group_box)
-        self.config_layout.addWidget(self.group_text, 3,0) #6
-        self.config_layout.addWidget(self.group_box, 3,1) #7  
-        self.group_text.setAlignment(Qt.AlignLeft)
+        #self.config_layout.addWidget(self.group_text, 3,0) #6
+        #self.config_layout.addWidget(self.group_box, 3,1) #7  
+        #self.group_text.setAlignment(Qt.AlignLeft)
 
-        self.ptext = QLabel("Period:")
-        self.ptext.setFont(textfont)
-        self.ptext.setAlignment(Qt.AlignCenter)
-        self.pbox = QComboBox()
-        item_list = ["1","2","3","4","5","6","7","8"]
-        self.period_id = "1"
-        self.pbox.addItems(item_list)
-        self.pbox.currentIndexChanged.connect(
-                lambda:self.setPeriodID(str(self.pbox.currentText())))
+        #self.ptext = QLabel("Period:")
+        #self.ptext.setFont(textfont)
+        #self.ptext.setAlignment(Qt.AlignCenter)
+        #self.pbox = QComboBox()
+        #item_list = ["1","2","3","4","5","6","7","8"]
+        #self.period_id = "1"
+        #self.pbox.addItems(item_list)
+        #self.pbox.currentIndexChanged.connect(
+                #lambda:self.setPeriodID(str(self.pbox.currentText())))
         #self.config_layout.addRow(self.ptext,self.pbox)
-        self.config_layout.addWidget(self.ptext, 4,0) #8 
-        self.config_layout.addWidget(self.pbox, 4,1) #9
-        self.ptext.setAlignment(Qt.AlignLeft) #extra
+        #self.config_layout.addWidget(self.ptext, 4,0) #8 
+        #self.config_layout.addWidget(self.pbox, 4,1) #9
+        #self.ptext.setAlignment(Qt.AlignLeft) #extra
         #self.config6.addWidget(self.ptext)
 
         self.location_text = QLabel("Taking data inside or outside?")
@@ -504,12 +504,13 @@ class App(QWidget):
         item_list = ["Inside","Outside"]
         self.location = "Inside"
         self.location_box.addItems(item_list)
-        self.location_box.currentIndexChanged.connect(
-                lambda:self.setLocation(str(self.location_box.currentText())))
         #self.config_layout.addRow(self.location_text,self.location_box)
-        self.config_layout.addWidget(self.location_text, 5,0) #10
-        self.config_layout.addWidget(self.location_box, 5,1) #11
+        self.config_layout.addWidget(self.location_text, 4,0) #10
+        self.config_layout.addWidget(self.location_box, 4,1) #11
         self.location_text.setAlignment(Qt.AlignLeft)
+        self.location_box.currentIndexChanged.connect(
+            lambda:self.setFilename(str(self.location_box.currentText()),
+                                        str(self.textbox.text())))
 
         self.sensorLabel = QLabel("Select sensors:")
         headerfont = QFont("Helvetica Neue", 18, QFont.Bold)
@@ -517,15 +518,16 @@ class App(QWidget):
         self.config_layout.addWidget(self.sensorLabel, 0, 4) 
 
         self.textbox = QLineEdit()
-        self.setFilename()
-        self.textbox.textChanged.connect(self.updateFilename)
-        self.config_layout.addWidget(self.textbox, 6,1) #here
+        self.config_layout.addWidget(self.textbox, 5,1)
+        self.textbox.textChanged.connect(
+            lambda:self.setFilename(str(self.location_box.currentText()),
+                                        str(self.textbox.text())))
 
         self.selection_tab.setLayout(self.config_layout)
-        self.group_text.close()
-        self.group_box.close()
-        self.ptext.close()
-        self.pbox.close()
+        #self.group_text.close()
+        #self.group_box.close()
+        #self.ptext.close()
+        #self.pbox.close()
         self.textbox.close()
         self.location_text.close()
         self.location_box.close()
@@ -534,19 +536,19 @@ class App(QWidget):
         if b.isChecked() == True:
             print("Saving sensor data")
             self.saveData = True
-            self.group_text.show()
-            self.group_box.show()
-            self.ptext.show()
-            self.pbox.show()
+            #self.group_text.show()
+            #self.group_box.show()
+            #self.ptext.show()
+            #self.pbox.show()
             self.location_text.show()
             self.location_box.show()
             self.textbox.show()
         else:
             self.saveData = False
-            self.group_text.close()
-            self.group_box.close()
-            self.ptext.close()
-            self.pbox.close()
+            #self.group_text.close()
+            #self.group_box.close()
+            #self.ptext.close()
+            #self.pbox.close()
             self.location_text.close()
             self.location_box.close()
             self.textbox.close()
@@ -560,30 +562,30 @@ class App(QWidget):
         self.ndata = int(text)
 
 
-    def setGroupID(self,text):
-        self.group_id = text
-        self.setFilename()
+    #def setGroupID(self,text):
+        #self.group_id = text
+        #self.setFilename()
 
 
-    def setPeriodID(self,text):
-        self.period_id = text
-        self.setFilename()
+    #def setPeriodID(self,text):
+        #self.period_id = text
+        #self.setFilename()
 
 
-    def setLocation(self,text):
-        self.location = text
-        self.setFilename()
+    #def setLocation(self,text):
+        #self.location = text
+        #self.setFilename()
 
 
-    def updateFilename(self,text):
-        self.file_prefix = self.textbox.text()
+    def setFilename(self, loc, name):
+        self.file_name = loc + "_" + name
 
 
-    def setFilename(self):
-        self.file_prefix = '{}_p{}_g{}'.format(self.location,
-                                               self.period_id,
-                                               self.group_id)
-        self.textbox.setText(self.file_prefix)
+    #def setFilename(self):
+        #self.file_prefix = '{}_p{}_g{}'.format(self.location,
+                                               #self.period_id,
+                                               #self.group_id)
+        #self.textbox.setText(self.file_prefix)
 
 
     def addSensor(self, sensor):
