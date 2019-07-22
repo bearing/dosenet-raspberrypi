@@ -288,15 +288,22 @@ class App(QWidget):
         print(dt)
                   
     def compData(self, comp, dt):
-        b = True
+        s = True
+        f = True
+
         if comp.count() > 0:
             for i in range(comp.count()):
                 if self.getDataType(comp.item(i)) != dt:
-                    b = False
+                    s = False
+        else:
+            f = False
 
-        if b == False:
+        if s == False:
             self.cant_comp = QMessageBox.about(self, "Can't compare data",
                                                "Please select files of the same data type")
+        elif f == False:
+            self.no_files = QMessageBox.about(self, "Can't compare data",
+                                              "No files selected")
         else:
             if dt == "CO2":
                 self.plotCO2(comp)
@@ -411,7 +418,7 @@ class App(QWidget):
         comp_button_style = "background-color: #D3D3D3"
         comp_button.setStyleSheet(comp_button_style)
         comp_button.clicked.connect(lambda:self.compData(comp_files,
-                                                         self.getDataType(comp_files.item(0))))
+                                                         data_types[types_box.currentText()].zfill(2)))
 
         found_files.itemDoubleClicked.connect(
             lambda:self.addFile(found_files.currentItem().text(), comp_files))
