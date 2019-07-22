@@ -510,25 +510,36 @@ class App(QWidget):
         self.location_text.setAlignment(Qt.AlignLeft)
         self.location_box.currentIndexChanged.connect(
             lambda:self.setFilename(str(self.location_box.currentText()),
-                                        str(self.textbox.text())))
+                                        str(self.namebox.text())))
 
         self.sensorLabel = QLabel("Select sensors:")
         headerfont = QFont("Helvetica Neue", 18, QFont.Bold)
         self.sensorLabel.setFont(headerfont)
         self.config_layout.addWidget(self.sensorLabel, 0, 4) 
 
-        self.textbox = QLineEdit()
-        self.config_layout.addWidget(self.textbox, 5,1)
-        self.textbox.textChanged.connect(
+
+        self.nametext = QLabel("File name: ")
+        self.nametext.setFont(textfont)
+        self.config_layout.addWidget(self.nametext, 5, 0)
+
+        self.notename = QLabel("(no need to include inside/outside, data type," +
+                               " or date in file name)")
+        self.config_layout.addWidget(self.notename, 6, 0)
+        
+        self.namebox = QLineEdit()
+        self.config_layout.addWidget(self.namebox, 5,1)
+        self.namebox.textChanged.connect(
             lambda:self.setFilename(str(self.location_box.currentText()),
-                                        str(self.textbox.text())))
+                                        str(self.namebox.text())))
 
         self.selection_tab.setLayout(self.config_layout)
         #self.group_text.close()
         #self.group_box.close()
         #self.ptext.close()
         #self.pbox.close()
-        self.textbox.close()
+        self.namebox.close()
+        self.nametext.close()
+        self.notename.close()
         self.location_text.close()
         self.location_box.close()
 
@@ -542,7 +553,9 @@ class App(QWidget):
             #self.pbox.show()
             self.location_text.show()
             self.location_box.show()
-            self.textbox.show()
+            self.namebox.show()
+            self.nametext.show()
+            self.notename.show()
         else:
             self.saveData = False
             #self.group_text.close()
@@ -551,7 +564,7 @@ class App(QWidget):
             #self.pbox.close()
             self.location_text.close()
             self.location_box.close()
-            self.textbox.close()
+            self.namebox.close()
 
 
     def setIntegrationTime(self,text):
