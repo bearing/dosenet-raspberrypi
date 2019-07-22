@@ -396,7 +396,7 @@ class App(QWidget):
         self.comp_layout.addWidget(howto_text, 2, 7)
 
         go_button = QPushButton("Go")
-        self.comp_layout.addWidget(go_button, 1, 6)
+        self.comp_layout.addWidget(go_button, 0, 7)
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
@@ -407,7 +407,7 @@ class App(QWidget):
                                                      str(years_box.currentText())))
 
         comp_button = QPushButton("Compare")
-        self.comp_layout.addWidget(comp_button, 3, 6)
+        self.comp_layout.addWidget(comp_button, 3, 7)
         comp_button_style = "background-color: #D3D3D3"
         comp_button.setStyleSheet(comp_button_style)
         comp_button.clicked.connect(lambda:self.compData(comp_files,
