@@ -208,7 +208,6 @@ class App(QWidget):
         if not self.test_mode:
             self.kill_sensor(sensor)
 
-
     def startSensor(self, sensor):
         fname = "/home/pi/data/" + self.file_name + '_' + \
                 str(dt.datetime.today()).split()[0]
@@ -574,6 +573,8 @@ class App(QWidget):
             self.location_text.close()
             self.location_box.close()
             self.namebox.close()
+            self.nametext.close()
+            self.notename.close()
 
 
     def setIntegrationTime(self,text):
@@ -997,6 +998,7 @@ class App(QWidget):
 
     @pyqtSlot()
     def run(self):
+        self.selection_tab.setEnabled(False)
         time_sample = 50
         if self.test_mode:
             time_sample = 1000*self.integration_time
