@@ -65,7 +65,7 @@ class OLED_Manager(object):
         if sensor == 1:
             data = [random.randint(1,400), random.randint(1,20)]
         elif sensor == 2:
-            data = [random.randint(1000,1800000)/float(random.randint(30,300))]
+            data = [math.floor(round(random.randint(1000,1800000)/float(random.randint(30,300)),0))]
         elif sensor == 3:
             data = [round(random.uniform(0,6),2), round(random.uniform(0,6),2), round(random.uniform(0,5),2),
                 round(random.uniform(0,1000),2), round(random.uniform(0,500),2), round(random.uniform(0,150),2),
@@ -150,7 +150,7 @@ class OLED_Manager(object):
             self.oprint(self.det_col(doserate_data_disp), 6, doserate_data_disp)
         elif sid == 2:
             cps = data[0]
-            doserate, cpm = cps*60*0.0000427, math.floor(round(cps*60,0))
+            doserate, cpm = cps*60*0.0000427, cps*60
             cpm_disp = self.rad_disp[0]+str(cpm)
             doserate_data_disp = str(round(doserate,3))+self.rad_disp[2]
             self.oprint(self.disp_col[sid+1], 1, self.disp_names[sid+1])
