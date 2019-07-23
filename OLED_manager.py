@@ -25,7 +25,10 @@ class OLED_Manager(object):
 
         self.logfile = logfile
 
-        self.display_time = display_time
+        if display_time is None:
+            self.display_time = DEFAULT_DISPLAY_TIME_OLED
+        else:
+            self.display_time = display_time
 
         self.test = test
 
@@ -65,7 +68,7 @@ class OLED_Manager(object):
         if sensor == 1:
             data = [random.randint(1,400), random.randint(1,20)]
         elif sensor == 2:
-            data = [math.floor(round(random.randint(1000,1800000)/float(random.randint(30,300)),0))]
+            data = [math.floor(round(random.uniform(0.005,0.5)/float(random.randint(30,300)),0))]
         elif sensor == 3:
             data = [round(random.uniform(0,6),2), round(random.uniform(0,6),2), round(random.uniform(0,5),2),
                 round(random.uniform(0,1000),2), round(random.uniform(0,500),2), round(random.uniform(0,150),2),
