@@ -194,7 +194,7 @@ class OLED_Manager(object):
         time.sleep(self.display_time)
         self.oclear()
 
-    def run():
+    def run(self):
         """
         Runs the OLED as a consumer and displays data as it receives it.
         """
