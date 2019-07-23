@@ -136,7 +136,6 @@ class OLED_Manager(object):
         timestr = self.disp_names[1] + datetime.datetime.now().strftime('%I:%M:%S%p')
         self.oprint(self.disp_col[1], 2, timestr)
         self.oprint(0,3,'---------------------')
-        self.vprint(1, data)
 
         if sid == 1:
             cpm, cpm_err = data[0], round(data[1],2)
@@ -212,7 +211,7 @@ class OLED_Manager(object):
             self.display_time = 30
             for sensor in range(0,5):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
-                data = {'id': sensor+1, 'data': self.create_test_data(sensor)}
+                data = {'id': sensor+1, 'data': self.create_test_data(sensor+1)}
                 self.vprint(1, "The randomized data is: "+str(data['data']))
                 self.vprint(1, "Now pretending to send data to RabbitMQ Queue")
                 time.sleep(1)
