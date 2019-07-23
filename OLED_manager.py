@@ -148,7 +148,7 @@ class OLED_Manager(object):
             self.oprint(self.det_col(doserate_data_disp), 6, doserate_data_disp)
         elif sid == 2:
             cps = data[0]
-            doserate, cpm = cps*60*0.0000427, cps*60
+            doserate, cpm = cps*60*0.0000427, math.floor(round(cps*60,0))
             cpm_disp = self.rad_disp[0]+str(cpm)
             doserate_data_disp = str(round(doserate,3))+self.rad_disp[2]
             self.oprint(self.disp_col[sid+1], 1, self.disp_names[sid+1])
