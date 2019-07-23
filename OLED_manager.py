@@ -115,7 +115,7 @@ class OLED_Manager(object):
         """
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
 
-    def det_col(disp_str):
+    def det_col(self, disp_str):
         """
         This function calculates the optimal starting pixel to
         center the display text on the OLED screen.
@@ -123,7 +123,7 @@ class OLED_Manager(object):
         disp_col = int(math.floor(3*(21-len(disp_str))))
         return disp_col
 
-    def display_data(sid, data):
+    def display_data(self, sid, data):
         """
         This function uses the sensor type to determine how to
         display given data then prints it to the OLED screen.
