@@ -211,7 +211,7 @@ class OLED_Manager(object):
             self.display_time = 30
             for sensor in range(0,5):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
-                data = {'id': sensor, 'data': create_test_data(sensor)}
+                data = {'id': sensor, 'data': self.create_test_data(sensor)}
                 self.vprint(1, "The randomized data is: "+str(data['data']))
                 self.callback(None, None, None, data)
             self.vprint(1, "Testing complete, make sure all data was displayed properly.")
