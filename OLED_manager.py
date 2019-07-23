@@ -213,7 +213,15 @@ class OLED_Manager(object):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
                 data = {'id': sensor, 'data': self.create_test_data(sensor)}
                 self.vprint(1, "The randomized data is: "+str(data['data']))
-                self.callback(None, None, body=data)
+                self.vprint(1, "Now pretending to send data to RabbitMQ Queue")
+                time.sleep(1)
+                self.vprint(
+                    1, "Received data at: {}".format(datetime.datetime.now().strftime("%H:%M:%S")))
+                self.vprint(2, "The id is: {}".format(data['id']))
+                self.vprint(2, "The data is: {}".format(data['data']))
+                self.display_data(data['id'],data['data'])
+                time.sleep(self.display_time)
+                self.oclear()
             self.vprint(1, "Testing complete, make sure all data was displayed properly.")
 
 if __name__ == '__main__':
