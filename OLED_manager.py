@@ -180,7 +180,7 @@ class OLED_Manager(object):
         else:
             self.oprint(self.disp_col[7], 1, self.disp_names[7])
 
-    def callback(channel, method_frame, header_frame, body):
+    def callback(self, channel, method_frame, header_frame, body):
         """
         This function automatically runs whenever the running consumer
         instance receives a data packet.
