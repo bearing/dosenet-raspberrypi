@@ -136,6 +136,7 @@ class OLED_Manager(object):
         timestr = self.disp_names[1] + datetime.datetime.now().strftime('%I:%M:%S%p')
         self.oprint(self.disp_col[1], 2, timestr)
         self.oprint(0,3,'---------------------')
+        self.vprint(1, data)
 
         if sid == 1:
             cpm, cpm_err = data[0], round(data[1],2)
