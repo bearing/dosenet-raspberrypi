@@ -25,6 +25,8 @@ class OLED_Manager(object):
 
         self.logfile = logfile
 
+        self.display_time = display_time
+
         self.test = test
 
         if self.test:
