@@ -222,6 +222,7 @@ class OLED_Manager(object):
                 self.display_data(data['id'],data['data'])
                 time.sleep(self.display_time)
                 self.oclear()
+                self.vprint(1,'--------------------')
             self.vprint(1, "Testing complete, make sure all data was displayed properly.")
 
 if __name__ == '__main__':
