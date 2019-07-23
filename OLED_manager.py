@@ -211,7 +211,7 @@ class OLED_Manager(object):
             self.display_time = 30
             for sensor in range(0,5):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
-                data = {'id': sensor, 'data': self.create_test_data(sensor)}
+                data = {'id': sensor+1, 'data': self.create_test_data(sensor)}
                 self.vprint(1, "The randomized data is: "+str(data['data']))
                 self.vprint(1, "Now pretending to send data to RabbitMQ Queue")
                 time.sleep(1)
