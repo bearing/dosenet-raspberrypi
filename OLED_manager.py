@@ -189,7 +189,10 @@ class OLED_Manager(object):
         """
         self.vprint(
             1, "Received data at: {}".format(datetime.datetime.now().strftime("%H:%M:%S")))
-        data = json.loads(body)
+        if not self.test:
+            data = json.loads(body)
+        else:
+            data = body
         self.vprint(2, "The id is: {}".format(data['id']))
         self.vprint(2, "The data is: {}".format(data['data']))
         self.display_data(data['id'],data['data'])
