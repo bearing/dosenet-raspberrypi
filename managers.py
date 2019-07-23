@@ -505,6 +505,10 @@ class Base_Manager(object):
                     self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
 
     def oled_send(self, data):
+        """
+        Sends data to the RabbitMQ queue 'toOLED' which is being
+        read by the OLED_Manager instance and displayed to a connected screen.
+        """
         connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toOLED')
@@ -514,6 +518,9 @@ class Base_Manager(object):
         connection.close()
 
     def oled_receive(self):
+        """
+        Undefined for now but might be useful in the future for logging?
+        """
         pass
 
     def handle_data(self, this_start, this_end, spectra):

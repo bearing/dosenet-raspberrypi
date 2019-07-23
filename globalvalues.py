@@ -47,6 +47,7 @@ DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_LOGFILE_AQ = '/home/pi/debug.log_AQ'
 DEFAULT_LOGFILE_CO2 = '/home/pi/debug.log_CO2'
 DEFAULT_LOGFILE_WEATHER = '/home/pi/debug.log_weather'
+DEFAULT_LOGFILE_OLED = '/home/pi/debug.log_oled'
 DEFAULT_LOGFILES = [DEFAULT_LOGFILE, DEFAULT_LOGFILE_D3S, DEFAULT_LOGFILE_AQ, DEFAULT_LOGFILE_CO2, DEFAULT_LOGFILE_WEATHER]
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
@@ -130,6 +131,8 @@ ANSI_CYAN = '\033[36m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
 GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
+
+DEFAULT_DISPLAY_TIME_OLED = 25
 
 """
 Command line output statements used in the data-handlers
