@@ -83,11 +83,17 @@ class PlotCanvas(FigureCanvas):
 
 
     def plot(self):
-        data = pd.read_csv('Outside_p1_g1_2019-06-14_D3S.csv')
+        data1 = pd.read_csv('Outside_p1_g1_2019-06-14_D3S.csv')
         #x_values = data.loc[:, 'Time']
         # CPS = 
-        print(data[0])
-        for i in range(10):
+        #print(data1.iloc[0])
+        #print(len(data1))
+        #print(len(data1.iloc[0]))
+        newdata1 = np.sum(data1, axis = 1)
+        print(newdata1)
+        CPS = newdata1
+        print(CPS)
+        for i in range(68):
           #newtime = time.strftime("%H:%M:%S", time.localtime(value))
           graphtime1.append(i)
           i = i + 1
@@ -95,10 +101,10 @@ class PlotCanvas(FigureCanvas):
             'Time': graphtime1,
             'CPS' : CPS
         })
-        ax = plt.gca()
-        df.plot(kind = 'line', x = 'Time', y = 'PM 1.0', color = 'blue', ax=ax)
-        df.plot(kind = 'line', x = 'Time', y = 'PM 2.5', color = 'green', ax=ax)
-        df.plot(kind = 'line', x = 'Time', y = 'PM 10', color = 'red', ax=ax)
+        #ax = plt.gca()
+        df.plot(kind = 'line', x = 'Time', y = 'CPS', color = 'blue')
+        #df.plot(kind = 'line', x = 'Time', y = 'PM 2.5', color = 'green', ax=ax)
+        #df.plot(kind = 'line', x = 'Time', y = 'PM 10', color = 'red', ax=ax)
         plt.show()
 
         #ax = self.figure.add_subplot(111)
