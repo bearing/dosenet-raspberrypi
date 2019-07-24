@@ -322,7 +322,7 @@ class App(QWidget, object):
 
         return dt
                   
-    def compData(self, comp, dt):
+    def compData(self, comp, dt, pm):
         s = True
         f = True
 
@@ -343,7 +343,7 @@ class App(QWidget, object):
             if dt == "CO2":
                 self.plotCO2(comp)
             elif dt == "AQ":
-                self.plotAQ(comp)
+                self.plotAQ(comp, pm)
             #else:
                 #self.plotRAD(comp)
         
@@ -365,7 +365,7 @@ class App(QWidget, object):
 
         return plt.show()
 
-    def plotAQ(self, datasets):
+    def plotAQ(self, datasets, pm):
 
         plt.title("Air Quality")
         plt.xlabel("time")
@@ -377,13 +377,9 @@ class App(QWidget, object):
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
                 time = ds.loc[:, "Time"]
-                pm1 = ds.loc[:, 'PM 1.0']
-                pm25 = ds.loc[:, 'PM 2.5']
-                pm10 = ds.loc[:, 'PM 10']
+                pm_tograph = ds.loc[:, pm]
 
-                plt.plot(time, pm1)
-                plt.plot(time, pm25)
-                plt.plot(time, pm10)
+                plt.plot(time, pm_tograph)
 
         return plt.show()
         
@@ -456,6 +452,13 @@ class App(QWidget, object):
         self.pm_layout.addWidget(self.select_pm, 0, 0)
         self.select_pm.hide()
 
+        if self.pm1.isChecked():
+            pm = self.pm1.text()
+        elif self.pm25.isChecked():
+            pm = self.pm25.text()
+        else:
+            pm = self.pm10.text()
+
         #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
@@ -492,7 +495,7 @@ class App(QWidget, object):
         comp_button_style = "background-color: #D3D3D3"
         comp_button.setStyleSheet(comp_button_style)
         comp_button.clicked.connect(lambda:self.compData(comp_files,
-                                                         data_types[types_box.currentText()]))
+                                                         data_types[types_box.currentText()], pm))
 
 
         found_files.itemDoubleClicked.connect(
