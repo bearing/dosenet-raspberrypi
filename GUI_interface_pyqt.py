@@ -18,16 +18,17 @@ import traceback
 import argparse
 import fnmatch
 import pandas as pd
+import pylab
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QListWidget, QMessageBox
-from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel
+from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel, QRadioButton
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
 from PyQt5.Qt import QHBoxLayout, QVBoxLayout #new imports
 from PyQt5.QtWidgets import QCheckBox
 from pyqtgraph import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot, Qt
-from PyQt5.QtGui import QPalette, QFont, QTabWidget, QTabBar, QComboBox
+from PyQt5.QtGui import QPalette, QFont, QTabWidget, QTabBar, QComboBox, QBrush, QImage
 from PyQt5.QtGui import QStyleFactory
 import matplotlib.pyplot as plt
 
@@ -68,7 +69,14 @@ def mouseMoved(evt):
         vLine.setPos(mousePoint.x())
         hLine.setPos(mousePoint.y())
 
-class App(QWidget):
+#class sscButton(object):
+    #def __init__(self, label, row, column, color):
+        #button = QPushButton(label)
+        #self.layout.addWidget(checkbox, row, column)
+        #button_style = "background-color: " + color
+        #button.setStyleSheet(button_style)
+
+class App(QWidget, object):
 
     def __init__(self, nbins=4096, test=False, windows=False, **kwargs):
         super().__init__()
@@ -76,6 +84,12 @@ class App(QWidget):
         self.left = 0
         self.test_mode = test
         self.windows = windows
+
+        bg = QImage("dosenet.png")
+        palette = QPalette()
+        palette.setBrush(10, QBrush(bg))
+        self.setPalette(palette)
+        
         if not self.test_mode:
             import pika
 
@@ -111,7 +125,6 @@ class App(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.initLayout()
         self.setLayout(self.layout)
-
 
     def initLayout(self):
         # Create Grid layout
@@ -157,36 +170,48 @@ class App(QWidget):
         #self.layout.addWidget(self.textbox,ptop+1,pleft+pwidth+1,1,1)
         #self.textbox.setAlignment(Qt.AlignCenter)
 
-        # Create push button
-        self.addButton('Start',self.run, 2,1,1,1, "#39c43e") #ptop+8,pleft+pwidth+1,1,1,"#66B2FF")
-        self.addButton('Stop',self.stop, 2,2,1,1, "#de4545") #ptop+9,pleft+pwidth+1,1,1,"#FF6666")
-        self.addButton('Clear',self.clear, 2,3,1,1, "#a3d1ff") #ptop+10,pleft+pwidth+1,1,1,"#E0E0E0")
+        #Create start, stop, clear button
+        start_button = QPushButton("Start")
+        self.layout.addWidget(start_button, 2, 1)
+        start_button_style = "background-color: #39c43e"
+        start_button.setStyleSheet(start_button_style)
+        start_button.clicked.connect(lambda: self.run(start_button))
 
+        stop_button = QPushButton("Stop")
+        self.layout.addWidget(stop_button, 2, 2)
+        stop_button_style = "background-color: #de4545"
+        stop_button.setStyleSheet(stop_button_style)
+        stop_button.clicked.connect(lambda: self.stop(stop_button, clear_button))
 
-    def addButton(self,label,method,top,left,height,width,color):
-        '''
-        Add a button to the main layout
-        Inputs: label,
-                method: button action function,
-                location: top,left
-                size: height,width
-                color: background color for the button
-        '''
-        button = QPushButton(label, self)
-        style_sheet_text = "background-color: "+color+";"+\
-                           "border-style: outset;"+\
-                           "border-width: 2px;"+\
-                           "border-radius: 2px;"+\
-                           "border-color: beige;"+\
-                           "font: bold 20px;"+\
-                           "min-width: 6em;"+\
-	                   "color: color"
+        clear_button = QPushButton("Clear")
+        self.layout.addWidget(clear_button, 2, 3)
+        clear_button_style = "background-color: #a3d1ff"
+        clear_button.setStyleSheet(clear_button_style)
+        clear_button.clicked.connect(lambda: self.clear())        
+
+    #def addButton(self,label,method,top,left,height,width,color):
+        #'''
+        #Add a button to the main layout
+        #Inputs: label,
+                #method: button action function,
+                #location: top,left
+                #size: height,width
+                #color: background color for the button
+        #'''
+        #button = QPushButton(label, self)
+        #style_sheet_text = "background-color: "+color+";"+\
+                           #"border-style: outset;"+\
+                           #"border-width: 2px;"+\
+                           #"border-radius: 2px;"+\
+                           #"border-color: beige;"+\
+                           #"font: bold 20px;"+\
+                           #"min-width: 6em;"+\
+	                   #"color: color"
                            #"padding: 2px;"
 
-        button.setStyleSheet(style_sheet_text)
-        button.clicked.connect(method)
-        self.layout.addWidget(button,top,left,height,width,Qt.AlignHCenter)
-
+        #button.setStyleSheet(style_sheet_text)
+        #button.clicked.connect(method)
+        #self.layout.addWidget(button,top,left,height,width,Qt.AlignHCenter)
 
     def addCheckBox(self, label, top, left):
         '''
@@ -240,15 +265,13 @@ class App(QWidget):
         print(cmd)
         os.system(cmd)
 
-
     def sensorButtonState(self,b):
-     if b.isChecked() == True:
-        print("{} is selected".format(b.text()))
-        self.addSensor(b.text())
-     else:
-        print("{} is deselected".format(b.text()))
-        self.rmvSensorTab(b.text())
-
+        if b.isChecked() == True:
+            print("{} is selected".format(b.text()))
+            self.addSensor(b.text())
+        else:
+            print("{} is deselected".format(b.text()))
+            self.rmvSensorTab(b.text())
 
     def setDisplayText(self, sensor):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
@@ -275,6 +298,18 @@ class App(QWidget):
         if b == False:
             comp.addItem(file)
 
+    def displayPM(self, comp):
+        if comp.count() > 0 and self.getDataType(comp.item(0)) == "AQ":
+            self.pm1.show()
+            self.pm25.show()
+            self.pm10.show()
+            self.select_pm.show()
+        else:
+            self.pm1.hide()
+            self.pm25.hide()
+            self.pm10.hide()
+            self.select_pm.hide()
+    
     def getDataType(self, file):
         dt = file.text()[len(file.text()) - 6:len(file.text()) - 4]
 
@@ -282,9 +317,10 @@ class App(QWidget):
             dt = "CO2"
         elif dt == "3S":
             dt = "D3S"
+        else:
+            dt = "AQ"
 
         return dt
-        print(dt)
                   
     def compData(self, comp, dt):
         s = True
@@ -306,20 +342,20 @@ class App(QWidget):
         else:
             if dt == "CO2":
                 self.plotCO2(comp)
-            #elif dt == "D3S":
-                #self.plotRAD(comp)
+            elif dt == "AQ":
+                self.plotAQ(comp)
             #else:
-                #self.plotAQ(comp)
-
-    
+                #self.plotRAD(comp)
+        
     def plotCO2(self, datasets):
 
         plt.title("Carbon Dioxide")
-        plt.xlabel("date and dime")
+        plt.xlabel("date and time")
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + datasets.item(i).text()) as csv_file:
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +
+                      datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
                 datetime = ds.loc[:, "Date and Time"]
@@ -328,8 +364,29 @@ class App(QWidget):
                 plt.plot(datetime, co2)
 
         return plt.show()
-    
 
+    def plotAQ(self, datasets):
+
+        plt.title("Air Quality")
+        plt.xlabel("time")
+        plt.ylabel("µg/m^3")
+
+        for i in range(datasets.count()):
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +
+                      datasets.item(i).text()) as csv_file:
+                ds = pd.read_csv(csv_file, delimiter = ",")
+
+                time = ds.loc[:, "Time"]
+                pm1 = ds.loc[:, 'PM 1.0']
+                pm25 = ds.loc[:, 'PM 2.5']
+                pm10 = ds.loc[:, 'PM 10']
+
+                plt.plot(time, pm1)
+                plt.plot(time, pm25)
+                plt.plot(time, pm10)
+
+        return plt.show()
+        
     def setCompTab(self):
         self.comp_tab = QWidget()
         self.tabs.addTab(self.comp_tab, "Compare")
@@ -350,7 +407,7 @@ class App(QWidget):
         data_text3.setAlignment(Qt.AlignLeft)
         self.comp_layout.addWidget(data_text3, 0, 4)
 
-        data_types = {"air quality": "DAQ", "radiation": "D3S", "carbon dioxide": "CO2"}
+        data_types = {"air quality": "AQ", "radiation": "D3S", "carbon dioxide": "CO2"}
         months = {"January": 1, "February": 2, "February": 3, "April": 4,
                   "May": 5, "June": 6, "July": 7, "August": 8,
                   "September": 9, "October": 10, "November": 11,
@@ -379,6 +436,26 @@ class App(QWidget):
         years_box.addItems(years)
         years_box.setCurrentIndex(0)
 
+        self.pm_layout = QGridLayout()
+        self.comp_layout.addLayout(self.pm_layout, 4, 7)
+
+        self.pm1 = QRadioButton("PM 1.0")
+        self.pm1.setChecked(True)
+        self.pm_layout.addWidget(self.pm1, 1, 0)
+        self.pm1.hide()
+
+        self.pm25 = QRadioButton("PM 2.5")
+        self.pm_layout.addWidget(self.pm25, 2, 0)
+        self.pm25.hide()
+
+        self.pm10 = QRadioButton("PM 10")
+        self.pm_layout.addWidget(self.pm10, 3, 0)
+        self.pm10.hide()
+
+        self.select_pm = QLabel("Select a\nparticle size:")
+        self.pm_layout.addWidget(self.select_pm, 0, 0)
+        self.select_pm.hide()
+
         #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
@@ -391,15 +468,13 @@ class App(QWidget):
         comp_files = QListWidget()
         found_files = QListWidget()
 
-        self.comp_layout.addWidget(found_text, 1, 0)
-        self.comp_layout.addWidget(found_files, 2, 0, 1, 2)
+        self.comp_layout.addWidget(found_text, 2, 0)
+        self.comp_layout.addWidget(found_files, 3, 0, 2, 2)
 
-        self.comp_layout.addWidget(comp_text, 1, 3)
-        self.comp_layout.addWidget(comp_files, 2, 3, 1, 3)
+        self.comp_layout.addWidget(comp_text, 2, 3)
+        self.comp_layout.addWidget(comp_files, 3, 3, 2, 3)
 
-        self.comp_layout.addWidget(howto_text, 3, 0, 1, 3)
-
-        self.comp_layout.addWidget(howto_text, 2, 7)
+        self.comp_layout.addWidget(howto_text, 5, 0)
 
         go_button = QPushButton("Go")
         self.comp_layout.addWidget(go_button, 0, 7)
@@ -413,17 +488,20 @@ class App(QWidget):
                                                      str(years_box.currentText())))
 
         comp_button = QPushButton("Compare")
-        self.comp_layout.addWidget(comp_button, 3, 7)
+        self.comp_layout.addWidget(comp_button, 2, 7)
         comp_button_style = "background-color: #D3D3D3"
         comp_button.setStyleSheet(comp_button_style)
         comp_button.clicked.connect(lambda:self.compData(comp_files,
-                                                         data_types[types_box.currentText()].zfill(2)))
+                                                         data_types[types_box.currentText()]))
+
 
         found_files.itemDoubleClicked.connect(
             lambda:self.addFile(found_files.currentItem().text(), comp_files))
+        found_files.itemDoubleClicked.connect(lambda: self.displayPM(comp_files))
 
         comp_files.itemDoubleClicked.connect(
             lambda:comp_files.takeItem(comp_files.currentRow()))
+        comp_files.itemDoubleClicked.connect(lambda: self.displayPM(comp_files))
 
         self.comp_tab.setLayout(self.comp_layout)
 
@@ -617,7 +695,6 @@ class App(QWidget):
         self.setSensorText(sensor)
         if not self.test_mode:
             self.startSensor(sensor)
-
 
     def setSensorTab(self, sensor):
         '''
@@ -997,7 +1074,8 @@ class App(QWidget):
                 message = receive_queue_data()
 
     @pyqtSlot()
-    def run(self):
+    def run(self, button):
+        button.setEnabled(False)
         self.selection_tab.setEnabled(False)
         time_sample = 50
         if self.test_mode:
@@ -1013,19 +1091,21 @@ class App(QWidget):
         self.timer.start(time_sample)
 
     @pyqtSlot()
-    def stop(self):
+    def stop(self, stop, clear):
         '''
         Send STOP command to all sensors
             - functionally a pause in displaying/recording data
         '''
+        stop.setEnabled(False)
+        clear.setEnabled(False)
         if not self.test_mode:
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
         stopmsg = QMessageBox()
         stopmsg.setIcon(QMessageBox.Information)
-        stopmsg.setText('Data Collection Stopped')
+        stopmsg.setText('Data collection stopped')
         if self.saveData:
-            stopmsg.setInformativeText('Data Saved')
+            stopmsg.setInformativeText('Data saved')
         stopmsg.setWindowTitle('Stop')
         stopmsg.setStandardButtons(QMessageBox.Ok)
         retval = stopmsg.exec_()
@@ -1071,6 +1151,7 @@ class App(QWidget):
             print("Sending EXIT command to all active sensors")
             send_queue_cmd('EXIT',self.sensor_list)
             time.sleep(2)
+
 
 
 #-------------------------------------------------------------------------------
