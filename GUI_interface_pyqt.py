@@ -322,7 +322,14 @@ class App(QWidget, object):
 
         return dt
                   
-    def compData(self, comp, dt, pm):
+    def compData(self, comp, dt):
+        if self.pm1.isChecked():
+            pm = self.pm1.text()
+        elif self.pm25.isChecked():
+            pm = self.pm25.text()
+        else:
+            pm = self.pm10.text()
+
         s = True
         f = True
 
@@ -367,7 +374,7 @@ class App(QWidget, object):
 
     def plotAQ(self, datasets, pm):
 
-        plt.title("Air Quality")
+        plt.title(pm)
         plt.xlabel("time")
         plt.ylabel("µg/m^3")
 
@@ -452,13 +459,6 @@ class App(QWidget, object):
         self.pm_layout.addWidget(self.select_pm, 0, 0)
         self.select_pm.hide()
 
-        if self.pm1.isChecked():
-            pm = self.pm1.text()
-        elif self.pm25.isChecked():
-            pm = self.pm25.text()
-        else:
-            pm = self.pm10.text()
-
         #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
@@ -495,7 +495,7 @@ class App(QWidget, object):
         comp_button_style = "background-color: #D3D3D3"
         comp_button.setStyleSheet(comp_button_style)
         comp_button.clicked.connect(lambda:self.compData(comp_files,
-                                                         data_types[types_box.currentText()], pm))
+                                                         data_types[types_box.currentText()]))
 
 
         found_files.itemDoubleClicked.connect(
