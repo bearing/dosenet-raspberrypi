@@ -175,9 +175,10 @@ class App(QWidget, object):
         self.layout.addWidget(start_button, 2, 1)
         start_button_style = "background-color: #39c43e"
         start_button.setStyleSheet(start_button_style)
-        start_button.clicked.connect(lambda: self.run(start_button))
+        start_button.clicked.connect(lambda: self.run(stop_button))
 
         stop_button = QPushButton("Stop")
+        stop_button.setEnabled(False)
         self.layout.addWidget(stop_button, 2, 2)
         stop_button_style = "background-color: #de4545"
         stop_button.setStyleSheet(stop_button_style)
@@ -1078,7 +1079,7 @@ class App(QWidget, object):
 
     @pyqtSlot()
     def run(self, button):
-        button.setEnabled(False)
+        button.setEnabled(True) 
         self.selection_tab.setEnabled(False)
         time_sample = 50
         if self.test_mode:
@@ -1100,7 +1101,7 @@ class App(QWidget, object):
             - functionally a pause in displaying/recording data
         '''
         stop.setEnabled(False)
-        clear.setEnabled(False)
+        #clear.setEnabled(False)
         if not self.test_mode:
             send_queue_cmd('STOP',self.sensor_list)
         self.timer.stop()
