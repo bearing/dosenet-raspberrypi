@@ -444,7 +444,7 @@ class App(QWidget, object):
             while lastYear > 2017:
                 lastYear = int(lastYear) - 1
                 years.append(str(lastYear))
-            years = sorted(years)
+            years = sorted(years, reverse = True)
              
         types_box = QComboBox()
         self.comp_layout.addWidget(types_box, 0, 1)
