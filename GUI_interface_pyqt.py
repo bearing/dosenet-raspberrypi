@@ -433,10 +433,19 @@ class App(QWidget, object):
                   "May": 5, "June": 6, "July": 7, "August": 8,
                   "September": 9, "October": 10, "November": 11,
                   "December": 12}
-        years = ["2011", "2012", "2013", "2014", "2015", "2016", "2017",
-                 "2018", "2019"]
+        years = ["2011", "2012", "2013", "2014", "2015", "2016"]
         locs = ["Inside", "Outside"]
-
+        
+        epoch_time = time.time()
+        currentYear = time.strftime("%Y", time.localtime(epoch_time))
+        if currentYear not in years:
+            years.append(currentYear)
+            lastYear = int(currentYear)
+            while lastYear > 2017:
+                lastYear = int(lastYear) - 1
+                years.append(str(lastYear))
+            years = sorted(years)
+             
         types_box = QComboBox()
         self.comp_layout.addWidget(types_box, 0, 1)
         types_box.addItems(data_types.keys())
