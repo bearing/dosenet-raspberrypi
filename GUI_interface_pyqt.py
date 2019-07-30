@@ -58,6 +58,10 @@ hLine = pg.InfiniteLine(angle=0, movable=False)
 global ex
 global proxy
 
+radCheck = False
+airCheck = False
+co2Check = False
+
 def mouseMoved(evt):
     global ex
     pos = evt[0]  ## using signal proxy turns arguments into a tuple
@@ -223,7 +227,7 @@ class App(QWidget, object):
 
         checkbox.setFont(textfont)
         checkbox.setChecked(False)
-        checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox))
+        checkbox.stateChanged.connect(lambda:self.sensorButtonState(checkbox, label))
         self.config_layout.addWidget(checkbox, top, left) #top, left
 
     def rmvSensorTab(self, sensor):
@@ -266,14 +270,27 @@ class App(QWidget, object):
         print(cmd)
         os.system(cmd)
 
-    def sensorButtonState(self,b):
+    def sensorButtonState(self,b,label):
+        global radCheck, airCheck, co2Check
         if b.isChecked() == True:
             print("{} is selected".format(b.text()))
             self.addSensor(b.text())
+            if label == 'Radiation':
+                radCheck = True
+                print(radCheck)
+            if label == 'Air Quality':
+                airCheck = True
+            if label == 'CO2':
+                co2Check = True
         else:
             print("{} is deselected".format(b.text()))
             self.rmvSensorTab(b.text())
-
+            if label == 'Radiation':
+                radCheck = False
+            if label == 'Air Quality':
+                airCheck = False
+            if label == 'CO2':
+                co2Check = False
     def setDisplayText(self, sensor):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
@@ -1079,20 +1096,28 @@ class App(QWidget, object):
 
     @pyqtSlot()
     def run(self, button):
-        button.setEnabled(True) 
-        self.selection_tab.setEnabled(False)
-        time_sample = 50
-        if self.test_mode:
-            time_sample = 1000*self.integration_time
-        print("Starting data collection")
-        # Only set start time the first time user clicks start
-        if self.start_time is None:
-            self.start_time = float(format(float(time.time()), '.2f'))
-        if not self.test_mode:
-            send_queue_cmd('START',self.sensor_list)
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.updatePlots)
-        self.timer.start(time_sample)
+        if radCheck or airCheck or co2Check:       
+            button.setEnabled(True) 
+            self.selection_tab.setEnabled(False)
+            time_sample = 50
+            if self.test_mode:
+                time_sample = 1000*self.integration_time
+            print("Starting data collection")
+            # Only set start time the first time user clicks start
+            if self.start_time is None:
+                self.start_time = float(format(float(time.time()), '.2f'))
+            if not self.test_mode:
+                send_queue_cmd('START',self.sensor_list)
+            self.timer = QtCore.QTimer()
+            self.timer.timeout.connect(self.updatePlots)
+            self.timer.start(time_sample)
+        else:
+            selectmsg = QMessageBox()
+            selectmsg.setIcon(QMessageBox.Warning)
+            selectmsg.setText('No sensors selected')
+            selectmsg.setWindowTitle('Select Sensor Type')
+            selectmsg.setStandardButtons(QMessageBox.Ok)
+            retval = selectmsg.exec_() 
 
     @pyqtSlot()
     def stop(self, stop, clear):
