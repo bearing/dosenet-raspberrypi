@@ -429,7 +429,7 @@ class App(QWidget, object):
         self.comp_layout.addWidget(data_text3, 0, 4)
 
         data_types = {"air quality": "AQ", "radiation": "D3S", "carbon dioxide": "CO2"}
-        months = {"January": 1, "February": 2, "February": 3, "April": 4,
+        months = {"January": 1, "February": 2, "March": 3, "April": 4,
                   "May": 5, "June": 6, "July": 7, "August": 8,
                   "September": 9, "October": 10, "November": 11,
                   "December": 12}
