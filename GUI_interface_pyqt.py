@@ -631,6 +631,7 @@ class App(QWidget, object):
 
         self.notename = QLabel("(no need to include inside/outside, data type," +
                                " or date in file name)")
+        self.notename.setFont(QtGui.QFont('Consolas', 10))
         self.config_layout.addWidget(self.notename, 6, 0)
         
         self.namebox = QLineEdit()
