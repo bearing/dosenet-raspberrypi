@@ -117,6 +117,7 @@ def establish_dict():
 	Establishes dictionary of data points.
 	'''
 	sensor_dict = {}
+	radiationRunning = False
 	
 	for sensor in active_sensors:
 		if sensor == 'Air Quality PM 2.5 (ug/m3)':
@@ -137,11 +138,23 @@ def establish_dict():
 				
 		elif sensor == 'Radiation (cps)':
 			sensor_dict['Radiation (cps)'] = {'min': 0, 'max':100, 'fg': '','val':0}			
-			os.system('sudo python D3S_rabbitmq_DAQ.py -i ' + str(time_delay) + ' &')
-			sendmsg('Radiation', 'START', 'fromGUI')
+		
+		elif sensor == 'Radiation Bi (cps)':
+			sensor_dict['Radiation Bi (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
+			
+		elif sensor == 'Radiation K (cps)':
+			sensor_dict['Radiation K (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
+			
+		elif sensor == 'Radiation Tl (cps)':
+			sensor_dict['Radiation Tl (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
 			
 		elif sensor == 'Temperature (C)':
 			sensor_dict['Temperature (C)'] = {'min': 15, 'max':30, 'fg': '','val':0}
+	
+		if not radiationRunning and sensor in ['Radiation (cps)', 'Radiation Bi (cps)', 'Radiation K (cps)', 'Radiation Tl (cps)']:
+			os.system('sudo python D3S_rabbitmq_DAQ.py -i ' + str(time_delay) + ' &')
+			sendmsg('Radiation', 'START', 'fromGUI')
+			radiationRunning = True
 	
 	time.sleep(5)
 	
@@ -157,17 +170,44 @@ def read_data():
 		sensor_label = data['id']
 		
 		if sensor_label == "Air Quality":
-			sensor_dict[sensor_label + ' PM 2.5 (ug/m3)']['val'] = data['data'][1][0]
+			sensor_dict['Air Quality PM 2.5 (ug/m3)']['val'] = data['data'][1][0]
 		elif sensor_label == "CO2":
-			sensor_dict[sensor_label + ' (ppm)']['val'] = data['data'][0]
+			sensor_dict['CO2 (ppm)']['val'] = data['data'][0]
 		elif sensor_label == "Radiation":
 			global spectrum
 			spectrum = data['data']
-			counts = 0
-			for value in data['data']:
-				counts = counts + value 
-			counts = counts/float(time_delay)
-			sensor_dict[sensor_label + ' (cps)']['val'] = counts
+			
+			if 'Radiation (cps)' in active_sensors:
+				counts = 0
+				for count in spectrum:
+					counts = counts + count
+				counts = counts/float(time_delay)
+				sensor_dict['Radiation (cps)']['val'] = counts
+			
+			if 'Radiation Bi (cps)' in active_sensors:
+				bismuthCounts = 0
+				
+				for count in spectrum[850:1100]:
+					bismuthCounts = bismuthCounts + count
+				bismuthCounts = bismuthCounts/float(time_delay)
+				sensor_dict['Radiation Bi (cps)']['val'] = bismuthCounts
+				
+			if 'Radiation K (cps)' in active_sensors:
+				potassiumCounts = 0
+				
+				for count in spectrum[2000:2400]:
+					potassiumCounts = potassiumCounts + count
+				potassiumCounts = potassiumCounts/float(time_delay)
+				sensor_dict['Radiation K (cps)']['val'] = potassiumCounts
+				
+			if 'Radiation Tl (cps)' in active_sensors:
+				thalliumCounts = 0
+				
+				for count in spectrum[3600:4000]:
+					thalliumCounts = thalliumCounts + count
+				thalliumCounts = thalliumCounts/float(time_delay)
+				sensor_dict['Radiation Tl (cps)']['val'] = thalliumCounts
+			
 		elif sensor_label == "GPS":
 			global coordinates
 			coordinates = data['data']
@@ -289,14 +329,14 @@ if __name__ == '__main__':
 			
 			location = folium.Map(location=[37.875381,-122.259019],zoom_start = 15)
 			
-			filepath = '/home/pi/dosenet-raspberrypi/gps/colormap'+shown_sensor.replace(" ", "_").replace("/", "_")+'.png' # Adds colormap to html file
+			filepath = '/home/pi/dosenet-raspberrypi/updated_gps/colormap'+shown_sensor.replace(" ", "_").replace("/", "_")+'.png' # Adds colormap to html file
 			FloatImage(filepath, bottom = 5, left = 4).add_to(location)
 			
 			for key in sensor_dict:
 				
 				print (key + ": This is the show" + str(sensor_dict[key]['fg'].show))
 				
-				sensor_dict[key]['fg'].show =(bool(key == shown_sensor)) # Sets the selected sensor to visible
+				sensor_dict[key]['fg'].show =  (bool(key == shown_sensor)) # Sets the selected sensor to visible
 				
 				sensor_dict[key]['fg'].add_to(location)
 
