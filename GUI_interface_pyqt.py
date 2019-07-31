@@ -305,7 +305,7 @@ class App(QWidget, object):
         if found.count() == 0:
             found.addItem("no files found")
 
-    def addFile(self, file, comp):
+    def addFile(self, file, comp, found):
         if comp.count() > 0:
             for i in range(comp.count()):
                 if comp.item(i).text() == file:
@@ -317,6 +317,11 @@ class App(QWidget, object):
 
         if b == False:
             comp.addItem(file)
+            found.takeItem(found.currentRow())
+
+    def transferFile(self, file, comp, found):
+        found.addItem(file)
+        comp.takeItem(comp.currentRow())
 
     def displayPM(self, comp):
         if comp.count() > 0 and self.getDataType(comp.item(0)) == "AQ":
@@ -381,7 +386,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +
+            with open(r'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +    #USER1
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -399,7 +404,7 @@ class App(QWidget, object):
         plt.ylabel("µg/m^3")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +
+            with open(r'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' +    #USER2
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
@@ -515,7 +520,7 @@ class App(QWidget, object):
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
         go_button.clicked.connect(lambda:self.searchData(found_files,
-                                                '/Users/vaughnluthringer/Desktop/dosenet/newdata/',
+                                                '/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', ##USER3
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
@@ -529,11 +534,13 @@ class App(QWidget, object):
 
 
         found_files.itemDoubleClicked.connect(
-            lambda:self.addFile(found_files.currentItem().text(), comp_files))
+            lambda:self.addFile(found_files.currentItem().text(), comp_files, found_files))
         found_files.itemDoubleClicked.connect(lambda: self.displayPM(comp_files))
 
+        #comp_files.itemDoubleClicked.connect(
+        #    lambda:comp_files.takeItem(comp_files.currentRow()))
         comp_files.itemDoubleClicked.connect(
-            lambda:comp_files.takeItem(comp_files.currentRow()))
+            lambda:self.transferFile(comp_files.currentItem().text(), comp_files, found_files))
         comp_files.itemDoubleClicked.connect(lambda: self.displayPM(comp_files))
 
         self.comp_tab.setLayout(self.comp_layout)
