@@ -36,6 +36,8 @@ import pyqtgraph as pg
 
 import random
 
+from collections import OrderedDict
+
 # Various function calls to set general look
 pg.setConfigOptions(antialias=True)
 pg.setConfigOption('background', 'w')
@@ -429,10 +431,10 @@ class App(QWidget, object):
         self.comp_layout.addWidget(data_text3, 0, 4)
 
         data_types = {"air quality": "AQ", "radiation": "D3S", "carbon dioxide": "CO2"}
-        months = {"January": 1, "February": 2, "March": 3, "April": 4,
-                  "May": 5, "June": 6, "July": 7, "August": 8,
-                  "September": 9, "October": 10, "November": 11,
-                  "December": 12}
+        months = OrderedDict([("January", 1), ("February", 2), ("March", 3), ("April", 4),
+                  ("May", 5), ("June", 6), ("July", 7), ("August", 8),
+                  ("September", 9), ("October", 10), ("November", 11),
+                  ("December", 12)])
         years = ["2011", "2012", "2013", "2014", "2015", "2016"]
         locs = ["Inside", "Outside"]
         
@@ -459,7 +461,8 @@ class App(QWidget, object):
         months_box = QComboBox()
         self.comp_layout.addWidget(months_box, 0, 5)
         months_box.addItems(months.keys())
-        types_box.setCurrentIndex(0)
+        currentMonth = time.strftime("%B", time.localtime(epoch_time))
+        months_box.setCurrentIndex((months[currentMonth] - 1))
 
         years_box = QComboBox()
         self.comp_layout.addWidget(years_box, 0, 6)
