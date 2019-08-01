@@ -5,7 +5,6 @@ import time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pika
-from PyQt5.QtWidgets import *
 import sys
 from pylab import cm
 from Adafruit_BME280 import *
@@ -51,14 +50,11 @@ def receive(ID, queue):
 			elif 'data' in message:
 				return message['data']
 			else:
-				print("Center of the earth")
 				return None
 		else:
-			print("Inside")
 			connection.close()
 			return None
 	else:
-		print("Outside")
 		connection.close()
 		return None
 
@@ -236,13 +232,11 @@ def create_file():
 	Returns open file and results
 	'''
 	global filename
-	tempfileheader = ''
+	tempfileheader = time.strftime('GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime())
 	if filename == '':
 		for letter in active_sensors:
 			tempfileheader = tempfileheader + letter[0]
-	
-		filename = (tempfileheader+' '+str(time.ctime(time.time()))).replace(' ', '_')
-		print(filename)
+		filename = tempfileheader
 		
 	log_out_file = open('../../data/'+filename+'.csv', "a+", )
 	log_results = csv.writer(log_out_file, delimiter = ",")
@@ -251,7 +245,7 @@ def create_file():
 	files = {'Data Log Out File': log_out_file, 'Data Log Results': log_results}
 	
 	if 'Radiation (cps)' in active_sensors:
-		spectrum_out_file = open('../../data/' + str(time.ctime(time.time())) + ' spectrum.csv', "a+", )
+		spectrum_out_file = open(time.strftime('../../data/GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_spectrum.csv', time.localtime()), "a+", )
 		spectrum_results = csv.writer(spectrum_out_file, delimiter = ",")
 		spectrum_results.writerow(['Epoch time'] + list(range(0,1024)))
 		files['Spectrum Out File'] = spectrum_out_file
@@ -293,7 +287,6 @@ if __name__ == '__main__':
 		active_sensors = receive('Sensors', 'control') # List of active sensors
 		time_delay = receive('Time Delay', 'control')
 		filename = receive('Filename', 'control')
-		print(active_sensors)
 		
 		sensor_dict = establish_dict() # Establishes a dictionary
 		
@@ -320,7 +313,6 @@ if __name__ == '__main__':
 		
 		while True:
 			shown_sensor = receive_last_message('Shown Sensor', 'control', shown_sensor) # Gets the chosen sensor to visualize
-			print(shown_sensor)
 			
 			if receive_last_message('EXIT', 'control') == 'EXIT': # Looks for EXIT command
 				break
@@ -333,14 +325,10 @@ if __name__ == '__main__':
 			FloatImage(filepath, bottom = 5, left = 4).add_to(location)
 			
 			for key in sensor_dict:
-				
-				print (key + ": This is the show" + str(sensor_dict[key]['fg'].show))
-				
 				sensor_dict[key]['fg'].show =  (bool(key == shown_sensor)) # Sets the selected sensor to visible
 				
 				sensor_dict[key]['fg'].add_to(location)
 
-				print (key + ": This is the show after" + str(sensor_dict[key]['fg'].show))
 				
 				# Gets point color
 				cmap = cm.get_cmap('rainbow',sensor_dict[key]['max']-sensor_dict[key]['min'])
