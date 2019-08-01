@@ -90,7 +90,6 @@ class tabWidget(QWidget):
 
 	def startGPSGUIButton(self):
 		self.startSensors = QPushButton("Start Plotting")
-		self.startSensors.setStyleSheet('QPushButton {background-color:red;}')
 		self.startSensors.clicked.connect(lambda:self.secondTab())
 		return self.startSensors
 	
@@ -149,11 +148,10 @@ class sensorChecklistAndButtons(QWidget):
 		
 		# Creates select all and deselect all buttons
 		self.selectAll = QPushButton("Select All")
-		self.selectAll.setStyleSheet('QPushButton {background-color:#66B2FF}')
 		self.selectAll.clicked.connect(lambda:self.selectAllBoxes(True))
 		
 		self.deselectAll = QPushButton("Deselect All")
-		self.deselectAll.setStyleSheet('QPushButton {background-color:#66B2FF}')
+		
 		self.deselectAll.clicked.connect(lambda:self.selectAllBoxes(False))
 		
 		# Adds widgets to sensorChecklistAndButtons class
@@ -259,11 +257,9 @@ class plottingWidget(QWidget):
 		
 		# Creates start and stop plotting buttons
 		self.startPlotting = QPushButton('Start Plotting')
-		self.startPlotting.setStyleSheet('QPushButton {background-color:#66B2FF}')
 		self.startPlotting.clicked.connect(lambda:self.startPlottingPoints())
 		
 		self.stopPlotting = QPushButton('Stop Plotting')
-		self.stopPlotting.setStyleSheet('QPushButton {background-color:#66B2FF}')
 		self.stopPlotting.clicked.connect(lambda:self.stopPlottingPoints())
 		
 		# Creates radio button
