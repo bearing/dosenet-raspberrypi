@@ -241,8 +241,9 @@ class App(QWidget, object):
             self.kill_sensor(sensor)
 
     def startSensor(self, sensor):
-        fname = "/home/pi/data/" + self.file_name + '_' + \
-                str(dt.datetime.today()).split()[0]
+	if self.saveData:
+        	fname = "/home/pi/data/" + self.file_name + '_' + \
+                	str(dt.datetime.today()).split()[0]
         if sensor==AIR:
             py = 'python'
             script = 'air_quality_DAQ.py'
