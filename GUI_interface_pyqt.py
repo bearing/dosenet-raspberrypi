@@ -534,7 +534,7 @@ class App(QWidget, object):
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
-        go_button.clicked.connect(lambda:self.searchData(found_files,
+        go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
                                                  '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
