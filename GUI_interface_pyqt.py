@@ -297,13 +297,28 @@ class App(QWidget, object):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
-    def searchData(self, found, location, data_type, loc, month, year):
+    def searchData(self, found, comp, location, data_type, loc, month, year):
         found.clear()
         for file in os.listdir(location):
             if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "-*" + data_type + ".csv"):
-                found.addItem(file)
+                #if found.count() == 0 and comp.count() == 0:
+                found.addItem(file) 
+                #else:
+                #    print(found.item(0))
+                #    for index in range(found.count()): #if file 
+                #        if file == found.item(index):
+                #            print('already here')
+                #            #print(file)
+                #            #print(found.item(index))
+                #        elif comp.count() != 0:
+                #            for index in range(comp.count()):
+                #               if file == comp.item(index):
+                #                    print('already here pt 2')
+                #        else:
+                #            found.addItem(file)
         if found.count() == 0:
             found.addItem("no files found")
+        
 
     def addFile(self, file, comp, found):
         if comp.count() > 0:
@@ -395,7 +410,7 @@ class App(QWidget, object):
 
                 plt.plot(datetime, co2)
 
-        return plt.show()
+        plt.show() #return HEREEE
 
     def plotAQ(self, datasets, pm):
 
