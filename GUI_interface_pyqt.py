@@ -386,7 +386,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #USER1 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -404,7 +404,7 @@ class App(QWidget, object):
         plt.ylabel("µg/m^3")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #USER2 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
@@ -520,7 +520,7 @@ class App(QWidget, object):
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
         go_button.clicked.connect(lambda:self.searchData(found_files,
-                                                 '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #USER3 '/home/admin/Desktop/DataSet1/',
+                                                 '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
