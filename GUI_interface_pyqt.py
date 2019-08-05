@@ -401,11 +401,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-<<<<<<< HEAD
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #USER1 '/home/admin/Desktop/DataSet1/' 
-=======
             with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
->>>>>>> 710cab3bef3583e7ed37b352520d74080168cc3b
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -538,13 +534,8 @@ class App(QWidget, object):
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
-<<<<<<< HEAD
-        go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
-                                                 '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #USER3 '/home/admin/Desktop/DataSet1/',
-=======
         go_button.clicked.connect(lambda:self.searchData(found_files,
                                                  '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
->>>>>>> 710cab3bef3583e7ed37b352520d74080168cc3b
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
