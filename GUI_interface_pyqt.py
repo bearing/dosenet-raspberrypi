@@ -296,13 +296,28 @@ class App(QWidget, object):
         full_text = ' '.join(str(r) for r in self.sensor_list[sensor])
         self.data_display[sensor].setText(full_text)
 
-    def searchData(self, found, location, data_type, loc, month, year):
+    def searchData(self, found, comp, location, data_type, loc, month, year):
         found.clear()
         for file in os.listdir(location):
             if fnmatch.fnmatch(file, loc + "*" + year + "*" + month + "-*" + data_type + ".csv"):
-                found.addItem(file)
+                #if found.count() == 0 and comp.count() == 0:
+                found.addItem(file) 
+                #else:
+                #    print(found.item(0))
+                #    for index in range(found.count()): #if file 
+                #        if file == found.item(index):
+                #            print('already here')
+                #            #print(file)
+                #            #print(found.item(index))
+                #        elif comp.count() != 0:
+                #            for index in range(comp.count()):
+                #               if file == comp.item(index):
+                #                    print('already here pt 2')
+                #        else:
+                #            found.addItem(file)
         if found.count() == 0:
             found.addItem("no files found")
+        
 
     def addFile(self, file, comp, found):
         if comp.count() > 0:
@@ -385,7 +400,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #USER1 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #USER1 '/home/admin/Desktop/DataSet1/' 
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -394,7 +409,7 @@ class App(QWidget, object):
 
                 plt.plot(datetime, co2)
 
-        return plt.show()
+        plt.show() #return HEREEE
 
     def plotAQ(self, datasets, pm):
 
@@ -518,7 +533,7 @@ class App(QWidget, object):
         go_button_style = "background-color: #39c43e"
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
-        go_button.clicked.connect(lambda:self.searchData(found_files,
+        go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
                                                  '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
