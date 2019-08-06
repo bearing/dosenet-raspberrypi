@@ -401,7 +401,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -414,21 +414,33 @@ class App(QWidget, object):
 
     def plotAQ(self, datasets, pm):
 
-        plt.title(pm)
-        plt.xlabel("time")
-        plt.ylabel("µg/m^3")
-
+        #plt.title(pm)
+        #plt.xlabel("time")
+        #plt.ylabel("µg/m^3")
+        plotNum = 1
         for i in range(datasets.count()):
-            with open(r'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
                 time = ds.loc[:, "Time"]
                 pm_tograph = ds.loc[:, pm]
 
-                plt.plot(time, pm_tograph)
-
-        return plt.show()
+                #plt.plot(time, pm_tograph)
+                df = pd.DataFrame({
+                    'Time': time, 
+                    'Particulate Matter': pm_tograph
+                })
+                df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
+                plt.figure(plotNum)
+                plt.title(pm)
+                plt.xlabel('Time')
+                plt.ylabel('µg/m^3')
+                #plt.show()
+                print(plotNum)
+                plotNum+= 1
+        plt.show()
+        #return plt.show()
         
     def setCompTab(self):
         self.comp_tab = QWidget()
@@ -535,7 +547,7 @@ class App(QWidget, object):
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
         go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
-                                                 '/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
+                                                 '/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
