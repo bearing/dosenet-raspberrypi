@@ -433,7 +433,7 @@ class App(QWidget, object):
                 })
                 df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
                 Plot = plt.figure(plotNum)
-                Plot.set_size_inches(2.5, 3, forward = True)
+                Plot.set_size_inches(4, 4, forward = True)
                 plt.title(pm)
                 plt.xlabel('Time')
                 plt.ylabel('µg/m^3')
