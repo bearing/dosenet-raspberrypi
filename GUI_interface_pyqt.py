@@ -432,7 +432,8 @@ class App(QWidget, object):
                     'Particulate Matter': pm_tograph
                 })
                 df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
-                plt.figure(plotNum)
+                Plot = plt.figure(plotNum)
+                Plot.set_size_inches(2.5, 3, forward = True)
                 plt.title(pm)
                 plt.xlabel('Time')
                 plt.ylabel('µg/m^3')
