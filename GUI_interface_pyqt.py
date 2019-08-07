@@ -338,6 +338,10 @@ class App(QWidget, object):
          found.addItem(file)
          comp.takeItem(comp.currentRow())
 
+    def clearFiles(self, found, comp):
+        found.clear()
+        comp.clear()
+
     def displayPM(self, comp):
         if comp.count() > 0 and self.getDataType(comp.item(0)) == "AQ":
             self.pm1.show()
@@ -560,6 +564,11 @@ class App(QWidget, object):
         comp_button.clicked.connect(lambda:self.compData(comp_files,
                                                          data_types[types_box.currentText()]))
 
+        clearFiles_button = QPushButton("Clear Files")
+        self.comp_layout.addWidget(clearFiles_button, 3, 7) #ahhhhhhhhhhhhhhh
+        clearFiles_button_style = "background-color: #cbf1f7"
+        clearFiles_button.setStyleSheet(clearFiles_button_style)
+        clearFiles_button.clicked.connect(lambda:self.clearFiles(found_files, comp_files)
 
         found_files.itemDoubleClicked.connect(
             lambda:self.addFile(found_files.currentItem().text(), comp_files, found_files))
