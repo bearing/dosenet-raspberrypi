@@ -73,7 +73,7 @@ class tabWidget(QWidget):
 		# Creates widgets for sensor GUI tab
 		self.startGPSGUIButton = self.startGPSGUIButton()
 		self.sensorChecklistAndButtons = sensorChecklistAndButtons(self)
-		self.fileCreation = fileCreation(self)
+		self.fileCreation = fileCreation()
 		self.timeDelay = timeDelay(self)
 		
 		# Adds widgets to sensor GUI tab
@@ -95,7 +95,6 @@ class tabWidget(QWidget):
 	
 	def secondTab(self):
 		if self.sensorChecklistAndButtons.sensorChecklist.selectedSensors != []:
-			print(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors)
 			# If GPS GUI tab is already made, deletes it
 			if self.tabs.count() == 2:
 				self.tabs.removeTab(1)
@@ -197,35 +196,35 @@ class sensorChecklist(QScrollArea):
 		if not sensorChanged.isChecked():
 			self.selectedSensors.remove(sensorChanged.text())
 		
-class fileCreation(QWidget):
-	def __init__(self, parent):
-		super(fileCreation, self).__init__(parent)
+class fileCreation(QScrollArea):
+	def __init__(self):
+		super(fileCreation, self).__init__()
 		
-		# Initializes filenames
+		# Initializes filenames/widget
 		self.logFilename = ''
 		self.spectrumFilename = ''
+		self.widget = QWidget()
 		
 		# Creates labels
-		self.fileLabel = QLabel('File name')
+		self.fileLabel = QLabel('Filename')
 		self.recordingLabel = QLabel('Record?')
 		self.logFileLabel = QLabel('Log File:')
 		self.spectrumFileLabel = QLabel('Spectrum:')
 		
 		# Creates input box for filename
 		self.logInput = QLineEdit()
-		#self.generalInput.textChanged.connect(lambda:self.filenameChanged(self.logFilename))
 		self.spectrumInput = QLineEdit()
-		#self.spectrumInput.textChanged.connect(lambda:self.filenameChanged(self.spectrumFilename))
 		
 		# Creates checkboxes for selecting which data to write
 		self.logCheck = QCheckBox()
 		self.spectrumCheck = QCheckBox()
 		
-		#Defaults logging data
+		# Defaults logging data
 		self.logCheck.setChecked(True)
 		
 		# Adds widgets to fileCreation class
-		self.layout = QGridLayout()
+		self.layout = QGridLayout(self.widget)
+		self.layout.setAlignment(Qt.AlignTop)
 		self.layout.addWidget(self.fileLabel, 0, 1)
 		self.layout.addWidget(self.recordingLabel, 0, 2)
 		self.layout.addWidget(self.logFileLabel, 1, 0)
@@ -234,10 +233,10 @@ class fileCreation(QWidget):
 		self.layout.addWidget(self.spectrumFileLabel, 2, 0)
 		self.layout.addWidget(self.spectrumInput, 2, 1)
 		self.layout.addWidget(self.spectrumCheck, 2, 2)
-		self.setLayout(self.layout)
 		
-	def filenameChanged(self, filename):
-		filename = self.sender().text()
+		# Finalizes widget
+		self.setWidget(self.widget)
+		self.setWidgetResizable(True)
 
 class timeDelay(QWidget):
 	def __init__(self, parent):
@@ -339,7 +338,6 @@ class sensorRadioButtons(QScrollArea):
 		
 		# Creates radio buttons
 		for sensor in self.activeSensors:
-			print(sensor)
 			self.radioButtons.append(QRadioButton(sensor))
 			self.radioButtons[-1].toggled.connect(lambda:self.changedRadio())
 			self.layout.addWidget(self.radioButtons[-1])
@@ -355,7 +353,6 @@ class sensorRadioButtons(QScrollArea):
 		self.sensor = self.sender()
 		if self.sensor.isChecked():
 			self.selectedButton = self.sensor.text()
-			print(self.selectedButton)
 			if self.started:
 				self.sendMessage('Shown Sensor', self.selectedButton, 'control')
 	
