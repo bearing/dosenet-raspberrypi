@@ -13,9 +13,44 @@ import json
 import gps
 import traceback
 from PIL import Image
+
 import csv
 
+sys.path.insert(0, 'folium')
+sys.path.insert(0, 'branca')
+
+import branca
+from branca.element import MacroElement
+
+from jinja2 import Template
+
 print("Starting map_plot.py. :)")
+
+class BindColormap(MacroElement):
+    """Binds a colormap to a given layer.
+
+    Parameters
+    ----------
+    colormap : branca.colormap.ColorMap
+        The colormap to bind.
+    """
+    def __init__(self, layer, colormap):
+        super(BindColormap, self).__init__()
+        self.layer = layer
+        self.colormap = colormap
+        self._template = Template(u"""
+        {% macro script(this, kwargs) %}
+            {{this.colormap.get_name()}}.svg[0][0].style.display = 'block';
+            {{this._parent.get_name()}}.on('overlayadd', function (eventLayer) {
+                if (eventLayer.layer == {{this.layer.get_name()}}) {
+                    {{this.colormap.get_name()}}.svg[0][0].style.display = 'block';
+                }});
+            {{this._parent.get_name()}}.on('overlayremove', function (eventLayer) {
+                if (eventLayer.layer == {{this.layer.get_name()}}) {
+                    {{this.colormap.get_name()}}.svg[0][0].style.display = 'none';
+                }});
+        {% endmacro %}
+        """)  # noqa
 
 def sendmsg(ID,cmd,queue):
 	'''
@@ -96,17 +131,17 @@ def popuptext(sensor_chosen):
 	Formats text for popup labels
 	'''
 	# List for popup label (current time and values)
-	popupv = ["Time: " + str(time.ctime(time.time())) + '<br>']
+	popup = "Time: " + str(time.ctime(time.time())) + '<br>'
 	
 	for sensor in active_sensors: 
 		if sensor == sensor_chosen:
-			popupv.append(sensor+" (shown): ")
+			popup = popup + sensor + " (shown): "
 		else:
-			popupv.append(sensor+": ")
+			popup = popup + sensor + ": "
 
-		popupv.append(str(sensor_dict[sensor]['val']) + "<br>")
+		popup = popup + str(sensor_dict[sensor]['val']) + "<br>"
 			
-	return ''.join(popupv) # Joins the list of popup labels into a string
+	return popup # Joins the list of popup labels into a string
 
 def establish_dict():
 	'''
@@ -122,30 +157,30 @@ def establish_dict():
 			sendmsg('Air Quality', 'START', 'fromGUI')
 			
 		elif sensor == 'CO2 (ppm)':
-			sensor_dict['CO2 (ppm)'] = {'min': 300, 'max':1000, 'fg': '','val':0}
+			sensor_dict['CO2 (ppm)'] = {'min': 300, 'max':1000, 'fg': '','val':0,'cm': ''}
 			os.system('python adc_DAQ.py -i ' + str(int(time_delay * 0.5)) + ' &')
 			sendmsg('CO2', 'START', 'fromGUI')
 			
 		elif sensor == 'Humidity (%)':
-			sensor_dict['Humidity (%)'] = {'min': 30, 'max':60, 'fg': '','val':0}
+			sensor_dict['Humidity (%)'] = {'min': 30, 'max':60, 'fg': '','val':0,'cm': ''}
 					
 		elif sensor == 'Pressure (Pa)':
-			sensor_dict['Pressure (Pa)'] = {'min': 99500, 'max':101400, 'fg': '','val':0}
+			sensor_dict['Pressure (Pa)'] = {'min': 99500, 'max':101400, 'fg': '','val':0,'cm': ''}
 				
 		elif sensor == 'Radiation (cps)':
-			sensor_dict['Radiation (cps)'] = {'min': 0, 'max':100, 'fg': '','val':0}			
+			sensor_dict['Radiation (cps)'] = {'min': 0, 'max':100, 'fg': '','val':0,'cm': ''}			
 		
 		elif sensor == 'Radiation Bi (cps)':
-			sensor_dict['Radiation Bi (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
+			sensor_dict['Radiation Bi (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0,'cm': ''}			
 			
 		elif sensor == 'Radiation K (cps)':
-			sensor_dict['Radiation K (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
+			sensor_dict['Radiation K (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0,'cm': ''}			
 			
 		elif sensor == 'Radiation Tl (cps)':
-			sensor_dict['Radiation Tl (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0}			
+			sensor_dict['Radiation Tl (cps)'] = {'min': 0, 'max':15, 'fg': '','val':0,'cm': ''}			
 			
 		elif sensor == 'Temperature (C)':
-			sensor_dict['Temperature (C)'] = {'min': 15, 'max':30, 'fg': '','val':0}
+			sensor_dict['Temperature (C)'] = {'min': 15, 'max':30, 'fg': '','val':0,'cm': ''}
 	
 		if not radiationRunning and sensor in ['Radiation (cps)', 'Radiation Bi (cps)', 'Radiation K (cps)', 'Radiation Tl (cps)']:
 			os.system('sudo python D3S_rabbitmq_DAQ.py -i ' + str(time_delay) + ' &')
@@ -231,37 +266,45 @@ def create_file():
 	Creates csv file to log data from run - name contains acronym for all sensors used as well as timestamp (zyy of run intialization
 	Returns open file and results
 	'''
-	global filename
-	tempfileheader = time.strftime('GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime())
-	if filename == '':
-		for letter in active_sensors:
-			tempfileheader = tempfileheader + letter[0]
-		filename = tempfileheader
+	global file_dict
+	
+	files = {}
+	if file_dict['Log File']['Record']:
+		if file_dict['Log File']['Filename'] == '':
+			tempfileheader = time.strftime('GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime())
+			for letter in active_sensors:
+				tempfileheader = tempfileheader + letter[0]
+			file_dict['Log File']['Filename'] = tempfileheader
+			
+		log_out_file = open('../../data/'+file_dict['Log File']['Filename']+'.csv', "a+", )
+		log_results = csv.writer(log_out_file, delimiter = ",")
+		log_results.writerow(['Epoch time', 'Latitude', 'Longitude'] + active_sensors)
 		
-	log_out_file = open('../../data/'+filename+'.csv', "a+", )
-	log_results = csv.writer(log_out_file, delimiter = ",")
-	log_results.writerow(['Epoch time', 'Latitude', 'Longitude'] + active_sensors)
+		files['Data Log Out File'] = log_out_file
+		files['Data Log Results'] = log_results
 	
-	files = {'Data Log Out File': log_out_file, 'Data Log Results': log_results}
-	
-	if 'Radiation (cps)' in active_sensors:
-		spectrum_out_file = open(time.strftime('../../data/GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_spectrum.csv', time.localtime()), "a+", )
+	if file_dict['Spectrum File']['Record'] and 'Radiation (cps)' in active_sensors:
+		if file_dict['Spectrum File']['Filename'] == '':
+			file_dict['Spectrum File']['Filename'] = time.strftime('GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_spectrum', time.localtime())
+		spectrum_out_file = open('../../data/'+file_dict['Spectrum File']['Filename']+'.csv', "a+", )
 		spectrum_results = csv.writer(spectrum_out_file, delimiter = ",")
 		spectrum_results.writerow(['Epoch time'] + list(range(0,1024)))
 		files['Spectrum Out File'] = spectrum_out_file
 		files['Spectrum Results'] = spectrum_results
+		
 	return files
 
 def write_data():
 	'''
 	Appends row to previously created log file 
 	'''
-	row = [time.time(), coordinates[0], coordinates[1]]
-	for sensor in active_sensors:
-		row.append(sensor_dict[sensor]['val'])
-	files['Data Log Results'].writerow(row)
+	if file_dict['Log File']['Record']:
+		row = [time.time(), coordinates[0], coordinates[1]]
+		for sensor in active_sensors:
+			row.append(sensor_dict[sensor]['val'])
+		files['Data Log Results'].writerow(row)
 	
-	if 'Radiation (cps)' in active_sensors:
+	if file_dict['Spectrum File']['Record'] and 'Radiation (cps)' in active_sensors:
 		files['Spectrum Results'].writerow([time.time()] + spectrum)
 		
 
@@ -269,9 +312,10 @@ def close_file():
 	'''
 	Closes the log file
 	'''
-	files['Data Log Out File'].close()
+	if file_dict['Log File']['Record']:
+		files['Data Log Out File'].close()
 	
-	if 'Radiation (cps)' in active_sensors:
+	if file_dict['Spectrum File']['Record'] and 'Radiation (cps)' in active_sensors:
 		files['Spectrum Out File'].close()
 	
 	sys.stdout.flush()
@@ -286,7 +330,7 @@ if __name__ == '__main__':
 		# Gets list of active sensors, time delay, and filename
 		active_sensors = receive('Sensors', 'control') # List of active sensors
 		time_delay = receive('Time Delay', 'control')
-		filename = receive('Filename', 'control')
+		file_dict = receive('Files', 'control')
 		
 		sensor_dict = establish_dict() # Establishes a dictionary
 		
@@ -303,11 +347,18 @@ if __name__ == '__main__':
 		
 		for key in sensor_dict:	
 			sensor_dict[key]['fg'] = folium.FeatureGroup(name=key) # Establishes Feature Groups
+			sensor_dict[key]['cm'] = branca.colormap.LinearColormap(['b','c','g','y','r'], vmin=sensor_dict[key]['min'], vmax=sensor_dict[key]['max'], caption=key)
+			
+			location.add_child(sensor_dict[key]['fg'])
+			location.add_child(sensor_dict[key]['cm'])
+			location.add_child(BindColormap(sensor_dict[key]['fg'], sensor_dict[key]['cm']))
+
+	
 			sensor_dict[key]['fg'].add_to(location) # Adds featuregroup to map
 			
-			makecolormap(key,sensor_dict[key]['min'],sensor_dict[key]['max'],'colormap'+key) # Creates Colormap that will be used as a legend
+			#makecolormap(key,sensor_dict[key]['min'],sensor_dict[key]['max'],'colormap'+key) # Creates Colormap that will be used as a legend
 		
-		folium.LayerControl().add_to(location) # Adds layers to location
+		location.add_child(folium.map.LayerControl()) # Adds layers to location
 		
 		shown_sensor = '' # Initializing shown_sensor
 		
@@ -321,25 +372,28 @@ if __name__ == '__main__':
 			
 			location = folium.Map(location=[37.875381,-122.259019],zoom_start = 15)
 			
-			filepath = '/home/pi/dosenet-raspberrypi/updated_gps/colormap'+shown_sensor.replace(" ", "_").replace("/", "_")+'.png' # Adds colormap to html file
-			FloatImage(filepath, bottom = 5, left = 4).add_to(location)
+			#filepath = '/home/pi/dosenet-raspberrypi/updated_gps/colormap'+shown_sensor.replace(" ", "_").replace("/", "_")+'.png' # Adds colormap to html file
+			#FloatImage(filepath, bottom = 5, left = 4).add_to(location)
 			
 			for key in sensor_dict:
 				sensor_dict[key]['fg'].show =  (bool(key == shown_sensor)) # Sets the selected sensor to visible
 				
-				sensor_dict[key]['fg'].add_to(location)
+				location.add_child(sensor_dict[key]['fg'])
+				location.add_child(sensor_dict[key]['cm'])
+				location.add_child(BindColormap(sensor_dict[key]['fg'], sensor_dict[key]['cm']))
 
-				
 				# Gets point color
-				cmap = cm.get_cmap('rainbow',sensor_dict[key]['max']-sensor_dict[key]['min'])
-				point_color = mpl.colors.rgb2hex(cmap(int(sensor_dict[key]['val']-sensor_dict[key]['min']))[:3])
+				#cmap = cm.get_cmap('rainbow',sensor_dict[key]['max']-sensor_dict[key]['min'])
+				#point_color = mpl.colors.rgb2hex(cmap(int(sensor_dict[key]['val']-sensor_dict[key]['min']))[:3])
+				
+				point_color = mpl.colors.rgb2hex(sensor_dict[key]['cm'].rgba_floats_tuple(sensor_dict[key]['val']))
 				
 				# Plots Circle
 				folium.Circle(radius = 15, location=coordinates, popup = popuptext(key),
 							fill_color = point_color,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key]['fg'])
 							
 		
-			folium.LayerControl().add_to(location)
+			location.add_child(folium.map.LayerControl()) #folium.LayerControl().add_to(location)
 			
 			write_data()
 				
