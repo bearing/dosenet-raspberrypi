@@ -544,7 +544,7 @@ class App(QWidget, object):
         self.comp_layout.addWidget(comp_text, 2, 3)
         self.comp_layout.addWidget(comp_files, 3, 3, 2, 3)
 
-        self.comp_layout.addWidget(howto_text, 5, 0)
+        self.comp_layout.addWidget(howto_text, 5, 0, 1, 3) 
 
         go_button = QPushButton("Go")
         self.comp_layout.addWidget(go_button, 0, 7)
@@ -565,7 +565,7 @@ class App(QWidget, object):
                                                          data_types[types_box.currentText()]))
 
         clearFiles_button = QPushButton("Clear Files")
-        self.comp_layout.addWidget(clearFiles_button, 3, 7) #ahhhhhhhhhhhhhhh
+        self.comp_layout.addWidget(clearFiles_button, 3, 7) 
         clearFiles_button_style = "background-color: #cbf1f7"
         clearFiles_button.setStyleSheet(clearFiles_button_style)
         clearFiles_button.clicked.connect(lambda:self.clearFiles(found_files, comp_files))
