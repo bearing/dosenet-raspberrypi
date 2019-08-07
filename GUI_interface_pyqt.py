@@ -405,7 +405,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/home/pi/data/' + #'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -423,7 +423,7 @@ class App(QWidget, object):
         #plt.ylabel("µg/m^3")
         plotNum = 1
         for i in range(datasets.count()):
-            with open(r'/home/pi/data/' + #'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
@@ -437,6 +437,13 @@ class App(QWidget, object):
                 })
                 df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
                 Plot = plt.figure(plotNum)
+                #Plot = plt.figure()              #TESTINGplots
+                #if plotNum != 1:
+                #    rect = 10, 10, 10, 10
+                #    ax = plt.gca()
+                #    Plot.add_axes(rect, label = 'test')
+                #    Plot.add_axes(rect, label = 'test1')
+                #    Plot.add_axes(ax)
                 Plot.set_size_inches(4, 4, forward = True)
                 plt.title(pm)
                 plt.xlabel('Time')
@@ -529,7 +536,7 @@ class App(QWidget, object):
         #textfont = QFont("Helvetica Neue", 18)
         found_text = QLabel("Found files:")
         comp_text = QLabel("Compare:")
-        howto_text = QLabel("Double-click items move/remove them")
+        howto_text = QLabel("Double-click items to move/remove them")
 
         #found_text.setFont(textfont)
         #found_text.setFont(textfont)
@@ -552,7 +559,7 @@ class App(QWidget, object):
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
         go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
-                                                 '/home/pi/data/', #'/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
+                                                 '/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
