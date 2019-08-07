@@ -1,12 +1,10 @@
+import matplotlib as mpl
 import folium
 from folium.plugins import FloatImage
 import os
 import time
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import pika
 import sys
-from pylab import cm
 from Adafruit_BME280 import *
 BME280_OSAMPLE_8 = 4
 import json
@@ -26,7 +24,7 @@ from jinja2 import Template
 
 print("Starting map_plot.py. :)")
 
-class BindColormap(MacroElement):
+class BindColormap(MacroElement): # Allows colormap to be directly tied to the layer that contains its points
     """Binds a colormap to a given layer.
 
     Parameters
@@ -102,29 +100,6 @@ def receive_last_message(ID, queue, message=''):
 		message = body
 		body = receive(ID, queue)
 	return message
-	
-
-def makecolormap(label,minvalue,maxvalue,filename):
-	'''
-	Makes a color map with given maximum and minimum values.
-	'''
-	fig, ax = plt.subplots(figsize=(6,1))
-	fig.subplots_adjust(bottom=0.5)
-
-	cmap = mpl.cm.rainbow
-
-	norm = mpl.colors.Normalize(vmin=minvalue, vmax=maxvalue)
-
-	
-	cb1 = mpl.colorbar.ColorbarBase(ax, cmap=cmap, norm=norm, orientation='horizontal')
-	cb1.set_label(label)
-	
-	filename = (filename.replace(" ", "_").replace("/", "_")+'.png')
-	
-	fig.savefig(filename)
-	
-	colorbar = Image.open(filename)
-	colorbar.crop((50, 0, 560, 100)).save(filename)
 
 def popuptext(sensor_chosen):
 	'''
@@ -324,6 +299,7 @@ if __name__ == '__main__':
 	try:
 		#Initial variables
 		sensor_tuple = ('Air Quality PM 2.5 (ug/m3)','CO2 (ppm)', 'Humidity (%)', 'Pressure (Pa)','Radiation (cps)', 'Temperature (C)')
+		chunk = [37.875381,-122.259019]
 		coordinates = [0, 0]
 		spectrum = []
 		
@@ -339,26 +315,16 @@ if __name__ == '__main__':
 		# Starts GPS DAQ
 		os.system('python gps_daq.py -i' + str(time_delay) + '&')
 		
-		location = folium.Map(location=[37.875381,-122.259019],zoom_start = 15) # Fetches chunk
-		location.save('testmap.html')
+		location = folium.Map(location=chunk,zoom_start = 15) # Fetches chunk
+		location.save('map.html')
 		
-		os.system('xdg-open testmap.html') # Opens the window containing map
+		os.system('xdg-open map.html') # Opens the window containing map
 		time.sleep(5)
+		os.system('xdotool windowsize `xdotool search --onlyvisible --name "Chromium"` 560 440')
 		
 		for key in sensor_dict:	
 			sensor_dict[key]['fg'] = folium.FeatureGroup(name=key) # Establishes Feature Groups
 			sensor_dict[key]['cm'] = branca.colormap.LinearColormap(['b','c','g','y','r'], vmin=sensor_dict[key]['min'], vmax=sensor_dict[key]['max'], caption=key)
-			
-			location.add_child(sensor_dict[key]['fg'])
-			location.add_child(sensor_dict[key]['cm'])
-			location.add_child(BindColormap(sensor_dict[key]['fg'], sensor_dict[key]['cm']))
-
-	
-			sensor_dict[key]['fg'].add_to(location) # Adds featuregroup to map
-			
-			#makecolormap(key,sensor_dict[key]['min'],sensor_dict[key]['max'],'colormap'+key) # Creates Colormap that will be used as a legend
-		
-		location.add_child(folium.map.LayerControl()) # Adds layers to location
 		
 		shown_sensor = '' # Initializing shown_sensor
 		
@@ -370,48 +336,45 @@ if __name__ == '__main__':
 			
 			read_data() # IMPORTANT FUNCTION -- Reads the data from queue
 			
-			location = folium.Map(location=[37.875381,-122.259019],zoom_start = 15)
+			# Recenters chunk
+			if coordinates != [0, 0]:
+				chunk = coordinates
 			
-			#filepath = '/home/pi/dosenet-raspberrypi/updated_gps/colormap'+shown_sensor.replace(" ", "_").replace("/", "_")+'.png' # Adds colormap to html file
-			#FloatImage(filepath, bottom = 5, left = 4).add_to(location)
+			location = folium.Map(location=chunk,zoom_start = 15)
 			
 			for key in sensor_dict:
 				sensor_dict[key]['fg'].show =  (bool(key == shown_sensor)) # Sets the selected sensor to visible
 				
+				# Adds feature groups and color maps to map again
 				location.add_child(sensor_dict[key]['fg'])
 				location.add_child(sensor_dict[key]['cm'])
-				location.add_child(BindColormap(sensor_dict[key]['fg'], sensor_dict[key]['cm']))
+				location.add_child(BindColormap(sensor_dict[key]['fg'], sensor_dict[key]['cm'])) # Binds colormap to feature group
 
 				# Gets point color
-				#cmap = cm.get_cmap('rainbow',sensor_dict[key]['max']-sensor_dict[key]['min'])
-				#point_color = mpl.colors.rgb2hex(cmap(int(sensor_dict[key]['val']-sensor_dict[key]['min']))[:3])
-				
 				point_color = mpl.colors.rgb2hex(sensor_dict[key]['cm'].rgba_floats_tuple(sensor_dict[key]['val']))
 				
 				# Plots Circle
 				folium.Circle(radius = 15, location=coordinates, popup = popuptext(key),
 							fill_color = point_color,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[key]['fg'])
-							
 		
-			location.add_child(folium.map.LayerControl()) #folium.LayerControl().add_to(location)
+			location.add_child(folium.map.LayerControl()) # Adds layer control
 			
-			write_data()
+			write_data() # Writes data into files
 				
-			location.save('testmap.html') # Saves map as html
+			location.save('map.html') # Saves map as html
 			
-			os.system('xdotool search --onlyvisible --name "Chromium" windowfocus key --clearmodifiers ctrl+r')
+			os.system('xdotool search --onlyvisible --name "Chromium" windowfocus key --clearmodifiers ctrl+r') # Reloads page
 			
 			time.sleep(time_delay)
 	finally:
-		close_file()
+		close_file() # Closes files
 		
-		os.system('xdotool search --onlyvisible --name "Chromium" windowfocus key --clearmodifiers ctrl+w')
+		os.system('xdotool search --onlyvisible --name "Chromium" windowfocus key --clearmodifiers ctrl+w') # Closes window after exit
 		
+		# Sends exit commands to daqs
 		for sensor in active_sensors:
-			if sensor not in ['Humidity (%)', 'Pressure (Pa)', 'Temperature (C)']:
+			if sensor not in ['Humidity (%)', 'Pressure (Pa)', 'Radiation Bi (cps)', 'Radiation K (cps)', 'Radiation Tl (cps)', 'Temperature (C)']:
 				sendmsg(sensor.split(' PM')[0].split(' (')[0], 'EXIT','fromGUI')
 		sendmsg('GPS', 'EXIT', 'fromGUI')
 		
 		traceback.print_exc()
-	
-
