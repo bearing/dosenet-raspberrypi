@@ -4,7 +4,7 @@ import pika
 import atexit
 import os
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QRadioButton, QComboBox, QLineEdit, QFormLayout, QScrollArea
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QRadioButton, QComboBox, QLineEdit, QFormLayout, QScrollArea, QGridLayout
 from PyQt5.QtCore import Qt
 
 class GUI(QMainWindow):
@@ -104,7 +104,7 @@ class tabWidget(QWidget):
 				self.clearQueue('fromGUI')
 				self.clearQueue('toGUI')
 				
-				if self.plottingWidget.started:
+				if self.plottingWidget.sensorRadioButtons.started:
 					print("Sending message to stop.")
 					self.plottingWidget.sendMessage('EXIT', 'EXIT', 'control')
 					self.plottingWidget.started = False
@@ -114,7 +114,7 @@ class tabWidget(QWidget):
 			self.tabs.addTab(self.GPSGUI, 'GPS GUI')
 			
 			# Creates widget for GPS GUI tab
-			self.plottingWidget = plottingWidget(self, sorted(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors), self.timeDelay.time, self.fileCreation.filename)
+			self.plottingWidget = plottingWidget(self, sorted(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors), self.timeDelay.time, {'Log File': {'Record': self.fileCreation.logCheck.isChecked(), 'Filename': self.fileCreation.logInput.text()}, 'Spectrum File': {'Record': self.fileCreation.spectrumCheck.isChecked(), 'Filename': self.fileCreation.spectrumInput.text()}})
 			
 			# Adds widget to GPS GUI tab
 			self.GPSGUI.layout = QVBoxLayout()
@@ -201,24 +201,43 @@ class fileCreation(QWidget):
 	def __init__(self, parent):
 		super(fileCreation, self).__init__(parent)
 		
-		# Initializes filename
-		self.filename = ''
+		# Initializes filenames
+		self.logFilename = ''
+		self.spectrumFilename = ''
 		
-		# Creates label
-		self.fileLabel = QLabel('File name:')
+		# Creates labels
+		self.fileLabel = QLabel('File name')
+		self.recordingLabel = QLabel('Record?')
+		self.logFileLabel = QLabel('Log File:')
+		self.spectrumFileLabel = QLabel('Spectrum:')
 		
 		# Creates input box for filename
-		self.filenameInput = QLineEdit()
-		self.filenameInput.textChanged.connect(lambda:self.filenameChanged())
+		self.logInput = QLineEdit()
+		#self.generalInput.textChanged.connect(lambda:self.filenameChanged(self.logFilename))
+		self.spectrumInput = QLineEdit()
+		#self.spectrumInput.textChanged.connect(lambda:self.filenameChanged(self.spectrumFilename))
+		
+		# Creates checkboxes for selecting which data to write
+		self.logCheck = QCheckBox()
+		self.spectrumCheck = QCheckBox()
+		
+		#Defaults logging data
+		self.logCheck.setChecked(True)
 		
 		# Adds widgets to fileCreation class
-		self.layout = QHBoxLayout()
-		self.layout.addWidget(self.fileLabel)
-		self.layout.addWidget(self.filenameInput)
+		self.layout = QGridLayout()
+		self.layout.addWidget(self.fileLabel, 0, 1)
+		self.layout.addWidget(self.recordingLabel, 0, 2)
+		self.layout.addWidget(self.logFileLabel, 1, 0)
+		self.layout.addWidget(self.logInput, 1, 1)
+		self.layout.addWidget(self.logCheck, 1, 2)
+		self.layout.addWidget(self.spectrumFileLabel, 2, 0)
+		self.layout.addWidget(self.spectrumInput, 2, 1)
+		self.layout.addWidget(self.spectrumCheck, 2, 2)
 		self.setLayout(self.layout)
 		
-	def filenameChanged(self):
-		self.filename = self.filenameInput.text()
+	def filenameChanged(self, filename):
+		filename = self.sender().text()
 
 class timeDelay(QWidget):
 	def __init__(self, parent):
@@ -247,13 +266,13 @@ class timeDelay(QWidget):
 		self.time = int(self.dropdown.currentText().strip(' seconds'))
 
 class plottingWidget(QWidget):
-	def __init__(self, parent, activeSensors, timeDelay, filename):
+	def __init__(self, parent, activeSensors, timeDelay, files):
 		super(plottingWidget, self).__init__(parent)
 		
 		# Initializes list of active sensors/time delay/filename
 		self.activeSensors = activeSensors
 		self.timeDelay = timeDelay
-		self.filename = filename
+		self.files = files
 		
 		# Creates start and stop plotting buttons
 		self.startPlotting = QPushButton('Start Plotting')
@@ -277,7 +296,7 @@ class plottingWidget(QWidget):
 			print("Sending message to start.")
 			self.sendMessage('Sensors', self.activeSensors, 'control')
 			self.sendMessage('Time Delay', self.timeDelay, 'control')
-			self.sendMessage('Filename', self.filename, 'control')
+			self.sendMessage('Files', self.files, 'control')
 			self.sendMessage('Shown Sensor', self.sensorRadioButtons.selectedButton, 'control')
 			os.system('python3 map_plot.py &')
 			self.sensorRadioButtons.started = True
