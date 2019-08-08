@@ -414,7 +414,7 @@ class App(QWidget, object):
 
                 plt.plot(datetime, co2)
 
-        plt.show() #return HEREEE
+        plt.show()
 
     def plotAQ(self, datasets, pm):
 
@@ -422,34 +422,64 @@ class App(QWidget, object):
         #plt.xlabel("time")
         #plt.ylabel("µg/m^3")
         plotNum = 1
+        Plot = plt.figure()
+        ax1 =  Plot.add_subplot(111)
         for i in range(datasets.count()):
             with open(r'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
-                time = ds.loc[:, "Time"]
+                graphtime = []
+                gettime = ds.loc[:, "Time"]
+                if isinstance(gettime[0], float):
+                    for value in gettime:
+                        newtime = time.strftime("%H:%M:%S", time.localtime(value))
+                        graphtime.append(newtime)
+                else:
+                    graphtime = ds.loc[:, "Time"]
                 pm_tograph = ds.loc[:, pm]
-
-                #plt.plot(time, pm_tograph)
+                #plt.plot(graphtime, pm_tograph)
                 df = pd.DataFrame({
-                    'Time': time, 
+                    'Time': graphtime, 
                     'Particulate Matter': pm_tograph
                 })
-                df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
-                Plot = plt.figure(plotNum)
-                #Plot = plt.figure()              #TESTINGplots
-                #if plotNum != 1:
-                #    rect = 10, 10, 10, 10
-                #    ax = plt.gca()
-                #    Plot.add_axes(rect, label = 'test')
-                #    Plot.add_axes(rect, label = 'test1')
-                #    Plot.add_axes(ax)
-                Plot.set_size_inches(4, 4, forward = True)
+                #df.plot(kind = 'line', x = 'Time', y = 'Particulate Matter', color = 'blue')
+                #Plot = plt.figure(plotNum)
+                #TESTINGplots
+
+                if plotNum == 1:
+                    ax1.plot(graphtime, pm_tograph, color = 'blue')
+                    Plot.subplots_adjust(bottom = 0.1)
+                    ax1.set_xlabel(r'Time')
+                    ax1.xaxis.label.set_color('blue')
+                    ax1.axes.xaxis.set_major_locator(plt.MaxNLocator(6))
+                if plotNum == 2:
+                    ax2 = ax1.twiny()
+                    Plot.subplots_adjust(bottom = 0.2)
+                    ax2.plot(graphtime, pm_tograph, color = 'orange')
+                    ax2.xaxis.set_ticks_position('bottom')
+                    ax2.xaxis.set_label_position('bottom')
+                    ax2.spines['bottom'].set_position(('axes', -0.17))
+                    ax2.set_xticklabels(graphtime) 
+                    ax2.set_xlabel(r'Time')
+                    ax2.xaxis.label.set_color('orange')
+                    ax2.axes.xaxis.set_major_locator(plt.MaxNLocator(6))
+                if plotNum == 3:
+                    Plot.subplots_adjust(bottom = 0.3)
+                    ax3 = ax1.twiny()
+                    ax3.plot(graphtime, pm_tograph, color = 'green')
+                    ax3.xaxis.set_ticks_position('bottom')
+                    ax3.xaxis.set_label_position('bottom')
+                    ax3.spines['bottom'].set_position(('axes', -0.35))
+                    ax3.set_xticklabels(graphtime) 
+                    ax3.set_xlabel(r'Time')
+                    ax3.xaxis.label.set_color('green')
+                    ax3.axes.xaxis.set_major_locator(plt.MaxNLocator(6))
+                #Plot.set_size_inches(4, 4, forward = True)
                 plt.title(pm)
-                plt.xlabel('Time')
+                #plt.xlabel('Time')
                 plt.ylabel('µg/m^3')
                 #plt.show()
-                print(plotNum)
                 plotNum+= 1
         plt.show()
         #return plt.show()
