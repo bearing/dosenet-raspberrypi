@@ -127,7 +127,7 @@ def establish_dict():
 	
 	for sensor in active_sensors:
 		if sensor == 'Air Quality PM 2.5 (ug/m3)':
-			sensor_dict['Air Quality PM 2.5 (ug/m3)'] = {'min': 0, 'max':100, 'fg': '','val':0}		
+			sensor_dict['Air Quality PM 2.5 (ug/m3)'] = {'min': 0, 'max':20, 'fg': '','val':0}		
 			os.system('python air_quality_DAQ.py -i ' + str(int(time_delay * 0.5)) + ' &')
 			sendmsg('Air Quality', 'START', 'fromGUI')
 			
@@ -137,7 +137,7 @@ def establish_dict():
 			sendmsg('CO2', 'START', 'fromGUI')
 			
 		elif sensor == 'Humidity (%)':
-			sensor_dict['Humidity (%)'] = {'min': 30, 'max':60, 'fg': '','val':0,'cm': ''}
+			sensor_dict['Humidity (%)'] = {'min': 30, 'max':80, 'fg': '','val':0,'cm': ''}
 					
 		elif sensor == 'Pressure (Pa)':
 			sensor_dict['Pressure (Pa)'] = {'min': 99500, 'max':101400, 'fg': '','val':0,'cm': ''}
