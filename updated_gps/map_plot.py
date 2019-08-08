@@ -260,7 +260,7 @@ def create_file():
 	
 	if file_dict['Spectrum File']['Record'] and 'Radiation (cps)' in active_sensors:
 		if file_dict['Spectrum File']['Filename'] == '':
-			file_dict['Spectrum File']['Filename'] = time.strftime('GPS_GUI_Data_%Y-%m-%d_%H:%M:%S_spectrum', time.localtime())
+			file_dict['Spectrum File']['Filename'] = time.strftime('GPS_GUI_Spectrum_Data_%Y-%m-%d_%H:%M:%S', time.localtime())
 		spectrum_out_file = open('../../data/'+file_dict['Spectrum File']['Filename']+'.csv', "a+", )
 		spectrum_results = csv.writer(spectrum_out_file, delimiter = ",")
 		spectrum_results.writerow(['Epoch time'] + list(range(0,1024)))
@@ -324,7 +324,7 @@ if __name__ == '__main__':
 		
 		for key in sensor_dict:	
 			sensor_dict[key]['fg'] = folium.FeatureGroup(name=key) # Establishes Feature Groups
-			sensor_dict[key]['cm'] = branca.colormap.LinearColormap(['b','c','g','y','r'], vmin=sensor_dict[key]['min'], vmax=sensor_dict[key]['max'], caption=key)
+			sensor_dict[key]['cm'] = branca.colormap.LinearColormap(['#6801D2','#1996F3','#4Cf2CE','#B3F295','#FF934D','#FF0000'], vmin=sensor_dict[key]['min'], vmax=sensor_dict[key]['max'], caption=key)
 		
 		shown_sensor = '' # Initializing shown_sensor
 		
@@ -378,3 +378,5 @@ if __name__ == '__main__':
 		sendmsg('GPS', 'EXIT', 'fromGUI')
 		
 		traceback.print_exc()
+
+# This was made by Big Al and Edward Lee
