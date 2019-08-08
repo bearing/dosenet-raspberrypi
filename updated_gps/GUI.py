@@ -372,6 +372,8 @@ if __name__ == '__main__':
 	GUI = GUI()
 	GUI.show()
 	
-	atexit.register(GUI.stopPlottingPoints)
+	atexit.register(GUI.stopPlottingPoints) # For closing DAQs and map plot if still running and GUI is closed
 	
 	sys.exit(app.exec_())
+	
+# This was made by Big Al and Edward Lee
