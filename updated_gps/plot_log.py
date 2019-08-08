@@ -65,102 +65,103 @@ def popuptext(sensor_chosen):
 		popup = popup + str(df.iloc[i][sensor]) + "<br>"
 	return popup
 
-files = sorted(glob.glob('/home/pi/data/GPS_GUI_Data_*')) # Gets files
-filename = '' # Initializes file name
+if __name__ == '__main__':
+	files = sorted(glob.glob('/home/pi/data/GPS_GUI_Data_*')) # Gets files
+	filename = '' # Initializes file name
 
-# Shows five files at a time
-for i in range(0, len(files)):
-	print(str(i%5+1) + '. ' + files[i]) # Lists possible files
-	if i%5+1 == 5: # Runs every five files printed
-		cmd = input('Choose 1-5, ENTER to list more choices, or type in your own file to plot: ')
+	# Shows five files at a time
+	for i in range(0, len(files)):
+		print(str(i%5+1) + '. ' + files[i]) # Lists possible files
+		if i%5+1 == 5: # Runs every five files printed
+			cmd = input('Choose 1-5, ENTER to list more choices, or type in your own file to plot: ')
+			try:
+				if int(cmd) in range(1, 6): # Checks if command is within 1-5
+					filename = files[i+int(cmd)-5] # Sets filename to chosen file
+					break
+				else:
+					filename = cmd # If not a number in the range, assumes it is a filename
+					break
+			except:
+				if cmd == '': # Continues to print next five lines
+					continue
+				else:
+					filename = cmd # Assumes text is a filename
+					break
+
+	# Shows remaining files if the number of files is not perfectly divisible by 5
+	if len(files)%5 != 0 and filename == '': # Also checks if filename hasn't been defined
+		# Checks if only one file option
+		if len(files)%5 == 1:
+			cmd = input('Choose 1 or type in your own file to plot: ') 
+		else:
+			cmd = input('Choose 1-' + str(len(files)%5) + ' or type in your own file to plot: ')
 		try:
-			if int(cmd) in range(1, 6): # Checks if command is within 1-5
-				filename = files[i+int(cmd)-5] # Sets filename to chosen file
-				break
+			if int(cmd) in range(1, (len(files)%5)+1): # Checks if command is a valid shown file
+				filename = files[-1+int(cmd)-(len(files)%5)] # Sets filename to chosen file
 			else:
 				filename = cmd # If not a number in the range, assumes it is a filename
-				break
 		except:
-			if cmd == '': # Continues to print next five lines
-				continue
-			else:
-				filename = cmd # Assumes text is a filename
-				break
+			filename = cmd # Assumes text is a filename
 
-# Shows remaining files if the number of files is not perfectly divisible by 5
-if len(files)%5 != 0 and filename == '': # Also checks if filename hasn't been defined
-	# Checks if only one file option
-	if len(files)%5 == 1:
-		cmd = input('Choose 1 or type in your own file to plot: ') 
-	else:
-		cmd = input('Choose 1-' + str(len(files)%5) + ' or type in your own file to plot: ')
-	try:
-		if int(cmd) in range(1, (len(files)%5)+1): # Checks if command is a valid shown file
-			filename = files[-1+int(cmd)-(len(files)%5)] # Sets filename to chosen file
-		else:
-			filename = cmd # If not a number in the range, assumes it is a filename
-	except:
-		filename = cmd # Assumes text is a filename
+	# If filename still not set, askes for filename until given one.
+	while filename == '':
+		filename = input('Type in your own file to plot: ')
 
-# If filename still not set, askes for filename until given one.
-while filename == '':
-	filename = input('Type in your own file to plot: ')
+	df = pd.read_csv(filename) # Creates dataframe
 
-df = pd.read_csv(filename) # Creates dataframe
+	location = folium.Map(location = [df['Latitude'].where(df['Latitude'] != 0).mean(), df['Longitude'].where(df['Longitude'] != 0).mean()], zoom_start = 16) # Establishes map
 
-location = folium.Map(location = [df['Latitude'].where(df['Latitude'] != 0).mean(), df['Longitude'].where(df['Longitude'] != 0).mean()], zoom_start = 16) # Establishes map
+	# Establishes sensor dictionary (min, max, feature group, colormap)
+	sensor_dict = {'Air Quality PM 2.5 (ug/m3)': {'min': 0, 'max': 20},
+					'CO2 (ppm)': {'min': 300, 'max': 1000, 'fg': '', 'cm': ''},
+					'Humidity (%)': {'min': 30, 'max': 80, 'fg': '', 'cm': ''},
+					'Pressure (Pa)': {'min': 99500, 'max': 101400, 'fg': '', 'cm': ''},
+					'Radiation (cps)': {'min': 0, 'max': 100, 'fg': '', 'cm': ''},
+					'Radiation Bi (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
+					'Radiation K (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
+					'Radiation Tl (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
+					'Temperature (C)': {'min': 15, 'max': 30, 'fg': '', 'cm': ''}}
 
-# Establishes sensor dictionary (min, max, feature group, colormap)
-sensor_dict = {'Air Quality PM 2.5 (ug/m3)': {'min': 0, 'max': 20},
-				'CO2 (ppm)': {'min': 300, 'max': 1000, 'fg': '', 'cm': ''},
-				'Humidity (%)': {'min': 30, 'max': 80, 'fg': '', 'cm': ''},
-				'Pressure (Pa)': {'min': 99500, 'max': 101400, 'fg': '', 'cm': ''},
-				'Radiation (cps)': {'min': 0, 'max': 100, 'fg': '', 'cm': ''},
-				'Radiation Bi (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
-				'Radiation K (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
-				'Radiation Tl (cps)': {'min': 0, 'max': 15, 'fg': '', 'cm': ''},
-				'Temperature (C)': {'min': 15, 'max': 30, 'fg': '', 'cm': ''}}
+	header_list = list(df) # Generates a list of column names
+	sensor_list = header_list[3:] # Generates a list of sensors represented in the dataframe
 
-header_list = list(df) # Generates a list of column names
-sensor_list = header_list[3:] # Generates a list of sensors represented in the dataframe
+	set_min_and_max = input('Would you like to set the min and max values for the colormaps (y/N)? ') # Asks if colormap ranges want to be set
 
-set_min_and_max = input('Would you like to set the min and max values for the colormaps (y/N)? ') # Asks if colormap ranges want to be set
-
-# Sets min and max for colormap ranges using input
-if set_min_and_max in ['y', 'Y', 'yes', 'Yes']:
-	for label in sensor_list:
-		minimum = input('Min value for ' + label + ' (For default = ' + str(sensor_dict[label]['min']) + ', press ENTER): ')
-		maximum = input('Max value for ' + label + ' (For default = ' + str(sensor_dict[label]['max']) + ', press ENTER): ')
-		if minimum != '':
-			sensor_dict[label]['min'] = int(minimum)
-		if maximum != '':
-			sensor_dict[label]['max'] = int(maximum)
-
-# Sets html file name if given, defaults to log.html
-html = input("HTML name (For default = 'log', press ENTER): ")
-if html == '':
-	html = 'log'
-
-for label in sensor_list:
-	sensor_dict[label]['fg'] = folium.FeatureGroup(name=label, show=False) # Creates feature group and hides it
-	sensor_dict[label]['cm'] = branca.colormap.LinearColormap(['#6801D2','#1996F3','#4Cf2CE','#B3F295','#FF934D','#FF0000'], vmin=sensor_dict[label]['min'], vmax=sensor_dict[label]['max'], caption=label) # Creates colormaps
-	
-	location.add_child(sensor_dict[label]['fg']) # Adds feature group to location
-	location.add_child(sensor_dict[label]['cm']) # Adds colormap to location
-	location.add_child(BindColormap(sensor_dict[label]['fg'], sensor_dict[label]['cm'])) # Binds colormap to feature group
-
-location.add_child(folium.map.LayerControl()) # Adds layer control
-
-# Plots points
-for i in range(0, len(df['Latitude'])):
-	if (df.iloc[i]['Latitude'] != 0):
+	# Sets min and max for colormap ranges using input
+	if set_min_and_max in ['y', 'Y', 'yes', 'Yes']:
 		for label in sensor_list:
-			point_color = mpl.colors.rgb2hex(sensor_dict[label]['cm'].rgba_floats_tuple(df.iloc[i][label])) # Gets point color
-			folium.Circle(radius = 15, location = [(df.iloc[i]['Latitude']),(df.iloc[i]['Longitude'])],popup = popuptext(label)
-							,fill_color = point_color,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[label]['fg']) # Plots point
+			minimum = input('Min value for ' + label + ' (For default = ' + str(sensor_dict[label]['min']) + ', press ENTER): ')
+			maximum = input('Max value for ' + label + ' (For default = ' + str(sensor_dict[label]['max']) + ', press ENTER): ')
+			if minimum != '':
+				sensor_dict[label]['min'] = int(minimum)
+			if maximum != '':
+				sensor_dict[label]['max'] = int(maximum)
 
-# Saves and opens html
-location.save(html + '.html')
-os.system('xdg-open ' + html + '.html')		
+	# Sets html file name if given, defaults to log.html
+	html = input("HTML name (For default = 'log', press ENTER): ")
+	if html == '':
+		html = 'log'
+
+	for label in sensor_list:
+		sensor_dict[label]['fg'] = folium.FeatureGroup(name=label, show=False) # Creates feature group and hides it
+		sensor_dict[label]['cm'] = branca.colormap.LinearColormap(['#6801D2','#1996F3','#4Cf2CE','#B3F295','#FF934D','#FF0000'], vmin=sensor_dict[label]['min'], vmax=sensor_dict[label]['max'], caption=label) # Creates colormaps
+		
+		location.add_child(sensor_dict[label]['fg']) # Adds feature group to location
+		location.add_child(sensor_dict[label]['cm']) # Adds colormap to location
+		location.add_child(BindColormap(sensor_dict[label]['fg'], sensor_dict[label]['cm'])) # Binds colormap to feature group
+
+	location.add_child(folium.map.LayerControl()) # Adds layer control
+
+	# Plots points
+	for i in range(0, len(df['Latitude'])):
+		if (df.iloc[i]['Latitude'] != 0):
+			for label in sensor_list:
+				point_color = mpl.colors.rgb2hex(sensor_dict[label]['cm'].rgba_floats_tuple(df.iloc[i][label])) # Gets point color
+				folium.Circle(radius = 15, location = [(df.iloc[i]['Latitude']),(df.iloc[i]['Longitude'])],popup = popuptext(label)
+								,fill_color = point_color,color = '#000000',fill_opacity = 1,stroke = 1,weight = 1).add_to(sensor_dict[label]['fg']) # Plots point
+
+	# Saves and opens html
+	location.save(html + '.html')
+	os.system('xdg-open ' + html + '.html')		
 
 # This was made by Big Al and Edward Lee
