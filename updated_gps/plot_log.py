@@ -102,6 +102,10 @@ if len(files)%5 != 0 and filename == '': # Also checks if filename hasn't been d
 	except:
 		filename = cmd # Assumes text is a filename
 
+# If filename still not set, askes for filename until given one.
+while filename == '':
+	filename = input('Type in your own file to plot: ')
+
 df = pd.read_csv(filename) # Creates dataframe
 
 location = folium.Map(location = [df['Latitude'].where(df['Latitude'] != 0).mean(), df['Longitude'].where(df['Longitude'] != 0).mean()], zoom_start = 16) # Establishes map
