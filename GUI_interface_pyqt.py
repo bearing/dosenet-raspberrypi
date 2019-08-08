@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLi
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox, QLabel, QRadioButton
 from PyQt5.QtWidgets import QMenu, QGridLayout, QFormLayout, QSpacerItem, QSizePolicy
 from PyQt5.Qt import QHBoxLayout, QVBoxLayout #new imports
-from PyQt5.QtWidgets import QCheckBox
+from PyQt5.QtWidgets import QCheckBox, QDesktopWidget
 from pyqtgraph import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot, Qt
@@ -405,7 +405,7 @@ class App(QWidget, object):
         plt.ylabel("carbon dioxide (parts per million)")
 
         for i in range(datasets.count()):
-            with open(r'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/pi/data/' + #'/home/admin/Desktop/DataSet1/' +  #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER1 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
                 
@@ -425,7 +425,7 @@ class App(QWidget, object):
         Plot = plt.figure()
         ax1 =  Plot.add_subplot(111)
         for i in range(datasets.count()):
-            with open(r'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
+            with open(r'/home/pi/data/' + #'/home/admin/Desktop/DataSet1/' + #'/Users/vaughnluthringer/Desktop/dosenet/newdata/' + #'/home/pi/data/' + #USER2 '/home/admin/Desktop/DataSet1/' +
                       datasets.item(i).text()) as csv_file:
                 ds = pd.read_csv(csv_file, delimiter = ",")
 
@@ -475,7 +475,11 @@ class App(QWidget, object):
                     ax3.set_xlabel(r'Time')
                     ax3.xaxis.label.set_color('green')
                     ax3.axes.xaxis.set_major_locator(plt.MaxNLocator(6))
-                #Plot.set_size_inches(4, 4, forward = True)
+                #qtRectangle = self.frameGeometry()
+                #centerPoint = QDesktopWidget().availableGeometry().center()
+                #qtRectangle.moveCenter(centerPoint)
+                #plt.move(qtRectangle.center())
+                Plot.set_size_inches(7, 4, forward = True)
                 plt.title(pm)
                 #plt.xlabel('Time')
                 plt.ylabel('µg/m^3')
@@ -589,7 +593,7 @@ class App(QWidget, object):
         go_button.setStyleSheet(go_button_style)
         #pathway only applicable on Vaughn's laptop!!!
         go_button.clicked.connect(lambda:self.searchData(found_files, comp_files,
-                                                 '/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
+                                                 '/home/pi/data/', #'/home/admin/Desktop/DataSet1/', #'/Users/vaughnluthringer/Desktop/dosenet/newdata/', #'/home/pi/data/', #USER3 '/home/admin/Desktop/DataSet1/',
                                                  data_types[types_box.currentText()], loc_box.currentText(),
                                                  str(months[months_box.currentText()]).zfill(2),
                                                      str(years_box.currentText())))
