@@ -39,7 +39,8 @@ class adc_DAQ(object):
         self.adc_results.writerow(["Date and Time", "CO2 (ppm)", "unc."])
 
     def write_data(self, data):
-        this_time = time.time()
+        epoch_time = time.time()
+        this_time = time.strftime("%H:%M:%S", time.localtime(epoch_time))
         print("Writing to output file: {}".format([this_time] + data[:]))
         self.adc_results.writerow([this_time] + data[:])
 
