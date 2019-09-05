@@ -45,9 +45,6 @@ arg_dict = vars(args)
 new_setup = not arg_dict['old_led_pins']
 log_data = arg_dict['log']
 
-print('new_setup =',new_setup)
-print('log_data =',log_data)
-
 if not RPI:
     print(SINGLE_BREAK_LINE)
     print(('{red}This is not being executed on a RaspberryPi, none of the rest of {reset}' +
@@ -139,10 +136,8 @@ if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset
     new_setup = False
 print('\n')
 for sensor in range(4):
-    sensor_i, sensor_i2 = ques_conv(sensor_question.format(sensor_name=names[sensor])), None
-    if sensor_i:
-        sensor_i2 = ques_conv(data_question.format(sensor_name=names[sensor]))
-    sensors.append((sensor_i, sensor_i2))
+    sensor_i = ques_conv(sensor_question.format(sensor_name=names[sensor]))
+    sensors.append(sensor_i)
 print('\n')
 if not any(ans[0] for ans in sensors):
     print(('{red}Shutting down program since no sensors are connected.{reset}').format(
@@ -153,30 +148,18 @@ interval = ques_conv(INTERVAL_QUESTION, True)
 print(DOUBLE_BREAK_LINE)
 
 pocket, AQ, CO2, Weather = False, False, False, False
-if sensors[0][0]:
-    if sensors[0][1]:
-        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-    else:
-        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup)
+if sensors[0]:
+    sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     pocket, pocket_data = True, False
-if sensors[1][0]:
-    if sensors[1][1]:
-        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-    else:
-        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup)
+if sensors[1]:
+    sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     AQ, AQ_data = True, False
-if sensors[2][0]:
-    if sensors[2][1]:
-        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-    else:
-        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup)
+if sensors[2]:
+    sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     CO2, CO2_data = True, False
-if sensors[3][0]:
+if sensors[3]:
     try:
-        if sensors[3][1]:
-            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-        else:
-            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup)
+        sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
         Weather, weather_data = True, False
     except NameError:
         print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
