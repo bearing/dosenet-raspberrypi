@@ -131,10 +131,6 @@ pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 
 print(SINGLE_BREAK_LINE)
-if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
-    green=ANSI_GR, reset=ANSI_RESET)):
-    new_setup = False
-print('\n')
 for sensor in range(4):
     sensor_i = ques_conv(sensor_question.format(sensor_name=names[sensor]))
     sensors.append(sensor_i)
