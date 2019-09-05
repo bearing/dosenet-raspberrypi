@@ -135,7 +135,7 @@ for sensor in range(4):
     sensor_i = ques_conv(sensor_question.format(sensor_name=names[sensor]))
     sensors.append(sensor_i)
 print('\n')
-if not any(ans[0] for ans in sensors):
+if not any(ans for ans in sensors):
     print(('{red}Shutting down program since no sensors are connected.{reset}').format(
         red=ANSI_RED, reset=ANSI_RESET))
     print(SINGLE_BREAK_LINE)
