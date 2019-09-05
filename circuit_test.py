@@ -43,7 +43,7 @@ args = parser.parse_args()
 arg_dict = vars(args)
 
 new_setup = not arg_dict['old_led_pins']
-log_data = not arg_dict['log']
+log_data = arg_dict['log']
 
 print('new_setup =',new_setup)
 print('log_data =',log_data)
