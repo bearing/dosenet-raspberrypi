@@ -42,7 +42,11 @@ parser.add_argument(
 args = parser.parse_args()
 arg_dict = vars(args)
 
-print(arg_dict)
+new_setup = not arg_dict['old_led_pins']
+log_data = not arg_dict['log']
+
+print('new_setup =',new_setup)
+print('log_data =',log_data)
 
 if not RPI:
     print(SINGLE_BREAK_LINE)
@@ -124,7 +128,7 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
                 int_err = False
     return ans
 
-sensors, ansr_err, int_err, new_setup = [], True, True, True
+sensors, ansr_err, int_err = [], True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
