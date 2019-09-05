@@ -1,5 +1,6 @@
 import time
 import sys
+import argparse
 from globalvalues import RPI
 from managers import Manager_Pocket
 from managers import Manager_AQ
@@ -29,6 +30,19 @@ the circuit is functioning properly. It also gives users the option to retry wit
 this testing code, along with giving a couple helpful hints to help determine
 possible things that could cause problems with sensors working properly.
 """
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--old_led_pins', '-o', action='store_true', default=False,
+    help='Activate this flag this if the board has the much older LED pin layout.')
+parser.add_argument(
+    '--log', '-l', action='store_true', default=False,
+    help='Activate this flag if you would like to store the data from testing the board.')
+
+args = parser.parse_args()
+arg_dict = vars(args)
+
+print(arg_dict)
 
 if not RPI:
     print(SINGLE_BREAK_LINE)
