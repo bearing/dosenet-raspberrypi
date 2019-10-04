@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QTa
     QLabel, QCheckBox, QRadioButton, QComboBox, QLineEdit, QFormLayout, QScrollArea, QGridLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QTimer
+from PyQt5 import QtGui
 
 global display_sensor ##################################
 
@@ -184,7 +185,6 @@ class sensorChecklist(QScrollArea):
 
         # Initializes tuple of sensors/list of check buttons/list of selected sensors
         self.sensors = ('Air Quality PM 2.5 (ug/m3)', 'CO2 (ppm)', 'Humidity (%)', 'Pressure (Pa)', 'Radiation (cps)',
-                        'Radiation Bi (cps)', 'Radiation K (cps)', 'Radiation Tl (cps)',
                         'Temperature (C)')  # Make sure this is in alphabetical order
         self.checkButtons = []
         self.selectedSensors = []
@@ -226,15 +226,15 @@ class fileCreation(QScrollArea):
         self.fileLabel = QLabel('Filename')
         self.recordingLabel = QLabel('Record?')
         self.logFileLabel = QLabel('Log File:')
-        self.spectrumFileLabel = QLabel('Spectrum:')
+        
 
         # Creates input box for filename
         self.logInput = QLineEdit()
-        self.spectrumInput = QLineEdit()
+ 
 
         # Creates checkboxes for selecting which data to write
         self.logCheck = QCheckBox()
-        self.spectrumCheck = QCheckBox()
+        
 
         # Defaults logging data
         self.logCheck.setChecked(True)
@@ -247,9 +247,6 @@ class fileCreation(QScrollArea):
         self.layout.addWidget(self.logFileLabel, 1, 0)
         self.layout.addWidget(self.logInput, 1, 1)
         self.layout.addWidget(self.logCheck, 1, 2)
-        self.layout.addWidget(self.spectrumFileLabel, 2, 0)
-        self.layout.addWidget(self.spectrumInput, 2, 1)
-        self.layout.addWidget(self.spectrumCheck, 2, 2)
 
         # Finalizes widget
         self.setWidget(self.widget)
@@ -301,6 +298,7 @@ class plottingWidget(QWidget):
 
         # Creates radio button
         self.sensorRadioButtons = sensorRadioButtons(self.activeSensors)
+        self.SensorDropDown = SensorDropDown(self.activeSensors)#############################################################################
 
         # Creates Text Display
         self.textDisplay = TextDisplayWindow() ##########################
@@ -309,7 +307,7 @@ class plottingWidget(QWidget):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.startPlotting)
         self.layout.addWidget(self.stopPlotting)
-        self.layout.addWidget(self.sensorRadioButtons)
+        self.layout.addWidget(self.SensorDropDown) ####################################################################################################
         self.layout.addWidget(self.textDisplay) #########################
         self.setLayout(self.layout)
 
@@ -345,7 +343,7 @@ class plottingWidget(QWidget):
         connection.close()
 
 
-class sensorRadioButtons(QScrollArea):
+class sensorRadioButtons(QWidget):#QScrollArea):
     def __init__(self, activeSensors):
         super(sensorRadioButtons, self).__init__()
 
@@ -362,17 +360,25 @@ class sensorRadioButtons(QScrollArea):
         self.layout.setAlignment(Qt.AlignTop)
 
         # Creates radio buttons
+        #########################################################################################################################################
+        self.dropdown = QComboBox()
+        for sensor in self.activeSensors:
+            self.dropdown.addItem(str(sensor))
+            
+        self.layout.addWidget(self.dropdown)
+        #self.dropdown.currentIndexChanged.connect(lambda: self.changedRadio())
+        
         for sensor in self.activeSensors:
             self.radioButtons.append(QRadioButton(sensor))
-            self.radioButtons[-1].toggled.connect(lambda: self.changedRadio())
+            #self.radioButtons[-1].toggled.connect(lambda: self.changedRadio())
             self.layout.addWidget(self.radioButtons[-1])
 
         # Initializes first option as selected
         self.radioButtons[0].setChecked(True)
 
         # Finalizes widget
-        self.setWidget(self.widget)
-        self.setWidgetResizable(True)
+        #self.setWidget(self.widget)
+        #self.setWidgetResizable(True)
 
     def changedRadio(self):
         global display_sensor
@@ -394,6 +400,51 @@ class sensorRadioButtons(QScrollArea):
         channel.queue_declare(queue=queue)
         channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
         connection.close()
+
+
+
+
+
+
+class SensorDropDown(QWidget):
+    def __init__(self, activeSensors):
+        super(SensorDropDown, self).__init__()
+
+        # Initializes time delay/tuple of possible time delays
+        self.activeSensors = activeSensors
+        print (self.activeSensors)
+        # Creates label
+        self.sensorLabel = QLabel('Sensors')
+
+        # Creates dropdown selection
+        self.dropdown = QComboBox()
+        for sensor in self.activeSensors:
+            self.dropdown.addItem(str(sensor))
+        self.dropdown.currentIndexChanged.connect(lambda: self.selectionChanged())
+
+        # Adds widgets to timeDelay class
+        self.layout = QHBoxLayout()
+        self.layout.addWidget(self.sensorLabel)
+        self.layout.addWidget(self.dropdown)
+        self.setLayout(self.layout)
+
+    def selectionChanged(self):
+        global display_sensor
+        display_sensor = self.dropdown.currentText()
+        print (self.dropdown.currentText())
+        
+    def sendMessage(self, ID, cmd, queue):
+        '''
+        Sends a message through the selected queue with the given ID.
+        '''
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        channel = connection.channel()
+
+        channel.queue_declare(queue=queue)
+        channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
+        connection.close()
+
+
 
 class TextDisplayWindow(QWidget):
     # constructor
@@ -425,8 +476,11 @@ class TextDisplayWindow(QWidget):
     def getSensorValue(self):
         self.i += 1
         # print('%d. call of getSensorValue()' % self.i)
+        global display_sensor
         print (display_sensor)
+        self.qLbl.setFont(QtGui.QFont("Times", 25, QtGui.QFont.Bold))
         self.qLbl.setText(str(display_sensor) + str(self.i))
+        
 
 
 if __name__ == '__main__':
