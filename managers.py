@@ -1096,11 +1096,11 @@ if __name__ == '__main__':
             '--network_LED_pin', '-e', default=None,
             help='Specify which pin the network LED is connected to.')
         parser.add_argument(
-            '--noise_pin', '-n', default=NOISE_PIN,
+            '--noise_pin', '-n', type=int, default=NOISE_PIN,
             help='Specify which pin to the noise reader is connected to ' +
             '(default {})'.format(NOISE_PIN))
         parser.add_argument(
-            '--signal_pin', '-u', default=SIGNAL_PIN,
+            '--signal_pin', '-u', type=int, default=SIGNAL_PIN,
             help='Specify which pin the signal is coming in from ' +
             '(default {})'.format(SIGNAL_PIN))
 
