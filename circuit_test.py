@@ -11,6 +11,7 @@ from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED, ANSI_CYAN, ANSI_YEL
 from globalvalues import CIRCUIT_SENSOR_NAMES
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 from globalvalues import INTERVAL_QUESTION, SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
+from globalvalues import PIZERO_QUESTION, PIZERO_SIGNAL_PIN
 from globalvalues import CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
@@ -131,6 +132,9 @@ pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 
 print(SINGLE_BREAK_LINE)
+small_board = ques_conv(PIZERO_QUESTION)
+print('\n')
+
 for sensor in range(4):
     sensor_i = ques_conv(sensor_question.format(sensor_name=names[sensor]))
     sensors.append(sensor_i)
@@ -145,7 +149,10 @@ print(DOUBLE_BREAK_LINE)
 
 pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0]:
-    sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
+    if small_board:
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, signal_pin=PIZERO_SIGNAL_PIN)
+    else:
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     pocket, pocket_data = True, False
 if sensors[1]:
     sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)

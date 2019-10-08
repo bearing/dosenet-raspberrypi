@@ -26,7 +26,7 @@ except ImportError:
 # Hardware pin numbers
 # (using Broadcom numbering)
 # (Broadcom numbers are labeled on the pi hat)
-SIGNAL_PIN = 17
+SIGNAL_PIN, PIZERO_SIGNAL_PIN = 17, 5
 NOISE_PIN = 4
 NEW_D3S_LED_PIN = 13
 NEW_NETWORK_LED_PIN = 16
@@ -47,7 +47,6 @@ DEFAULT_LOGFILE_D3S = '/home/pi/debug.log_D3S'
 DEFAULT_LOGFILE_AQ = '/home/pi/debug.log_AQ'
 DEFAULT_LOGFILE_CO2 = '/home/pi/debug.log_CO2'
 DEFAULT_LOGFILE_WEATHER = '/home/pi/debug.log_weather'
-DEFAULT_LOGFILE_OLED = '/home/pi/debug.log_oled'
 DEFAULT_LOGFILES = [DEFAULT_LOGFILE, DEFAULT_LOGFILE_D3S, DEFAULT_LOGFILE_AQ, DEFAULT_LOGFILE_CO2, DEFAULT_LOGFILE_WEATHER]
 DEFAULT_HOSTNAME = 'dosenet.dhcp.lbl.gov'
 DEFAULT_UDP_PORT = 5005
@@ -68,12 +67,6 @@ DEFAULT_DATA_BACKLOG_FILE_AQ = '/home/pi/data_backlog_file_AQ.txt'
 DEFAULT_DATA_BACKLOG_FILE_CO2 = '/home/pi/data_backlog_file_CO2.txt'
 DEFAULT_DATA_BACKLOG_FILE_WEATHER = '/home/pi/data_backlog_file_weather.txt'
 DEFAULT_DATA_BACKLOG_FILES = [DEFAULT_DATA_BACKLOG_FILE, DEFAULT_DATA_BACKLOG_FILE_D3S, DEFAULT_DATA_BACKLOG_FILE_AQ, DEFAULT_DATA_BACKLOG_FILE_CO2, DEFAULT_DATA_BACKLOG_FILE_WEATHER]
-DEFAULT_OLED_DATA_FILE_PG = '/home/pi/oled_pg.csv'
-DEFAULT_OLED_DATA_FILE_D3S = '/home/pi/oled_d3s.csv'
-DEFAULT_OLED_DATA_FILE_AQ = '/home/pi/oled_aq.csv'
-DEFAULT_OLED_DATA_FILE_CO2 = '/home/pi/oled_co2.csv'
-DEFAULT_OLED_DATA_FILE_WEATHER = '/home/pi/oled_weather.csv'
-DEFAULT_OLED_LOGS = [DEFAULT_OLED_DATA_FILE_PG, DEFAULT_OLED_DATA_FILE_D3S, DEFAULT_OLED_DATA_FILE_AQ, DEFAULT_OLED_DATA_FILE_CO2, DEFAULT_OLED_DATA_FILE_WEATHER]
 DEFAULT_CALIBRATIONLOG_D3S = '/home/pi/calibration-log_D3S.txt'
 DEFAULT_CALIBRATIONLOG_TIME = 600
 DEFAULT_PROTOCOL = 'new'
@@ -131,8 +124,6 @@ ANSI_CYAN = '\033[36m' + ANSI_BOLD
 
 REBOOT_SCRIPT = '/home/pi/dosenet-raspberrypi/git-pull-reboot.sh'
 GIT_DIRECTORY = '/home/pi/dosenet-raspberrypi/'
-
-DEFAULT_DISPLAY_TIME_OLED = 25
 
 """
 Command line output statements used in the data-handlers
@@ -214,6 +205,10 @@ SENSOR_CONNECTION_QUESTION = (
     '{green} connected to the PiHat you are testing?  {reset}').format(
     green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
 
+PIZERO_QUESTION = (
+    '{green}Are you testing a small (Pi-Zero) PCB?  {reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
 DATA_LOGGING_QUESTION = (
     '{green}Do you want to log data for the {reset}' + '{blue}{{sensor_name}}{reset}' +
     '{green}?  {reset}').format(green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
@@ -228,7 +223,7 @@ CIRCUIT_TEST_RUNNING = (
     '{green}test for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
 CIRCUIT_TEST_RETRYING = (
-    '{green}Retrying the {reset}' + '{yellow}{{sensor_name}} {reset}' +
+    '{green}Retrying the {reset}' + '{yellow}{{sensorea_name}} {reset}' +
     '{green}on a {reset}' + '{yellow}{{interval}}{reset}' + '{green} second interval to {reset}' +
     '{green}continue testing for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
