@@ -50,7 +50,7 @@ from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
 from globalvalues import AQ_VARIABLES, CO2_VARIABLES
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
-from globalvalues import DEFAULT_OLED_LOGS
+#from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
 except ImportError:
@@ -1080,9 +1080,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--oled', '-o', action='store_true', default=False,
         help='Indicates whether an OLED screen is present or not')
+    """
     parser.add_argument(
         '--oled_log', '-r', default=None,
         help='Specify a path for the datalog (default {})'.format(DEFAULT_OLED_LOGS[sensor-1]))
+    """
 
     if sensor == 1:
         #Pocket Geiger specific variables.
