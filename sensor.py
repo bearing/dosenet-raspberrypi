@@ -104,7 +104,7 @@ class Sensor(object):
                 time.sleep(1)
                 self.add_interrupt(n_tries=(n_tries - 1))
 
-    def count(self):
+    def count(self, pin=None):
         """
         Add one count to queue. (Callback for GPIO pin)
 
