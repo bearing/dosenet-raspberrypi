@@ -52,6 +52,8 @@ class Sensor(object):
         self.logfile = logfile
         set_verbosity(self, logfile=logfile)
 
+        self.signal_pin = signal_pin
+
         if use_gpio is None:
             self.use_gpio = RPI
         else:
@@ -74,7 +76,7 @@ class Sensor(object):
             # use Broadcom GPIO numbering
             GPIO.setmode(GPIO.BCM)
             # set up signal pin
-            GPIO.setup(signal_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.add_interrupt()
 
         # TODO: check_accumulation every 5 minutes or so?
@@ -87,7 +89,7 @@ class Sensor(object):
 
         try:
             GPIO.add_event_detect(
-                signal_pin, GPIO.FALLING,
+                self.signal_pin, GPIO.FALLING,
                 callback=self.count,
                 bouncetime=1)
         except RuntimeError:
@@ -102,7 +104,7 @@ class Sensor(object):
                 time.sleep(1)
                 self.add_interrupt(n_tries=(n_tries - 1))
 
-    def count(self, pin=signal_pin):
+    def count(self):
         """
         Add one count to queue. (Callback for GPIO pin)
 
@@ -167,7 +169,7 @@ class Sensor(object):
         Older code does this every loop. I don't know whether it's needed.
         As of this refactoring, the device runs fine (for 24 hrs) without.
         """
-        GPIO.remove_event_detect(signal_pin)
+        GPIO.remove_event_detect(self.signal_pin)
         self.add_interrupt()
 
     def cleanup(self):
