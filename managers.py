@@ -690,7 +690,8 @@ class Manager_Pocket(Base_Manager):
         self.sensor = Sensor(
             counts_LED=self.counts_LED,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            signal_pin=signal_pin)
         self.data_handler = Data_Handler_Pocket(
             manager=self,
             verbosity=self.v,

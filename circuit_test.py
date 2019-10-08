@@ -150,10 +150,8 @@ print(DOUBLE_BREAK_LINE)
 pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0]:
     if small_board:
-        print('Small Board')
         sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, signal_pin=PIZERO_SIGNAL_PIN)
     else:
-        print('Big Board')
         sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     pocket, pocket_data = True, False
 if sensors[1]:
