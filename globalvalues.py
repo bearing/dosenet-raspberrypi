@@ -223,7 +223,7 @@ CIRCUIT_TEST_RUNNING = (
     '{green}test for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
 CIRCUIT_TEST_RETRYING = (
-    '{green}Retrying the {reset}' + '{yellow}{{sensorea_name}} {reset}' +
+    '{green}Retrying the {reset}' + '{yellow}{{sensor_name}} {reset}' +
     '{green}on a {reset}' + '{yellow}{{interval}}{reset}' + '{green} second interval to {reset}' +
     '{green}continue testing for data.\n{reset}').format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET)
 
