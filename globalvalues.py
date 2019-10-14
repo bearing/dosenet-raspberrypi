@@ -82,11 +82,20 @@ DEFAULT_D3STEST_TIME = 5
 D3S_LED_BLINK_PERIOD_INITIAL = 0.75
 D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
+DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO = None, None
 CLK, MISO, MOSI, CS = 18, 23, 24, 25
+CLK_Small, MISO_Small, MOSI_Small, CS_Small = 18, 23, 20, 21
 try:
     DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 except:
-    print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
+    pass
+    #print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
+
+try:
+    DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK_Small, cs=CS_Small, miso=MISO_Small, mosi=MOSI_Small)
+except:
+    pass
+    #print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
 DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
