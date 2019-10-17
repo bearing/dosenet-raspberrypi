@@ -87,12 +87,14 @@ CLK, MISO, MOSI, CS = 18, 23, 24, 25
 CLK_Small, MISO_Small, MOSI_Small, CS_Small = 18, 23, 20, 21
 try:
     DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+    print('Regular board size CO2 Sensor imported "properly"')
 except:
     pass
     #print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
 
 try:
     DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK_Small, cs=CS_Small, miso=MISO_Small, mosi=MOSI_Small)
+    print('Small board size CO2 Sensor imported "properly"')
 except:
     pass
     #print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")

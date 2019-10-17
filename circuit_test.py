@@ -338,7 +338,8 @@ if CO2:
             break
         elif average_data[0] < 0:
             print(('{red}Found negative data from the CO2 Sensor. \n{reset}' +
-                '{red}This usually means that the CO2 Sensor is not actually connected.\n{reset}' +
+                '{red}This usually means that the CO2 Sensor is not actually connected\n{reset}' +
+                '{red}or that the ADC is not getting powered properly.\n{reset}' +
                 '{red}Make sure the CO2 sensor is connected then try again.\n{reset}' +
                 '{red}If this continues, it is likely a problem with the PiHat{reset}').format(
                 red=ANSI_RED, reset=ANSI_RESET))
