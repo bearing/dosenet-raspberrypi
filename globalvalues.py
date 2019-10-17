@@ -90,8 +90,7 @@ except:
     pass
 
 try:
-    #DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS_Small, miso=MISO, mosi=MOSI_Small, gpio=GPIO)
-    DEFAULT_CO2_PORT_2 = Adafruit_MCP3008.MCP3008(clk=18, cs=23, miso=20, mosi=21)
+    DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS_Small, miso=MISO, mosi=MOSI_Small)#, gpio=GPIO)
 except:
     pass
 
