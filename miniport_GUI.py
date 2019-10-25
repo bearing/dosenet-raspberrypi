@@ -80,14 +80,14 @@ class tabWidget(QWidget):
         self.startGPSGUIButton = self.startGPSGUIButton()
         self.sensorChecklistAndButtons = sensorChecklistAndButtons(self)
         self.fileCreation = fileCreation()
-        self.timeDelay = timeDelay(self)
+        #self.timeDelay = timeDelay(self)
 
         # Adds widgets to sensor GUI tab
         self.sensorGUI.layout = QVBoxLayout(self)
         self.sensorGUI.layout.addWidget(self.startGPSGUIButton)
         self.sensorGUI.layout.addWidget(self.sensorChecklistAndButtons)
         self.sensorGUI.layout.addWidget(self.fileCreation)
-        self.sensorGUI.layout.addWidget(self.timeDelay)
+        #self.sensorGUI.layout.addWidget(self.timeDelay)
         self.sensorGUI.setLayout(self.sensorGUI.layout)
 
         # Adds tabs to tabWidget class
@@ -119,14 +119,7 @@ class tabWidget(QWidget):
             self.tabs.addTab(self.GPSGUI, 'GPS GUI')
 
             # Creates widget for GPS GUI tab
-            self.plottingWidget = plottingWidget(self,
-                                                 sorted(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors),
-                                                 self.timeDelay.time, {
-                                                     'Log File': {'Record': self.fileCreation.logCheck.isChecked(),
-                                                                  'Filename': self.fileCreation.logInput.text()},
-                                                     'Spectrum File': {
-                                                         'Record': self.fileCreation.spectrumCheck.isChecked(),
-                                                         'Filename': self.fileCreation.spectrumInput.text()}})
+            self.plottingWidget = plottingWidget(self, sorted(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors),{'Log File': {'Record': self.fileCreation.logCheck.isChecked(),'Filename': self.fileCreation.logInput.text()}})
 
             # Adds widget to GPS GUI tab
             self.GPSGUI.layout = QVBoxLayout()
@@ -199,6 +192,8 @@ class sensorChecklist(QScrollArea):
             self.checkButtons.append(QCheckBox(sensor))
             self.checkButtons[-1].stateChanged.connect(lambda: self.addToGPSGUI())
             self.layout.addWidget(self.checkButtons[-1])
+        
+        print(self.checkButtons)
 
         # Finalizes widget
         self.setWidget(self.widget)
@@ -219,7 +214,6 @@ class fileCreation(QScrollArea):
 
         # Initializes filenames/widget
         self.logFilename = ''
-        self.spectrumFilename = ''
         self.widget = QWidget()
 
         # Creates labels
@@ -253,40 +247,39 @@ class fileCreation(QScrollArea):
         self.setWidgetResizable(True)
 
 
-class timeDelay(QWidget):
-    def __init__(self, parent):
-        super(timeDelay, self).__init__(parent)
+#class timeDelay(QWidget):
+    #def __init__(self, parent):
+        #super(timeDelay, self).__init__(parent)
 
-        # Initializes time delay/tuple of possible time delays
-        self.time = 5
-        self.possibleTimeDelays = range(5, 65, 5)
+        ## Initializes time delay/tuple of possible time delays
+        #self.time = 5
+        #self.possibleTimeDelays = range(5, 65, 5)
 
-        # Creates label
-        self.timeLabel = QLabel('Time Delay: ')
+        ## Creates label
+        #self.timeLabel = QLabel('Time Delay: ')
 
-        # Creates dropdown selection
-        self.dropdown = QComboBox()
-        for time in self.possibleTimeDelays:
-            self.dropdown.addItem(str(time) + ' seconds')
-        self.dropdown.currentIndexChanged.connect(lambda: self.selectionChanged())
+        ## Creates dropdown selection
+        #self.dropdown = QComboBox()
+        #for time in self.possibleTimeDelays:
+            #self.dropdown.addItem(str(time) + ' seconds')
+        #self.dropdown.currentIndexChanged.connect(lambda: self.selectionChanged())
 
-        # Adds widgets to timeDelay class
-        self.layout = QHBoxLayout()
-        self.layout.addWidget(self.timeLabel)
-        self.layout.addWidget(self.dropdown)
-        self.setLayout(self.layout)
+        ## Adds widgets to timeDelay class
+        #self.layout = QHBoxLayout()
+        #self.layout.addWidget(self.timeLabel)
+        #self.layout.addWidget(self.dropdown)
+        #self.setLayout(self.layout)
 
-    def selectionChanged(self):
-        self.time = int(self.dropdown.currentText().strip(' seconds'))
+    #def selectionChanged(self):
+        #self.time = int(self.dropdown.currentText().strip(' seconds'))
 
 
 class plottingWidget(QWidget):
-    def __init__(self, parent, activeSensors, timeDelay, files):
+    def __init__(self, parent, activeSensors, files):
         super(plottingWidget, self).__init__(parent)
 
         # Initializes list of active sensors/time delay/filename
         self.activeSensors = activeSensors
-        self.timeDelay = timeDelay
         self.files = files
 
         # Creates start and stop plotting buttons
@@ -315,7 +308,6 @@ class plottingWidget(QWidget):
         if not self.sensorRadioButtons.started:
             print("Sending message to start.")
             self.sendMessage('Sensors', self.activeSensors, 'control')
-            self.sendMessage('Time Delay', self.timeDelay, 'control')
             self.sendMessage('Files', self.files, 'control')
             self.sendMessage('Shown Sensor', self.sensorRadioButtons.selectedButton, 'control')
             os.system('python3 map_plot.py &')
@@ -403,14 +395,10 @@ class sensorRadioButtons(QWidget):#QScrollArea):
 
 
 
-
-
-
 class SensorDropDown(QWidget):
     def __init__(self, activeSensors):
         super(SensorDropDown, self).__init__()
 
-        # Initializes time delay/tuple of possible time delays
         self.activeSensors = activeSensors
         print (self.activeSensors)
         # Creates label
@@ -427,10 +415,12 @@ class SensorDropDown(QWidget):
         self.layout.addWidget(self.sensorLabel)
         self.layout.addWidget(self.dropdown)
         self.setLayout(self.layout)
+        
 
     def selectionChanged(self):
         global display_sensor
         display_sensor = self.dropdown.currentText()
+        self.sendMessage(display_sensor,"START","FromGUI")
         print (self.dropdown.currentText())
         
     def sendMessage(self, ID, cmd, queue):
@@ -448,38 +438,71 @@ class SensorDropDown(QWidget):
 
 class TextDisplayWindow(QWidget):
     # constructor
-    def __init__(self):
-        super(TextDisplayWindow, self).__init__()
-        # counter
-        self.i = 0
-        # add QLabel
-        self.qLbl = QLabel('Not yet initialized')
-        # make QTimer
-        self.qTimer = QTimer()
-        #
-        self.start = QPushButton('Start Timer')
-        self.start.clicked.connect(lambda: self.startTimer())
-        # set interval to 1 s
-        self.qTimer.setInterval(1000) # 1000 ms = 1 s
-        # connect timeout signal to signal handler
-        self.qTimer.timeout.connect(self.getSensorValue)
-        # start timer
+        def __init__(self):
+                super(TextDisplayWindow, self).__init__()
+                # counter
+                self.i = 0
+                # add QLabel
+                self.qLbl = QLabel('Not yet initialized')
+                # make QTimer
+                self.qTimer = QTimer()
+                #
+                self.start = QPushButton('Start Timer')
+                self.start.clicked.connect(lambda: self.startTimer())
+                # set interval to 1 s
+                self.qTimer.setInterval(1000) # 1000 ms = 1 s
+                # connect timeout signal to signal handler
+                self.qTimer.timeout.connect(self.getSensorValue)
+                # start timer
 
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.qLbl)
-        self.layout.addWidget(self.start)
-        self.setLayout(self.layout)
+                self.layout = QVBoxLayout()
+                self.qLbl.setFont(QtGui.QFont("Times", 25, QtGui.QFont.Bold))
+                self.layout.addWidget(self.qLbl)
+                self.layout.addWidget(self.start)
+                self.setLayout(self.layout)
 
-    def startTimer(self):
-        self.qTimer.start()
+        def startTimer(self):
+                self.qTimer.start()
 
-    def getSensorValue(self):
-        self.i += 1
-        # print('%d. call of getSensorValue()' % self.i)
-        global display_sensor
-        print (display_sensor)
-        self.qLbl.setFont(QtGui.QFont("Times", 25, QtGui.QFont.Bold))
-        self.qLbl.setText(str(display_sensor) + str(self.i))
+        def getSensorValue(self):
+                self.i += 1
+                #global display_sensor
+                #print (display_sensor)
+                display_sensor = self.receive(queue = "FromGUI")
+                self.qLbl.setText(str(display_sensor) + str(self.i))
+
+        def receive(ID,queue): # Might need to remove this and replace it with the getlastmessage function from the other thing
+                connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+                channel = connection.channel()
+                channel.queue_declare(queue=queue)
+
+                method_frame = channel.basic_get(queue=queue)
+                header_frame = channel.basic_get(queue=queue)
+                body = channel.basic_get(queue=queue)
+                if body is not None:
+                        message = json.loads(body[2].decode('utf-8'))
+                        print(message)
+                        if ID == None:
+                                channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                                connection.close()
+                                return message
+                        elif message['id'] == ID:
+                                channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+                                connection.close()
+                                if 'cmd' in message:
+                                        return message['cmd']
+                                elif 'data' in message:
+                                        return message['data']
+                                else:
+                                        return None
+                        else:
+                                connection.close()
+                                return None
+                else:
+                        connection.close()
+                        return None
+
+        
         
 
 
