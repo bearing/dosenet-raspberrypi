@@ -1209,7 +1209,7 @@ if __name__ == '__main__':
     if sensor == 4:
         #CO2 Sensor specific variables.
         parser.add_argument(
-            '--CO2_port', '-a', default=DEFAULT_CO2_PORT,
+            '--CO2_port', '-a', default=None,
             help='Specify which port the CO2 sensor is sending ' +
             'data through \n[Note this is an Adafruit MCP port so be sure ' +
             'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
