@@ -95,10 +95,10 @@ try:
     DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS_Small, miso=MISO, mosi=MOSI_Small)#, gpio=GPIO)
 except:
     pass
-"""
 
 if not DEFAULT_CO2_PORT and not DEFAULT_CO2_PORT_PI_ZERO:
     print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
+"""
 DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']

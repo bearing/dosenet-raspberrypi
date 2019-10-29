@@ -64,7 +64,7 @@ try:
     from globalvalues import DEFAULT_AQ_PORT
 except ImportError:
     pass
-from globalvaules import CO2_pins
+from globalvalues import CO2_pins
 """
 try:
     from globalvalues import DEFAULT_CO2_PORT
