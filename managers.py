@@ -708,6 +708,9 @@ class Manager_Pocket(Base_Manager):
                         self.network_LED = LED(OLD_NETWORK_LED_PIN)
                 else:
                     self.network_LED = LED(network_LED_pin)
+            else:
+                self.counts_LED = None
+                self.network_LED = None
         else:
             self.counts_LED = None
             self.network_LED = None
