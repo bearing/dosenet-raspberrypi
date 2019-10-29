@@ -989,6 +989,7 @@ class Manager_CO2(Base_Manager):
         try:
             if not CO2_port:
                 if self.small_board:
+                    GPIO.setwarnings(False)
                     GPIO.setmode(GPIO.BCM)
                     GPIO.setup(20,GPIO.IN)
                     GPIO.setup(21,GPIO.IN)
