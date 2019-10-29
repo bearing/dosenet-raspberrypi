@@ -1072,7 +1072,7 @@ if __name__ == '__main__':
         help='Specify a publickey file (default {})'.format(
             DEFAULT_PUBLICKEY))
     parser.add_argument(
-        '--hostname', '-h', default=DEFAULT_HOSTNAME,
+        '--hostname', '-5', default=DEFAULT_HOSTNAME,
         help='Specify a server hostname (default {})'.format(
             DEFAULT_HOSTNAME))
     parser.add_argument(
