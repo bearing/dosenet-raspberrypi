@@ -989,6 +989,9 @@ class Manager_CO2(Base_Manager):
         try:
             if not CO2_port:
                 if self.small_board:
+                    GPIO.setmode(GPIO.BCM)
+                    GPIO.setup(20,GPIO.IN)
+                    GPIO.setup(21,GPIO.IN)
                     self.CO2_port = Adafruit_MCP3008.MCP3008(clk=CO2_pins[1][0], cs=CO2_pins[1][1], miso=CO2_pins[1][2], mosi=CO2_pins[1][3])
                 else:
                     self.CO2_port = Adafruit_MCP3008.MCP3008(clk=CO2_pins[0][0], cs=CO2_pins[0][1], miso=CO2_pins[0][2], mosi=CO2_pins[0][3])
