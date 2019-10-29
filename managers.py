@@ -1212,7 +1212,7 @@ if __name__ == '__main__':
             '--CO2_port', '-a', default=None,
             help='Specify which port the CO2 sensor is sending ' +
             'data through \n[Note this is an Adafruit MCP port so be sure ' +
-            'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
+            'to use that notation]')
 
         args = parser.parse_args()
         arg_dict = vars(args)
