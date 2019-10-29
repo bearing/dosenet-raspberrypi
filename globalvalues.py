@@ -84,9 +84,9 @@ D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
 DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO = None, None
 #Broadcom numbering of GPIO pins
-CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 18, 23, 24, 25, 20, 21
+#CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 18, 23, 24, 25, 20, 21
 #Board pin numbering of GPIO pins
-#CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 12, 16, 18, 22, 38, 40
+CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 12, 16, 18, 22, 38, 40
 CO2_pins = [[CLK, CS, MISO, MOSI], [CLK, CS_Small, MISO, MOSI_Small]]
 """
 try:
