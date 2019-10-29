@@ -12,7 +12,7 @@ from globalvalues import CIRCUIT_SENSOR_NAMES
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 from globalvalues import INTERVAL_QUESTION, SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 from globalvalues import PIZERO_QUESTION, PIZERO_SIGNAL_PIN
-from globalvalues import DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO
+#from globalvalues import DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO
 from globalvalues import CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
@@ -94,7 +94,7 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
         if restr and def_choices:
             if ans == 'YES' or ans == 'Y':
                 ans = True
-            elif ans == 'EXIT':
+            elif ans == 'EXIT' or ans == 'E':
                 sys.exit()
             elif ans == 'NO' or ans == 'N':
                 ans = False
@@ -151,7 +151,7 @@ print(DOUBLE_BREAK_LINE)
 pocket, AQ, CO2, Weather = False, False, False, False
 if sensors[0]:
     if small_board:
-        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, signal_pin=PIZERO_SIGNAL_PIN)
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, small_board=True)
     else:
         sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     pocket, pocket_data = True, False
@@ -160,7 +160,7 @@ if sensors[1]:
     AQ, AQ_data = True, False
 if sensors[2]:
     if small_board:
-        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, port=DEFAULT_CO2_PORT_PI_ZERO)
+        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, small_board=True)
     else:
         sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     CO2, CO2_data = True, False
