@@ -87,7 +87,7 @@ DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO = None, None
 CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 18, 23, 24, 25, 20, 21
 #Board pin numbering of GPIO pins
 #CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 12, 16, 18, 22, 38, 40
-CO2_pins = [[CLK, CS, MISO, MOSI], [18, 24, MISO, MOSI_Small]]
+CO2_pins = [[CLK, CS, MISO, MOSI], [18, 21, 24, 20]]
 """
 try:
     DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
