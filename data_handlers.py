@@ -101,7 +101,8 @@ class Data_Handler(object):
                 trash = self.queue.popleft()
                 try:
                     if not self.send_fail and not self.led.is_on:
-                        self.led.on()
+                        if not self.manager.small_board:
+                            self.led.on()
                     self.manager.sender.send_cpm_new(
                         trash[0], trash[1], trash[2])
                 except (socket.gaierror, socket.error, socket.timeout) as e:
@@ -462,11 +463,13 @@ class Data_Handler(object):
                     self.vprint(1, 'Failed to send packet! Socket timeout')
                 if self.manager.sensor_type == 1:
                     if self.send_fail:
-                        self.led.stop_blink()
-                        self.led.off()
+                        if not self.manager.small_board:
+                            self.led.stop_blink()
+                            self.led.off()
                     if not self.send_fail:
                         self.send_fail = True
-                        self.led.start_blink(interval=self.blink_period_lost_connection)
+                        if not self.manager.small_board:
+                            self.led.start_blink(interval=self.blink_period_lost_connection)
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
                 if self.manager.sensor_type == 2:
                     self.send_to_memory(spectra=spectra)
