@@ -9,7 +9,10 @@ import csv
 import os
 import subprocess
 import socket
-import pika
+try:
+    import pika
+except:
+    pass
 import json
 try:
     import kromek
