@@ -652,6 +652,7 @@ class Base_Manager(object):
 
         #Unique shutdown procedure for Pocket Geiger
         if self.sensor_type == 1:
+            #if not self.small_board:
             self.sensor.cleanup()
             del(self.sensor)
 
