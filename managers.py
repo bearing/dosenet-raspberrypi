@@ -663,11 +663,13 @@ class Base_Manager(object):
             except AttributeError:
                 pass
 
+        """
         if self.sensor_type != 3:
             try:
                 GPIO.cleanup()
             except NameError:
                 pass
+        """
 
         self.data_handler.send_all_to_backlog()
 
