@@ -8,6 +8,7 @@ import errno
 
 from auxiliaries import datetime_from_epoch
 from auxiliaries import set_verbosity
+from globalvalues import ANSI_RESET, ANSI_YEL, ANSI_GR, ANSI_RED
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_D3S
 from globalvalues import DEFAULT_DATA_BACKLOG_FILE_AQ
@@ -307,7 +308,7 @@ class Data_Handler(object):
                 1, SINGLE_BREAK_LINE)
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
             if self.manager.test:
-                self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
+                self.test_send(cpm=cpm, cpm_err=cpm_err)
             elif not self.manager.config:
                 self.no_config_send(cpm=cpm, cpm_err=cpm_err)
             elif not self.manager.publickey:
@@ -332,7 +333,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, spectra=spectra)
             self.manager.calibration_log(calibrationlog, spectra)
             if self.manager.test:
-                self.send_to_memory(spectra=spectra)
+                self.test_send(spectra=spectra)
             elif not self.manager.config:
                 self.no_config_send(spectra=spectra)
             elif not self.manager.publickey:
@@ -363,7 +364,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, average_data=average_data)
 
             if self.manager.test:
-                self.send_to_memory(average_data=average_data)
+                self.test_send(average_data=average_data)
             elif not self.manager.config:
                 self.no_config_send(average_data=average_data)
             elif not self.manager.publickey:
@@ -389,7 +390,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, average_data=average_data)
 
             if self.manager.test:
-                self.send_to_memory(average_data=average_data)
+                self.test_send(average_data=average_data)
             elif not self.manager.config:
                 self.no_config_send(average_data=average_data)
             elif not self.manager.publickey:
@@ -416,7 +417,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, average_data=average_data)
 
             if self.manager.test:
-                self.send_to_memory(average_data=average_data)
+                self.test_send(average_data=average_data)
             elif not self.manager.config:
                 self.no_config_send(average_data=average_data)
             elif not self.manager.publickey:
