@@ -10,7 +10,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QTimer
 from PyQt5 import QtGui
 
-global display_sensor 
+display_sensor = ""
 
 def receive(ID, queue):
 	'''
@@ -255,24 +255,25 @@ class plottingWidget(QWidget):
 		self.weather_activated = False
 
 		for sensor in activeSensors:
-			print(sensor)
+
 			if sensor == "Air Quality PM 2.5 (ug/m3)":
 				print("Air Quality DAQ activated")
+				os.system('python air_quality_DAQ.py &')
+				self.sendMessage("Air Quality","START","fromGUI")
+				
 			elif sensor == "CO2 (ppm)":
 				print("CO2 DAQ activated")
+				os.system('python adc_DAQ.py &')
+				self.sendMessage("CO2","START","fromGUI")
+				
+				
 			elif sensor == "Radiation (cps)":
 				print("Radiation DAQ activated")
+				
 			elif sensor == "Humidity (%)" or "Temperature (C)" or "Pressure (Pa)":
 				if not self.weather_activated:
 					print("Weather DAQ activated")
 				self.weather_activated = True
-		
-		# Creates start and stop plotting buttons
-		self.startPlotting = QPushButton('Start Plotting')
-		self.startPlotting.clicked.connect(lambda: self.startPlottingPoints())
-
-		self.stopPlotting = QPushButton('Stop Plotting')
-		self.stopPlotting.clicked.connect(lambda: self.stopPlottingPoints())
 
 		# Creates Dropdown Menu
 		self.SensorDropDown = SensorDropDown(self.activeSensors)#############################################################################
@@ -282,29 +283,9 @@ class plottingWidget(QWidget):
 
 		# Adds widgets to plottingWidget class
 		self.layout = QVBoxLayout()
-		self.layout.addWidget(self.startPlotting)
-		self.layout.addWidget(self.stopPlotting)
 		self.layout.addWidget(self.SensorDropDown) ####################################################################################################
 		self.layout.addWidget(self.textDisplay) #########################
 		self.setLayout(self.layout)
-
-	def startPlottingPoints(self):
-		if not self.sensorRadioButtons.started:
-			print("Sending message to start.")
-			self.sendMessage('Sensors', self.activeSensors, 'control')
-			self.sendMessage('Shown Sensor', self.sensorRadioButtons.selectedButton, 'control')
-			os.system('python3 map_plot.py &')
-			self.sensorRadioButtons.started = True
-		elif self.sensorRadioButtons.started:
-			print("Already sent message to start.")
-
-	def stopPlottingPoints(self):
-		if self.sensorRadioButtons.started:
-			print("Sending message to stop.")
-			self.sendMessage('EXIT', 'EXIT', 'control')
-			self.sensorRadioButtons.started = False
-		elif not self.sensorRadioButtons.started:
-			print("Already sent message to stop.")
 
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -316,65 +297,6 @@ class plottingWidget(QWidget):
 		channel.queue_declare(queue=queue)
 		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
 		connection.close()
-
-
-#class sensorRadioButtons(QWidget):#QScrollArea):
-	#def __init__(self, activeSensors):
-		#super(sensorRadioButtons, self).__init__()
-
-		## Initializes list of active sensors/list of radio buttons/started boolean/widget
-		#self.activeSensors = activeSensors
-		#self.radioButtons = []
-		#self.selectedButton = self.activeSensors[0]
-		#self.started = False
-		#self.widget = QWidget()
-
-
-		## Initializes layout
-		#self.layout = QVBoxLayout(self.widget)
-		#self.layout.setAlignment(Qt.AlignTop)
-
-		## Creates radio buttons
-		##########################################################################################################################################
-		#self.dropdown = QComboBox()
-		#for sensor in self.activeSensors:
-			#self.dropdown.addItem(str(sensor))
-			
-		#self.layout.addWidget(self.dropdown)
-		##self.dropdown.currentIndexChanged.connect(lambda: self.changedRadio())
-		
-		#for sensor in self.activeSensors:
-			#self.radioButtons.append(QRadioButton(sensor))
-			##self.radioButtons[-1].toggled.connect(lambda: self.changedRadio())
-			#self.layout.addWidget(self.radioButtons[-1])
-
-		## Initializes first option as selected
-		#self.radioButtons[0].setChecked(True)
-
-		## Finalizes widget
-		##self.setWidget(self.widget)
-		##self.setWidgetResizable(True)
-
-	##def changedRadio(self):
-		##global display_sensor
-		##self.sensor = self.sender()
-		##if self.sensor.isChecked():
-			##self.selectedButton = self.sensor.text()
-			###print(self.sensor.text())
-			##display_sensor = self.sensor.text()
-			##if self.started:
-				##self.sendMessage('Shown Sensor', self.selectedButton, 'control')
-
-	#def sendMessage(self, ID, cmd, queue):
-		#'''
-		#Sends a message through the selected queue with the given ID.
-		#'''
-		#connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-		#channel = connection.channel()
-
-		#channel.queue_declare(queue=queue)
-		#channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
-		#connection.close()
 
 
 
@@ -401,9 +323,10 @@ class SensorDropDown(QWidget):
 		
 
 	def selectionChanged(self):
+		
 		global display_sensor
 		display_sensor = self.dropdown.currentText()
-		self.sendMessage(display_sensor,"START","fromGUI")
+		#self.sendMessage(display_sensor,"START","fromGUI")
 		print (self.dropdown.currentText())
 		
 	def sendMessage(self, ID, cmd, queue):
@@ -446,13 +369,37 @@ class TextDisplayWindow(QWidget):
 
 	def startTimer(self):
 		self.qTimer.start()
+		
+		"""
+		I really screwed the pooch on this one
+		Everything in the getSensorValue method is endless trash
+		I must be drunk
+		
+		"""
 
 	def getSensorValue(self):
-		self.i += 1
-		#global display_sensor
-		#print (display_sensor)
-		display_sensor = receive_last_message(queue = "fromGUI")
-		self.qLbl.setText(str(display_sensor) + str(self.i))
+		
+		print(display_sensor)
+		print("________________________________________________________________") #str(receive_last_message(ID = "CO2",queue="toGUI",message="")))
+		sensor_id = "Air Quality"
+		
+		if display_sensor == "Air Quality PM 2.5 (ug/m3)":
+			sensor_id = "Air Quality"
+		elif display_sensor == "CO2 (ppm)":
+			sensor_id = "CO2"
+		
+		display_sensor_data = str(receive_last_message(ID = "CO2",queue = "toGUI",message=""))
+		print(display_sensor_data)
+		print(display_sensor_data)
+		self.qLbl.setTextFormat(0) # Set format so that qLabel doesn't have to guess what kind of string is passed in
+		
+		self.qLbl.setText(display_sensor_data)
+		
+		#### IMPORTANT 
+		#### THE RECEIVE LAST MESSAGE METHOD REMOVES THINGS FROM THE QUEUE
+		#### DO NOT TRY TO USE IT TWICE AND BELIEVE YOU WILL GET THE SAME THING
+		#### IT MIGHT BE FINE WITH AIR QUALITY SINCE IT PUSHES SO MANY THINGS OUT SO QUICKLY, BUT CO2 WILL NOT WORK SINCE IT PUSHES TO THE QUEUE SLOWER
+		#### MUCH MORE WORK NEEDS TO BE DONE
 		
    
 
@@ -468,4 +415,4 @@ if __name__ == '__main__':
 
 	sys.exit(app.exec_())
 
-# This was made by Big Al and Edward Lee
+# This code is endless trash
