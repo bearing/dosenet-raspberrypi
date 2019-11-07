@@ -10,7 +10,16 @@ import json
 import random
 
 from auxiliaries import set_verbosity
-from globalvalues import DEFAULT_LOGFILE_OLED, DEFAULT_DISPLAY_TIME_OLED
+
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_SSD1306
+
+import Image
+import ImageDraw
+import ImageFont
+
+DEFAULT_LOGFILE_OLED = '/home/pi/debug.log_oled'
+DEFAULT_DISPLAY_TIME_OLED = 25
 
 class OLED_Manager(object):
     """
@@ -18,10 +27,13 @@ class OLED_Manager(object):
     display data straight from the different types of sensors (hopefully)
     """
     def __init__(self,
+                 oled_type=None,
                  display_time=None,
                  logfile=None,
                  verbosity=None,
                  test=None):
+
+        self.oled_type = oled_type
 
         self.logfile = logfile
 
@@ -45,7 +57,13 @@ class OLED_Manager(object):
 
         set_verbosity(self)
 
-        self.OLED_Pin_Setup()
+        self.screen = None
+        if self.oled_type == 'r':
+            self.redOLED_Pin_Setup()
+        elif self.oled_type = 'b':
+            self.screen = self.blueOLED_Pin_Setup()
+        else:
+            pass
 
         self.disp_names = ("Data received from:", "at ", "Pocket Geiger Counter",
             "D3S", "Air Quality Sensor", "CO2 Sensor", "Weather Sensor", "Unknown Sensor :(")
@@ -81,10 +99,30 @@ class OLED_Manager(object):
             data = None
         return data
 
-    def OLED_Pin_Setup(self):
+    def blueOLED_Pin_Setup(self):
         """
-        This function sets up the pins for the OLED screen and
-        displays a small message when complete
+        This function sets up the pins for the blue slightly larger
+        OLED screen and displays a small message when complete.
+
+        This also sets up an overall screen image area that can be edited
+        before being displayed.
+        """
+        disp = Adafruit_SSD1306.SSD1306_128_64(rst=20, dc=21, spi=SPI.SpiDev(0, 0, max_speed_hz=8000000))
+        disp.begin()
+
+        self.display_image = Image.new('1', (disp.width, disp.height))
+        self.draw = ImageDraw.Draw(self.image)
+        self.font = ImageFont.load_default()
+
+        disp.clear()
+        disp.display()
+
+        return disp
+
+    def redOLED_Pin_Setup(self):
+        """
+        This function sets up the pins for the red slightly smaller
+        OLED screen and displays a small message when complete
         """
         ctypes.CDLL("/usr/lib/libwiringPi.so").wiringPiSetup()
         ctypes.CDLL("/usr/lib/libwiringPi.so").pinMode(10, 1)
@@ -106,19 +144,39 @@ class OLED_Manager(object):
         the message for that many seconds and then clear the screen.
         """
         if isinstance(print_text, str):
-            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(x, y, print_text)
-            if display_time:
-                time.sleep(display_time)
-                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
+            if self.oled_type == 'r':
+                ctypes.CDLL("/home/pi/oledtest/test.so").LCD_P6x8Str(x, y, print_text)
+                if display_time:
+                    time.sleep(display_time)
+                    self.oclear()
+            elif self.oled_type == 'b':
+                if not self.screen:
+                    self.vprint(1, 'Blue OLED screen not setup! Please do so before trying to print to it')
+                else:
+                    self.draw.text((x, y), print_text, font=self.font, fill=255)
+                    self.screen.image(self.image)
+                    self.screen.display()
+                    if display_time:
+                        time.sleep(display_time)
+                        self.oclear()
         else:
             print("Trying to display something that wasn't a string! Try making it a string.")
 
-    def oclear(self):
+    def oclear(self, x=None, y=None):
         """
         This function is meant to shorten the code needed to clear the
-        OLED screen.
+        red OLED screen.
         """
-        ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
+        if self.oled_type == 'r':
+            ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
+        elif self.oled_type == 'b':
+            if not x and not y:
+                self.screen.clear()
+                self.screen.display()
+            else:
+                pass
+        else:
+            self.vprint(1, 'Not a recognized OLED screen type! Nothing to clear then :)')
 
     def det_col(self, disp_str):
         """
@@ -127,6 +185,11 @@ class OLED_Manager(object):
         """
         disp_col = int(math.floor(3*(21-len(disp_str))))
         return disp_col
+
+
+"""
+For the Blue OLED screen, each letter is displaying on a 6x7 pixel grid with a 1 pixel buffer on the top
+"""
 
     def display_data(self, sid, data):
         """
@@ -229,6 +292,9 @@ class OLED_Manager(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--oled_type', '-o', type=str, default='b', help=('Enter either b or r to distinguish '+
+        'which OLED screen \nis connected to the RaspberryPi (default {})'.format('Blue')))
     parser.add_argument(
         '--display_time', '-d', type=int, help=('Enter a number corresponding '+
         'to the amount of time that data \nfrom each sensor will display on '+
