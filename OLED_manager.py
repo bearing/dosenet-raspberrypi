@@ -60,7 +60,7 @@ class OLED_Manager(object):
         self.screen = None
         if self.oled_type == 'r':
             self.redOLED_Pin_Setup()
-        elif self.oled_type = 'b':
+        elif self.oled_type == 'b':
             self.screen = self.blueOLED_Pin_Setup()
         else:
             pass
