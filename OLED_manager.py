@@ -5,7 +5,10 @@ import math
 import argparse
 import sys
 import os
-import pika
+try:
+    import pika
+except:
+    pass
 import json
 import random
 
@@ -84,9 +87,10 @@ class OLED_Manager(object):
         """
         random.seed(time.time())
         if sensor == 1:
-            data = [random.randint(1,400), random.randint(1,20)]
+            ranpoc, rantime = random.randint(1,50), random.randint(10,300)
+            data = [ranpoc, math.sqrt(ranpoc*(float(rantime)/60))/(float(rantime)/60)]
         elif sensor == 2:
-            data = [math.floor(round(random.uniform(0.005,0.5)/float(random.randint(30,300)),0))]
+            data = [round(random.uniform(1000,25000),3)]
         elif sensor == 3:
             data = [round(random.uniform(0,6),2), round(random.uniform(0,6),2), round(random.uniform(0,5),2),
                 round(random.uniform(0,1000),2), round(random.uniform(0,500),2), round(random.uniform(0,150),2),
@@ -186,10 +190,9 @@ class OLED_Manager(object):
         disp_col = int(math.floor(3*(21-len(disp_str))))
         return disp_col
 
-
-"""
-For the Blue OLED screen, each letter is displaying on a 6x7 pixel grid with a 1 pixel buffer on the top
-"""
+    """
+    For the Blue OLED screen, each letter is displaying on a 6x7 pixel grid with a 1 pixel buffer on the top
+    """
 
     def display_data(self, sid, data):
         """

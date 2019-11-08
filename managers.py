@@ -1239,10 +1239,10 @@ if __name__ == '__main__':
     if sensor == 5:
         #Weather Sensor specific variables.
         parser.add_argument(
-            '--Weather_Port', '-a', default=DEFAULT_WEATHER_PORT,
+            '--Weather_Port', '-a', default=None,
             help='Specify which port the Weather sensor is sending ' +
             'data through \n[Note this is an I2C port so be sure ' +
-            'to use that notation] (default {})'.format(DEFAULT_WEATHER_PORT))
+            'to use that notation]')
 
         args = parser.parse_args()
         arg_dict = vars(args)
