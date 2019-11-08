@@ -1075,7 +1075,7 @@ if __name__ == '__main__':
         if sensor.upper() in val:
             sensor = i+1
     if isinstance(sensor, str):
-        print('{red}{value} is not a valid sensor choice, try entering any #1-5 or a sensor name{reset}'.format(
+        print('{red}"{value}" is not a valid sensor choice, try entering any #1-5 or a sensor name{reset}'.format(
             red=ANSI_RED, value=sensor, reset=ANSI_RESET))
         sys.exit()
 
