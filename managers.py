@@ -1066,12 +1066,16 @@ class SleepError(Exception):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--sensor', '-s', type=int, help='Enter a number corresponding ' +
+        '--sensor', '-s', type=str, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
         '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
     sensor = parser.parse_known_args()[0].sensor
-    if sensor > 5 or sensor < 1:
-        print('{red}{value} is not a valid sensor choice, try entering any #1-5{reset}'.format(
+    valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
+    for i, val in enumerate(valid_sensors):
+        if sensor.upper() in val:
+            sensor = i+1
+    if isinstance(sensor, str):
+        print('{red}{value} is not a valid sensor choice, try entering any #1-5 or a sensor name{reset}'.format(
             red=ANSI_RED, value=sensor, reset=ANSI_RESET))
         sys.exit()
 
