@@ -1072,8 +1072,9 @@ if __name__ == '__main__':
     sensor = parser.parse_known_args()[0].sensor
     valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
     for i, val in enumerate(valid_sensors):
-        if sensor.upper() in val:
-            sensor = i+1
+        if not isinstance(sensor, int):
+            if sensor.upper() in val:
+                sensor = i+1
     if isinstance(sensor, str):
         print('{red}"{value}" is not a valid sensor choice, try entering any #1-5 or a sensor name{reset}'.format(
             red=ANSI_RED, value=sensor, reset=ANSI_RESET))
