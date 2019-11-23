@@ -1,3 +1,7 @@
+'''
+	Author: Albert Qiang
+	hit me up on facebook for that collab
+'''
 import json
 import sys
 import pika
@@ -12,45 +16,38 @@ from PyQt5 import QtGui
 
 display_sensor = ""
 
-def receive(ID, queue):
-	'''
-	Returns command or data from queue with given ID. If given ID is None, then returns first message from queue.
-	'''
+def get_last_message(ID):
 	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 	channel = connection.channel()
-	channel.queue_declare(queue=queue)
-	method_frame, header_frame, body = channel.basic_get(queue=queue)
-	if body is not None:
-		message = json.loads(body.decode('utf-8'))
-		if ID == None:
-				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-				connection.close()
-				return message
-		elif message['id'] == ID:
-				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-				connection.close()
-				if 'cmd' in message:
-						return message['cmd']
-				elif 'data' in message:
-						return message['data']
-				else:
-						return None
-		else:
-				connection.close()
-				return None
-	else:
-		connection.close()
-		return None
+	channel.queue_declare(queue='toGUI')
+	#message = body
+	value = ""
+	method_frame, header_frame, body = channel.basic_get(queue='toGUI')
 	
-def receive_last_message(ID, queue, message=''):
-	'''
-	Returns last consecutive message with matching ID.
-	'''
-	body = receive(ID, queue)
 	while body != None:
-			message = body
-			body = receive(ID, queue)
-	return message
+		method_frame, header_frame, body = channel.basic_get(queue='toGUI')
+		if body is not None:
+			message = json.loads(body.decode('utf-8'))
+			if message['id'] == ID:
+				value = message
+				#print(type(value))
+				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+			else:
+				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+	
+	connection.close()
+	
+	return value
+	
+def clearQueue(queue):
+		'''
+		Clears given queue.
+		'''
+		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+		channel = connection.channel()
+		channel.queue_declare(queue=queue)
+		channel.queue_delete(queue=queue)
+		connection.close()
 
 
 class GUI(QMainWindow):
@@ -89,7 +86,8 @@ class GUI(QMainWindow):
 
 	def stopPlottingPoints(self):
 		print("Sending message to stop (if not plotting, ignore).")
-		self.sendMessage('EXIT', 'EXIT', 'control')
+		#for i in activeSensors:
+		#	self.sendMessage(i, 'EXIT', 'toGUI')
 
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -215,8 +213,8 @@ class sensorChecklist(QScrollArea):
 		super(sensorChecklist, self).__init__()
 
 		# Initializes tuple of sensors/list of check buttons/list of selected sensors
-		self.sensors = ('Air Quality PM 2.5 (ug/m3)', 'CO2 (ppm)', 'Humidity (%)', 'Pressure (Pa)', 'Radiation (cps)',
-						'Temperature (C)')  # Make sure this is in alphabetical order
+		self.sensors = ('Air Quality', 'CO2', 'Humidity', 'Pressure', 'Radiation',
+						'Temperature')  # Make sure this is in alphabetical order
 		self.checkButtons = []
 		self.selectedSensors = []
 		self.widget = QWidget()
@@ -252,34 +250,12 @@ class plottingWidget(QWidget):
 
 		# Initializes list of active sensors/time delay/filename
 		self.activeSensors = activeSensors
-		self.weather_activated = False
-
-		for sensor in activeSensors:
-
-			if sensor == "Air Quality PM 2.5 (ug/m3)":
-				print("Air Quality DAQ activated")
-				os.system('python air_quality_DAQ.py &')
-				self.sendMessage("Air Quality","START","fromGUI")
-				
-			elif sensor == "CO2 (ppm)":
-				print("CO2 DAQ activated")
-				os.system('python adc_DAQ.py &')
-				self.sendMessage("CO2","START","fromGUI")
-				
-				
-			elif sensor == "Radiation (cps)":
-				print("Radiation DAQ activated")
-				
-			elif sensor == "Humidity (%)" or "Temperature (C)" or "Pressure (Pa)":
-				if not self.weather_activated:
-					print("Weather DAQ activated")
-				self.weather_activated = True
 
 		# Creates Dropdown Menu
 		self.SensorDropDown = SensorDropDown(self.activeSensors)#############################################################################
 
 		# Creates Text Display
-		self.textDisplay = TextDisplayWindow() ##########################
+		self.textDisplay = TextDisplayWindow(self.activeSensors) ##########################
 
 		# Adds widgets to plottingWidget class
 		self.layout = QVBoxLayout()
@@ -327,7 +303,7 @@ class SensorDropDown(QWidget):
 		global display_sensor
 		display_sensor = self.dropdown.currentText()
 		#self.sendMessage(display_sensor,"START","fromGUI")
-		print (self.dropdown.currentText())
+		print (display_sensor)#self.dropdown.currentText())
 		
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -344,8 +320,9 @@ class SensorDropDown(QWidget):
 
 class TextDisplayWindow(QWidget):
 	# constructor
-	def __init__(self):
+	def __init__(self,activeSensors):
 		super(TextDisplayWindow, self).__init__()
+		print(activeSensors)
 		# counter
 		self.i = 0
 		# add QLabel
@@ -354,11 +331,11 @@ class TextDisplayWindow(QWidget):
 		self.qTimer = QTimer()
 		#
 		self.start = QPushButton('Start Timer')
-		self.start.clicked.connect(lambda: self.startTimer())
+		self.start.clicked.connect(lambda: self.startTimer(activeSensors))
 		# set interval to 1 s
-		self.qTimer.setInterval(1000) # 1000 ms = 1 s
+		self.qTimer.setInterval(2000) # 1000 ms = 1 s
 		# connect timeout signal to signal handler
-		self.qTimer.timeout.connect(self.getSensorValue)
+		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors))
 		# start timer
 
 		self.layout = QVBoxLayout()
@@ -366,8 +343,43 @@ class TextDisplayWindow(QWidget):
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
 		self.setLayout(self.layout)
+	
+	def sendMessage(self, ID, cmd, queue):
+		'''
+		Sends a message through the selected queue with the given ID.
+		'''
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+		channel = connection.channel()
 
-	def startTimer(self):
+		channel.queue_declare(queue=queue)
+		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
+		connection.close()
+
+	def startTimer(self,activeSensors):
+		
+		weather_activated = False
+
+		for sensor in activeSensors:
+
+			if sensor == "Air Quality":
+				print("Air Quality DAQ activated")
+				os.system('python air_quality_DAQ.py -i 1 &')
+				self.sendMessage("Air Quality","START","fromGUI")
+				
+			elif sensor == "CO2":
+				print("CO2 DAQ activated")
+				os.system('python adc_DAQ.py -i 1 &')
+				self.sendMessage("CO2","START","fromGUI")
+				
+				
+			elif sensor == "Radiation":
+				print("Radiation DAQ activated")
+				
+			elif sensor == "Humidity" or "Temperature" or "Pressure":
+				if not weather_activated:
+					print("Weather DAQ activated")
+				weather_activated = True
+				
 		self.qTimer.start()
 		
 		"""
@@ -377,18 +389,40 @@ class TextDisplayWindow(QWidget):
 		
 		"""
 
-	def getSensorValue(self):
+	def getSensorValue(self,activeSensors):
 		
-		print(display_sensor)
+		global display_sensor # This is largely uncesscary, but I'm stupid 
+		
+		print(display_sensor+"baguette boy lives again")
 		print("________________________________________________________________") #str(receive_last_message(ID = "CO2",queue="toGUI",message="")))
-		sensor_id = "Air Quality"
+		default_id = activeSensors[0]
 		
-		if display_sensor == "Air Quality PM 2.5 (ug/m3)":
-			sensor_id = "Air Quality"
-		elif display_sensor == "CO2 (ppm)":
-			sensor_id = "CO2"
+		if display_sensor == "":
+			display_sensor = default_id
 		
-		display_sensor_data = str(receive_last_message(ID = "CO2",queue = "toGUI",message=""))
+		display_sensor_data = get_last_message(ID =display_sensor)
+		"""
+		I can't fucking figure this formatting out
+		get_last_message should be returning a dictionary, but for some reason display_sensor_data is a string
+		im too sick to do this rn.
+		"""
+		print(type(display_sensor_data))
+		
+		if display_sensor == "Air Quality":
+			display_sensor_data = str("AQ: "+str(display_sensor_data[1][0]))
+		elif display_sensor == "CO2":
+			display_sensor_data = str("CO2: "+str(display_sensor_data[1]))
+		elif display_sensor == "Radiation":
+			'''
+			insert formatting for Radiation here
+			'''
+		elif display_sensor == "Humidity" or "Temperature" or "Pressure":
+			if not weather_activated:
+				"""
+				insert formatting for Weather here
+				"""
+			weather_activated = True
+		
 		print(display_sensor_data)
 		print(display_sensor_data)
 		self.qLbl.setTextFormat(0) # Set format so that qLabel doesn't have to guess what kind of string is passed in
@@ -400,8 +434,7 @@ class TextDisplayWindow(QWidget):
 		#### DO NOT TRY TO USE IT TWICE AND BELIEVE YOU WILL GET THE SAME THING
 		#### IT MIGHT BE FINE WITH AIR QUALITY SINCE IT PUSHES SO MANY THINGS OUT SO QUICKLY, BUT CO2 WILL NOT WORK SINCE IT PUSHES TO THE QUEUE SLOWER
 		#### MUCH MORE WORK NEEDS TO BE DONE
-		
-   
+	
 
 
 
@@ -415,4 +448,6 @@ if __name__ == '__main__':
 
 	sys.exit(app.exec_())
 
-# This code is endless trash
+# This code is filth of the highest degree
+# Brought to you from the Friday afternoons of Big Al
+
