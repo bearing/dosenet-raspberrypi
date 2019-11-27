@@ -16,12 +16,13 @@ from PyQt5 import QtGui
 
 display_sensor = ""
 
+
+
 def get_last_message(ID):
 	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 	channel = connection.channel()
 	channel.queue_declare(queue='toGUI')
-	#message = body
-	value = ""
+	value = None
 	method_frame, header_frame, body = channel.basic_get(queue='toGUI')
 	
 	while body != None:
@@ -30,7 +31,6 @@ def get_last_message(ID):
 			message = json.loads(body.decode('utf-8'))
 			if message['id'] == ID:
 				value = message
-				#print(type(value))
 				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 			else:
 				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
@@ -48,6 +48,7 @@ def clearQueue(queue):
 		channel.queue_declare(queue=queue)
 		channel.queue_delete(queue=queue)
 		connection.close()
+
 
 
 class GUI(QMainWindow):
@@ -83,11 +84,6 @@ class GUI(QMainWindow):
 		channel.queue_declare(queue=queue)
 		channel.queue_delete(queue=queue)
 		connection.close()
-
-	def stopPlottingPoints(self):
-		print("Sending message to stop (if not plotting, ignore).")
-		#for i in activeSensors:
-		#	self.sendMessage(i, 'EXIT', 'toGUI')
 
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -142,8 +138,8 @@ class tabWidget(QWidget):
 				self.tabs.removeTab(1)
 
 				#self.clearQueue('control')
-				#self.clearQueue('fromGUI')
-				#self.clearQueue('toGUI')
+				self.clearQueue('fromGUI')
+				self.clearQueue('toGUI')
 
 				#if self.plottingWidget.sensorRadioButtons.started:
 				#    print("Sending message to stop.")
@@ -152,7 +148,7 @@ class tabWidget(QWidget):
 
 			# Adds GPS GUI tab
 			self.GPSGUI = QWidget()
-			self.tabs.addTab(self.GPSGUI, 'GPS GUI')
+			self.tabs.addTab(self.GPSGUI, 'Display')
 
 			# Creates widget for GPS GUI tab
 			self.plottingWidget = plottingWidget(self, sorted(self.sensorChecklistAndButtons.sensorChecklist.selectedSensors))
@@ -331,7 +327,10 @@ class TextDisplayWindow(QWidget):
 		self.qTimer = QTimer()
 		#
 		self.start = QPushButton('Start Timer')
+		self.stop = QPushButton('Kill Everything')
+	
 		self.start.clicked.connect(lambda: self.startTimer(activeSensors))
+		self.stop.clicked.connect(lambda: self.kill(activeSensors))
 		# set interval to 1 s
 		self.qTimer.setInterval(2000) # 1000 ms = 1 s
 		# connect timeout signal to signal handler
@@ -342,7 +341,11 @@ class TextDisplayWindow(QWidget):
 		self.qLbl.setFont(QtGui.QFont("Times", 25, QtGui.QFont.Bold))
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
+		self.layout.addWidget(self.stop)
 		self.setLayout(self.layout)
+	
+	
+		
 	
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -354,6 +357,11 @@ class TextDisplayWindow(QWidget):
 		channel.queue_declare(queue=queue)
 		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
 		connection.close()
+	
+	def kill(self,activeSensors):
+		for i in activeSensors:
+			self.sendMessage(i,"EXIT","fromGUI")
+		sys.exit()
 
 	def startTimer(self,activeSensors):
 		
@@ -399,19 +407,24 @@ class TextDisplayWindow(QWidget):
 		
 		if display_sensor == "":
 			display_sensor = default_id
+			print(display_sensor)
 		
-		display_sensor_data = get_last_message(ID =display_sensor)
-		"""
-		I can't fucking figure this formatting out
-		get_last_message should be returning a dictionary, but for some reason display_sensor_data is a string
-		im too sick to do this rn.
-		"""
-		print(type(display_sensor_data))
+		display_sensor_data = json.dumps((get_last_message(ID=display_sensor)))
+		print(display_sensor_data)
+		display_sensor_data = (json.loads(display_sensor_data))
+		
+		
 		
 		if display_sensor == "Air Quality":
-			display_sensor_data = str("AQ: "+str(display_sensor_data[1][0]))
+			if display_sensor_data is not None:
+				display_sensor_data = "AQ: "+str(display_sensor_data['data'][1][0])
+			else: 
+				display_sensor_data = "AQ: N/A "
 		elif display_sensor == "CO2":
-			display_sensor_data = str("CO2: "+str(display_sensor_data[1]))
+			if display_sensor_data is not None:
+				display_sensor_data = str("CO2: "+str('%.3f'%display_sensor_data['data'][0]))
+			else: 
+				display_sensor_data = "CO2: N/A "
 		elif display_sensor == "Radiation":
 			'''
 			insert formatting for Radiation here
@@ -443,8 +456,6 @@ if __name__ == '__main__':
 	app = QApplication(sys.argv)
 	GUI = GUI()
 	GUI.show()
-
-	atexit.register(GUI.stopPlottingPoints)  # For closing DAQs and map plot if still running and GUI is closed
 
 	sys.exit(app.exec_())
 
