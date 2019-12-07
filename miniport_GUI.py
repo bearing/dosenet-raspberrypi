@@ -1,12 +1,14 @@
 '''
 	Author: Albert Qiang
-	hit me up on facebook for that collab
+	hit me up on LinkedIn for that collab
 '''
 import json
 import sys
 import pika
 import atexit
 import os
+import time
+import csv
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, \
 	QLabel, QCheckBox, QRadioButton, QComboBox, QLineEdit, QFormLayout, QScrollArea, QGridLayout
@@ -16,9 +18,13 @@ from PyQt5 import QtGui
 
 display_sensor = ""
 
+row = {}
 
 
 def get_last_message(ID):
+	
+	global row
+	
 	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 	channel = connection.channel()
 	channel.queue_declare(queue='toGUI')
@@ -31,25 +37,60 @@ def get_last_message(ID):
 			message = json.loads(body.decode('utf-8'))
 			if message['id'] == ID:
 				value = message
+				row[ID] = value
 				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 			else:
+				row[message['id']] = message
 				channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 	
 	connection.close()
 	
 	return value
 	
+def write_labels(filename):
+	log_out_file = open(filename+'.csv', "a+")
+	log_results = csv.writer(log_out_file, delimiter = ",")
+	
+	labels = ['Epoch Time','Air Quality','CO2','GPS','Humidity','Pressure','Radiation','Temperature']
+	
+	log_results.writerow(labels)
+	
+	log_out_file.close()
+	
+def write_data(filename,data_dictionary):
+	
+	log_out_file = open(filename+'.csv', "a+")
+	log_results = csv.writer(log_out_file, delimiter = ",")
+	
+	file_row = [None] * 8
+	
+	"""
+	Each label corresponds to an index based on its position in the labels array
+	"""
+	
+	file_row[0]=(time.time())
+	
+	for sensor in data_dictionary:
+		if sensor == "Air Quality":
+			file_row[1]=((data_dictionary['Air Quality'])['data'][1][0])
+		elif sensor == "CO2":
+			file_row[2]=((data_dictionary['CO2'])['data'][0])
+	
+	
+	log_results.writerow(file_row)
+	
+	log_out_file.close()
+	
 def clearQueue(queue):
-		'''
-		Clears given queue.
-		'''
-		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-		channel = connection.channel()
-		channel.queue_declare(queue=queue)
-		channel.queue_delete(queue=queue)
-		connection.close()
-
-
+	'''
+	Clears given queue.
+	'''
+	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+	channel = connection.channel()
+	channel.queue_declare(queue=queue)
+	channel.queue_delete(queue=queue)
+	connection.close()
+	
 
 class GUI(QMainWindow):
 	def __init__(self):
@@ -248,15 +289,15 @@ class plottingWidget(QWidget):
 		self.activeSensors = activeSensors
 
 		# Creates Dropdown Menu
-		self.SensorDropDown = SensorDropDown(self.activeSensors)#############################################################################
+		self.SensorDropDown = SensorDropDown(self.activeSensors)
 
 		# Creates Text Display
-		self.textDisplay = TextDisplayWindow(self.activeSensors) ##########################
+		self.textDisplay = TextDisplayWindow(self.activeSensors) 
 
 		# Adds widgets to plottingWidget class
 		self.layout = QVBoxLayout()
-		self.layout.addWidget(self.SensorDropDown) ####################################################################################################
-		self.layout.addWidget(self.textDisplay) #########################
+		self.layout.addWidget(self.SensorDropDown) 
+		self.layout.addWidget(self.textDisplay) 
 		self.setLayout(self.layout)
 
 	def sendMessage(self, ID, cmd, queue):
@@ -298,8 +339,7 @@ class SensorDropDown(QWidget):
 		
 		global display_sensor
 		display_sensor = self.dropdown.currentText()
-		#self.sendMessage(display_sensor,"START","fromGUI")
-		print (display_sensor)#self.dropdown.currentText())
+		print (display_sensor)
 		
 	def sendMessage(self, ID, cmd, queue):
 		'''
@@ -319,6 +359,10 @@ class TextDisplayWindow(QWidget):
 	def __init__(self,activeSensors):
 		super(TextDisplayWindow, self).__init__()
 		print(activeSensors)
+		
+		self.file_header = time.strftime('GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime()) # name of the file
+		write_labels(self.file_header)
+		
 		# counter
 		self.i = 0
 		# add QLabel
@@ -334,7 +378,7 @@ class TextDisplayWindow(QWidget):
 		# set interval to 1 s
 		self.qTimer.setInterval(2000) # 1000 ms = 1 s
 		# connect timeout signal to signal handler
-		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors))
+		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors,self.file_header))
 		# start timer
 
 		self.layout = QVBoxLayout()
@@ -389,19 +433,20 @@ class TextDisplayWindow(QWidget):
 				weather_activated = True
 				
 		self.qTimer.start()
-		
-		"""
-		I really screwed the pooch on this one
-		Everything in the getSensorValue method is endless trash
-		I must be drunk
-		
-		"""
+	
+	"""
+	
+	♪♪♬♪ endless trash ♬♪♪♪
+	
+	"""
+	
 
-	def getSensorValue(self,activeSensors):
+
+	def getSensorValue(self,activeSensors,log_file_name):
 		
-		global display_sensor # This is largely uncesscary, but I'm stupid 
+		global display_sensor # I'm not sure this is necessary
 		
-		print(display_sensor+"baguette boy lives again")
+		print(display_sensor+"baguette boy lives again") # damn right he does
 		print("________________________________________________________________") #str(receive_last_message(ID = "CO2",queue="toGUI",message="")))
 		default_id = activeSensors[0]
 		
@@ -438,15 +483,13 @@ class TextDisplayWindow(QWidget):
 		
 		print(display_sensor_data)
 		print(display_sensor_data)
+		print(str(row)+"**************************************")
+		
+		write_data(log_file_name,row)
+		
 		self.qLbl.setTextFormat(0) # Set format so that qLabel doesn't have to guess what kind of string is passed in
 		
 		self.qLbl.setText(display_sensor_data)
-		
-		#### IMPORTANT 
-		#### THE RECEIVE LAST MESSAGE METHOD REMOVES THINGS FROM THE QUEUE
-		#### DO NOT TRY TO USE IT TWICE AND BELIEVE YOU WILL GET THE SAME THING
-		#### IT MIGHT BE FINE WITH AIR QUALITY SINCE IT PUSHES SO MANY THINGS OUT SO QUICKLY, BUT CO2 WILL NOT WORK SINCE IT PUSHES TO THE QUEUE SLOWER
-		#### MUCH MORE WORK NEEDS TO BE DONE
 	
 
 
@@ -459,6 +502,5 @@ if __name__ == '__main__':
 
 	sys.exit(app.exec_())
 
-# This code is filth of the highest degree
-# Brought to you from the Friday afternoons of Big Al
+# Brought to you by Big Al's Friday afternoons
 
