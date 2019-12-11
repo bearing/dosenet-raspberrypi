@@ -325,6 +325,42 @@ class plottingWidget(QWidget):
 		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
 		connection.close()
 
+	def kill(self,activeSensors):
+		for i in activeSensors:
+			self.sendMessage(i,"EXIT","fromGUI")
+		sys.exit()
+
+	def startTimer(self,activeSensors):
+		
+		weather_activated = False
+
+		for sensor in activeSensors:
+
+			if sensor == "Air Quality":
+				print("Air Quality DAQ activated")
+				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
+				self.sendMessage("Air Quality","START","fromGUI")
+				
+			elif sensor == "CO2":
+				print("CO2 DAQ activated")
+				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 &')
+				self.sendMessage("CO2","START","fromGUI")
+
+			elif sensor == "Radiation":
+				print("Radiation DAQ activated")
+				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
+				self.sendMessage("Radiation","START","fromGUI")
+				
+			elif sensor == "Humidity" or "Temperature" or "Pressure":
+				if not weather_activated:
+					print("Weather DAQ activated")
+					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
+					self.sendMessage("Weather","START","fromGUI")
+				weather_activated = True
+				
+		self.qTimer.start()
+	
+
 
 
 class SensorDropDown(QWidget):
@@ -393,7 +429,6 @@ class TextDisplayWindow(QWidget):
 		self.layout = QVBoxLayout()
 		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
 		self.qLbl.setAlignment(Qt.AlignCenter)
-		self.qLbl.setAlignment(Qt.AlignTop)
 		self.layout.addWidget(self.qLbl)
 		#self.layout.addWidget(self.start)
 		#self.layout.addWidget(self.stop)
@@ -412,41 +447,6 @@ class TextDisplayWindow(QWidget):
 		channel.queue_declare(queue=queue)
 		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
 		connection.close()
-	
-	def kill(self,activeSensors):
-		for i in activeSensors:
-			self.sendMessage(i,"EXIT","fromGUI")
-		sys.exit()
-
-	def startTimer(self,activeSensors):
-		
-		weather_activated = False
-
-		for sensor in activeSensors:
-
-			if sensor == "Air Quality":
-				print("Air Quality DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
-				self.sendMessage("Air Quality","START","fromGUI")
-				
-			elif sensor == "CO2":
-				print("CO2 DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 &')
-				self.sendMessage("CO2","START","fromGUI")
-
-			elif sensor == "Radiation":
-				print("Radiation DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
-				self.sendMessage("Radiation","START","fromGUI")
-				
-			elif sensor == "Humidity" or "Temperature" or "Pressure":
-				if not weather_activated:
-					print("Weather DAQ activated")
-					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
-					self.sendMessage("Weather","START","fromGUI")
-				weather_activated = True
-				
-		self.qTimer.start()
 	
 	"""
 	
