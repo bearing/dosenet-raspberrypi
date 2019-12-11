@@ -104,6 +104,7 @@ class adc_DAQ(object):
         channel = connection.channel()
         channel.queue_declare(queue='fromGUI')
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
+        print(body)
         if body is not None:
             message = json.loads(body)
             if message['id']=='CO2':
