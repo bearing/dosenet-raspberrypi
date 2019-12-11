@@ -465,24 +465,35 @@ class TextDisplayWindow(QWidget):
 		
 		if display_sensor == "Air Quality":
 			if display_sensor_data is not None:
-				display_sensor_data = "AQ: "+str(display_sensor_data['data'][1][0])
+				display_sensor_data = "PM2.5: "+str(display_sensor_data['data'][1][0]+" μg/L")
 			else: 
 				display_sensor_data = "AQ: N/A "
 		elif display_sensor == "CO2":
 			if display_sensor_data is not None:
-				display_sensor_data = str("CO2: "+str('%.3f'%display_sensor_data['data'][0]))
+				display_sensor_data = str("CO2: "+str('%.1f'%display_sensor_data['data'][0])+" ppm")
 			else: 
 				display_sensor_data = "CO2: N/A "
 		elif display_sensor == "Radiation":
-			'''
-			insert formatting for Radiation here
-			'''
-		elif display_sensor == "Humidity" or "Temperature" or "Pressure":
-			if not weather_activated:
-				"""
-				insert formatting for Weather here
-				"""
-			weather_activated = True
+			if display_sensor_data is not None:
+				display_sensor_data = str("CPM: "+str(display_sensor_data['data'][0]) \
+					+", μSv/hr: "+str(display_sensor_data['data'][0]*0.036))
+			else: 
+				display_sensor_data = "CPM: N/A "
+		elif display_sensor == "Humidity":
+			if display_sensor_data is not None:
+				display_sensor_data = str("% Humidity: "+str(display_sensor_data['data'][0]))
+			else: 
+				display_sensor_data = "% Humidity: N/A "
+		elif display_sensor == "Temperature":
+			if display_sensor_data is not None:
+				display_sensor_data = str("Temp: "+str(display_sensor_data['data'][0])+" C")
+			else: 
+				display_sensor_data = "Temp: N/A "
+		elif display_sensor == "Pressure":
+			if display_sensor_data is not None:
+				display_sensor_data = str("Pressure: "+str(display_sensor_data['data'][0])+" atm")
+			else: 
+				display_sensor_data = "Pressure: N/A "
 		
 		print(display_sensor_data)
 		print(display_sensor_data)

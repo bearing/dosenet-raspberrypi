@@ -51,14 +51,13 @@ class adc_DAQ(object):
             #concentration = 5000/(16*1024/33)*values[0] - 1250
             # I suspect this new software outputs 16-bit (65536) instead of 10-bit (1024) word
             concentration = 5000/(16*65536/33)*values[0] - 1250
-            print(concentration)
             self.CO2_list.append(concentration)
 
 
             if len(self.CO2_list)>=self.n_merge:
-                self.print_data(self.CO2_list)
+                #self.print_data(self.CO2_list)
                 data = self.merge_data(self.CO2_list)
-                print("Data being sent to GUI: {} at {}".format(data,time.time()))
+                #print("Data being sent to GUI: {} at {}".format(data,time.time()))
                 self.send_data(data)
                 self.clear_data()
 
