@@ -169,4 +169,4 @@ if __name__ == '__main__':
 
         time.sleep(.2)
 
-	exit
+    exit

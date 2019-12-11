@@ -347,6 +347,8 @@ class plottingWidget(QWidget):
 	def kill(self,activeSensors):
 		for i in activeSensors:
 			self.sendMessage(i,"EXIT","fromGUI")
+		for i in activeSensors:
+			self.sendMessage(i,"EXIT","fromGUI")
 		sys.exit()
 
 	def startTimer(self,activeSensors):
