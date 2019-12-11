@@ -118,7 +118,7 @@ class air_quality_DAQ():
         channel.queue_declare(queue='fromGUI')
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
         if body is not None:
-            message = json.loads(body)
+            message = json.loads(body.decode('utf-8'))
             if message['id']=='Air Quality':
                 channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                 connection.close()

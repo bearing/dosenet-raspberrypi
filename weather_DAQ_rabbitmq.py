@@ -85,7 +85,7 @@ class weather_DAQ(object):
         channel.queue_declare(queue='fromGUI')
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
         if body is not None:
-            message = json.loads(body)
+            message = json.loads(body.decode('utf-8'))
             if message['id']=='Weather' or 
                message['id']=='Temperature' or 
                message['id']=='Humidity' or 

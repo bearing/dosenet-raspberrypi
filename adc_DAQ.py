@@ -55,7 +55,7 @@ class adc_DAQ(object):
             if len(self.CO2_list)>=self.n_merge:
                 self.print_data(self.CO2_list)
                 data = self.merge_data(self.CO2_list)
-                #print("Data being sent to GUI: {}".format(data))
+                print("Data being sent to GUI: {}".format(data))
                 self.send_data(data)
                 self.clear_data()
 
@@ -140,9 +140,8 @@ if __name__ == '__main__':
         if msg == 'START':
             print("Inside START")
             while msg is None or msg=='START':
-                print("running daq")
                 daq.run()
-                time.sleep(1/float(NRUN))
+                time.sleep(args.interval/float(NRUN))
                 msg = daq.receive()
                 sys.stdout.flush()
         # If EXIT is sent, break out of while loop and exit program
@@ -151,9 +150,7 @@ if __name__ == '__main__':
 
         if msg == 'EXIT':
             print('exiting program')
-            if arg_dict['datalog'] is not None:
-                sys.stdout.flush()
-                daq.close_file()
+            sys.stdout.flush()
             break
 
         time.sleep(.2)
