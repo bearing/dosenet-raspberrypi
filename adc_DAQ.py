@@ -78,15 +78,15 @@ class adc_DAQ(object):
         return [np.mean(temp_list), np.std(temp_list)]
 
     def send_data(self, data):
-		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-		channel = connection.channel()
-		channel.queue_declare(queue='toGUI')
-		message = {'id': 'CO2', 'data': data}
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='toGUI')
+        message = {'id': 'CO2', 'data': data}
 
-		channel.basic_publish(exchange='',
-							  routing_key='toGUI',
-							  body=json.dumps(message))
-		connection.close()
+        channel.basic_publish(exchange='',
+                              routing_key='toGUI',
+                              body=json.dumps(message))
+        connection.close()
 
 
     def clear_data(self):
