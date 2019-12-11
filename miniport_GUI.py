@@ -155,6 +155,7 @@ class tabWidget(QWidget):
 		# Creates widgets for sensor GUI tab
 		self.startGPSGUIButton = self.startGPSGUIButton()
 		self.sensorChecklistAndButtons = sensorChecklistAndButtons(self)
+		self.sensorChecklistAndButtons.verticalScrollBar.setStyleSheet("QScrollBar:vertical { width: 50px; }")
 		
 
 		# Adds widgets to sensor GUI tab
@@ -383,8 +384,9 @@ class TextDisplayWindow(QWidget):
 		# start timer
 
 		self.layout = QVBoxLayout()
-		self.qLbl.setFont(QtGui.QFont("Times", 36, QtGui.QFont.Bold))
+		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
 		self.qLbl.setAlignment(Qt.AlignCenter)
+		self.qLbl.setAlignment(Qt.AlignMiddle)
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
 		self.layout.addWidget(self.stop)
@@ -477,23 +479,22 @@ class TextDisplayWindow(QWidget):
 				display_sensor_data = "CO2: N/A "
 		elif display_sensor == "Radiation":
 			if display_sensor_data is not None:
-				display_sensor_data = str("CPM: "+str(display_sensor_data['data'][0]) \
-					+", μSv/hr: "+str('%.3f'%display_sensor_data['data'][0]*0.036))
+				display_sensor_data = str("μSv/hr: "+str('%.3f'%display_sensor_data['data'][0]*0.036))
 			else: 
 				display_sensor_data = "CPM: N/A "
 		elif display_sensor == "Humidity":
 			if display_sensor_data is not None:
-				display_sensor_data = str("% Humidity: "+str(display_sensor_data['data'][0]))
+				display_sensor_data = str("% H: "+str('%.1f'%display_sensor_data['data'][0]))
 			else: 
 				display_sensor_data = "% Humidity: N/A "
 		elif display_sensor == "Temperature":
 			if display_sensor_data is not None:
-				display_sensor_data = str("Temp: "+str(display_sensor_data['data'][0])+" C")
+				display_sensor_data = str("T: "+str('%.1f'%display_sensor_data['data'][0])+" C")
 			else: 
 				display_sensor_data = "Temp: N/A "
 		elif display_sensor == "Pressure":
 			if display_sensor_data is not None:
-				display_sensor_data = str("Pressure: "+str(display_sensor_data['data'][0])+" atm")
+				display_sensor_data = str("P: "+str('%.4f'%display_sensor_data['data'][0])+" atm")
 			else: 
 				display_sensor_data = "Pressure: N/A "
 		
@@ -513,7 +514,7 @@ class TextDisplayWindow(QWidget):
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
-	app.setFont(QtGui.QFont("Times", 24))
+	app.setFont(QtGui.QFont("Times", 22))
 	GUI = GUI()
 	GUI.show()
 
