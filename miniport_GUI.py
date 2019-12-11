@@ -295,10 +295,23 @@ class plottingWidget(QWidget):
 		# Creates Text Display
 		self.textDisplay = TextDisplayWindow(self.activeSensors) 
 
+		# Start/Stop buttons
+		buttonWidget = QWidget()
+		self.start = QPushButton('Start')
+		self.stop = QPushButton('Stop')
+	
+		self.start.clicked.connect(lambda: self.startTimer(self.activeSensors))
+		self.stop.clicked.connect(lambda: self.kill(self.activeSensors))
+		button_layout = QHBoxLayout()
+		button_layout.addWidget(self.start)
+		button_layout.addWidget(self.stop)
+		buttonWidget.setLayout(button_layout)
+
 		# Adds widgets to plottingWidget class
 		self.layout = QVBoxLayout()
-		self.layout.addWidget(self.SensorDropDown) 
-		self.layout.addWidget(self.textDisplay) 
+		self.layout.addWidget(self.SensorDropDown,2) 
+		self.layout.addWidget(self.textDisplay,6)
+		self.layout.addWidget(buttonWidget,2)
 		self.setLayout(self.layout)
 
 	def sendMessage(self, ID, cmd, queue):
@@ -371,12 +384,6 @@ class TextDisplayWindow(QWidget):
 		self.qLbl = QLabel('Not yet initialized')
 		# make QTimer
 		self.qTimer = QTimer()
-		#
-		self.start = QPushButton('Start Timer')
-		self.stop = QPushButton('Kill Everything')
-	
-		self.start.clicked.connect(lambda: self.startTimer(activeSensors))
-		self.stop.clicked.connect(lambda: self.kill(activeSensors))
 		# set interval to 1 s
 		self.qTimer.setInterval(2000) # 1000 ms = 1 s
 		# connect timeout signal to signal handler
@@ -385,11 +392,11 @@ class TextDisplayWindow(QWidget):
 
 		self.layout = QVBoxLayout()
 		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
-		self.qLbl.setAlignment(Qt.AlignHCenter)
+		self.qLbl.setAlignment(Qt.AlignCenter)
 		self.qLbl.setAlignment(Qt.AlignTop)
 		self.layout.addWidget(self.qLbl)
-		self.layout.addWidget(self.start)
-		self.layout.addWidget(self.stop)
+		#self.layout.addWidget(self.start)
+		#self.layout.addWidget(self.stop)
 		self.setLayout(self.layout)
 	
 	
