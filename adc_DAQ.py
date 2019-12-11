@@ -48,7 +48,9 @@ class adc_DAQ(object):
             for i in range(8):
                 # read_adc gets the value of the specified channel (0-7).
                 values[i] = self.channels[i].value
-            concentration = 5000/496*values[0] - 1250
+            #concentration = 5000/(16/33*1024)*values[0] - 1250
+            # I suspect this new software outputs 16-bit (65536) instead of 10-bit (1024) word
+            concentration = 5000/(16/33*65536)
             self.CO2_list.append(concentration)
 
 
@@ -69,12 +71,12 @@ class adc_DAQ(object):
         temp_list = np.asarray(temp_list)
         pre_mean = np.mean(temp_list)
         pre_sd = np.std(temp_list)
-        while pre_sd > 15.0:
-            temp_list = temp_list[np.logical_and(
-                                  temp_list<(pre_mean+pre_sd),
-                                  temp_list>(pre_mean-pre_sd))]
-            pre_mean = np.mean(temp_list)
-            pre_sd = np.std(temp_list)
+        #while pre_sd > 15.0:
+        #    temp_list = temp_list[np.logical_and(
+        #                         temp_list<(pre_mean+pre_sd),
+        #                          temp_list>(pre_mean-pre_sd))]
+        #    pre_mean = np.mean(temp_list)
+        #    pre_sd = np.std(temp_list)
         return [np.mean(temp_list), np.std(temp_list)]
 
     def send_data(self, data):
@@ -104,7 +106,6 @@ class adc_DAQ(object):
         channel = connection.channel()
         channel.queue_declare(queue='fromGUI')
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
-        print(body)
         if body is not None:
             message = json.loads(body.decode('utf-8'))
             if message['id']=='CO2':
@@ -139,6 +140,7 @@ if __name__ == '__main__':
 		#    - re-check for message from GUI
         if msg == 'START':
             print("Inside START")
+            print("Sending data every {}s".format(args.interval))
             while msg is None or msg=='START':
                 daq.run()
                 time.sleep(args.interval/float(NRUN))
