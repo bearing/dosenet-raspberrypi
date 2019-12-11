@@ -40,7 +40,7 @@ class pocket_geiger_DAQ(object):
 
     def send_data(self, data):
         connection = pika.BlockingConnection(
-                          pika.ConnectionParameters('localhost'))
+            pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toGUI')
         message = {'id': 'Radiation', 'data': data}
