@@ -51,9 +51,9 @@ class adc_DAQ(object):
             concentration = 5000/496*values[0] - 1250
             self.CO2_list.append(concentration)
 
-            #self.print_data(self.CO2_list)
 
             if len(self.CO2_list)>=self.n_merge:
+                self.print_data(self.CO2_list)
                 data = self.merge_data(self.CO2_list)
                 #print("Data being sent to GUI: {}".format(data))
                 self.send_data(data)
@@ -78,8 +78,7 @@ class adc_DAQ(object):
         return [np.mean(temp_list), np.std(temp_list)]
 
     def send_data(self, data):
-		connection = pika.BlockingConnection(
-            pika.ConnectionParameters('localhost'))
+		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 		channel = connection.channel()
 		channel.queue_declare(queue='toGUI')
 		message = {'id': 'CO2', 'data': data}

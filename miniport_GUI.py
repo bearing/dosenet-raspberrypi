@@ -420,7 +420,7 @@ class TextDisplayWindow(QWidget):
 				
 			elif sensor == "CO2":
 				print("CO2 DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 > /tmp/CO2.log 2>&1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 &')
 				self.sendMessage("CO2","START","fromGUI")
 
 			elif sensor == "Radiation":

@@ -62,8 +62,7 @@ class weather_DAQ(object):
             pass
 
     def send_data(self, data_type, data):
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters('localhost'))
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toGUI')
         message = {'id': data_type, 'data': data}
