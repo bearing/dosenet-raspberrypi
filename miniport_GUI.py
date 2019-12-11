@@ -415,7 +415,7 @@ class TextDisplayWindow(QWidget):
 
 			if sensor == "Air Quality":
 				print("Air Quality DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 > /tmp/AQ.log 2>&1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
 				self.sendMessage("Air Quality","START","fromGUI")
 				
 			elif sensor == "CO2":
@@ -425,13 +425,13 @@ class TextDisplayWindow(QWidget):
 
 			elif sensor == "Radiation":
 				print("Radiation DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 > Rad.log 2>&1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
 				self.sendMessage("Radiation","START","fromGUI")
 				
 			elif sensor == "Humidity" or "Temperature" or "Pressure":
 				if not weather_activated:
 					print("Weather DAQ activated")
-					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 > Weather.log 2>&1 &')
+					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
 					self.sendMessage("Weather","START","fromGUI")
 				weather_activated = True
 				

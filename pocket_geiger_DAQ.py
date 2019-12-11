@@ -1,8 +1,12 @@
 import time
 import datetime
+import os
+import argparse
 import numpy as np
 from sensor import Sensor
 import sys
+import pika
+import json
 sys.stdout.flush()
 
 
@@ -28,6 +32,7 @@ class pocket_geiger_DAQ(object):
             self.count_list.append(count_cpm)
 
             if len(self.count_list) >= self.n_merge:
+                self.print_data(self.count_list)
                 data = [np.mean(np.asarray(self.count_list)),
                         np.std(np.asarray(self.count_list))]
                 self.send_data(data)
