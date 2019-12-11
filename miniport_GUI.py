@@ -431,8 +431,8 @@ class TextDisplayWindow(QWidget):
 			elif sensor == "Humidity" or "Temperature" or "Pressure":
 				if not weather_activated:
 					print("Weather DAQ activated")
-                    os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
-                    self.sendMessage("Weather","START","fromGUI")
+					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
+					self.sendMessage("Weather","START","fromGUI")
 				weather_activated = True
 				
 		self.qTimer.start()
