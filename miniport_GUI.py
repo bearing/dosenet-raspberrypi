@@ -368,95 +368,6 @@ class plottingWidget(QWidget):
 				
 		self.qTimer.start()
 	
-
-
-
-class SensorDropDown(QWidget):
-	def __init__(self, activeSensors):
-		super(SensorDropDown, self).__init__()
-
-		self.activeSensors = activeSensors
-		print (self.activeSensors)
-		# Creates label
-		self.sensorLabel = QLabel('Sensors')
-
-		# Creates dropdown selection
-		self.dropdown = QComboBox()
-		for sensor in self.activeSensors:
-			self.dropdown.addItem(str(sensor))
-		self.dropdown.currentIndexChanged.connect(lambda: self.selectionChanged())
-
-		# Adds widgets to timeDelay class
-		self.layout = QHBoxLayout()
-		self.layout.addWidget(self.sensorLabel)
-		self.layout.addWidget(self.dropdown)
-		self.layout.setAlignment(Qt.AlignTop)
-		self.setLayout(self.layout)
-		
-
-	def selectionChanged(self):
-		
-		global display_sensor
-		display_sensor = self.dropdown.currentText()
-		print (display_sensor)
-		
-	def sendMessage(self, ID, cmd, queue):
-		'''
-		Sends a message through the selected queue with the given ID.
-		'''
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-		channel = connection.channel()
-
-		channel.queue_declare(queue=queue)
-		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
-		connection.close()
-
-
-
-class TextDisplayWindow(QWidget):
-	# constructor
-	def __init__(self,activeSensors):
-		super(TextDisplayWindow, self).__init__()
-		print(activeSensors)
-		
-		self.file_header = time.strftime('GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime()) # name of the file
-		write_labels(self.file_header)
-		
-		# counter
-		self.i = 0
-		# add QLabel
-		self.qLbl = QLabel('Not yet initialized')
-
-		self.layout = QVBoxLayout()
-		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
-		self.qLbl.setAlignment(Qt.AlignCenter)
-		self.layout.addWidget(self.qLbl)
-		#self.layout.addWidget(self.start)
-		#self.layout.addWidget(self.stop)
-		self.setLayout(self.layout)
-	
-	
-		
-	
-	def sendMessage(self, ID, cmd, queue):
-		'''
-		Sends a message through the selected queue with the given ID.
-		'''
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-		channel = connection.channel()
-
-		channel.queue_declare(queue=queue)
-		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
-		connection.close()
-	
-	"""
-	
-	♪♪♬♪ endless trash ♬♪♪♪
-	
-	"""
-	
-
-
 	def getSensorValue(self,activeSensors,log_file_name):
 		
 		global display_sensor # I'm not sure this is necessary
@@ -516,6 +427,89 @@ class TextDisplayWindow(QWidget):
 		
 		self.qLbl.setText(display_sensor_data)
 	
+	"""
+	
+	♪♪♬♪ endless trash ♬♪♪♪
+	
+	"""
+
+
+class SensorDropDown(QWidget):
+	def __init__(self, activeSensors):
+		super(SensorDropDown, self).__init__()
+
+		self.activeSensors = activeSensors
+		print (self.activeSensors)
+		# Creates label
+		self.sensorLabel = QLabel('Sensors')
+
+		# Creates dropdown selection
+		self.dropdown = QComboBox()
+		for sensor in self.activeSensors:
+			self.dropdown.addItem(str(sensor))
+		self.dropdown.currentIndexChanged.connect(lambda: self.selectionChanged())
+
+		# Adds widgets to timeDelay class
+		self.layout = QHBoxLayout()
+		self.layout.addWidget(self.sensorLabel)
+		self.layout.addWidget(self.dropdown)
+		self.layout.setAlignment(Qt.AlignTop)
+		self.setLayout(self.layout)
+		
+
+	def selectionChanged(self):
+		
+		global display_sensor
+		display_sensor = self.dropdown.currentText()
+		print (display_sensor)
+		
+	def sendMessage(self, ID, cmd, queue):
+		'''
+		Sends a message through the selected queue with the given ID.
+		'''
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+		channel = connection.channel()
+
+		channel.queue_declare(queue=queue)
+		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
+		connection.close()
+
+
+class TextDisplayWindow(QWidget):
+	# constructor
+	def __init__(self,activeSensors):
+		super(TextDisplayWindow, self).__init__()
+		print(activeSensors)
+		
+		self.file_header = time.strftime('GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime()) # name of the file
+		write_labels(self.file_header)
+		
+		# counter
+		self.i = 0
+		# add QLabel
+		self.qLbl = QLabel('Not yet initialized')
+
+		self.layout = QVBoxLayout()
+		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
+		self.qLbl.setAlignment(Qt.AlignCenter)
+		self.layout.addWidget(self.qLbl)
+		#self.layout.addWidget(self.start)
+		#self.layout.addWidget(self.stop)
+		self.setLayout(self.layout)
+	
+	
+		
+	
+	def sendMessage(self, ID, cmd, queue):
+		'''
+		Sends a message through the selected queue with the given ID.
+		'''
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+		channel = connection.channel()
+
+		channel.queue_declare(queue=queue)
+		channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({'id': ID, 'cmd': cmd}))
+		connection.close()
 
 
 
