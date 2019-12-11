@@ -1,6 +1,5 @@
 import time
 import numpy as np
-from collections import deque
 import serial
 import sys
 import os
@@ -12,11 +11,9 @@ import csv
 sys.stdout.flush()
 
 class air_quality_DAQ():
-    def __init__ (self, interval=1, datalog=None):
+    def __init__ (self, interval=1):
         # self.sensor = sensor [Not sure if this is necessary]
         self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
-
-        self.outfile_name = datalog
 
         self.n_merge = int(interval)
         self.PM01_list = []
@@ -28,8 +25,6 @@ class air_quality_DAQ():
         self.P25_list = []
         self.P50_list = []
         self.P100_list = []
-
-        self.out_file = None
 
         if datalog is not None:
             self.create_file(datalog)
@@ -75,8 +70,6 @@ class air_quality_DAQ():
                          np.std(np.asarray(self.PM10_list))]
                 self.send_data([data1,data2,data3])
                 print("sent data to GUI")
-                if self.out_file is not None:
-                    self.write_data(data1, data2, data3)
                 self.clear_data()
                 sys.stdout.flush()
 
@@ -141,32 +134,10 @@ class air_quality_DAQ():
             connection.close()
             return None
 
-    def create_file(self, fname = None):
-        self.out_file = open(fname, "ab+", buffering=0)
-        self.results = csv.writer(self.out_file, delimiter = ",")
-        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
-                    "2.5 um", "5.0 um", "10 um",
-                    "PM 1.0", "PM 2.5", "PM 10"]
-        self.results.writerow(metadata)
-
-    def write_data(self, data1, data2, data3):
-        this_time = time.time()
-        self.results.writerow([this_time] + data1[:] + data2[:] + data3[:])
-
-    def close_file(self):
-        self.out_file.close()
-        print("Copying data from {} to server.".format(self.out_file.name))
-        sys_cmd = 'scp {} pi@192.168.4.1:/home/pi/data/'.format(
-                                self.out_file.name)
-        err = os.system(sys_cmd)
-        print("system command returned {}".format(err))
-        sys.stdout.flush()
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--interval", "-i", type=int, default=1)
-    parser.add_argument('--datalog', '-d', default=None)
 
     args = parser.parse_args()
     arg_dict = vars(args)
@@ -196,12 +167,7 @@ if __name__ == '__main__':
 
         if msg == 'EXIT':
             print('exiting program')
-            print('logging data flag is {}'.format(arg_dict['datalog']))
             sys.stdout.flush()
-            if arg_dict['datalog'] is not None:
-                print("Closing log file and sending to server...")
-                sys.stdout.flush()
-                daq.close_file()
             break
 
         time.sleep(.2)

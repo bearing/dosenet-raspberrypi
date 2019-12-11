@@ -1,41 +1,62 @@
 import time
 import datetime
+import csv
 import numpy as np
-from sensor import Sensor
+
+import board
+import digitalio
+import busio
+import time
+import adafruit_bme280
+
 import sys
+import os
+import subprocess
+import argparse
+import pika
+import json
 sys.stdout.flush()
 
-
-class pocket_geiger_DAQ(object):
+class weather_DAQ(object):
     def __init__(self, interval=1):
         self.n_merge=int(interval)
-        self.count_list=[]
-        self.maxdata=int(maxdata)
-        self.merge_test=False
-        self.first_data = True
-        self.last_time = None
-        self.sensor = Sensor()
-        print('N MERGE: {}'.format(n_merge) )
+        self.temp_list=[]
+        self.humid_list=[]
+        self.press_list=[]
+        #self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+        i2c = busio.I2C(board.SCL, board.SDA)
+        self.sensor = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+
 
     def run(self):
-        date_time = time.time()
-
+        sys.stdout.flush()
         try:
-            count_cpm,count_err = self.sensor.get_cpm(date_time-60,date_time)
-            print('CPM = {}+/-{}'.format(count_cpm,count_err))
-            self.merge_test=False
+            degrees = self.sensor.temperature
+            pascals = self.sensor.pressure
+            atm = pascals/101325.0
+            humidity = self.sensor.humidity
+            altitude = self.sensor.altitude
 
-            self.count_list.append(count_cpm)
+            self.temp_list.append(degrees)
+            self.humid_list.append(humidity)
+            self.press_list.append(atm)
 
-            if len(self.count_list) >= self.n_merge:
-                data = [np.mean(np.asarray(self.count_list)),
-                        np.std(np.asarray(self.count_list))]
-                self.send_data(data)
+
+            if len(self.temp_list)>=self.n_merge:
+                data1 = [np.mean(np.asarray(self.temp_list)),
+                         np.std(np.asarray(self.temp_list))]
+                data2 = [np.mean(np.asarray(self.humid_list)),
+                         np.std(np.asarray(self.humid_list))]
+                data3 = [np.mean(np.asarray(self.press_list)),
+                         np.std(np.asarray(self.press_list))]
+                self.send_data([data1,data2,data3])
+                print("Data being sent to GUI: {}".format(data))
+                sys.stdout.flush()
                 self.clear_data()
 
         except Exception as e:
+            print("Error: could not read sensor data: {}".format(values))
             print(e)
-            #print("CO2 sensor error\n\n")
             pass
 
     def send_data(self, data):
@@ -43,7 +64,7 @@ class pocket_geiger_DAQ(object):
                           pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toGUI')
-        message = {'id': 'Radiation', 'data': data}
+        message = {'id': 'Weather', 'data': data}
 
         channel.basic_publish(exchange='',
                               routing_key='toGUI',
@@ -52,13 +73,9 @@ class pocket_geiger_DAQ(object):
 
 
     def clear_data(self):
-        self.count_list[:] = []
-
-
-    def print_data(self,cpm_list):
-        print('Radiation data: {}'.format(cpm_list))
-        print('Ave CPM = {}'.format(np.mean(cpm_list)))
-        sys.stdout.flush()
+        self.temp_list[:] = []
+        self.humid_list[:] = []
+        self.press_list[:] = []
 
 
     def receive(self):
@@ -68,7 +85,7 @@ class pocket_geiger_DAQ(object):
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
         if body is not None:
             message = json.loads(body)
-            if message['id']=='Radiation':
+            if message['id']=='CO2':
                 channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                 connection.close()
                 return message['cmd']
@@ -88,7 +105,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
-    daq = pocket_geiger_DAQ(**arg_dict)
+    daq = weather_DAQ(**arg_dict)
     while True:
         # Look for messages from GUI every 10 ms
         msg = daq.receive()
@@ -109,12 +126,11 @@ if __name__ == '__main__':
         # If EXIT is sent, break out of while loop and exit program
         if msg == 'STOP':
             print("stopping and entering exterior while loop.")
+            sys.stdout.flush()
 
         if msg == 'EXIT':
             print('exiting program')
-            if arg_dict['datalog'] is not None:
-                sys.stdout.flush()
-                daq.close_file()
+            sys.stdout.flush()
             break
 
         time.sleep(.2)

@@ -24,9 +24,10 @@ if RPI:
     import RPi.GPIO as GPIO
 
 from auxiliaries import datetime_from_epoch, set_verbosity
-from globalvalues import SIGNAL_PIN
+#from globalvalues import SIGNAL_PIN
 from globalvalues import DEFAULT_MAX_ACCUM_TIME
 
+SIGNAL_PIN = 5
 
 class Sensor(object):
     """
