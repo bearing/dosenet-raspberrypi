@@ -43,13 +43,15 @@ class weather_DAQ(object):
 
 
             if len(self.temp_list)>=self.n_merge:
-                data1 = [np.mean(np.asarray(self.temp_list)),
-                         np.std(np.asarray(self.temp_list))]
-                data2 = [np.mean(np.asarray(self.humid_list)),
-                         np.std(np.asarray(self.humid_list))]
-                data3 = [np.mean(np.asarray(self.press_list)),
-                         np.std(np.asarray(self.press_list))]
-                self.send_data([data1,data2,data3])
+                t_data = [np.mean(np.asarray(self.temp_list)),
+                           np.std(np.asarray(self.temp_list))]
+                h_data = [np.mean(np.asarray(self.humid_list)),
+                           np.std(np.asarray(self.humid_list))]
+                p_data = [np.mean(np.asarray(self.press_list)),
+                           np.std(np.asarray(self.press_list))]
+                self.send_data('Temperature',t_data)
+                self.send_data('Humidity',h_data)
+                self.send_data('Pressure',p_data)
                 print("Data being sent to GUI: {}".format(data))
                 sys.stdout.flush()
                 self.clear_data()
@@ -59,12 +61,12 @@ class weather_DAQ(object):
             print(e)
             pass
 
-    def send_data(self, data):
+    def send_data(self, data_type, data):
         connection = pika.BlockingConnection(
                           pika.ConnectionParameters('localhost'))
         channel = connection.channel()
         channel.queue_declare(queue='toGUI')
-        message = {'id': 'Weather', 'data': data}
+        message = {'id': data_type, 'data': data}
 
         channel.basic_publish(exchange='',
                               routing_key='toGUI',
@@ -85,7 +87,10 @@ class weather_DAQ(object):
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
         if body is not None:
             message = json.loads(body)
-            if message['id']=='CO2':
+            if message['id']=='Weather' or 
+               message['id']=='Temperature' or 
+               message['id']=='Humidity' or 
+               message['id']=='Pressure':
                 channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                 connection.close()
                 return message['cmd']

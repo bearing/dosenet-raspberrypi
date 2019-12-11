@@ -26,9 +26,6 @@ class air_quality_DAQ():
         self.P50_list = []
         self.P100_list = []
 
-        if datalog is not None:
-            self.create_file(datalog)
-
 
     def run(self):
         text = self.port.read(32)
