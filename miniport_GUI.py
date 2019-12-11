@@ -285,27 +285,30 @@ class sensorChecklist(QScrollArea):
 class plottingWidget(QWidget):
 	def __init__(self, parent, activeSensors):
 		super(plottingWidget, self).__init__(parent)
+		print(activeSensors)
 
+		self.file_header = time.strftime('GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime()) # name of the file
+		write_labels(self.file_header)
+		
 		# Initializes list of active sensors/time delay/filename
 		self.activeSensors = activeSensors
 
 		# Creates Dropdown Menu
 		self.SensorDropDown = SensorDropDown(self.activeSensors)
 
-		# Creates Text Display
-		self.textDisplay = TextDisplayWindow(self.activeSensors) 
-
 		# Start/Stop buttons
 		buttonWidget = QWidget()
 		self.start = QPushButton('Start')
 		self.stop = QPushButton('Stop')
 	
+		# counter
+		self.i = 0
 		# make QTimer
 		self.qTimer = QTimer()
 		# set interval to 1 s
 		self.qTimer.setInterval(2000) # 1000 ms = 1 s
 		# connect timeout signal to signal handler
-		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors,self.file_header))
+		self.qTimer.timeout.connect(lambda: self.getSensorValue(self.activeSensors,self.file_header))
 		# start timer
 
 		self.start.clicked.connect(lambda: self.startTimer(self.activeSensors))
@@ -315,10 +318,18 @@ class plottingWidget(QWidget):
 		button_layout.addWidget(self.stop)
 		buttonWidget.setLayout(button_layout)
 
+		# Creates Text Display
+		#self.textDisplay = TextDisplayWindow(self.activeSensors) 
+		# add QLabel
+		self.qLbl = QLabel('Not yet initialized')
+		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
+		self.qLbl.setAlignment(Qt.AlignCenter)
+
 		# Adds widgets to plottingWidget class
 		self.layout = QVBoxLayout()
 		self.layout.addWidget(self.SensorDropDown,2) 
-		self.layout.addWidget(self.textDisplay,6)
+		#self.layout.addWidget(self.textDisplay,6)
+		self.layout.addWidget(self.qLbl,6)
 		self.layout.addWidget(buttonWidget,2)
 		self.setLayout(self.layout)
 
@@ -475,27 +486,12 @@ class SensorDropDown(QWidget):
 		connection.close()
 
 
-class TextDisplayWindow(QWidget):
+#class TextDisplayWindow(QWidget):
 	# constructor
-	def __init__(self,activeSensors):
-		super(TextDisplayWindow, self).__init__()
-		print(activeSensors)
+#	def __init__(self,activeSensors):
+#		super(TextDisplayWindow, self).__init__()
+#		print(activeSensors)
 		
-		self.file_header = time.strftime('GUI_Data_%Y-%m-%d_%H:%M:%S_', time.localtime()) # name of the file
-		write_labels(self.file_header)
-		
-		# counter
-		self.i = 0
-		# add QLabel
-		self.qLbl = QLabel('Not yet initialized')
-
-		self.layout = QVBoxLayout()
-		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
-		self.qLbl.setAlignment(Qt.AlignCenter)
-		self.layout.addWidget(self.qLbl)
-		#self.layout.addWidget(self.start)
-		#self.layout.addWidget(self.stop)
-		self.setLayout(self.layout)
 	
 	
 		
