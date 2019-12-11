@@ -98,7 +98,7 @@ class GUI(QMainWindow):
 
 		# Initializes parameters
 		self.title = 'GUI'
-		self.left, self.top, self.width, self.height = 560, 20, 240, 440
+		self.left, self.top, self.width, self.height = 10, 20, 310, 440
 
 		# Clears used queues
 		#self.clearQueue('control')
