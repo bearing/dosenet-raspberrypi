@@ -73,15 +73,15 @@ class air_quality_DAQ():
 
 
     def send_data(self, data):
-		connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-		channel = connection.channel()
-		channel.queue_declare(queue='toGUI')
-		message = {'id': 'Air Quality', 'data': data}
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='toGUI')
+        message = {'id': 'Air Quality', 'data': data}
 
-		channel.basic_publish(exchange='',
-							  routing_key='toGUI',
-							  body=json.dumps(message))
-		connection.close()
+        channel.basic_publish(exchange='',
+        					  routing_key='toGUI',
+        					  body=json.dumps(message))
+        connection.close()
 
 
     def clear_data(self):
