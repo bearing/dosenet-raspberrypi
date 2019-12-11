@@ -15,7 +15,7 @@ class pocket_geiger_DAQ(object):
         self.n_merge=int(interval)
         self.count_list=[]
         self.sensor = Sensor()
-        print('N MERGE: {}'.format(n_merge) )
+        print('N MERGE: {}'.format(self.n_merge) )
 
     def run(self):
         date_time = time.time()
