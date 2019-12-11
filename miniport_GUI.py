@@ -425,8 +425,8 @@ class TextDisplayWindow(QWidget):
 
 			elif sensor == "Radiation":
 				print("Radiation DAQ activated")
-                os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
-                self.sendMessage("Radiation","START","fromGUI")
+				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
+				self.sendMessage("Radiation","START","fromGUI")
 				
 			elif sensor == "Humidity" or "Temperature" or "Pressure":
 				if not weather_activated:
