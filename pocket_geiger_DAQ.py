@@ -14,10 +14,6 @@ class pocket_geiger_DAQ(object):
     def __init__(self, interval=1):
         self.n_merge=int(interval)
         self.count_list=[]
-        self.maxdata=int(maxdata)
-        self.merge_test=False
-        self.first_data = True
-        self.last_time = None
         self.sensor = Sensor()
         print('N MERGE: {}'.format(n_merge) )
 
@@ -40,7 +36,6 @@ class pocket_geiger_DAQ(object):
 
         except Exception as e:
             print(e)
-            #print("CO2 sensor error\n\n")
             pass
 
     def send_data(self, data):
