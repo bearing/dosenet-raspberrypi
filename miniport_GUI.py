@@ -300,6 +300,14 @@ class plottingWidget(QWidget):
 		self.start = QPushButton('Start')
 		self.stop = QPushButton('Stop')
 	
+		# make QTimer
+		self.qTimer = QTimer()
+		# set interval to 1 s
+		self.qTimer.setInterval(2000) # 1000 ms = 1 s
+		# connect timeout signal to signal handler
+		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors,self.file_header))
+		# start timer
+
 		self.start.clicked.connect(lambda: self.startTimer(self.activeSensors))
 		self.stop.clicked.connect(lambda: self.kill(self.activeSensors))
 		button_layout = QHBoxLayout()
@@ -418,13 +426,6 @@ class TextDisplayWindow(QWidget):
 		self.i = 0
 		# add QLabel
 		self.qLbl = QLabel('Not yet initialized')
-		# make QTimer
-		self.qTimer = QTimer()
-		# set interval to 1 s
-		self.qTimer.setInterval(2000) # 1000 ms = 1 s
-		# connect timeout signal to signal handler
-		self.qTimer.timeout.connect(lambda: self.getSensorValue(activeSensors,self.file_header))
-		# start timer
 
 		self.layout = QVBoxLayout()
 		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
