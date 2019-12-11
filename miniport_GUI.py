@@ -486,7 +486,7 @@ class TextDisplayWindow(QWidget):
 				display_sensor_data = "CO2: N/A "
 		elif display_sensor == "Radiation":
 			if display_sensor_data is not None:
-				display_sensor_data = str("μSv/hr: "+str('%.3f'%display_sensor_data['data'][0]*0.036))
+				display_sensor_data = str("μSv/hr: "+str('%.3f'%(display_sensor_data['data'][0]*0.036)))
 			else: 
 				display_sensor_data = "CPM: N/A "
 		elif display_sensor == "Humidity":
