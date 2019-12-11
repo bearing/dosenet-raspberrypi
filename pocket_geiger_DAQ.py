@@ -91,7 +91,7 @@ if __name__ == '__main__':
     while True:
         # Look for messages from GUI every 10 ms
         msg = daq.receive()
-        print("received msg: {}".format(msg))
+        print("Rad received msg: {}".format(msg))
         sys.stdout.flush()
 
         # If START is sent, begin running daq

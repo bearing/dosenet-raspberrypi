@@ -359,7 +359,7 @@ class plottingWidget(QWidget):
 
 			if sensor == "Air Quality":
 				print("Air Quality DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
+				os.system('python /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
 				self.sendMessage("Air Quality","START","fromGUI")
 				
 			elif sensor == "CO2":
