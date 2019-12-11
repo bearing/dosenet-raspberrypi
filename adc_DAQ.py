@@ -20,11 +20,11 @@ MISO = board.D19
 MOSI = board.D20
 CS   = board.D26
 # input interval is in units of seconds, we call run methods every .1s
-NRUN = 10
+#NRUN = 10
 
 class adc_DAQ(object):
     def __init__(self, interval=1):
-        self.n_merge=int(NRUN*interval)
+        self.n_merge=int(interval)
         self.CO2_list=[]
         spi = busio.SPI(clock=CLK, MISO=MISO, MOSI=MOSI)
         cs = digitalio.DigitalInOut(CS)
@@ -50,7 +50,7 @@ class adc_DAQ(object):
                 values[i] = self.channels[i].value
             #concentration = 5000/(16*1024/33)*values[0] - 1250
             # I suspect this new software outputs 16-bit (65536) instead of 10-bit (1024) word
-            concentration = 5000/(16*65536/33) - 1250
+            concentration = 5000/(16*65536/33)*values[0] - 1250
             print(concentration)
             self.CO2_list.append(concentration)
 
@@ -144,7 +144,7 @@ if __name__ == '__main__':
             print("Sending data every {}s".format(args.interval))
             while msg is None or msg=='START':
                 daq.run()
-                time.sleep(args.interval/float(NRUN))
+                time.sleep(args.interval)
                 msg = daq.receive()
                 sys.stdout.flush()
         # If EXIT is sent, break out of while loop and exit program
