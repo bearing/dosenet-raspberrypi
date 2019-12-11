@@ -98,7 +98,7 @@ class GUI(QMainWindow):
 
 		# Initializes parameters
 		self.title = 'GUI'
-		self.left, self.top, self.width, self.height = 5, 30, 610, 450
+		self.left, self.top, self.width, self.height = 1, 30, 620, 450
 
 		# Clears used queues
 		#self.clearQueue('control')
@@ -382,7 +382,7 @@ class TextDisplayWindow(QWidget):
 		# start timer
 
 		self.layout = QVBoxLayout()
-		self.qLbl.setFont(QtGui.QFont("Times", 25, QtGui.QFont.Bold))
+		self.qLbl.setFont(QtGui.QFont("Times", 30, QtGui.QFont.Bold))
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
 		self.layout.addWidget(self.stop)
@@ -415,23 +415,23 @@ class TextDisplayWindow(QWidget):
 
 			if sensor == "Air Quality":
 				print("Air Quality DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/air_quality_DAQ.py -i 1 >& /tmp/AQ.log &')
 				self.sendMessage("Air Quality","START","fromGUI")
 				
 			elif sensor == "CO2":
 				print("CO2 DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/adc_DAQ.py -i 1 >& /tmp/CO2.log &')
 				self.sendMessage("CO2","START","fromGUI")
 
 			elif sensor == "Radiation":
 				print("Radiation DAQ activated")
-				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 &')
+				os.system('python3 /home/pi/dosenet-raspberrypi/pocket_geiger_DAQ.py -i 1 >& Rad.log &')
 				self.sendMessage("Radiation","START","fromGUI")
 				
 			elif sensor == "Humidity" or "Temperature" or "Pressure":
 				if not weather_activated:
 					print("Weather DAQ activated")
-					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 &')
+					os.system('python3 /home/pi/dosenet-raspberrypi/weather_DAQ_rabbitmq.py -i 1 >& Weather.log &')
 					self.sendMessage("Weather","START","fromGUI")
 				weather_activated = True
 				
@@ -449,7 +449,7 @@ class TextDisplayWindow(QWidget):
 		
 		global display_sensor # I'm not sure this is necessary
 		
-		print(display_sensor+"baguette boy lives again") # damn right he does
+		print(display_sensor+" baguette boy lives again") # damn right he does
 		print("________________________________________________________________") #str(receive_last_message(ID = "CO2",queue="toGUI",message="")))
 		default_id = activeSensors[0]
 		
