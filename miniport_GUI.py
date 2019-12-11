@@ -332,6 +332,7 @@ class SensorDropDown(QWidget):
 		self.layout = QHBoxLayout()
 		self.layout.addWidget(self.sensorLabel)
 		self.layout.addWidget(self.dropdown)
+		self.layout.setAlignment(Qt.AlignTop)
 		self.setLayout(self.layout)
 		
 
@@ -382,7 +383,8 @@ class TextDisplayWindow(QWidget):
 		# start timer
 
 		self.layout = QVBoxLayout()
-		self.qLbl.setFont(QtGui.QFont("Times", 30, QtGui.QFont.Bold))
+		self.qLbl.setFont(QtGui.QFont("Times", 36, QtGui.QFont.Bold))
+		self.qLbl.setAlignment(Qt.AlignCenter)
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
 		self.layout.addWidget(self.stop)
@@ -511,6 +513,7 @@ class TextDisplayWindow(QWidget):
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
+	app.setFont(QtGui.QFont("Times", 24))
 	GUI = GUI()
 	GUI.show()
 

@@ -52,12 +52,12 @@ class weather_DAQ(object):
                 self.send_data('Temperature',t_data)
                 self.send_data('Humidity',h_data)
                 self.send_data('Pressure',p_data)
-                print("Data being sent to GUI: {}".format(data))
+                print("Data being sent to GUI: {}".format([t_data,h_data,p_data]))
                 sys.stdout.flush()
                 self.clear_data()
 
         except Exception as e:
-            print("Error: could not read sensor data: {}".format(values))
+            print("Error: could not read sensor data from {}".format(self.sensor))
             print(e)
             pass
 
