@@ -28,7 +28,7 @@ class pocket_geiger_DAQ(object):
             self.count_list.append(count_cpm)
 
             if len(self.count_list) >= self.n_merge:
-                self.print_data(self.count_list)
+                #self.print_data(self.count_list)
                 data = [np.mean(np.asarray(self.count_list)),
                         np.std(np.asarray(self.count_list))]
                 self.send_data(data)
@@ -100,7 +100,6 @@ if __name__ == '__main__':
         if msg == 'START':
             print("Inside START")
             while msg is None or msg=='START':
-                print("running daq")
                 daq.run()
                 time.sleep(1)
                 msg = daq.receive()

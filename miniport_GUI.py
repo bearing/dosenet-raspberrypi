@@ -322,7 +322,7 @@ class plottingWidget(QWidget):
 		#self.textDisplay = TextDisplayWindow(self.activeSensors) 
 		# add QLabel
 		self.qLbl = QLabel('Not yet initialized')
-		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
+		self.qLbl.setFont(QtGui.QFont("Times", 44, QtGui.QFont.Bold))
 		self.qLbl.setAlignment(Qt.AlignCenter)
 
 		# Adds widgets to plottingWidget class
@@ -395,8 +395,7 @@ class plottingWidget(QWidget):
 		print(display_sensor_data)
 		display_sensor_data = (json.loads(display_sensor_data))
 		
-		
-		
+
 		if display_sensor == "Air Quality":
 			if display_sensor_data is not None:
 				display_sensor_data = "PM2.5: "+str(display_sensor_data['data'][1][0]+" μg/L")
@@ -411,7 +410,7 @@ class plottingWidget(QWidget):
 			if display_sensor_data is not None:
 				display_sensor_data = str("μSv/hr: "+str('%.3f'%(display_sensor_data['data'][0]*0.036)))
 			else: 
-				display_sensor_data = "CPM: N/A "
+				display_sensor_data = "μSv/hr: N/A "
 		elif display_sensor == "Humidity":
 			if display_sensor_data is not None:
 				display_sensor_data = str("% H: "+str('%.1f'%display_sensor_data['data'][0]))

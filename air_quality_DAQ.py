@@ -13,7 +13,8 @@ sys.stdout.flush()
 class air_quality_DAQ():
     def __init__ (self, interval=1):
         # self.sensor = sensor [Not sure if this is necessary]
-        self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
+        #self.port = serial.Serial("/dev/serial0", baudrate=9600, timeout=1.5)
+        self.port = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=1.5)
 
         self.n_merge = int(interval)
         self.PM01_list = []
