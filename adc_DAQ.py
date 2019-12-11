@@ -30,7 +30,7 @@ class adc_DAQ(object):
         cs = digitalio.DigitalInOut(CS)
         self.mcp=MCP.MCP3008(spi,cs)
         self.channels = [0]*8
-        self.channels[0] = AnalogIn(self.mcp, MCP.P0)
+        self.channels[0] = AnalogIn(self.mcp, MCP.P0, MCP.P1)
         self.channels[1] = AnalogIn(self.mcp, MCP.P1)
         self.channels[2] = AnalogIn(self.mcp, MCP.P2)
         self.channels[3] = AnalogIn(self.mcp, MCP.P3)
@@ -48,16 +48,17 @@ class adc_DAQ(object):
             for i in range(8):
                 # read_adc gets the value of the specified channel (0-7).
                 values[i] = self.channels[i].value
-            #concentration = 5000/(16/33*1024)*values[0] - 1250
+            #concentration = 5000/(16*1024/33)*values[0] - 1250
             # I suspect this new software outputs 16-bit (65536) instead of 10-bit (1024) word
-            concentration = 5000/(16/33*65536)
+            concentration = 5000/(16*65536/33) - 1250
+            print(concentration)
             self.CO2_list.append(concentration)
 
 
             if len(self.CO2_list)>=self.n_merge:
                 self.print_data(self.CO2_list)
                 data = self.merge_data(self.CO2_list)
-                print("Data being sent to GUI: {}".format(data))
+                print("Data being sent to GUI: {} at {}".format(data,time.time()))
                 self.send_data(data)
                 self.clear_data()
 
