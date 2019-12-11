@@ -400,7 +400,7 @@ class plottingWidget(QWidget):
 
 		if display_sensor == "Air Quality":
 			if display_sensor_data is not None:
-				display_sensor_data = "PM2.5: "+str(display_sensor_data['data'][1][0]+" μg/L")
+				display_sensor_data = str("PM2.5: "+str(display_sensor_data['data'][1][0])+" μg/L")
 			else: 
 				display_sensor_data = "AQ: N/A "
 		elif display_sensor == "CO2":
