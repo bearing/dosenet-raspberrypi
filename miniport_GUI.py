@@ -385,8 +385,8 @@ class TextDisplayWindow(QWidget):
 
 		self.layout = QVBoxLayout()
 		self.qLbl.setFont(QtGui.QFont("Times", 38, QtGui.QFont.Bold))
-		self.qLbl.setAlignment(Qt.AlignCenter)
-		self.qLbl.setAlignment(Qt.AlignMiddle)
+		self.qLbl.setAlignment(Qt.AlignHCenter)
+		self.qLbl.setAlignment(Qt.AlignTop)
 		self.layout.addWidget(self.qLbl)
 		self.layout.addWidget(self.start)
 		self.layout.addWidget(self.stop)
