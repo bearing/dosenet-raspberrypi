@@ -155,7 +155,7 @@ class tabWidget(QWidget):
 		# Creates widgets for sensor GUI tab
 		self.startGPSGUIButton = self.startGPSGUIButton()
 		self.sensorChecklistAndButtons = sensorChecklistAndButtons(self)
-		self.sensorChecklistAndButtons.verticalScrollBar.setStyleSheet("QScrollBar:vertical { width: 50px; }")
+		self.sensorChecklistAndButtons.setStyleSheet("QScrollBar:vertical { width: 50px; }")
 		
 
 		# Adds widgets to sensor GUI tab
