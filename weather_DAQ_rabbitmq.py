@@ -86,10 +86,10 @@ class weather_DAQ(object):
         method_frame, header_frame, body = channel.basic_get(queue='fromGUI')
         if body is not None:
             message = json.loads(body.decode('utf-8'))
-            if message['id']=='Weather' or 
-               message['id']=='Temperature' or 
-               message['id']=='Humidity' or 
-               message['id']=='Pressure':
+            if (message['id']=='Weather') or 
+               (message['id']=='Temperature') or 
+               (message['id']=='Humidity') or 
+               (message['id']=='Pressure'):
                 channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                 connection.close()
                 return message['cmd']
