@@ -114,7 +114,7 @@ class OLED_Manager(object):
         disp = Adafruit_SSD1306.SSD1306_128_64(rst=20, dc=21, spi=SPI.SpiDev(0, 0, max_speed_hz=8000000))
         disp.begin()
 
-        self.display_image = Image.new('1', (disp.width, disp.height))
+        self.image = Image.new('1', (disp.width, disp.height))
         self.draw = ImageDraw.Draw(self.image)
         self.font = ImageFont.load_default()
 
