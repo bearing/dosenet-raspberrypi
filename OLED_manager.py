@@ -154,10 +154,11 @@ class OLED_Manager(object):
                     time.sleep(display_time)
                     self.oclear()
             elif self.oled_type == 'b':
+                yb = 8*y
                 if not self.screen:
                     self.vprint(1, 'Blue OLED screen not setup! Please do so before trying to print to it')
                 else:
-                    self.draw.text((x, y), print_text, font=self.font, fill=255)
+                    self.draw.text((x, yb), print_text, font=self.font, fill=255)
                     self.screen.image(self.image)
                     self.screen.display()
                     if display_time:
