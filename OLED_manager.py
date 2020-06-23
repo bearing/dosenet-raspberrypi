@@ -78,6 +78,8 @@ class OLED_Manager(object):
         self.co2_disp = ("CO2 Concentration:", "ppm")
         self.weather_disp = ("Pressure: ", "hPa", "Temperature: ", "C", "Humidity: ", "%")
 
+        self.logo = Image.open('dosenet-logo.png').convert('1')
+
     def create_test_data(self, sensor):
         """
         Generates a pseudo-random set of data based on which sensor is called.
@@ -152,6 +154,20 @@ class OLED_Manager(object):
 
         self.screen.clear()
         self.screen.display()
+
+    def draw_logo(self, display_time=None):
+        """
+        This function draws our DoseNet logo onto the screen 
+        Gotta get that branding shown off :)
+        """
+        self.screen.clear()
+        self.screen.image(self.logo)
+
+        self.screen.display()
+
+        if display_time:
+            time.sleep(display_time)
+            self.oclear()
 
     def oprint(self, x, y, print_text, display_time=None):
         """
@@ -298,6 +314,7 @@ class OLED_Manager(object):
             channel.start_consuming()
         else:
             self.display_time = 30
+            self.vprint(1, "Make sure that you watch the OLED, the data should be printing to the screen shortly")
             for sensor in range(0,5):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
                 data = {'id': sensor+1, 'data': self.create_test_data(sensor+1)}
