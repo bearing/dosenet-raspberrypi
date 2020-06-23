@@ -141,6 +141,18 @@ class OLED_Manager(object):
         time.sleep(1.5)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
 
+    def new_image(self):
+        """
+        This function creates a new image space for the blue OLED to occupy
+        Without this method, every clear of the screen would cause text overlap
+        """
+        self.image = Image.new('1', (self.screen.width, self.screen.height))
+        self.draw = ImageDraw.Draw(self.image)
+        self.font = ImageFont.load_default()
+
+        self.screen.clear()
+        self.screen.display()
+
     def oprint(self, x, y, print_text, display_time=None):
         """
         This function is meant to shorten the code needed to print to
@@ -178,6 +190,8 @@ class OLED_Manager(object):
             if not x and not y:
                 self.screen.clear()
                 self.screen.display()
+                
+                self.new_image()
             else:
                 pass
         else:
