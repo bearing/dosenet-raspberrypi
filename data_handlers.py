@@ -156,34 +156,14 @@ class Data_Handler(object):
                     self.manager.sender.send_spectra_new_D3S(
                         trash[0], trash[1])
 
-        if self.manager.sensor_type == 3:
+        if self.manager.sensor_type in [3,4,5]:
             average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_AQ(this_end, average_data)
+            self.manager.sender.send_data_new_Env(this_end, average_data)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
                     trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_AQ(
-                        trash[0], trash[1])
-
-        if self.manager.sensor_type == 4:
-            average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_CO2(this_end, average_data)
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to server")
-                while self.queue:
-                    trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_CO2(
-                        trash[0], trash[1])
-
-        if self.manager.sensor_type == 5:
-            average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_weather(this_end, average_data)
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to server")
-                while self.queue:
-                    trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_weather(
+                    self.manager.sender.send_data_new_Env(
                         trash[0], trash[1])
 
     def send_all_to_backlog(self, path=None):
@@ -204,7 +184,7 @@ class Data_Handler(object):
                 temp = []
                 while self.queue:
                     temp.append(self.queue.popleft())
-                with open(path, "ab") as f: # might only work for python 3?
+                with open(path, "ab") as f:
                     writer = csv.writer(f)
                     writer.writerows(temp)
         else:
