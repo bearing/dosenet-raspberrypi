@@ -221,11 +221,14 @@ class Data_Handler(object):
                 self.vprint(2, "Flushing backlog file to memory queue")
                 with open(path, 'r') as f:
                     data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1], i[2]])
-                print(self.queue)
-                os.remove(path)
+                try:
+                    data = ast.literal_eval(data)
+                    for i in data:
+                        self.queue.append([i[0], i[1], i[2]])
+                    print(self.queue)
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
         if self.manager.sensor_type == 2:
             if path == None:
@@ -235,13 +238,16 @@ class Data_Handler(object):
                 with open(path, 'rb') as f:
                     reader = csv.reader(f)
                     lst = list(reader)
-                for i in lst:
-                    timestring = i[0]
-                    spectra = i[1]
-                    timestring = ast.literal_eval(timestring)
-                    spectra = ast.literal_eval(spectra)
-                    self.queue.append([timestring, spectra])
-                os.remove(path)
+                try:
+                    for i in lst:
+                        timestring = i[0]
+                        spectra = i[1]
+                        timestring = ast.literal_eval(timestring)
+                        spectra = ast.literal_eval(spectra)
+                        self.queue.append([timestring, spectra])
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
         if self.manager.sensor_type in (3, 4, 5):
             if path == None and self.manager.sensor_type == 3:
@@ -254,11 +260,14 @@ class Data_Handler(object):
                 self.vprint(2, "Flushing backlog file to memory queue")
                 with open(path, 'r') as f:
                     data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1]])
-                print(self.queue)
-                os.remove(path)
+                try:
+                    data = ast.literal_eval(data)
+                    for i in data:
+                        self.queue.append([i[0], i[1]])
+                    print(self.queue)
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
     def main(self, datalog, this_start, this_end, **kwargs):
         """
