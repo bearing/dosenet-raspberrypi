@@ -222,7 +222,7 @@ class App(QWidget):
             if self.saveData:
                 fname = fname + "_CO2.csv"
 
-        cmd_head = '{} /home/pi/dosenet-raspberrypi/{}'.format(py, script)
+        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format(self.integration_time)
         if self.saveData:
             cmd_options = cmd_options + ' -d {}'.format(fname)
@@ -875,7 +875,7 @@ def receive_queue_data():
     channel.queue_declare(queue='toGUI')
     method_frame, header_frame, body = channel.basic_get(queue='toGUI')
     if body is not None:
-        # message from d3s is coming back as bytes
+        # message from d3s seems to come back as bytes...
         if type(body) is bytes:
             body = body.decode("utf-8")
         message = json.loads(body)
