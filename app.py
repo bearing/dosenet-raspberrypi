@@ -1,6 +1,6 @@
 import os
 from random import randint
-import pandas as pd
+#import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import os.path
@@ -89,44 +89,56 @@ def appendSaveFile(sensors, lat, lon, saveName):
     for x in range(len(sensors)):
         if x == 0:
             if 'Air Quality' in sensors:
-                f1 = pd.read_csv("AirQuality.csv")
-                col = f1['dataSet'].tolist()
-                air = col[-1]
+                with open("AirQuality.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("AirQuality.csv")
+                    col = f1['dataSet'].tolist()
+                    air = col[-1]
             else:
                 air = " "
         elif x == 1:
             if 'CO2' in sensors:
-                f1 = pd.read_csv("CO2.csv")
-                col = f1['dataSet'].tolist()
-                co2 = col[-1]
+                with open("CO2.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("CO2.csv")
+                    col = f1['dataSet'].tolist()
+                    co2 = col[-1]
             else:
                 co2 = " "
         elif x == 2:
             if 'H'in sensors:
-                f1 = pd.read_csv("Humidity.csv")
-                col = f1['dataSet'].tolist()
-                hum = col[-1]
+                with open("Humidity.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Humidity.csv")
+                    col = f1['dataSet'].tolist()
+                    hum = col[-1]
             else:
                 hum = " "
         elif x == 3:
             if 'P' in sensors:
-                f1 = pd.read_csv("Pressure.csv")
-                col = f1['dataSet'].tolist()
-                pres = col[-1]
+                with open("Pressure.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Pressure.csv")
+                    col = f1['dataSet'].tolist()
+                    pres = col[-1]
             else:
                 pres = " "
         elif x == 4:
             if 'Radiation' in sensors:
-                f1 = pd.read_csv("Radiation.csv")
-                col = f1['dataSet'].tolist()
-                rad = col[-1]
+                with open("Radiation.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Radiation.csv")
+                    col = f1['dataSet'].tolist()
+                    rad = col[-1]
             else:
                 rad = " "
         elif x == 5:
             if 'T' in sensors:
-                f1 = pd.read_csv("Temperature.csv")
-                col = f1['dataSet'].tolist()
-                temp = col[-1]
+                with open("Temperature.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Temperature.csv")
+                    col = f1['dataSet'].tolist()
+                    temp = col[-1]
             else:
                 temp = " "
 
@@ -359,7 +371,9 @@ def updateGraph(n, button, sensor):
     fileName = str(sensor + ".csv")
     if clicked == "t" and os.path.exists(fileName):
         fileName = sensor + ".csv"
-        dataFile = pd.read_csv(fileName)
+        with open(fileName, "r") as csvFile:
+            dataFile = csv.reader(csvFile)
+        #dataFile = pd.read_csv(fileName)
         if len(dataFile["lat"]) != 0:
             # print ("in update graph creating trace")
             # print(dataFile['lat'])
