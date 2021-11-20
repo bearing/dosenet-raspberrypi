@@ -19,7 +19,7 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
-from PyQt5.QtGui import QStyleFactory
+#from PyQt5.QtGui import QStyleFactory
 import json
 import sys
 import traceback
@@ -493,7 +493,7 @@ if __name__ == '__main__':
         if not arg_dict['test']:
             clear_queue()
         app = QApplication(sys.argv)
-        QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+        #QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         nbins = 1024
         ex = App(nbins=nbins, **arg_dict)
         ex.show()
