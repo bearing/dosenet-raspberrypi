@@ -471,6 +471,7 @@ def clear_queue():
 
 
 if __name__ == '__main__':
+    app.run_server(debug=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--test", "-t",
@@ -487,26 +488,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
-    global ex
-    # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    try:
-        if not arg_dict['test']:
-            clear_queue()
-        app = QApplication(sys.argv)
-        #QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-        nbins = 1024
-        ex = App(nbins=nbins, **arg_dict)
-        ex.show()
-
-        atexit.register(ex.exit)
-    except:
-        if not arg_dict['test']:
-            send_queue_cmd('EXIT',["Radiation","Air Quality","CO2","P/T/H"])
-        # Still want to see traceback for debugging
-        print('ERROR: GUI quit unexpectedly!')
-        traceback.print_exc()
-        pass
-
-    ret = app.exec_()
-    print(ret)
-    sys.exit(ret)
+    # global ex
+    # # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    # try:
+    #     if not arg_dict['test']:
+    #         clear_queue()
+    #     app = QApplication(sys.argv)
+    #     #QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+    #     nbins = 1024
+    #     #ex = App(nbins=nbins, **arg_dict)
+    #     #ex.show()
+    #
+    #     atexit.register(ex.exit)
+    # except:
+    #     if not arg_dict['test']:
+    #         send_queue_cmd('EXIT',["Radiation","Air Quality","CO2","P/T/H"])
+    #     # Still want to see traceback for debugging
+    #     print('ERROR: GUI quit unexpectedly!')
+    #     traceback.print_exc()
+    #     pass
+    #
+    # ret = app.exec_()
+    # print(ret)
+    # sys.exit(ret)
