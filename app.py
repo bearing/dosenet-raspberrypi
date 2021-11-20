@@ -1,6 +1,6 @@
 import os
 from random import randint
-#import pandas as pd
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import os.path
@@ -13,8 +13,8 @@ import pika
 import argparse
 
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
