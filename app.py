@@ -331,6 +331,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append("T")
 
     send_queue_cmd("START", sensorList) #start the sensors
+    print(sensroList)
     return sensorList
 
 #creates file to save the data onto
