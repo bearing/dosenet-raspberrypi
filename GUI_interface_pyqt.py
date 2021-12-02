@@ -639,9 +639,9 @@ class App(QWidget):
         if sensor==PTH:
             base_data = np.random.random(1)[0]
             base_err = 0.05*np.random.random(3)
-            data = [[base_data,base_err[0]],
-                    [base_data*1.5,base_err[1]],
-                    [base_data*5.0,base_err[2]]]
+            data = [[base_data*20,base_err[0]],
+                    [base_data*50,base_err[1]],
+                    [base_data*1.1,base_err[2]]]
         if sensor==CO2:
             data = [np.random.random(1)[0],0.05*np.random.random(1)[0]]
         return data

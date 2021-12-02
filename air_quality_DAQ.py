@@ -144,9 +144,7 @@ class air_quality_DAQ():
     def create_file(self, fname = None):
         self.out_file = open(fname, "ab+", buffering=0)
         self.results = csv.writer(self.out_file, delimiter = ",")
-        metadata = ["Time", "0.3 um", "0.5 um", "1.0 um",
-                    "2.5 um", "5.0 um", "10 um",
-                    "PM 1.0", "PM 2.5", "PM 10"]
+        metadata = ["Time", "PM 1.0", "PM 2.5", "PM 10"]
         self.results.writerow(metadata)
 
     def write_data(self, data1, data2, data3):

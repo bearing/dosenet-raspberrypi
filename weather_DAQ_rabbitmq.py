@@ -38,7 +38,7 @@ class weather_DAQ(object):
         try:
             degrees = self.sensor.temperature
             pascals = self.sensor.pressure
-            atm = pascals/101325.0
+            atm = pascals/101325.0 * 100
             humidity = self.sensor.relative_humidity
             altitude = self.sensor.altitude
 
@@ -54,7 +54,7 @@ class weather_DAQ(object):
                            np.std(np.asarray(self.humid_list))]
                 p_data = [np.mean(np.asarray(self.press_list)),
                            np.std(np.asarray(self.press_list))]
-                self.send_data('PTH',[t_data,h_data,p_data])
+                self.send_data('P/T/H',[t_data,h_data,p_data])
                 print("Data being sent to GUI: {}".format([t_data,h_data,p_data]))
                 if self.out_file is not None:
                     self.write_data(t_data, h_data, p_data)
