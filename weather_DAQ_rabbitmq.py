@@ -39,7 +39,7 @@ class weather_DAQ(object):
             degrees = self.sensor.temperature
             pascals = self.sensor.pressure
             atm = pascals/101325.0
-            humidity = self.sensor.raltive_humidity
+            humidity = self.sensor.relative_humidity
             altitude = self.sensor.altitude
 
             self.temp_list.append(degrees)
