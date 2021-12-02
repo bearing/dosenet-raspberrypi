@@ -105,7 +105,7 @@ class weather_DAQ(object):
     def create_file(self, fname = None):
         self.out_file = open(fname, "a",newline="")
         self.results = csv.writer(self.out_file, delimiter = ",")
-        metadata = ["Time", "Temperature", "Humidity", "Pressure"]
+        metadata = ["Time", "Temperature", "T Unc.", "Humidity", "H Unc.", "Pressure", "P Unc."]
         self.results.writerow(metadata)
 
     def write_data(self, data1, data2, data3):
