@@ -582,7 +582,7 @@ class App(QWidget):
                 press = "{:.1f}".format(np.mean(self.data[sensor][2]))
             sensor_text = ["Temperature =",temp,
                            " C   Humidity =",hum,
-                           "%    Pressure =",press,"hPa"]
+                           "%    Pressure =",press," atm"]
             self.sensor_list[sensor] = sensor_text
 
         if sensor==AIR:
