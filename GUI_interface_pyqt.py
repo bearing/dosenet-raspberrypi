@@ -205,7 +205,7 @@ class App(QWidget):
         fname = "/home/pi/data/" + self.file_prefix + '_' + \
                 str(dt.datetime.today()).split()[0]
         if sensor==PTH:
-            py = 'python'
+            py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
             if self.saveData:
