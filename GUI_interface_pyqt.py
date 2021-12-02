@@ -229,7 +229,7 @@ class App(QWidget):
             if self.saveData:
                 fname = fname + "_CO2.csv"
 
-        cmd_head = '{} /home/pi/dosenet-raspberrypi/{}'.format(py, script)
+        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format(self.integration_time)
         if self.saveData:
             cmd_options = cmd_options + ' -d {}'.format(fname)
