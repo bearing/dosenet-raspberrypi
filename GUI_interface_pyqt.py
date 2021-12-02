@@ -523,7 +523,7 @@ class App(QWidget):
             colors = [(255,0,0),(0,255,0),(0,0,255)]
             names = ['<h4>Temp/23C</h4>',
                      '<h4>Humidity/50%</h4>',
-                     '<h4>Pressure/1000hPa</h4>']
+                     '<h4>Pressure/atm</h4>']
 
             self.plot_list[sensor] = []
             self.err_list[sensor] = []
@@ -743,11 +743,11 @@ class App(QWidget):
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               np.asarray(self.data[sensor][1][0])/50.0)
             self.err_list[sensor][2].setData(x=np.asarray(self.time_data[sensor]),
-                                             y=np.asarray(self.data[sensor][2][0])/1000.0,
-                                             height=np.asarray(self.data[sensor][2][1])/1000.0,
+                                             y=np.asarray(self.data[sensor][2][0]),
+                                             height=np.asarray(self.data[sensor][2][1]),
                                              beam=0.15)
             self.plot_list[sensor][2].setData(self.time_data[sensor],
-                                              np.asarray(self.data[sensor][2][0])/1000.0)
+                                              np.asarray(self.data[sensor][2][0]))
 
         if sensor==AIR:
             self.err_list[sensor][0].setData(x=np.asarray(self.time_data[sensor]),
