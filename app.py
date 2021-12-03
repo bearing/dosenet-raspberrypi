@@ -18,13 +18,6 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
-#from PyQt5.QtGui import QStyleFactory
-import json
-import sys
-import traceback
-
-
 app = dash.Dash(__name__, prevent_initial_callbacks=True)
 # ________________________________________________________
 # method that creates rando numbers
@@ -82,7 +75,7 @@ def createSaveFile():
     timeStamp = str(datetime.now())
     fileName = timeStamp + ".csv"
     print('fileName' + fileName)
-    headerList = [['dateTime','latitude', 'longitude', 'airQuality', 'co2', 'humidity', 'pressure', 'radiation', 'temperature']]
+    headerList = [['dateTime','latitude', 'longitude', 'airQuality', 'co2', 'humidity', 'pressure', 'RAD', 'temperature']]
     if os.path.exists(fileName) == False:
         with open(fileName, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -96,60 +89,48 @@ def appendSaveFile(sensors, lat, lon, saveName):
     for x in range(len(sensors)):
         if x == 0:
             if 'Air Quality' in sensors:
-                with open("AirQuality.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("AirQuality.csv")
-                    col = f1['dataSet'].tolist()
-                    air = col[-1]
+                f1 = pd.read_csv("AirQuality.csv")
+                col = f1['dataSet'].tolist()
+                air = col[-1]
             else:
                 air = " "
         elif x == 1:
             if 'CO2' in sensors:
-                with open("CO2.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("CO2.csv")
-                    col = f1['dataSet'].tolist()
-                    co2 = col[-1]
+                f1 = pd.read_csv("CO2.csv")
+                col = f1['dataSet'].tolist()
+                co2 = col[-1]
             else:
                 co2 = " "
         elif x == 2:
             if 'H'in sensors:
-                with open("Humidity.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Humidity.csv")
-                    col = f1['dataSet'].tolist()
-                    hum = col[-1]
+                f1 = pd.read_csv("Humidity.csv")
+                col = f1['dataSet'].tolist()
+                hum = col[-1]
             else:
                 hum = " "
         elif x == 3:
             if 'P' in sensors:
-                with open("Pressure.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Pressure.csv")
-                    col = f1['dataSet'].tolist()
-                    pres = col[-1]
+                f1 = pd.read_csv("Pressure.csv")
+                col = f1['dataSet'].tolist()
+                pres = col[-1]
             else:
                 pres = " "
         elif x == 4:
-            if 'Radiation' in sensors:
-                with open("Radiation.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Radiation.csv")
-                    col = f1['dataSet'].tolist()
-                    rad = col[-1]
+            if 'RAD' in sensors:
+                f1 = pd.read_csv("RAD.csv")
+                col = f1['dataSet'].tolist()
+                RAD = col[-1]
             else:
-                rad = " "
+                RAD = " "
         elif x == 5:
             if 'T' in sensors:
-                with open("Temperature.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Temperature.csv")
-                    col = f1['dataSet'].tolist()
-                    temp = col[-1]
+                f1 = pd.read_csv("Temperature.csv")
+                col = f1['dataSet'].tolist()
+                temp = col[-1]
             else:
                 temp = " "
 
-    newRow = [dateTime, lat, lon, air, co2, hum, pres, rad, temp]
+    newRow = [dateTime, lat, lon, air, co2, hum, pres, RAD, temp]
     with open(saveName,'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(newRow)
@@ -165,8 +146,8 @@ def deleteFile():
       os.remove("Humidity.csv")
     if os.path.exists("Pressure.csv"):
       os.remove("Pressure.csv")
-    if os.path.exists("Radiation.csv"):
-      os.remove("Radiation.csv")
+    if os.path.exists("RAD.csv"):
+      os.remove("RAD.csv")
     if os.path.exists("Temperature.csv"):
       os.remove("Temperature.csv")
     else:
@@ -207,7 +188,7 @@ app.layout = html.Div([
                     {'label': 'CO2', 'value': 'co2'},
                     {'label': 'Humidity', 'value': 'humidity'},
                     {'label': 'Pressure (Pa)', 'value': 'pressure'},
-                    {'label': 'Radiation (cps)', 'value': 'radiation'},
+                    {'label': 'Radiation (cps)', 'value': 'RAD'},
                     {'label': 'Temperature (C)', 'value': 'temperature'}
                 ],
                 placeholder="Select a sensor",
@@ -228,8 +209,8 @@ app.layout = html.Div([
                 options=[{'label': 'Humidity', 'value': 'humidity'}], value=[]),
             dcc.Checklist( id="pressure",
                 options=[{'label': 'Pressure (Pa)', 'value': 'pressure'}], value=[]),
-            dcc.Checklist( id="radiation",
-                options=[{'label': 'Radiation (cps)', 'value': 'radiation'}], value=[]),
+            dcc.Checklist( id="RAD",
+                options=[{'label': 'Radiation (cps)', 'value': 'RAD'}], value=[]),
             dcc.Checklist( id="temperature",
                 options=[{'label': 'Temperature (C)', 'value': 'temperature'}], value=[])])
         ], style= {'display': 'flex'}),
@@ -300,7 +281,7 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     dash.dependencies.State('co2','value'),
     dash.dependencies.State('humidity','value'),
     dash.dependencies.State('pressure','value'),
-    dash.dependencies.State('radiation','value'),
+    dash.dependencies.State('RAD','value'),
     dash.dependencies.State('temperature','value'))
 
 def temp_sensor(start, air, co, hum, pres, rad, temp):
@@ -323,15 +304,14 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append("P")
     if rad != []:
         print ("rad")
-        createFile("Radiation")
-        sensorList.append("Radiation")
+        createFile("RAD")
+        sensorList.append("RAD")
     if temp != []:
         print ("temp")
         createFile("Temperature")
         sensorList.append("T")
 
     send_queue_cmd("START", sensorList) #start the sensors
-    print(sensroList)
     return sensorList
 
 #creates file to save the data onto
@@ -379,9 +359,7 @@ def updateGraph(n, button, sensor):
     fileName = str(sensor + ".csv")
     if clicked == "t" and os.path.exists(fileName):
         fileName = sensor + ".csv"
-        with open(fileName, "r") as csvFile:
-            dataFile = csv.reader(csvFile)
-        #dataFile = pd.read_csv(fileName)
+        dataFile = pd.read_csv(fileName)
         if len(dataFile["lat"]) != 0:
             # print ("in update graph creating trace")
             # print(dataFile['lat'])
@@ -472,7 +450,6 @@ def clear_queue():
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--test", "-t",
@@ -489,26 +466,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
-    # global ex
-    # # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    # try:
-    #     if not arg_dict['test']:
-    #         clear_queue()
-    #     app = QApplication(sys.argv)
-    #     #QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    #     nbins = 1024
-    #     #ex = App(nbins=nbins, **arg_dict)
-    #     #ex.show()
-    #
-    #     atexit.register(ex.exit)
-    # except:
-    #     if not arg_dict['test']:
-    #         send_queue_cmd('EXIT',["Radiation","Air Quality","CO2","P/T/H"])
-    #     # Still want to see traceback for debugging
-    #     print('ERROR: GUI quit unexpectedly!')
-    #     traceback.print_exc()
-    #     pass
-    #
-    # ret = app.exec_()
-    # print(ret)
-    # sys.exit(ret)
+    global ex
+    # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    try:
+        if not arg_dict['test']:
+            clear_queue()
+        app = QApplication(sys.argv)
+        QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+        nbins = 1024
+        ex = App(nbins=nbins, **arg_dict)
+        ex.show()
+
+        atexit.register(ex.exit)
+    except:
+        if not arg_dict['test']:
+            send_queue_cmd('EXIT',["RAD","Air Quality","CO2","P/T/H"])
+        # Still want to see traceback for debugging
+        print('ERROR: GUI quit unexpectedly!')
+        traceback.print_exc()
+        pass
+
+    ret = app.exec_()
+    print(ret)
+    sys.exit(ret)
