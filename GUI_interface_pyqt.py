@@ -204,6 +204,12 @@ class App(QWidget):
     def startSensor(self, sensor):
         fname = "/home/pi/data/" + self.file_prefix + '_' + \
                 str(dt.datetime.today()).split()[0]
+        if sensor==PTH:
+            py = 'python3'
+            script = 'weather_DAQ_rabbitmq.py'
+            log = 'weather_gui.log'
+            if self.saveData:
+                fname = fname + "_PTH.csv"
         if sensor==AIR:
             py = 'python'
             script = 'air_quality_DAQ.py'
@@ -506,6 +512,38 @@ class App(QWidget):
             layout.addWidget(plotwin,1,0,1,8)
             layout.setRowStretch(1,15)
 
+        if sensor==PTH:
+            plotwin = pg.GraphicsWindow()
+            plotwin.setContentsMargins(0,0,0,0)
+            iplot = plotwin.addPlot()
+            iplot.showGrid(x=True, y=True)
+            legend = pg.LegendItem(size=(110,90), offset=(100,10))
+            legend.setParentItem(iplot)
+            iplot.setLabel('left', '<h2>P/T/H</h2>')
+            iplot.setLabel('bottom', '<h2>Time</h2>')
+            colors = [(255,0,0),(0,255,0),(0,0,255)]
+            names = ['<h4>Temp/23C</h4>',
+                     '<h4>Humidity/50%</h4>',
+                     '<h4>Pressure/atm</h4>']
+
+            self.plot_list[sensor] = []
+            self.err_list[sensor] = []
+            for idx in range(len(self.data[sensor])):
+                err = pg.ErrorBarItem(x=self.time_data[sensor],
+                                      y=self.data[sensor][idx][0],
+                                      height=np.asarray(
+                                                self.data[sensor][idx][1]))
+                iplot.addItem(err)
+                curve = iplot.plot(self.time_data[sensor],
+                                   self.data[sensor][idx][0],
+                                   symbolBrush=colors[idx], symbolPen='k',
+                                   pen=colors[idx], name=names[idx])
+                self.err_list[sensor].append(err)
+                self.plot_list[sensor].append(curve)
+                legend.addItem(curve,names[idx])
+            layout.addWidget(plotwin,1,0,1,8)
+            layout.setRowStretch(1,15)
+
         if sensor==CO2:
             plotwin = pg.GraphicsWindow()
             plotwin.setContentsMargins(0,0,0,0)
@@ -533,6 +571,18 @@ class App(QWidget):
             cps = "{:.1f}".format(np.mean(self.data[sensor]))
             usv = "{:.3f}".format(np.mean(self.data[sensor]))
             sensor_text = ["CPS =",cps,"                  uSv/hr =",usv]
+            self.sensor_list[sensor] = sensor_text
+
+        if sensor==PTH:
+            if len(self.data[sensor][0]) == 0:
+                temp, hum, press = 0., 0., 0.
+            else:
+                temp = "{:.1f}".format(np.mean(self.data[sensor][0]))
+                hum = "{:.1f}".format(np.mean(self.data[sensor][1]))
+                press = "{:.1f}".format(np.mean(self.data[sensor][2]))
+            sensor_text = ["Temperature =",temp,
+                           " C   Humidity =",hum,
+                           "%    Pressure =",press," atm"]
             self.sensor_list[sensor] = sensor_text
 
         if sensor==AIR:
@@ -568,6 +618,9 @@ class App(QWidget):
         if sensor==AIR:
             self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
 
+        if sensor==PTH:
+            self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+
         if sensor==CO2:
             self.data[sensor] = [[],[]]
 
@@ -584,6 +637,12 @@ class App(QWidget):
             data = [[base_data,base_err[0]],
                     [base_data*1.5,base_err[1]],
                     [base_data*5.0,base_err[2]]]
+        if sensor==PTH:
+            base_data = np.random.random(1)[0]
+            base_err = 0.05*np.random.random(3)
+            data = [[base_data*20,base_err[0]],
+                    [base_data*50,base_err[1]],
+                    [base_data*1.1,base_err[2]]]
         if sensor==CO2:
             data = [np.random.random(1)[0],0.05*np.random.random(1)[0]]
         return data
@@ -615,6 +674,22 @@ class App(QWidget):
                 self.ave_data[0].pop(0)
                 self.ave_data[1].pop(0)
 
+        if sensor==PTH:
+            self.data[PTH][0][0].append(data[0][0])
+            self.data[PTH][0][1].append(data[0][1])
+            self.data[PTH][1][0].append(data[1][0])
+            self.data[PTH][1][1].append(data[1][1])
+            self.data[PTH][2][0].append(data[2][0])
+            self.data[PTH][2][1].append(data[2][1])
+
+            if len(self.data[sensor][0][0]) > self.ndata:
+                self.data[sensor][0][0].pop(0)
+                self.data[sensor][0][1].pop(0)
+                self.data[sensor][1][0].pop(0)
+                self.data[sensor][1][1].pop(0)
+                self.data[sensor][2][0].pop(0)
+                self.data[sensor][2][1].pop(0)
+
         if sensor==AIR:
             self.data[AIR][0][0].append(data[0][0])
             self.data[AIR][0][1].append(data[0][1])
@@ -639,6 +714,7 @@ class App(QWidget):
                 self.data[sensor][0].pop(0)
                 self.data[sensor][1].pop(0)
 
+
     def updatePlot(self, sensor):
         '''
         Update plots with newest data from the sensor
@@ -653,6 +729,26 @@ class App(QWidget):
                                           beam=0.15)
             self.plot_list[sensor][1].setData(self.time_data[sensor],
                                               self.ave_data[0])
+
+        if sensor==PTH:
+            self.err_list[sensor][0].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][0][0])/23.0,
+                                             height=np.asarray(self.data[sensor][0][1])/23.0,
+                                             beam=0.15)
+            self.plot_list[sensor][0].setData(self.time_data[sensor],
+                                              np.asarray(self.data[sensor][0][0])/23.0)
+            self.err_list[sensor][1].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][1][0])/50.0,
+                                             height=np.asarray(self.data[sensor][1][1])/50.0,
+                                             beam=0.15)
+            self.plot_list[sensor][1].setData(self.time_data[sensor],
+                                              np.asarray(self.data[sensor][1][0])/50.0)
+            self.err_list[sensor][2].setData(x=np.asarray(self.time_data[sensor]),
+                                             y=np.asarray(self.data[sensor][2][0]),
+                                             height=np.asarray(self.data[sensor][2][1]),
+                                             beam=0.15)
+            self.plot_list[sensor][2].setData(self.time_data[sensor],
+                                              np.asarray(self.data[sensor][2][0]))
 
         if sensor==AIR:
             self.err_list[sensor][0].setData(x=np.asarray(self.time_data[sensor]),
@@ -700,6 +796,20 @@ class App(QWidget):
             self.sensor_list[sensor][1] = cps_str
             self.sensor_list[sensor][3] = usv_str
             self.setDisplayBackground(sensor,usv)
+
+        if sensor==PTH:
+            if len(self.data[sensor][0][0]) > 0:
+                temp = "{:.1f}".format(self.data[sensor][0][0][-1])
+                hum = "{:.1f}".format(self.data[sensor][1][0][-1])
+                press = "{:.1f}".format(self.data[sensor][2][0][-1])
+            else:
+                temp = "0.0"
+                hum = "0.0"
+                press = "0.0"
+            self.sensor_list[sensor][1] = temp
+            self.sensor_list[sensor][3] = hum
+            self.sensor_list[sensor][5] = press
+            self.setDisplayBackground(sensor,np.mean(self.data[sensor][1][0]))
 
         if sensor==AIR:
             if len(self.data[sensor][0][0]) > 0:
@@ -822,6 +932,8 @@ class App(QWidget):
                     self.ave_data = [[],[]]
                 if sensor==AIR:
                     self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
+                if sensor==PTH:
+                    self.data[sensor] = [[[],[]],[[],[]],[[],[]]]
                 if sensor==CO2:
                     self.data[sensor] = [[],[]]
                 self.updatePlot(sensor)
@@ -876,7 +988,7 @@ def receive_queue_data():
     channel.queue_declare(queue='toGUI')
     method_frame, header_frame, body = channel.basic_get(queue='toGUI')
     if body is not None:
-        # message from d3s seems to come back as bytes...
+        # message from d3s is coming back as bytes
         if type(body) is bytes:
             body = body.decode("utf-8")
         message = json.loads(body)
