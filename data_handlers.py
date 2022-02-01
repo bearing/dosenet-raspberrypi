@@ -156,34 +156,14 @@ class Data_Handler(object):
                     self.manager.sender.send_spectra_new_D3S(
                         trash[0], trash[1])
 
-        if self.manager.sensor_type == 3:
+        if self.manager.sensor_type in [3,4,5]:
             average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_AQ(this_end, average_data)
+            self.manager.sender.send_data_new_Env(this_end, average_data)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
                     trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_AQ(
-                        trash[0], trash[1])
-
-        if self.manager.sensor_type == 4:
-            average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_CO2(this_end, average_data)
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to server")
-                while self.queue:
-                    trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_CO2(
-                        trash[0], trash[1])
-
-        if self.manager.sensor_type == 5:
-            average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_weather(this_end, average_data)
-            if self.queue:
-                self.vprint(1, "Flushing memory queue to server")
-                while self.queue:
-                    trash = self.queue.popleft()
-                    self.manager.sender.send_data_new_weather(
+                    self.manager.sender.send_data_new_Env(
                         trash[0], trash[1])
 
     def send_all_to_backlog(self, path=None):
@@ -204,7 +184,7 @@ class Data_Handler(object):
                 temp = []
                 while self.queue:
                     temp.append(self.queue.popleft())
-                with open(path, "ab") as f: # might only work for python 3?
+                with open(path, "ab") as f:
                     writer = csv.writer(f)
                     writer.writerows(temp)
         else:
@@ -241,11 +221,14 @@ class Data_Handler(object):
                 self.vprint(2, "Flushing backlog file to memory queue")
                 with open(path, 'r') as f:
                     data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1], i[2]])
-                print(self.queue)
-                os.remove(path)
+                try:
+                    data = ast.literal_eval(data)
+                    for i in data:
+                        self.queue.append([i[0], i[1], i[2]])
+                    print(self.queue)
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
         if self.manager.sensor_type == 2:
             if path == None:
@@ -255,13 +238,16 @@ class Data_Handler(object):
                 with open(path, 'rb') as f:
                     reader = csv.reader(f)
                     lst = list(reader)
-                for i in lst:
-                    timestring = i[0]
-                    spectra = i[1]
-                    timestring = ast.literal_eval(timestring)
-                    spectra = ast.literal_eval(spectra)
-                    self.queue.append([timestring, spectra])
-                os.remove(path)
+                try:
+                    for i in lst:
+                        timestring = i[0]
+                        spectra = i[1]
+                        timestring = ast.literal_eval(timestring)
+                        spectra = ast.literal_eval(spectra)
+                        self.queue.append([timestring, spectra])
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
         if self.manager.sensor_type in (3, 4, 5):
             if path == None and self.manager.sensor_type == 3:
@@ -274,11 +260,14 @@ class Data_Handler(object):
                 self.vprint(2, "Flushing backlog file to memory queue")
                 with open(path, 'r') as f:
                     data = f.read()
-                data = ast.literal_eval(data)
-                for i in data:
-                    self.queue.append([i[0], i[1]])
-                print(self.queue)
-                os.remove(path)
+                try:
+                    data = ast.literal_eval(data)
+                    for i in data:
+                        self.queue.append([i[0], i[1]])
+                    print(self.queue)
+                    os.remove(path)
+                except SyntaxError:
+                    os.remove(path)
 
     def main(self, datalog, this_start, this_end, **kwargs):
         """

@@ -78,6 +78,8 @@ class OLED_Manager(object):
         self.co2_disp = ("CO2 Concentration:", "ppm")
         self.weather_disp = ("Pressure: ", "hPa", "Temperature: ", "C", "Humidity: ", "%")
 
+        self.logo = Image.open('dosenet-logo.png').convert('1')
+
     def create_test_data(self, sensor):
         """
         Generates a pseudo-random set of data based on which sensor is called.
@@ -114,7 +116,7 @@ class OLED_Manager(object):
         disp = Adafruit_SSD1306.SSD1306_128_64(rst=20, dc=21, spi=SPI.SpiDev(0, 0, max_speed_hz=8000000))
         disp.begin()
 
-        self.display_image = Image.new('1', (disp.width, disp.height))
+        self.image = Image.new('1', (disp.width, disp.height))
         self.draw = ImageDraw.Draw(self.image)
         self.font = ImageFont.load_default()
 
@@ -141,6 +143,32 @@ class OLED_Manager(object):
         time.sleep(1.5)
         ctypes.CDLL("/home/pi/oledtest/test.so").LCD_Fill(0x00)
 
+    def new_image(self):
+        """
+        This function creates a new image space for the blue OLED to occupy
+        Without this method, every clear of the screen would cause text overlap
+        """
+        self.image = Image.new('1', (self.screen.width, self.screen.height))
+        self.draw = ImageDraw.Draw(self.image)
+        self.font = ImageFont.load_default()
+
+        self.screen.clear()
+        self.screen.display()
+
+    def draw_logo(self, display_time=None):
+        """
+        This function draws our DoseNet logo onto the screen 
+        Gotta get that branding shown off :)
+        """
+        self.screen.clear()
+        self.screen.image(self.logo)
+
+        self.screen.display()
+
+        if display_time:
+            time.sleep(display_time)
+            self.oclear()
+
     def oprint(self, x, y, print_text, display_time=None):
         """
         This function is meant to shorten the code needed to print to
@@ -154,10 +182,11 @@ class OLED_Manager(object):
                     time.sleep(display_time)
                     self.oclear()
             elif self.oled_type == 'b':
+                yb = 9*y
                 if not self.screen:
                     self.vprint(1, 'Blue OLED screen not setup! Please do so before trying to print to it')
                 else:
-                    self.draw.text((x, y), print_text, font=self.font, fill=255)
+                    self.draw.text((x, yb), print_text, font=self.font, fill=255)
                     self.screen.image(self.image)
                     self.screen.display()
                     if display_time:
@@ -177,6 +206,8 @@ class OLED_Manager(object):
             if not x and not y:
                 self.screen.clear()
                 self.screen.display()
+                
+                self.new_image()
             else:
                 pass
         else:
@@ -283,6 +314,7 @@ class OLED_Manager(object):
             channel.start_consuming()
         else:
             self.display_time = 30
+            self.vprint(1, "Make sure that you watch the OLED, the data should be printing to the screen shortly")
             for sensor in range(0,5):
                 self.vprint(1, "Now creating random data for the "+self.disp_names[sensor+2])
                 data = {'id': sensor+1, 'data': self.create_test_data(sensor+1)}

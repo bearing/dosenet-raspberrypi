@@ -49,6 +49,7 @@ from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import NEW_SENSOR_DISPLAY_TEXT, OLD_SENSOR_DISPLAY_TEXT
+from globalvalues import OLED_CONNECTED_TEXT, SINGLE_BREAK_LINE
 from globalvalues import RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILES, DEFAULT_DATALOGS
@@ -292,6 +293,12 @@ class Base_Manager(object):
         Main method to run the sensors continuously, the run
         procedure is determined by the sensor_type of the instance.
         """
+        if self.oled:
+            self.vprint(1, SINGLE_BREAK_LINE)
+            self.vprint(
+                    1, OLED_CONNECTED_TEXT)
+            self.vprint(1, SINGLE_BREAK_LINE)
+            
         if self.new_setup:
             self.vprint(
                     1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))

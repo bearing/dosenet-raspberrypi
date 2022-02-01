@@ -164,6 +164,11 @@ RUNNING_DISPLAY_TEXT = (
     'of {{interval}} seconds.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
+OLED_CONNECTED_TEXT = (
+    '{green}OLED is connected and running!\n' +
+    'Data will be sent to be displayed on the OLED.{reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
 CPM_DISPLAY_TEXT = (
     '{green} {{counts}}{reset}' + '{cyan} total counts with {reset}' +
     '{green}{{cpm:.2f}}{reset}' + '{cyan} counts per minute\n{reset}' +
