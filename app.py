@@ -317,7 +317,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         print ("rad")
         createFile("RAD")
         sensorList.append("RAD")
-    if pres != [] | hum != [] | temp != []:
+    if pres != []:
         print ("pres")
         createFile("Pressure")
         createFile("Temperature")
