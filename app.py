@@ -353,8 +353,8 @@ def saveFile(save):
 def collectDataInFile(n, clicked, save, sensors, fileName):
     last_clicked = clicked[-5:]
     if last_clicked == 'START':
-        # lat = str(randolat())
-        # lon = str(randolon())
+        lat = str(randolat())
+        lon = str(randolon())
         #for x in sensors:
             # print("appending to file")
          #send message to start collecting
@@ -417,7 +417,7 @@ def updateGraph(n, button, sensor):
 #   - allows commmunication between GUI and sensor DAQs
 #   - send commands and receive sensor data
 #-------------------------------------------------------------------------------
-def send_queue_cmd(cmd, daq_list):
+def send_queue_cmd(cmd, daq_list)s:
     '''
     Send commands for sensor DAQs
         - valid commands: START, STOP, EXIT
