@@ -308,25 +308,25 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     if air != []:
         print ("air")
         createFile("AirQuality")
-        sensorList.append("Air Quality")
+        sensorList.append("AIR")
     if co != []:
         print ("co2")
         createFile("CO2")
         sensorList.append("CO2")
-    if hum != []:
-        print ("hum")
-        createFile("H")
-        sensorList.append("Humidity")
-    if pres != []:
+    if rad != []:
+        print ("rad")
+        createFile("RAD")
+        sensorList.append("RAD")
+    if pres != [] | hum != [] | temp != []:
         print ("pres")
         createFile("Pressure")
         createFile("Temperature")
         createFile("Humidity")
-        sensorList.append("P/T/H")
-    # if rad != []:
-    #     print ("rad")
-    #     createFile("RAD")
-    #     sensorList.append("Radiation")
+        sensorList.append("PTH")
+    # if hum != []:
+    #     print ("hum")
+    #     createFile("H")
+    #     sensorList.append("Humidity")
     # if temp != []:
     #     print ("temp")
     #     createFile("Temperature")
