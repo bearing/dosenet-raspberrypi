@@ -47,15 +47,15 @@ def appendFile(sensorName, lat, lon, data):
             writer.writerow(newRow)
             csvFile.close()
         fileName = str("Temperature" + ".csv")
-        pData = data[1]
-        newRow = [lat, lon, pData]
+        tData = data[1]
+        newRow = [lat, lon, tData]
         with open(fileName,'a') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(newRow)
             csvFile.close()
         fileName = str("Humidity" + ".csv")
-        pData = data[2]
-        newRow = [lat, lon, pData]
+        hData = data[2]
+        newRow = [lat, lon, hData]
         with open(fileName,'a') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(newRow)
@@ -331,7 +331,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append("T")
 
     send_queue_cmd("START", sensorList) #start the sensors
-    print(sensroList)
+    print(sensorList)
     return sensorList
 
 #creates file to save the data onto
@@ -355,12 +355,12 @@ def collectDataInFile(n, clicked, save, sensors, fileName):
     if last_clicked == 'START':
         lat = str(randolat())
         lon = str(randolon())
-        #for x in sensors:
-            # print("appending to file")
-         #send message to start collecting
-        message= receive_queue_data()
-            # data = str(randoNum())
-        appendFile(message['id'], lat, lon, message['data'])
+        for x in sensors:
+            message = receive_queue_data()
+            keys = message.values()
+            value = itr(keys)
+            data = next(value)
+            appendFile(x, lat, lon, value)
         if (save != 0):
             appendSaveFile(sensors, lat, lon, fileName)
 
@@ -417,7 +417,7 @@ def updateGraph(n, button, sensor):
 #   - allows commmunication between GUI and sensor DAQs
 #   - send commands and receive sensor data
 #-------------------------------------------------------------------------------
-def send_queue_cmd(cmd, daq_list)s:
+def send_queue_cmd(cmd, daq_list):
     '''
     Send commands for sensor DAQs
         - valid commands: START, STOP, EXIT
