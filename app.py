@@ -429,12 +429,14 @@ def send_queue_cmd(cmd, daq_list):
     for sensor in daq_list:
         print("Sending cmd: {} for {}".format(cmd,sensor))
         message = {'id': sensor, 'cmd': cmd}
+        print("message", message)
         channel.basic_publish(exchange='',
                               routing_key='fromGUI',
                               body=json.dumps(message))
     connection.close()
 
 def receive_queue_data():
+    print("in receive_queue_data")
     '''
     Receive data from sensor DAQs
     '''
