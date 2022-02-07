@@ -132,7 +132,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
                 pres = " "
         elif x == 4:
             if 'RAD' in sensors:
-                with open("RAD.csv", "r") as csvFile:
+                with open("Radiation.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("Radiation.csv")
                     col = f1['dataSet'].tolist()
@@ -315,11 +315,13 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append("CO2")
     if hum != []:
         print ("hum")
-        createFile("Humidity")
-        sensorList.append("H")
+        createFile("H")
+        sensorList.append("Humidity")
     if pres != []:
         print ("pres")
         createFile("Pressure")
+        createFile("Temperature")
+        createFile("Humidity")
         sensorList.append("P/T/H")
     # if rad != []:
     #     print ("rad")
