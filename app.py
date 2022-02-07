@@ -418,6 +418,7 @@ def updateGraph(n, button, sensor):
 #   - send commands and receive sensor data
 #-------------------------------------------------------------------------------
 def send_queue_cmd(cmd, daq_list):
+    print("in send_queue_cmd")
     '''
     Send commands for sensor DAQs
         - valid commands: START, STOP, EXIT
