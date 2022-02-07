@@ -320,15 +320,15 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     if pres != []:
         print ("pres")
         createFile("Pressure")
-        sensorList.append("P")
-    if rad != []:
-        print ("rad")
-        createFile("RAD")
-        sensorList.append("RAD")
-    if temp != []:
-        print ("temp")
-        createFile("Temperature")
-        sensorList.append("T")
+        sensorList.append("P/T/H")
+    # if rad != []:
+    #     print ("rad")
+    #     createFile("RAD")
+    #     sensorList.append("Radiation")
+    # if temp != []:
+    #     print ("temp")
+    #     createFile("Temperature")
+    #     sensorList.append("T")
 
     send_queue_cmd("START", sensorList) #start the sensors
     print(sensorList)
@@ -356,8 +356,8 @@ def collectDataInFile(n, clicked, save, sensors, fileName):
         lat = str(randolat())
         lon = str(randolon())
         for x in sensors:
-            message = receive_queue_data()
-            keys = message.values()
+            messages = receive_queue_data()
+            keys = messages.values()
             value = itr(keys)
             data = next(value)
             appendFile(x, lat, lon, value)
@@ -454,6 +454,7 @@ def receive_queue_data():
         message = json.loads(body)
         channel.basic_ack(delivery_tag=method_frame.delivery_tag)
         connection.close()
+        print("receivemess", message)
         return message
     else:
         connection.close()
