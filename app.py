@@ -352,19 +352,22 @@ def saveFile(save):
     dash.dependencies.State('save-button', 'n_clicks'),
     dash.dependencies.State('checked-sensor', 'children'),
     dash.dependencies.State('savingFileName', 'children'))
-def collectDataInFile(n, clicked, save, sensors, fileName):
+def collectDataInFile(n, clicked, save, sensorList, fileName):
     last_clicked = clicked[-5:]
     if last_clicked == 'START':
         lat = str(randolat())
         lon = str(randolon())
-        for x in sensors:
+        for sensor in sensorList:
             messages = receive_queue_data()
+            print(messages)
             keys = messages.values()
             value = itr(keys)
             data = next(value)
-            appendFile(x, lat, lon, value)
+            appendFile(sensor, lat, lon, data)
+
+#NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS
         if (save != 0):
-            appendSaveFile(sensors, lat, lon, fileName)
+            appendSaveFile(sensor, lat, lon, fileName)
 
         clear_queue()
     return "data"
@@ -458,7 +461,6 @@ def receive_queue_data():
         print("receivemess", message)
         return message
     else:
-        print("NONE")
         connection.close()
         return None
 
