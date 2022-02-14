@@ -446,23 +446,23 @@ def startSensor(sensorList):
     py = 'sudo python'
     for sensor in sensorList:
         print("in start sens")
-        if sensor == PTH:
+        if sensor == 'PTH':
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
-        if sensor == AIR:
+        if sensor == 'AIR':
             py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
-        if sensor == RAD:
+        if sensor == 'RAD':
             print("here: RAD")
             py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
-        if sensor==CO2:
+        if sensor == 'CO2':
             py = 'python'
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
