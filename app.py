@@ -421,37 +421,37 @@ def updateGraph(n, button, sensor):
      #app.run_server(debug=True)
 #________________________________________________________________________________
 def startSensor(sensorList):
-        # fname = "/home/pi/data/" + self.file_prefix + '_' + \
-        #         str(dt.datetime.today()).split()[0]
+        fname = "/home/pi/data/" + self.file_prefix + '_' + \
+                str(dt.datetime.today()).split()[0]
     for sensor in sensorList:
         print("sensor: ", sensor)
         if sensor==PTH:
-            #py = 'python3'
+            py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
         if sensor==AIR:
-            #py = 'python'
+            py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
         if sensor==RAD:
-            #py = 'sudo python'
+            py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
         if sensor==CO2:
-            #py = 'python'
+            py = 'python'
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
 
-        # cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
-        # cmd_options = ' -i {}'.format(self.integration_time)
-        # cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
-        # cmd = cmd_head + cmd_options + cmd_log
-        #
-        # print(cmd)
-        # os.system(cmd)
+        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
+        cmd_options = ' -i {}'.format(self.integration_time)
+        cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
+        cmd = cmd_head + cmd_options + cmd_log
+
+        print(cmd)
+        os.system(cmd)
 
 #-------------------------------------------------------------------------------
 # Methods for communication with the shared queue
