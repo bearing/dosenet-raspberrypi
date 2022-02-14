@@ -18,7 +18,7 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QtGui, QApplication, QWidget, QMainWindow, QPushButton
 from PyQt5.QtGui import QStyleFactory
 import json
 import sys
@@ -492,7 +492,7 @@ if __name__ == '__main__':
     arg_dict = vars(args)
 
     global ex
-    # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
     try:
         if not arg_dict['test']:
             clear_queue()
