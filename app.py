@@ -425,24 +425,24 @@ def startSensor(sensorList):
         #         str(dt.datetime.today()).split()[0]
     for sensor in sensorList:
         if sensor==PTH:
-        py = 'python3'
-        script = 'weather_DAQ_rabbitmq.py'
-        log = 'weather_gui.log'
+            py = 'python3'
+            script = 'weather_DAQ_rabbitmq.py'
+            log = 'weather_gui.log'
 
         if sensor==AIR:
-        py = 'python'
-        script = 'air_quality_DAQ.py'
-        log = 'AQ_gui.log'
+            py = 'python'
+            script = 'air_quality_DAQ.py'
+            log = 'AQ_gui.log'
 
         if sensor==RAD:
-        py = 'sudo python'
-        script = 'D3S_rabbitmq_DAQ.py'
-        log = 'rad_gui.log'
+            py = 'sudo python'
+            script = 'D3S_rabbitmq_DAQ.py'
+            log = 'rad_gui.log'
 
         if sensor==CO2:
-        py = 'python'
-        script = 'adc_DAQ.py'
-        log = 'CO2_gui.log'
+            py = 'python'
+            script = 'adc_DAQ.py'
+            log = 'CO2_gui.log'
 
         # cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
         # cmd_options = ' -i {}'.format(self.integration_time)
