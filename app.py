@@ -306,7 +306,7 @@ def stopSensor(stop, sensorList):
 
     print("Sending EXIT command to all active sensors")
     send_queue_cmd('STOP',sensorList)
-    send_queue_cmd('EXIT',sensorist)
+    send_queue_cmd('EXIT',sensorList)
     time.sleep(2)
 
     return("exit")
@@ -445,17 +445,18 @@ def startSensor(sensorList):
 
     for sensor in sensorList:
         print("sensor: ", sensor)
-        if sensor==PTH:
+        if sensor == PTH:
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
-        if sensor==AIR:
+        if sensor == AIR:
             py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
-        if sensor==RAD:
+        if sensor == RAD:
+            print("here: RAD")
             py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
@@ -465,6 +466,7 @@ def startSensor(sensorList):
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
 
+        print("py: ", py)
         cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format("2")
         cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
