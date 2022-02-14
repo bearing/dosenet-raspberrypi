@@ -355,7 +355,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     startSensor(sensorList) #start up the sensors
     time.sleep(5) #time for sensors to start up: 5 seconds
     send_queue_cmd("START", sensorList) #start the q
-    print(sensorList)
+    print("sens list: " , sensorList)
     return sensorList
 
 #creates file to save the data onto
@@ -391,7 +391,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         if (save != 0):
             appendSaveFile(sensor, lat, lon, fileName)
 
-        clear_queue()
+        #clear_queue()
     return "data"
 
 
