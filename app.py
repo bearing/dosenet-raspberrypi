@@ -440,7 +440,6 @@ def send_queue_cmd(cmd, daq_list):
     connection.close()
 
 def receive_queue_data():
-    print("in receive_queue_data")
     '''
     Receive data from sensor DAQs
     '''
@@ -449,16 +448,12 @@ def receive_queue_data():
     channel.queue_declare(queue='toGUI')
     method_frame, header_frame, body = channel.basic_get(queue='toGUI')
     if body is not None:
-        HEAD
-        # message from d3s seems to come back as bytes...
         # message from d3s is coming back as bytes
-        d4b986b040e7ae16a0f57b5a4363212f294f6628
         if type(body) is bytes:
             body = body.decode("utf-8")
         message = json.loads(body)
         channel.basic_ack(delivery_tag=method_frame.delivery_tag)
         connection.close()
-        print("receivemess", message)
         return message
     else:
         connection.close()
@@ -480,7 +475,6 @@ def clear_queue():
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--test", "-t",
@@ -497,26 +491,26 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
-    # global ex
-    # # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    # try:
-    #     if not arg_dict['test']:
-    #         clear_queue()
-    #     app = QApplication(sys.argv)
-    #     #QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    #     nbins = 1024
-    #     #ex = App(nbins=nbins, **arg_dict)
-    #     #ex.show()
-    #
-    #     atexit.register(ex.exit)
-    # except:
-    #     if not arg_dict['test']:
-    #         send_queue_cmd('EXIT',["Radiation","Air Quality","CO2","P/T/H"])
-    #     # Still want to see traceback for debugging
-    #     print('ERROR: GUI quit unexpectedly!')
-    #     traceback.print_exc()
-    #     pass
-    #
-    # ret = app.exec_()
-    # print(ret)
-    # sys.exit(ret)
+    global ex
+    # Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    try:
+        if not arg_dict['test']:
+            clear_queue()
+        app = QApplication(sys.argv)
+        QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+        nbins = 1024
+        ex = App(nbins=nbins, **arg_dict)
+        ex.show()
+
+        atexit.register(ex.exit)
+    except:
+        if not arg_dict['test']:
+            send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
+        # Still want to see traceback for debugging
+        print('ERROR: GUI quit unexpectedly!')
+        traceback.print_exc()
+        pass
+
+    ret = app.exec_()
+    print(ret)
+    sys.exit(ret)
