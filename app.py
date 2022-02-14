@@ -25,6 +25,10 @@ import traceback
 
 
 app = dash.Dash(__name__, prevent_initial_callbacks=True)
+RAD = "Radiation"
+AIR = "Air Quality"
+CO2 = "CO2"
+PTH = "P/T/H"
 # ________________________________________________________
 # method that creates rando numbers
 def randoNum():
@@ -498,10 +502,10 @@ if __name__ == '__main__':
         app = QApplication(sys.argv)
         QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
         nbins = 1024
-        ex = App(nbins=nbins, **arg_dict)
-        ex.show()
+        # ex = App(nbins=nbins, **arg_dict)
+        # ex.show()
 
-        atexit.register(ex.exit)
+        #atexit.register(ex.exit)
     except:
         if not arg_dict['test']:
             send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
@@ -510,6 +514,6 @@ if __name__ == '__main__':
         traceback.print_exc()
         pass
 
-    ret = app.exec_()
-    print(ret)
-    sys.exit(ret)
+    # ret = app.exec_()
+    # print(ret)
+    # sys.exit(ret)
