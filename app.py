@@ -18,9 +18,8 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QStyleFactory
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
-from PyQt5.QtGui import QStyleFactory
 import json
 import sys
 import traceback
