@@ -18,7 +18,7 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QStyleFactory
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
 import json
 import sys
 import traceback
@@ -418,7 +418,37 @@ def updateGraph(n, button, sensor):
 # ------------------------------------------------------------------------------
 # if __name__ == '__main__':
 #     app.run_server(debug=True)
+#________________________________________________________________________________
+def startSensor(self, sensor):
+        fname = "/home/pi/data/" + self.file_prefix + '_' + \
+                str(dt.datetime.today()).split()[0]
+        if sensor==PTH:
+            py = 'python3'
+            script = 'weather_DAQ_rabbitmq.py'
+            log = 'weather_gui.log'
 
+        if sensor==AIR:
+            py = 'python'
+            script = 'air_quality_DAQ.py'
+            log = 'AQ_gui.log'
+
+        if sensor==RAD:
+            py = 'sudo python'
+            script = 'D3S_rabbitmq_DAQ.py'
+            log = 'rad_gui.log'
+
+        if sensor==CO2:
+            py = 'python'
+            script = 'adc_DAQ.py'
+            log = 'CO2_gui.log'
+
+        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
+        cmd_options = ' -i {}'.format(self.integration_time)
+        cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
+        cmd = cmd_head + cmd_options + cmd_log
+
+        print(cmd)
+        os.system(cmd)
 
 #-------------------------------------------------------------------------------
 # Methods for communication with the shared queue
@@ -494,25 +524,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arg_dict = vars(args)
 
-    global ex
-    #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    try:
-        if not arg_dict['test']:
-            clear_queue()
-        app = QApplication(sys.argv)
-        QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-        nbins = 1024
-        # ex = App(nbins=nbins, **arg_dict)
-        # ex.show()
-
-        #atexit.register(ex.exit)
-    except:
-        if not arg_dict['test']:
-            send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
-        # Still want to see traceback for debugging
-        print('ERROR: GUI quit unexpectedly!')
-        traceback.print_exc()
-        pass
+    # global ex
+    # #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
+    # try:
+    #     if not arg_dict['test']:
+    #         clear_queue()
+    #     app = QApplication(sys.argv)
+    #     QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+    #     nbins = 1024
+    #     # ex = App(nbins=nbins, **arg_dict)
+    #     # ex.show()
+    #
+    #     #atexit.register(ex.exit)
+    # except:
+    #     if not arg_dict['test']:
+    #         send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
+    #     # Still want to see traceback for debugging
+    #     print('ERROR: GUI quit unexpectedly!')
+    #     traceback.print_exc()
+    #     pass
 
     # ret = app.exec_()
     # print(ret)
