@@ -426,12 +426,12 @@ def startSensor(sensorList):
     for sensor in sensorList:
         print("sensor: ", sensor)
         if sensor==PTH:
-            py = 'python3'
+            #py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
         if sensor==AIR:
-            py = 'python'
+            #py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
@@ -441,7 +441,7 @@ def startSensor(sensorList):
             log = 'rad_gui.log'
 
         if sensor==CO2:
-            py = 'python'
+            #py = 'python'
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
 
