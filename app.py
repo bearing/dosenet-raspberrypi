@@ -417,7 +417,7 @@ def updateGraph(n, button, sensor):
     return dash.no_update
 # ------------------------------------------------------------------------------
 # if __name__ == '__main__':
-#     app.run_server(debug=True)
+     #app.run_server(debug=True)
 #________________________________________________________________________________
 def startSensor(self, sensor):
         fname = "/home/pi/data/" + self.file_prefix + '_' + \
@@ -520,7 +520,7 @@ if __name__ == '__main__':
         default = False,
     )
 
-
+    app.run_server(debug=True)
     args = parser.parse_args()
     arg_dict = vars(args)
 
