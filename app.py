@@ -436,7 +436,7 @@ def startSensor(sensorList):
             log = 'AQ_gui.log'
 
         if sensor==RAD:
-            py = 'sudo python'
+            #py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
@@ -459,7 +459,6 @@ def startSensor(sensorList):
 #   - send commands and receive sensor data
 #-------------------------------------------------------------------------------
 def send_queue_cmd(cmd, daq_list):
-    print("in send_queue_cmd")
     '''
     Send commands for sensor DAQs
         - valid commands: START, STOP, EXIT
