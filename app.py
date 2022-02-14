@@ -9,6 +9,7 @@ import random
 import csv
 from os import path
 from datetime import datetime
+import datetime as dt
 import pika
 import argparse
 
@@ -305,7 +306,6 @@ def stopSensor(stop, sensorList):
 
     print("Sending EXIT command to all active sensors")
     send_queue_cmd('STOP',sensorList)
-    self.timer.stop()
     send_queue_cmd('EXIT',sensorist)
     time.sleep(2)
 
