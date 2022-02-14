@@ -548,8 +548,7 @@ if __name__ == '__main__':
     )
 
     app.run_server(debug=True)
-    args = parser.parse_args()
-    arg_dict = vars(args)
+
 
     # global ex
     # #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
