@@ -307,7 +307,6 @@ def stopSensor(stop, sensorList):
     print("Sending EXIT command to all active sensors")
     send_queue_cmd('STOP',sensorList)
     send_queue_cmd('EXIT',sensorList)
-    time.sleep(2)
 
     return("exit")
 
