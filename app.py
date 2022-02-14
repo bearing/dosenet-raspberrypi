@@ -424,6 +424,7 @@ def startSensor(sensorList):
         # fname = "/home/pi/data/" + self.file_prefix + '_' + \
         #         str(dt.datetime.today()).split()[0]
     for sensor in sensorList:
+        print("sensor: ", sensor)
         if sensor==PTH:
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
