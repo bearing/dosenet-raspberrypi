@@ -362,7 +362,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         lon = str(randolon())
         for sensor in sensorList:
             messages = receive_queue_data()
-            print(messages)
+            print("message: ", messages)
             keys = messages.values()
             value = itr(keys)
             data = next(value)
@@ -480,6 +480,7 @@ def receive_queue_data():
     channel = connection.channel()
     channel.queue_declare(queue='toGUI')
     method_frame, header_frame, body = channel.basic_get(queue='toGUI')
+    print("body: ", body)
     if body is not None:
         # message from d3s is coming back as bytes
         if type(body) is bytes:
