@@ -244,6 +244,7 @@ app.layout = html.Div([
     html.Div(id='savingFileName', children='', style={'display': 'none'}),
     html.Div(id='collectingData', children='', style={'display': 'none'}),
     html.Div(id='savingData', children='', style={'display': 'none'}),
+    html.Div(id='stopSensors', children='', style={'display': 'none'}),
 
     html.Div(id='buttons', children = [
     html.Button(children = 'Start', id='start-button', n_clicks = 0, style={'width': "15%", 'height': "40px",'display': 'inline-block','margin-left': "10px",'margin-right': "30px", 'font_size': '40px'}),
@@ -287,13 +288,29 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
         last_clicked = 'START'
     elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
-        deleteFile()
         interval = 0
     else:
         last_clicked = "none"
     cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
 
     return cur_clicks, interval
+
+@app.callback(
+    dash.dependencies.Output('stopSensors', 'children'),
+    dash.dependencies.Input('stop-button', 'n_clicks'),
+    dash.dependencies.State('checked-sensor', 'children')
+    )
+def stopSensor(stop, sensorList):
+    deleteFile() #delete the temp files
+
+    print("Sending EXIT command to all active sensors")
+        send_queue_cmd('STOP',sensor_list)
+        self.timer.stop()
+        send_queue_cmd('EXIT',sensor_list)
+        time.sleep(2)
+
+    return("exit")
+
 
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
