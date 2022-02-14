@@ -304,10 +304,10 @@ def stopSensor(stop, sensorList):
     deleteFile() #delete the temp files
 
     print("Sending EXIT command to all active sensors")
-        send_queue_cmd('STOP',sensor_list)
-        self.timer.stop()
-        send_queue_cmd('EXIT',sensor_list)
-        time.sleep(2)
+    send_queue_cmd('STOP',sensor_list)
+    self.timer.stop()
+    send_queue_cmd('EXIT',sensor_list)
+    time.sleep(2)
 
     return("exit")
 
