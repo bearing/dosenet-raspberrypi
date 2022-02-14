@@ -304,9 +304,9 @@ def stopSensor(stop, sensorList):
     deleteFile() #delete the temp files
 
     print("Sending EXIT command to all active sensors")
-    send_queue_cmd('STOP',sensor_list)
+    send_queue_cmd('STOP',sensorList)
     self.timer.stop()
-    send_queue_cmd('EXIT',sensor_list)
+    send_queue_cmd('EXIT',sensorist)
     time.sleep(2)
 
     return("exit")
@@ -439,8 +439,10 @@ def updateGraph(n, button, sensor):
      #app.run_server(debug=True)
 #________________________________________________________________________________
 def startSensor(sensorList):
-    fname = "/home/pi/data/" + self.file_prefix + '_' + \
+    file_prefix = '{}_p{}_g{}'.format("Inside", "1", "1")
+    fname = "/home/pi/data/" + file_prefix + '_' + \
     str(dt.datetime.today()).split()[0]
+
     for sensor in sensorList:
         print("sensor: ", sensor)
         if sensor==PTH:
@@ -464,7 +466,7 @@ def startSensor(sensorList):
             log = 'CO2_gui.log'
 
         cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
-        cmd_options = ' -i {}'.format(self.integration_time)
+        cmd_options = ' -i {}'.format("2")
         cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
         cmd = cmd_head + cmd_options + cmd_log
 
