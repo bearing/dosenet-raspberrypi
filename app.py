@@ -335,8 +335,9 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     #     createFile("Temperature")
     #     sensorList.append("T")
 
-    startSensor(sensorList)
-    send_queue_cmd("START", sensorList) #start the sensors
+    startSensor(sensorList) #start up the sensors
+    time.sleep(5) #time for sensors to start up: 5 seconds
+    send_queue_cmd("START", sensorList) #start the q
     print(sensorList)
     return sensorList
 
@@ -421,8 +422,8 @@ def updateGraph(n, button, sensor):
      #app.run_server(debug=True)
 #________________________________________________________________________________
 def startSensor(sensorList):
-        fname = "/home/pi/data/" + self.file_prefix + '_' + \
-                str(dt.datetime.today()).split()[0]
+    fname = "/home/pi/data/" + self.file_prefix + '_' + \
+    str(dt.datetime.today()).split()[0]
     for sensor in sensorList:
         print("sensor: ", sensor)
         if sensor==PTH:
