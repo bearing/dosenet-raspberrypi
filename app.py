@@ -351,11 +351,11 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     #     print ("temp")
     #     createFile("Temperature")
     #     sensorList.append("T")
-
-    startSensor(sensorList) #start up the sensors
-    time.sleep(5) #time for sensors to start up: 5 seconds
-    send_queue_cmd("START", sensorList) #start the q
     print("sens list: " , sensorList)
+    startSensor(sensorList) #start up the sensors
+    time.sleep(2) #time for sensors to start up: 5 seconds
+
+    send_queue_cmd("START", sensorList) #start the q
     return sensorList
 
 #creates file to save the data onto
@@ -391,7 +391,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         if (save != 0):
             appendSaveFile(sensor, lat, lon, fileName)
 
-        #clear_queue()
+        #clear_queue() ONLY CLEAR Q AFTER IT WAS PUT ONTO THE FILES
     return "data"
 
 
@@ -443,8 +443,9 @@ def startSensor(sensorList):
     fname = "/home/pi/data/" + file_prefix + '_' + \
     str(dt.datetime.today()).split()[0]
 
+    py = 'sudo python'
     for sensor in sensorList:
-        print("sensor: ", sensor)
+        print("in start sens")
         if sensor == PTH:
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
@@ -466,7 +467,6 @@ def startSensor(sensorList):
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
 
-        print("py: ", py)
         cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format("2")
         cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
@@ -485,6 +485,7 @@ def send_queue_cmd(cmd, daq_list):
     Send commands for sensor DAQs
         - valid commands: START, STOP, EXIT
     '''
+    print("in send q")
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='fromGUI')
