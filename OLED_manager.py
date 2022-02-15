@@ -80,6 +80,7 @@ class OLED_Manager(object):
 
         self.logo = Image.open('dosenet-logo.png').convert('1')
 
+
     def create_test_data(self, sensor):
         """
         Generates a pseudo-random set of data based on which sensor is called.

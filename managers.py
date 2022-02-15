@@ -175,6 +175,15 @@ class Base_Manager(object):
         if self.datalogflag:
             with open(file, 'a') as f:
                 pass
+    def make_oled_log(self, file):
+        """
+        Works the same as make_data_log but is separate
+        so that the oled_log isn't created when data logging is on
+        but an OLED screen is not connected.
+        """
+        if self.oled:
+            with open(file, 'a') as f:
+                pass
 
     def handle_input(self, log, logfile, verbosity,
                          test, interval, config, publickey, aeskey):

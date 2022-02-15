@@ -54,6 +54,8 @@ class Data_Handler(object):
         self.manager = manager
         self.queue = deque('')
 
+        self.stype = self.manager.sensor_type
+
     def test_send(self, **kwargs):
         """
         Test mode
@@ -85,14 +87,14 @@ class Data_Handler(object):
         """
         Normal send. Socket errors are handled in the main method.
         """
-        if self.manager.sensor_type == 1:
+        if self.stype == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
             if self.led and self.first_run:
                 self.first_run = False
                 if self.led.blinker:
                     self.led.stop_blink()
                 self.led.on()
-            self.manager.sender.send_cpm_new(this_end, cpm, cpm_err)
+            self.manager.sender.send_cpm_new(self.stype, this_end, cpm, cpm_err)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 no_error_yet = True
@@ -104,7 +106,7 @@ class Data_Handler(object):
                         if not self.manager.small_board:
                             self.led.on()
                     self.manager.sender.send_cpm_new(
-                        trash[0], trash[1], trash[2])
+                        trash[0], trash[1], trash[2], trash[3])
                 except (socket.gaierror, socket.error, socket.timeout) as e:
                     if e == socket.gaierror:
                         if e[0] == socket.EAI_AGAIN:
@@ -142,19 +144,19 @@ class Data_Handler(object):
                     elif e == socket.timeout:
                         # TCP
                         self.vprint(1, 'Failed to send packet! Socket timeout')
-                    self.send_to_memory(cpm=trash[1], cpm_err=trash[2])
+                    self.send_to_memory(cpm=trash[2], cpm_err=trash[3])
                     no_error_yet = False
                 if self.send_fail and no_error_yet:
                     self.send_fail = False
-        if self.manager.sensor_type == 2:
+        if self.stype == 2:
             spectra = kwargs.get('spectra')
-            self.manager.sender.send_spectra_new_D3S(this_end, spectra)
+            self.manager.sender.send_spectra_new_D3S(self.stype, this_end, spectra)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
                     trash = self.queue.popleft()
                     self.manager.sender.send_spectra_new_D3S(
-                        trash[0], trash[1])
+                        trash[0], trash[1], trash[2])
 
         if self.manager.sensor_type in [3,4,5]:
             average_data = kwargs.get('average_data')
@@ -167,18 +169,18 @@ class Data_Handler(object):
                         trash[0], trash[1])
 
     def send_all_to_backlog(self, path=None):
-        if path == None and self.manager.sensor_type == 1:
+        if path == None and self.stype == 1:
             path = DEFAULT_DATA_BACKLOG_FILE
-        if path == None and self.manager.sensor_type == 2:
+        if path == None and self.stype == 2:
             path = DEFAULT_DATA_BACKLOG_FILE_D3S
-        if path == None and self.manager.sensor_type == 3:
+        if path == None and self.stype == 3:
             path = DEFAULT_DATA_BACKLOG_FILE_AQ
-        if path == None and self.manager.sensor_type == 4:
+        if path == None and self.stype == 4:
             path = DEFAULT_DATA_BACKLOG_FILE_CO2
-        if path == None and self.manager.sensor_type == 5:
+        if path == None and self.stype == 5:
             path = DEFAULT_DATA_BACKLOG_FILE_WEATHER
 
-        if self.manager.sensor_type == 2:
+        if self.stype == 2:
             if self.queue:
                 self.vprint(1, "Flushing memory queue to backlog file")
                 temp = []
@@ -199,22 +201,22 @@ class Data_Handler(object):
         Adds the time and spectra to the queue object.
         """
         time_string = time.time()
-        if self.manager.sensor_type == 1:
+        if self.stype == 1:
             cpm, cpm_err = kwargs.get('cpm'), kwargs.get('cpm_err')
-            self.queue.append([time_string, cpm, cpm_err])
-        if self.manager.sensor_type == 2:
+            self.queue.append([self.stype, time_string, cpm, cpm_err])
+        if self.stype == 2:
             spectra = kwargs.get('spectra')
-            self.queue.append([time_string, spectra])
-        if self.manager.sensor_type == 3 or \
-            self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+            self.queue.append([self.stype, time_string, spectra])
+        if self.stype == 3 or \
+            self.stype == 4 or self.stype == 5:
             average_data = kwargs.get('average_data')
-            self.queue.append([time_string, average_data])
+            self.queue.append([self.stype, time_string, average_data])
 
     def backlog_to_queue(self, path=None):
         """
         Sends data in backlog to queue and deletes the backlog
         """
-        if self.manager.sensor_type == 1:
+        if self.stype == 1:
             if path == None:
                 path = DEFAULT_DATA_BACKLOG_FILE
             if os.path.isfile(path):
@@ -230,7 +232,7 @@ class Data_Handler(object):
                 except SyntaxError:
                     os.remove(path)
 
-        if self.manager.sensor_type == 2:
+        if self.stype == 2:
             if path == None:
                 path = DEFAULT_DATA_BACKLOG_FILE_D3S
             if os.path.isfile(path):
@@ -249,12 +251,12 @@ class Data_Handler(object):
                 except SyntaxError:
                     os.remove(path)
 
-        if self.manager.sensor_type in (3, 4, 5):
-            if path == None and self.manager.sensor_type == 3:
+        if self.stype in (3, 4, 5):
+            if path == None and self.stype == 3:
                 path = DEFAULT_DATA_BACKLOG_FILE_AQ
-            if path == None and self.manager.sensor_type == 4:
+            if path == None and self.stype == 4:
                 path = DEFAULT_DATA_BACKLOG_FILE_CO2
-            if path == None and self.manager.sensor_type == 5:
+            if path == None and self.stype == 5:
                 path = DEFAULT_DATA_BACKLOG_FILE_WEATHER
             if os.path.isfile(path):
                 self.vprint(2, "Flushing backlog file to memory queue")
@@ -297,7 +299,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, cpm=cpm, cpm_err=cpm_err)
             display_data = [cpm, cpm_err]
 
-        if self.manager.sensor_type == 2:
+        if self.stype == 2:
             spectra = kwargs.get('spectra')
             calibrationlog = kwargs.get('calibrationlog')
             self.vprint(
@@ -317,7 +319,7 @@ class Data_Handler(object):
             self.manager.calibration_log(calibrationlog, spectra)
             display_data = [sum(spectra)/float(self.manager.interval)]
 
-        if self.manager.sensor_type == 3:
+        if self.stype == 3:
             average_data = kwargs.get('average_data')
             self.vprint(
                 1, SINGLE_BREAK_LINE)
@@ -342,7 +344,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, average_data=average_data)
             display_data = average_data
 
-        if self.manager.sensor_type == 4:
+        if self.stype == 4:
             average_data = kwargs.get('average_data')
             self.vprint(
                 1, SINGLE_BREAK_LINE)
@@ -362,7 +364,7 @@ class Data_Handler(object):
             self.manager.data_log(datalog, average_data=average_data)
             display_data = average_data
 
-        if self.manager.sensor_type == 5:
+        if self.stype == 5:
             average_data = kwargs.get('average_data')
             self.vprint(
                 1, SINGLE_BREAK_LINE)
@@ -410,12 +412,12 @@ class Data_Handler(object):
 
         if not self.manager.test:
             try:
-                if self.manager.sensor_type == 1:
+                if self.stype == 1:
                     self.regular_send(this_end, cpm=cpm, cpm_err=cpm_err)
-                if self.manager.sensor_type == 2:
+                if self.stype == 2:
                     self.regular_send(this_end, spectra=spectra)
-                if self.manager.sensor_type == 3 or \
-                    self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+                if self.stype == 3 or \
+                    self.stype == 4 or self.stype == 5:
                     self.regular_send(this_end, average_data=average_data)
             except (socket.gaierror, socket.error, socket.timeout) as e:
                 if e == socket.gaierror:
@@ -450,7 +452,7 @@ class Data_Handler(object):
                 elif e == socket.timeout:
                     # TCP
                     self.vprint(1, 'Failed to send packet! Socket timeout')
-                if self.manager.sensor_type == 1:
+                if self.stype == 1:
                     if self.send_fail:
                         if not self.manager.small_board:
                             self.led.stop_blink()
@@ -460,10 +462,10 @@ class Data_Handler(object):
                         if not self.manager.small_board:
                             self.led.start_blink(interval=self.blink_period_lost_connection)
                     self.send_to_memory(cpm=cpm, cpm_err=cpm_err)
-                if self.manager.sensor_type == 2:
+                if self.stype == 2:
                     self.send_to_memory(spectra=spectra)
-                if self.manager.sensor_type == 3 or \
-                    self.manager.sensor_type == 4 or self.manager.sensor_type == 5:
+                if self.stype == 3 or \
+                    self.stype == 4 or self.stype == 5:
                     self.send_to_memory(average_data=average_data)
 
 class Data_Handler_Pocket(Data_Handler):
