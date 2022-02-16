@@ -288,6 +288,8 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
     if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
+        if start_clicks == 1:
+            clear_queue() #clear the queue when start is first pushed
     elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
         interval = 0
@@ -389,7 +391,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
             data = next(value)
             appendFile(sensor, lat, lon, data)
 
-#NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS
+#NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS *********
         if (save != 0):
             appendSaveFile(sensor, lat, lon, fileName)
 
@@ -473,7 +475,6 @@ def startSensor(sensorList):
         cmd_options = ' -i {}'.format("2")
         cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
         cmd = cmd_head + cmd_options + cmd_log
-
         print(cmd)
         os.system(cmd)
 
@@ -536,6 +537,7 @@ def clear_queue():
 
 
 if __name__ == '__main__':
+    app.run_server(debug=True)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--test", "-t",
@@ -548,7 +550,6 @@ if __name__ == '__main__':
         default = False,
     )
 
-    app.run_server(debug=True)
     args = parser.parse_args()
     arg_dict = vars(args)
 
