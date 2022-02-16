@@ -352,6 +352,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     #     print ("temp")
     #     createFile("Temperature")
     #     sensorList.append("T")
+
     print("sens list: " , sensorList)
     startSensor(sensorList) #start up the sensors
     time.sleep(2) #time for sensors to start up: 5 seconds
@@ -548,7 +549,8 @@ if __name__ == '__main__':
     )
 
     app.run_server(debug=True)
-
+    args = parser.parse_args()
+    arg_dict = vars(args)
 
     # global ex
     # #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
