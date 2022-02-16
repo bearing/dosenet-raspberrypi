@@ -13,7 +13,6 @@ import datetime as dt
 import csv
 import sys
 import os
-import pika
 import json
 import atexit
 import traceback
@@ -96,7 +95,7 @@ class App(QWidget):
         self.data_display = {}
         self.data = {}
         self.time_data = {}
-        self.saveData = False
+        self.saveData = True
         self.channels = np.arange(self.nbins, dtype=float) * 2.55
         self.initUI()
 
