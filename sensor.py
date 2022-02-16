@@ -24,7 +24,7 @@ if RPI:
     import RPi.GPIO as GPIO
 
 from auxiliaries import datetime_from_epoch, set_verbosity
-from globalvalues import SIGNAL_PIN
+from globalvalues import SIGNAL_PIN, PIZERO_SIGNAL_PIN
 from globalvalues import DEFAULT_MAX_ACCUM_TIME
 
 
@@ -45,11 +45,14 @@ class Sensor(object):
                  use_gpio=None,
                  verbosity=1,
                  logfile=None,
+                 signal_pin=SIGNAL_PIN,
                  ):
 
         self.v = verbosity
         self.logfile = logfile
         set_verbosity(self, logfile=logfile)
+
+        self.signal_pin = signal_pin
 
         if use_gpio is None:
             self.use_gpio = RPI
@@ -73,7 +76,7 @@ class Sensor(object):
             # use Broadcom GPIO numbering
             GPIO.setmode(GPIO.BCM)
             # set up signal pin
-            GPIO.setup(SIGNAL_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             self.add_interrupt()
 
         # TODO: check_accumulation every 5 minutes or so?
@@ -86,7 +89,7 @@ class Sensor(object):
 
         try:
             GPIO.add_event_detect(
-                SIGNAL_PIN, GPIO.FALLING,
+                self.signal_pin, GPIO.FALLING,
                 callback=self.count,
                 bouncetime=1)
         except RuntimeError:
@@ -101,7 +104,7 @@ class Sensor(object):
                 time.sleep(1)
                 self.add_interrupt(n_tries=(n_tries - 1))
 
-    def count(self, pin=SIGNAL_PIN):
+    def count(self, pin=None):
         """
         Add one count to queue. (Callback for GPIO pin)
 
@@ -166,7 +169,7 @@ class Sensor(object):
         Older code does this every loop. I don't know whether it's needed.
         As of this refactoring, the device runs fine (for 24 hrs) without.
         """
-        GPIO.remove_event_detect(SIGNAL_PIN)
+        GPIO.remove_event_detect(self.signal_pin)
         self.add_interrupt()
 
     def cleanup(self):

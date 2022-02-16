@@ -14,6 +14,7 @@ try:
     from Adafruit_BME280 import *
 except:
     pass
+    
 import os
 
 try:
@@ -26,7 +27,7 @@ except ImportError:
 # Hardware pin numbers
 # (using Broadcom numbering)
 # (Broadcom numbers are labeled on the pi hat)
-SIGNAL_PIN = 17
+SIGNAL_PIN, PIZERO_SIGNAL_PIN = 17, 5
 NOISE_PIN = 4
 NEW_D3S_LED_PIN = 13
 NEW_NETWORK_LED_PIN = 16
@@ -88,11 +89,26 @@ DEFAULT_D3STEST_TIME = 5
 D3S_LED_BLINK_PERIOD_INITIAL = 0.75
 D3S_LED_BLINK_PERIOD_DEVICE_FOUND = 0.325
 
-CLK, MISO, MOSI, CS = 18, 23, 24, 25
+DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO = None, None
+#Broadcom numbering of GPIO pins
+CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 18, 23, 24, 25, 20, 21
+#Board pin numbering of GPIO pins
+#CLK, MISO, MOSI, CS, MOSI_Small, CS_Small = 12, 16, 18, 22, 38, 40
+CO2_pins = [[CLK, CS, MISO, MOSI], [18, 26, 6, 13]]
+"""
 try:
     DEFAULT_CO2_PORT = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 except:
+    pass
+
+try:
+    DEFAULT_CO2_PORT_PI_ZERO = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS_Small, miso=MISO, mosi=MOSI_Small)#, gpio=GPIO)
+except:
+    pass
+
+if not DEFAULT_CO2_PORT and not DEFAULT_CO2_PORT_PI_ZERO:
     print("No CO2 Sensor setup, proceeding without initializing CO2 Port.")
+"""
 DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
@@ -154,6 +170,11 @@ RUNNING_DISPLAY_TEXT = (
     'of {{interval}} seconds.{reset}').format(
     green=ANSI_GR, reset=ANSI_RESET)
 
+OLED_CONNECTED_TEXT = (
+    '{green}OLED is connected and running!\n' +
+    'Data will be sent to be displayed on the OLED.{reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
+
 CPM_DISPLAY_TEXT = (
     '{green} {{counts}}{reset}' + '{cyan} total counts with {reset}' +
     '{green}{{cpm:.2f}}{reset}' + '{cyan} counts per minute\n{reset}' +
@@ -210,6 +231,10 @@ SENSOR_CONNECTION_QUESTION = (
     '{green}Is the {reset}' + '{blue}{{sensor_name}}{reset}' +
     '{green} connected to the PiHat you are testing?  {reset}').format(
     green=ANSI_GR, blue=ANSI_BLUE, reset=ANSI_RESET)
+
+PIZERO_QUESTION = (
+    '{green}Are you testing a small (Pi-Zero) PCB?  {reset}').format(
+    green=ANSI_GR, reset=ANSI_RESET)
 
 DATA_LOGGING_QUESTION = (
     '{green}Do you want to log data for the {reset}' + '{blue}{{sensor_name}}{reset}' +

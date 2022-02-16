@@ -1,5 +1,6 @@
 import time
 import sys
+import argparse
 from globalvalues import RPI
 from managers import Manager_Pocket
 from managers import Manager_AQ
@@ -10,6 +11,8 @@ from globalvalues import ANSI_RESET, ANSI_GR, ANSI_RED, ANSI_CYAN, ANSI_YEL
 from globalvalues import CIRCUIT_SENSOR_NAMES
 from globalvalues import SINGLE_BREAK_LINE, DOUBLE_BREAK_LINE
 from globalvalues import INTERVAL_QUESTION, SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
+from globalvalues import PIZERO_QUESTION, PIZERO_SIGNAL_PIN
+#from globalvalues import DEFAULT_CO2_PORT, DEFAULT_CO2_PORT_PI_ZERO
 from globalvalues import CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 from globalvalues import CPM_DISPLAY_TEXT
 from globalvalues import AQ_PM_DISPLAY_TEXT, AQ_P_DISPLAY_TEXT
@@ -29,6 +32,20 @@ the circuit is functioning properly. It also gives users the option to retry wit
 this testing code, along with giving a couple helpful hints to help determine
 possible things that could cause problems with sensors working properly.
 """
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--old_led_pins', '-o', action='store_true', default=False,
+    help='Activate this flag this if the board has the much older LED pin layout.')
+parser.add_argument(
+    '--log', '-l', action='store_true', default=False,
+    help='Activate this flag if you would like to store the data from testing the board.')
+
+args = parser.parse_args()
+arg_dict = vars(args)
+
+new_setup = not arg_dict['old_led_pins']
+log_data = arg_dict['log']
 
 if not RPI:
     print(SINGLE_BREAK_LINE)
@@ -77,7 +94,7 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
         if restr and def_choices:
             if ans == 'YES' or ans == 'Y':
                 ans = True
-            elif ans == 'EXIT':
+            elif ans == 'EXIT' or ans == 'E':
                 sys.exit()
             elif ans == 'NO' or ans == 'N':
                 ans = False
@@ -110,37 +127,20 @@ def ques_conv(question, int_vers=False, restr=True, ans_choices=('Y','YES','N','
                 int_err = False
     return ans
 
-sensors, ansr_err, int_err, new_setup = [], True, True, True
+sensors, ansr_err, int_err = [], True, True
 names, running, retrying = CIRCUIT_SENSOR_NAMES, CIRCUIT_TEST_RUNNING, CIRCUIT_TEST_RETRYING
 pocket_data, AQ_data, CO2_data, weather_data = None, None, None, None
 sensor_question, data_question = SENSOR_CONNECTION_QUESTION, DATA_LOGGING_QUESTION
 
 print(SINGLE_BREAK_LINE)
-if ques_conv(('{green}Do you need help setting up the LEDs? {reset}').format(
-    green=ANSI_GR, reset=ANSI_RESET)):
-        print('\n')
-        print(('{yellow}For the D3S LED (red): \n{reset}'+
-            '{green}Plug the postive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 13\n{reset}'+
-            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.\n{reset}'+
-            '{yellow}For the Network LED (green): \n{reset}'+
-            '{green}Plug the positive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 16\n{reset}'+
-            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.\n{reset}'+
-            '{yellow}For the Counts LED (blue): \n{reset}'+
-            '{green}Plug the positive (longer) leg of the LED into{reset}'+ '{yellow} GPIO pin 19\n{reset}'+
-            '{green}Plug the negative (shorter) leg of the LED into the header connected to ground.{reset}'
-            ).format(green=ANSI_GR, yellow=ANSI_YEL, reset=ANSI_RESET))
-else:
-    if not ques_conv('{green}Does this PiHat have the new LED configuration?  {reset}'.format(
-        green=ANSI_GR, reset=ANSI_RESET)):
-        new_setup = False
+small_board = ques_conv(PIZERO_QUESTION)
 print('\n')
+
 for sensor in range(4):
-    sensor_i, sensor_i2 = ques_conv(sensor_question.format(sensor_name=names[sensor])), None
-    if sensor_i:
-        sensor_i2 = ques_conv(data_question.format(sensor_name=names[sensor]))
-    sensors.append((sensor_i, sensor_i2))
+    sensor_i = ques_conv(sensor_question.format(sensor_name=names[sensor]))
+    sensors.append(sensor_i)
 print('\n')
-if not any(ans[0] for ans in sensors):
+if not any(ans for ans in sensors):
     print(('{red}Shutting down program since no sensors are connected.{reset}').format(
         red=ANSI_RED, reset=ANSI_RESET))
     print(SINGLE_BREAK_LINE)
@@ -149,30 +149,24 @@ interval = ques_conv(INTERVAL_QUESTION, True)
 print(DOUBLE_BREAK_LINE)
 
 pocket, AQ, CO2, Weather = False, False, False, False
-if sensors[0][0]:
-    if sensors[0][1]:
-        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
+if sensors[0]:
+    if small_board:
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, small_board=True)
     else:
-        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup)
+        sensor_pocket = Manager_Pocket(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     pocket, pocket_data = True, False
-if sensors[1][0]:
-    if sensors[1][1]:
-        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-    else:
-        sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup)
+if sensors[1]:
+    sensor_AQ = Manager_AQ(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     AQ, AQ_data = True, False
-if sensors[2][0]:
-    if sensors[2][1]:
-        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
+if sensors[2]:
+    if small_board:
+        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data, small_board=True)
     else:
-        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup)
+        sensor_CO2 = Manager_CO2(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
     CO2, CO2_data = True, False
-if sensors[3][0]:
+if sensors[3]:
     try:
-        if sensors[3][1]:
-            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=True)
-        else:
-            sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup)
+        sensor_weather = Manager_Weather(cirtest=True, interval=interval, new_setup=new_setup, datalogflag=log_data)
         Weather, weather_data = True, False
     except NameError:
         print(('{red}Could not import the Weather Port and thus could not initiate \n{reset}' +
@@ -344,7 +338,8 @@ if CO2:
             break
         elif average_data[0] < 0:
             print(('{red}Found negative data from the CO2 Sensor. \n{reset}' +
-                '{red}This usually means that the CO2 Sensor is not actually connected.\n{reset}' +
+                '{red}This usually means that the CO2 Sensor is not actually connected\n{reset}' +
+                '{red}or that the ADC is not getting powered properly.\n{reset}' +
                 '{red}Make sure the CO2 sensor is connected then try again.\n{reset}' +
                 '{red}If this continues, it is likely a problem with the PiHat{reset}').format(
                 red=ANSI_RED, reset=ANSI_RESET))

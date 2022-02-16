@@ -215,7 +215,14 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_AQ(self, sensor_type, timestamp, average_data, error_code=0):
+    def construct_packet_new_Env(self, timestamp, average_data, error_code=0):
+        """
+        Constructing of packet to send data for the AQ, CO2, Weather sensors
+        Content of avgdata_str varies based on the type of sensor
+        AQ: PM1, PM25, PM10, U03, U05, U1, U25, U5, U10
+        CO2: Concentration, UV
+        Weather: Temperature, Pressure, Humidity
+        """
         avgdata_str = str(average_data).replace(',', ';')
         try:
             raw_packet = ','.join(
@@ -227,40 +234,6 @@ class ServerSender(object):
                  str(error_code)]
             )
         except AttributeError:      # on self.config.hash
-            raise MissingFile('Missing or broken Config object')
-        else:
-            self.vprint(3, 'Constructed packet')
-            return raw_packet
-
-    def construct_packet_new_CO2(self, sensor_type, timestamp, average_data, error_code=0):
-        avgdata_str = str(average_data).replace(',', ';')
-        try:
-            raw_packet = ','.join(
-                [str(self.config.hash),
-                 str(self.config.ID),
-                 str(sensor_type),
-                 str(timestamp),
-                 avgdata_str,
-                 str(error_code)]
-            )
-        except AttributeError:
-            raise MissingFile('Missing or broken Config object')
-        else:
-            self.vprint(3, 'Constructed packet')
-            return raw_packet
-
-    def construct_packet_new_weather(self, sensor_type, timestamp, average_data, error_code=0):
-        avgdata_str = str(average_data).replace(',', ';')
-        try:
-            raw_packet = ','.join(
-                [str(self.config.hash),
-                 str(self.config.ID),
-                 str(sensor_type),
-                 str(timestamp),
-                 avgdata_str,
-                 str(error_code)]
-            )
-        except AttributeError:
             raise MissingFile('Missing or broken Config object')
         else:
             self.vprint(3, 'Constructed packet')
@@ -402,30 +375,13 @@ class ServerSender(object):
         encrypted = self.encrypt_packet_aes(packet)
         self.send_data(encrypted)
 
-    def send_data_new_AQ(self, sensor_type, timestamp, average_data, error_code=0):
+    def send_data_new_Env(self, timestamp, average_data, error_code=0):
         """
-        Protocol for sending average air quality data
+        Protocol for sending data for the 
+        Air Quality Sensor, CO2 Sensor and Weather Sensor
         """
-        packet = self.construct_packet_new_AQ(
-            sensor_type, timestamp, average_data, error_code=error_code)
-        encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted)
-
-    def send_data_new_CO2(self, sensor_type, timestamp, average_data, error_code=0):
-        """
-        Protocol for sending the average CO2 data
-        """
-        packet = self.construct_packet_new_CO2(
-            sensor_type, timestamp, average_data, error_code=error_code)
-        encrypted = self.encrypt_packet(packet)
-        self.send_data(encrypted)
-
-    def send_data_new_weather(self, sensor_type, timestamp, average_data, error_code=0):
-        """
-        Protocol for sending the average CO2 data
-        """
-        packet = self.construct_packet_new_weather(
-            sensor_type, timestamp, average_data, error_code=error_code)
+        packet = self.construct_packet_new_Env(
+            timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 

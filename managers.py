@@ -10,9 +10,19 @@ import os
 import subprocess
 import socket
 try:
+    import pika
+except:
+    pass
+import json
+try:
     import kromek
 except:
     print("Not set up to run a D3S, continuing anyway")
+try:
+    import Adafruit_MCP3008
+except:
+    print("Not set up to run a CO2 sensor, continuing anyway")
+
 import numpy as np
 import datetime
 from Crypto.Cipher import AES
@@ -32,13 +42,14 @@ from data_handlers import Data_Handler_AQ
 from data_handlers import Data_Handler_CO2
 from data_handlers import Data_Handler_Weather
 
-from globalvalues import SIGNAL_PIN, NOISE_PIN, NETWORK_LED_BLINK_PERIOD_S
+from globalvalues import SIGNAL_PIN, NOISE_PIN, PIZERO_SIGNAL_PIN, NETWORK_LED_BLINK_PERIOD_S
 from globalvalues import NEW_NETWORK_LED_PIN, OLD_NETWORK_LED_PIN
 from globalvalues import NEW_COUNTS_LED_PIN, OLD_COUNTS_LED_PIN
 from globalvalues import NEW_D3S_LED_PIN, OLD_D3S_LED_PIN
 from globalvalues import D3S_LED_BLINK_PERIOD_INITIAL, D3S_LED_BLINK_PERIOD_DEVICE_FOUND
 
 from globalvalues import NEW_SENSOR_DISPLAY_TEXT, OLD_SENSOR_DISPLAY_TEXT
+from globalvalues import OLED_CONNECTED_TEXT, SINGLE_BREAK_LINE
 from globalvalues import RUNNING_DISPLAY_TEXT, SENSOR_NAMES, DATA_NAMES
 from globalvalues import DEFAULT_CONFIG, DEFAULT_PUBLICKEY, DEFAULT_AESKEY
 from globalvalues import DEFAULT_LOGFILES, DEFAULT_DATALOGS
@@ -48,7 +59,7 @@ from globalvalues import DEFAULT_CALIBRATIONLOG_D3S, DEFAULT_CALIBRATIONLOG_TIME
 from globalvalues import DEFAULT_INTERVALS, DEFAULT_TEST_INTERVALS, TEST_INTERVAL_NAMES
 from globalvalues import AQ_VARIABLES, CO2_VARIABLES
 from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
-from globalvalues import DEFAULT_OLED_LOGS
+#from globalvalues import DEFAULT_OLED_LOGS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
 except ImportError:
@@ -57,10 +68,13 @@ try:
     from globalvalues import DEFAULT_AQ_PORT
 except ImportError:
     pass
+from globalvalues import CO2_pins
+"""
 try:
     from globalvalues import DEFAULT_CO2_PORT
 except:
     pass
+"""
 from globalvalues import REBOOT_SCRIPT, GIT_DIRECTORY, BOOT_LOG_CODE
 from globalvalues import strf
 from globalvalues import ANSI_RED, ANSI_RESET
@@ -113,6 +127,8 @@ class Base_Manager(object):
                  cirtest=False,
                  oled=False,
                  oled_log=None,
+                 oled_test=False,
+                 small_board=False,
                  ):
         self.new_setup = new_setup
         self.sensor_type = sensor_type
@@ -124,6 +140,9 @@ class Base_Manager(object):
         self.oled_log = oled_log
 
         self.test = test
+        self.oled_test = oled_test
+
+        self.small_board = small_board
 
         # Replacing the original d_flag and f_flag functions for
         if self.datalogflag or self.test:
@@ -135,18 +154,10 @@ class Base_Manager(object):
         if self.datalog:
             self.datalogflag = True
 
-        #test for timing from data to see what
-        if self.oled:
-            if self.oled_log is None:
-                for i in range(len(DEFAULT_OLED_LOGS)):
-                    if self.sensor_type == i+1:
-                        self.oled_log = DEFAULT_OLED_LOGS[i]
-                        break
-        if self.oled_log:
+        if self.oled_test:
             self.oled = True
 
         self.make_data_log(self.datalog)
-        self.make_oled_log(self.oled_log)
 
         self.data_names = data_names
 
@@ -206,7 +217,7 @@ class Base_Manager(object):
             self.vprint(1, 'Writing to logfile at {}'.format(self.logfile))
         self.running = True
 
-        if self.test:
+        if self.test or self.oled_test:
             if interval is None:
                 for i in range(len(DEFAULT_TEST_INTERVALS)):
                     if self.sensor_type == i+1:
@@ -257,6 +268,7 @@ class Base_Manager(object):
             self.vprint(
                 1, 'WARNING: no config file given. Not posting to server')
             self.config = None
+            self.new_setup = True
 
         if publickey:
             try:
@@ -290,6 +302,12 @@ class Base_Manager(object):
         Main method to run the sensors continuously, the run
         procedure is determined by the sensor_type of the instance.
         """
+        if self.oled:
+            self.vprint(1, SINGLE_BREAK_LINE)
+            self.vprint(
+                    1, OLED_CONNECTED_TEXT)
+            self.vprint(1, SINGLE_BREAK_LINE)
+            
         if self.new_setup:
             self.vprint(
                     1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
@@ -349,14 +367,16 @@ class Base_Manager(object):
 
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
-                self.d3s_LED.stop_blink()
+                if not self.small_board:
+                    self.d3s_LED.stop_blink()
                 self.d3s_presence = False
                 GPIO.cleanup()
                 return
             else:
                 print ('Discovered %s' % devs)
                 print("D3S device found, checking for data now")
-                self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
+                if not self.small_board:
+                    self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_2)
                 self.d3s_presence = True
             filtered = []
 
@@ -367,7 +387,8 @@ class Base_Manager(object):
             devs = filtered
             if len(devs) <= 0:
                 print("No D3S connected, exiting manager now")
-                self.d3s_LED.stop_blink()
+                if not self.small_board:
+                    self.d3s_LED.stop_blink()
                 self.d3s_presence = False
                 GPIO.cleanup()
                 return
@@ -413,14 +434,18 @@ class Base_Manager(object):
                     self.takedown()
 
             if self.d3s_light_switch:
-                self.d3s_LED.stop_blink()
+                if not self.small_board:
+                    self.d3s_LED.stop_blink()
                 print("D3S data connection found, continuing with normal data collection")
-                self.d3s_LED.on()
+                if not self.small_board:
+                    self.d3s_LED.on()
             else:
-                self.d3s_LED.stop_blink()
+                if not self.small_board:
+                    self.d3s_LED.stop_blink()
                 print("Turning off light and will try to gather data again at reboot")
-                self.d3s_LED.off()
-                GPIO.cleanup()
+                if not self.small_board:
+                    self.d3s_LED.off()
+                    GPIO.cleanup()
                 return
 
             if self.d3s_presence:
@@ -515,6 +540,25 @@ class Base_Manager(object):
                     f.write('{0}, {1}'.format(time_string, average_data))
                     f.write('\n')
                     self.vprint(2, 'Writing average {} to data log at {}'.format(self.data_names[self.sensor_type-1],file))
+
+    def oled_send(self, data):
+        """
+        Sends data to the RabbitMQ queue 'toOLED' which is being
+        read by the OLED_Manager instance and displayed to a connected screen.
+        """
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='toOLED')
+        message = {'id': self.sensor_type, 'data': data}
+        self.vprint(1, message)
+        channel.basic_publish(exchange='',routing_key='toOLED',body=json.dumps(message))
+        connection.close()
+
+    def oled_receive(self):
+        """
+        Undefined for now but might be useful in the future for logging?
+        """
+        pass
 
     def handle_data(self, this_start, this_end, spectra):
         """
@@ -624,6 +668,7 @@ class Base_Manager(object):
 
         #Unique shutdown procedure for Pocket Geiger
         if self.sensor_type == 1:
+            #if not self.small_board:
             self.sensor.cleanup()
             del(self.sensor)
 
@@ -635,11 +680,16 @@ class Base_Manager(object):
             except AttributeError:
                 pass
 
+
         if self.sensor_type != 3:
-            try:
-                GPIO.cleanup()
-            except NameError:
+            if not self.small_board:
+                try:
+                    GPIO.cleanup()
+                except NameError:
+                    pass
+            else:
                 pass
+
 
         self.data_handler.send_all_to_backlog()
 
@@ -654,28 +704,38 @@ class Manager_Pocket(Base_Manager):
                  counts_LED_pin=None,
                  network_LED_pin=None,
                  noise_pin=NOISE_PIN,
-                 signal_pin=SIGNAL_PIN,
+                 signal_pin=None,
                  **kwargs):
 
         super(Manager_Pocket, self).__init__(sensor_type=1, **kwargs)
 
         self.quit_after_interval = False
 
+        if not signal_pin:
+            if self.small_board:
+                signal_pin=PIZERO_SIGNAL_PIN
+            else:
+                signal_pin=SIGNAL_PIN
+
         if RPI:
-            if counts_LED_pin == None:
-                if self.new_setup:
-                    self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+            if not self.small_board:
+                if counts_LED_pin == None:
+                    if self.new_setup:
+                        self.counts_LED = LED(NEW_COUNTS_LED_PIN)
+                    else:
+                        self.counts_LED = LED(OLD_COUNTS_LED_PIN)
                 else:
-                    self.counts_LED = LED(OLD_COUNTS_LED_PIN)
-            else:
-                self.counts_LED = LED(counts_LED_pin)
-            if network_LED_pin == None:
-                if self.new_setup:
-                    self.network_LED = LED(NEW_NETWORK_LED_PIN)
+                    self.counts_LED = LED(counts_LED_pin)
+                if network_LED_pin == None:
+                    if self.new_setup:
+                        self.network_LED = LED(NEW_NETWORK_LED_PIN)
+                    else:
+                        self.network_LED = LED(OLD_NETWORK_LED_PIN)
                 else:
-                    self.network_LED = LED(OLD_NETWORK_LED_PIN)
+                    self.network_LED = LED(network_LED_pin)
             else:
-                self.network_LED = LED(network_LED_pin)
+                self.counts_LED = None
+                self.network_LED = None
         else:
             self.counts_LED = None
             self.network_LED = None
@@ -683,7 +743,8 @@ class Manager_Pocket(Base_Manager):
         self.sensor = Sensor(
             counts_LED=self.counts_LED,
             verbosity=self.v,
-            logfile=self.logfile)
+            logfile=self.logfile,
+            signal_pin=signal_pin)
         self.data_handler = Data_Handler_Pocket(
             manager=self,
             verbosity=self.v,
@@ -822,23 +883,24 @@ class Manager_D3S(Base_Manager):
         self.d3s_data_attempts = d3s_data_attempts
         self.d3s_data_lim = d3s_data_lim
 
-        if d3s_LED_pin == None:
-            if self.new_setup:
-                self.d3s_LED = LED(NEW_D3S_LED_PIN)
+        if not self.small_board:
+            if d3s_LED_pin == None:
+                if self.new_setup:
+                    self.d3s_LED = LED(NEW_D3S_LED_PIN)
+                else:
+                    self.d3s_LED = LED(OLD_D3S_LED_PIN)
             else:
-                self.d3s_LED = LED(OLD_D3S_LED_PIN)
-        else:
-            self.d3s_LED = LED(d3s_LED_pin)
+                self.d3s_LED = LED(d3s_LED_pin)
 
-        self.d3s_light_switch = d3s_light_switch
-        self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
-        self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
-        self.d3s_LED_blink = d3s_LED_blink
+            self.d3s_light_switch = d3s_light_switch
+            self.d3s_LED_blink_period_1 = d3s_LED_blink_period_1
+            self.d3s_LED_blink_period_2 = d3s_LED_blink_period_2
+            self.d3s_LED_blink = d3s_LED_blink
 
-        if d3s_LED_blink:
-            self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
-        if d3s_light_switch:
-            self.d3s_LED.on()
+            if d3s_LED_blink:
+                self.d3s_LED.start_blink(interval=self.d3s_LED_blink_period_1)
+            if d3s_light_switch:
+                self.d3s_LED.on()
 
         self.data_handler = Data_Handler_D3S(
             manager=self,
@@ -949,10 +1011,20 @@ class Manager_CO2(Base_Manager):
 
         super(Manager_CO2, self).__init__(sensor_type=4, **kwargs)
 
-        if not CO2_port:
-            self.CO2_port = DEFAULT_CO2_PORT
-        else:
-            self.CO2_port = CO2_port
+        try:
+            if not CO2_port:
+                if self.small_board:
+                    #GPIO.setwarnings(False)
+                    #GPIO.setmode(GPIO.BCM)
+                    #GPIO.setup(20,GPIO.IN)
+                    #GPIO.setup(21,GPIO.IN)
+                    self.CO2_port = Adafruit_MCP3008.MCP3008(clk=CO2_pins[1][0], cs=CO2_pins[1][1], miso=CO2_pins[1][2], mosi=CO2_pins[1][3])
+                else:
+                    self.CO2_port = Adafruit_MCP3008.MCP3008(clk=CO2_pins[0][0], cs=CO2_pins[0][1], miso=CO2_pins[0][2], mosi=CO2_pins[0][3])
+            else:
+                self.CO2_port = CO2_port
+        except:
+            print("Unable to import a CO2 port")
 
         self.data_handler = Data_Handler_CO2(
             manager=self,
@@ -1010,12 +1082,17 @@ class SleepError(Exception):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--sensor', '-s', type=int, help='Enter a number corresponding ' +
+        '--sensor', '-s', type=str, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
         '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
     sensor = parser.parse_known_args()[0].sensor
-    if sensor > 5 or sensor < 1:
-        print('{red}{value} is not a valid sensor choice, try entering any #1-5{reset}'.format(
+    valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
+    for i, val in enumerate(valid_sensors):
+        if not isinstance(sensor, int):
+            if sensor.upper() in val:
+                sensor = i+1
+    if isinstance(sensor, str):
+        print('{red}"{value}" is not a valid sensor choice, try entering any #1-5 or a sensor name{reset}'.format(
             red=ANSI_RED, value=sensor, reset=ANSI_RESET))
         sys.exit()
 
@@ -1032,7 +1109,7 @@ if __name__ == '__main__':
         help='Specify a publickey file (default {})'.format(
             DEFAULT_PUBLICKEY))
     parser.add_argument(
-        '--hostname', '-4', default=DEFAULT_HOSTNAME,
+        '--hostname', '-5', default=DEFAULT_HOSTNAME,
         help='Specify a server hostname (default {})'.format(
             DEFAULT_HOSTNAME))
     parser.add_argument(
@@ -1043,6 +1120,9 @@ if __name__ == '__main__':
     parser.add_argument(
         '--test', '-t', action='store_true', default=False,
         help='Start in test mode (no config, 30s intervals)')
+    parser.add_argument(
+        '--oled_test', '-w', action='store_true', default=False,
+        help='Mode used for testing the oled screen (30s intervals)')
     parser.add_argument(
         '--verbosity', '-v', type=int, default=None,
         help='Verbosity level (0 to 3) (default 1)')
@@ -1071,8 +1151,13 @@ if __name__ == '__main__':
         '--oled', '-o', action='store_true', default=False,
         help='Indicates whether an OLED screen is present or not')
     parser.add_argument(
+        '--small_board', '-0', action='store_true', default=False,
+        help='Indicates whether this is on a PiZero board or not')
+    """
+    parser.add_argument(
         '--oled_log', '-r', default=None,
         help='Specify a path for the datalog (default {})'.format(DEFAULT_OLED_LOGS[sensor-1]))
+    """
 
     if sensor == 1:
         #Pocket Geiger specific variables.
@@ -1083,11 +1168,11 @@ if __name__ == '__main__':
             '--network_LED_pin', '-e', default=None,
             help='Specify which pin the network LED is connected to.')
         parser.add_argument(
-            '--noise_pin', '-n', default=NOISE_PIN,
+            '--noise_pin', '-n', type=int, default=NOISE_PIN,
             help='Specify which pin to the noise reader is connected to ' +
             '(default {})'.format(NOISE_PIN))
         parser.add_argument(
-            '--signal_pin', '-u', default=SIGNAL_PIN,
+            '--signal_pin', '-u', type=int, default=None,
             help='Specify which pin the signal is coming in from ' +
             '(default {})'.format(SIGNAL_PIN))
 
@@ -1111,7 +1196,7 @@ if __name__ == '__main__':
             '--calibrationlogtime', '-x', type=int, default=None,
             help='Specify the amount of time the D3S should take to calibrate ' +
             '(default 10 minutes)')
-        parser.add_argument('--count', '-0', dest='count', default=0)
+        parser.add_argument('--count', '-4', dest='count', default=0)
         parser.add_argument(
             '--d3s_LED_pin', '-3', default=None,
             help='Specify which pin the D3S LED is connected to.')
@@ -1161,10 +1246,10 @@ if __name__ == '__main__':
     if sensor == 4:
         #CO2 Sensor specific variables.
         parser.add_argument(
-            '--CO2_port', '-a', default=DEFAULT_CO2_PORT,
+            '--CO2_port', '-a', default=None,
             help='Specify which port the CO2 sensor is sending ' +
             'data through \n[Note this is an Adafruit MCP port so be sure ' +
-            'to use that notation] (default {})'.format(DEFAULT_CO2_PORT))
+            'to use that notation]')
 
         args = parser.parse_args()
         arg_dict = vars(args)
@@ -1173,12 +1258,12 @@ if __name__ == '__main__':
         mgr = Manager_CO2(**arg_dict)
 
     if sensor == 5:
-        #CO2 Sensor specific variables.
+        #Weather Sensor specific variables.
         parser.add_argument(
-            '--Weather_Port', '-a', default=DEFAULT_WEATHER_PORT,
+            '--Weather_Port', '-a', default=None,
             help='Specify which port the Weather sensor is sending ' +
             'data through \n[Note this is an I2C port so be sure ' +
-            'to use that notation] (default {})'.format(DEFAULT_WEATHER_PORT))
+            'to use that notation]')
 
         args = parser.parse_args()
         arg_dict = vars(args)
