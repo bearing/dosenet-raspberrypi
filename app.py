@@ -181,11 +181,11 @@ app.layout = html.Div([
             html.Div(id='sensorText', children='What sensor data do you want to display on the map?', style= {'margin-right': '2%'}),
             dcc.Dropdown(id="displayOption",
                 options=[
-                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'airQuality'},
-                    {'label': 'CO2', 'value': 'co2'},
+                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': AIR},
+                    {'label': 'CO2', 'value': CO2},
                     {'label': 'Humidity', 'value': 'humidity'},
                     {'label': 'Pressure (Pa)', 'value': 'pressure'},
-                    {'label': 'Radiation (cps)', 'value': 'RAD'},
+                    {'label': 'Radiation (cps)', 'value': RAD},
                     {'label': 'Temperature (C)', 'value': 'temperature'}
                 ],
                 placeholder="Select a sensor",
@@ -312,8 +312,8 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         print ("rad")
         createFile(RAD)
         sensorList.append(RAD)
-    if pres != []:
-        print ("pres")
+    if pres != [] || hum != [] || temp != []:
+        print ("PTH")
         createFile(PTH)
         sensorList.append(PTH)
 
@@ -370,12 +370,19 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
-    fileName = str(sensor + ".csv")
+    boolean PTHCheck == False;
+
+    if (sensor == 'pressure' || sensor == "temperature" || sensor == "humidity"):
+        fileName = str(PTH + ".csv")
+        PTHCheck = True;  #checking to see if it is PTH bc data needs to be extracted differently
+    else:
+        fileName = str(sensor + ".csv")
+
     if clicked == "t" and os.path.exists(fileName):
         fileName = sensor + ".csv"
         with open(fileName, "r") as csvFile:
             dataFile = csv.reader(csvFile)
-        #dataFile = pd.read_csv(fileName)
+
         if len(dataFile["lat"]) != 0:
             # print ("in update graph creating trace")
             # print(dataFile['lat'])
@@ -383,21 +390,31 @@ def updateGraph(n, button, sensor):
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
 
+            if PTHCheck == True:
+                if sensor == "pressure":
+                    data = dataFile['dataSet'][0]
+                if sensor == "temperature":
+                    data = dataFile['dataSet'][1]
+                if sensor == "humidity":
+                    data = dataFile['dataSet'][2]
+            else:
+                data = dataFile['dataSet']
+
             fig = px.scatter_mapbox(
                 dataFile,
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
-                hover_name= dataFile['dataSet'],
-                hover_data= {'dataSet':False},
-                color=dataFile['dataSet'],
-                color_continuous_scale=scl,
-                zoom=19,
-                height=1000,
-                mapbox_style="open-street-map"
+                hover_name = data,
+                hover_data = {'dataSet': False},
+                color = data,
+                color_continuous_scale = scl,
+                zoom = 19,
+                height = 1000,
+                mapbox_style = "open-street-map"
                 )
 
-            fig.update_geos(fitbounds="locations")
-            fig.update_traces(marker={'size': 10})
+            fig.update_geos(fitbounds = "locations")
+            fig.update_traces(marker = {'size': 10})
             return fig
         return dash.no_update
     return dash.no_update
