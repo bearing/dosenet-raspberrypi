@@ -43,35 +43,12 @@ def randolon():
     return lon
 
 def appendFile(sensorName, lat, lon, data):
-    if sensorName == PTH:
-        fileName = str("Pressure" + ".csv")
-        pData = data[0]
-        newRow = [lat, lon, pData]
-        with open(fileName,'a') as csvFile:
-            writer = csv.writer(csvFile)
-            writer.writerow(newRow)
-            csvFile.close()
-        fileName = str("Temperature" + ".csv")
-        tData = data[1]
-        newRow = [lat, lon, tData]
-        with open(fileName,'a') as csvFile:
-            writer = csv.writer(csvFile)
-            writer.writerow(newRow)
-            csvFile.close()
-        fileName = str("Humidity" + ".csv")
-        hData = data[2]
-        newRow = [lat, lon, hData]
-        with open(fileName,'a') as csvFile:
-            writer = csv.writer(csvFile)
-            writer.writerow(newRow)
-            csvFile.close()
-    else:
-        fileName = str(sensorName + ".csv")
-        newRow = [lat, lon, data]
-        with open(fileName,'a') as csvFile:
-            writer = csv.writer(csvFile)
-            writer.writerow(newRow)
-            csvFile.close()
+    fileName = str(sensorName + ".csv")
+    newRow = [lat, lon, data]
+    with open(fileName,'a') as csvFile:
+        writer = csv.writer(csvFile)
+        writer.writerow(newRow)
+        csvFile.close()
 
 
 def createFile(sensorName):
@@ -118,24 +95,6 @@ def appendSaveFile(sensors, lat, lon, saveName):
             else:
                 co2 = " "
         elif x == 2:
-            if 'H'in sensors:
-                with open("Humidity.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Humidity.csv")
-                    col = f1['dataSet'].tolist()
-                    hum = col[-1]
-            else:
-                hum = " "
-        elif x == 3:
-            if 'P' in sensors:
-                with open("Pressure.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Pressure.csv")
-                    col = f1['dataSet'].tolist()
-                    pres = col[-1]
-            else:
-                pres = " "
-        elif x == 4:
             if 'RAD' in sensors:
                 with open("Radiation.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
@@ -144,6 +103,24 @@ def appendSaveFile(sensors, lat, lon, saveName):
                     RAD = col[-1]
             else:
                 RAD = " "
+        elif x == 3:
+            if 'H'in sensors:
+                with open("Humidity.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Humidity.csv")
+                    col = f1['dataSet'].tolist()
+                    hum = col[-1]
+            else:
+                hum = " "
+        elif x == 4:
+            if 'P' in sensors:
+                with open("Pressure.csv", "r") as csvFile:
+                    f1 = csv.reader(csvFile)
+                    #f1 = pd.read_csv("Pressure.csv")
+                    col = f1['dataSet'].tolist()
+                    pres = col[-1]
+            else:
+                pres = " "
         elif x == 5:
             if 'T' in sensors:
                 with open("Temperature.csv", "r") as csvFile:
@@ -162,18 +139,14 @@ def appendSaveFile(sensors, lat, lon, saveName):
 
 
 def deleteFile():
-    if os.path.exists("AirQuality.csv"):
-      os.remove("AirQuality.csv")
+    if os.path.exists("Air Quality.csv"):
+      os.remove("Air Quality.csv")
     if os.path.exists("CO2.csv"):
       os.remove("CO2.csv")
-    if os.path.exists("Humidity.csv"):
-      os.remove("Humidity.csv")
-    if os.path.exists("Pressure.csv"):
-      os.remove("Pressure.csv")
+    if os.path.exists("P/T/H.csv"):
+        os.remove("P/T/H.csv")
     if os.path.exists("RAD.csv"):
       os.remove("RAD.csv")
-    if os.path.exists("Temperature.csv"):
-      os.remove("Temperature.csv")
     else:
       print("The file does not exist")
 #
@@ -341,18 +314,9 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append(RAD)
     if pres != []:
         print ("pres")
-        createFile("Pressure")
-        createFile("Temperature")
-        createFile("Humidity")
+        createFile(PTH)
         sensorList.append(PTH)
-    # if hum != []:
-    #     print ("hum")
-    #     createFile("H")
-    #     sensorList.append("Humidity")
-    # if temp != []:
-    #     print ("temp")
-    #     createFile("Temperature")
-    #     sensorList.append("T")
+
 
     print("sens list: " , sensorList)
     startSensor(sensorList) #start up the sensors
