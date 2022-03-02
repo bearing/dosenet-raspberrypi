@@ -43,7 +43,7 @@ def randolon():
     return lon
 
 def appendFile(sensorName, lat, lon, data):
-    if sensorName == "P/T/H":
+    if sensorName == PTH:
         fileName = str("Pressure" + ".csv")
         pData = data[0]
         newRow = [lat, lon, pData]
@@ -100,7 +100,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
     dateTime = now.strftime("%d/%m/%Y %H:%M:%S")
     for x in range(len(sensors)):
         if x == 0:
-            if 'Air Quality' in sensors:
+            if AIR in sensors:
                 with open("AirQuality.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("AirQuality.csv")
@@ -109,7 +109,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
             else:
                 air = " "
         elif x == 1:
-            if 'CO2' in sensors:
+            if CO2 in sensors:
                 with open("CO2.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("CO2.csv")
@@ -302,8 +302,7 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
 @app.callback(
     dash.dependencies.Output('stopSensors', 'children'),
     dash.dependencies.Input('stop-button', 'n_clicks'),
-    dash.dependencies.State('checked-sensor', 'children')
-    )
+    dash.dependencies.State('checked-sensor', 'children'))
 def stopSensor(stop, sensorList):
     deleteFile() #delete the temp files
 
@@ -330,22 +329,22 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     sensorList = []
     if air != []:
         print ("air")
-        createFile("AirQuality")
-        sensorList.append("AIR")
+        createFile(Air)
+        sensorList.append(Air)
     if co != []:
         print ("co2")
-        createFile("CO2")
-        sensorList.append("CO2")
+        createFile(CO2)
+        sensorList.append(CO2)
     if rad != []:
         print ("rad")
-        createFile("RAD")
-        sensorList.append("RAD")
+        createFile(RAD)
+        sensorList.append(RAD)
     if pres != []:
         print ("pres")
         createFile("Pressure")
         createFile("Temperature")
         createFile("Humidity")
-        sensorList.append("PTH")
+        sensorList.append(PTH)
     # if hum != []:
     #     print ("hum")
     #     createFile("H")
@@ -447,9 +446,9 @@ def startSensor(sensorList):
     fname = "/home/pi/data/" + file_prefix + '_' + \
     str(dt.datetime.today()).split()[0]
 
+    print("in start sens")
     py = 'sudo python'
     for sensor in sensorList:
-        print("in start sens")
         if sensor == 'PTH':
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
