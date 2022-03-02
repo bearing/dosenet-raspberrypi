@@ -101,7 +101,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
     for x in range(len(sensors)):
         if x == 0:
             if AIR in sensors:
-                with open("AirQuality.csv", "r") as csvFile:
+                with open("Air Quality.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("AirQuality.csv")
                     col = f1['dataSet'].tolist()
@@ -449,23 +449,23 @@ def startSensor(sensorList):
     print("in start sens")
     py = 'sudo python'
     for sensor in sensorList:
-        if sensor == 'PTH':
+        if sensor == PTH:
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
-        if sensor == 'AIR':
+        if sensor == AIR:
             py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
-        if sensor == 'RAD':
+        if sensor == RAD:
             print("here: RAD")
             py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
-        if sensor == 'CO2':
+        if sensor == CO2:
             py = 'python'
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
