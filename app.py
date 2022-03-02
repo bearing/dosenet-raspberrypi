@@ -370,11 +370,11 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
-    boolean PTHCheck == False;
+    int PTHCheck == 0;
 
     if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):
         fileName = str(PTH + ".csv")
-        PTHCheck = True;  #checking to see if it is PTH bc data needs to be extracted differently
+        PTHCheck = 1;  #checking to see if it is PTH bc data needs to be extracted differently
     else:
         fileName = str(sensor + ".csv")
 
