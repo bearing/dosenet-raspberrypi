@@ -312,7 +312,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         print ("rad")
         createFile(RAD)
         sensorList.append(RAD)
-    if pres != [] || hum != [] || temp != []:
+    if pres != [] or hum != [] or temp != []:
         print ("PTH")
         createFile(PTH)
         sensorList.append(PTH)
@@ -372,7 +372,7 @@ def updateGraph(n, button, sensor):
     clicked = button[-1:]
     boolean PTHCheck == False;
 
-    if (sensor == 'pressure' || sensor == "temperature" || sensor == "humidity"):
+    if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):
         fileName = str(PTH + ".csv")
         PTHCheck = True;  #checking to see if it is PTH bc data needs to be extracted differently
     else:
