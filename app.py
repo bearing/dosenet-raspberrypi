@@ -52,6 +52,7 @@ def appendFile(sensorName, lat, lon, data):
 
 
 def createFile(sensorName):
+    print("created file with name: " + sensorName)
     fileName = str(sensorName + ".csv")
     headerList = [['lat', 'lon', 'dataSet']]
     if os.path.exists(fileName) == False:
@@ -370,11 +371,9 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
-    PTHCheck == 0;
 
-    if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):
+    if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
         fileName = str(PTH + ".csv")
-        PTHCheck = 1;  #checking to see if it is PTH bc data needs to be extracted differently
     else:
         fileName = str(sensor + ".csv")
 
@@ -390,7 +389,7 @@ def updateGraph(n, button, sensor):
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
 
-            if PTHCheck == 1:
+            if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"): #separate the data to look at the correct one out of PTH
                 if sensor == "pressure":
                     data = dataFile['dataSet'][0]
                 if sensor == "temperature":
