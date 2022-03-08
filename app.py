@@ -371,6 +371,8 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
 
+    print("updateGraph")
+    print("sensor: ", sensor)
     if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
         fileName = str(PTH + ".csv")
     else:
