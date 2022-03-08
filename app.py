@@ -349,10 +349,9 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         lon = str(randolon())
         for sensor in sensorList:
             messages = receive_queue_data()
-            print("message: ", messages)
-            keys = messages.values()
-            value = itr(keys)
-            data = next(value)
+            #print("message: ", messages)
+            print("data" + message['data']
+            #data = next(value)
             appendFile(sensor, lat, lon, data)
 
 #NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS *********
