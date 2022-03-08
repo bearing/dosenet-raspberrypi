@@ -380,14 +380,14 @@ def updateGraph(n, button, sensor):
         fileName = str(sensor + ".csv")
 
     if clicked == "T" and os.path.exists(fileName):
+        print("in if statement")
         fileName = sensor + ".csv"
         with open(fileName, "r") as csvFile:
             dataFile = csv.reader(csvFile)
-            print(dataFile['lat'])
 
-        if len(dataFile["lat"]) != 0:
+        if len(dataFile['lat']) != 0:
             # print ("in update graph creating trace")
-
+            print(dataFile['lat'])
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
