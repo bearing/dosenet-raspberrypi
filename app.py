@@ -350,8 +350,8 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         for sensor in sensorList:
             messages = receive_queue_data()
             #print("message: ", messages)
-            print("data" + message['data'])
-            data = message['data']
+            print("data" + messages['data'])
+            data = messages['data']
             appendFile(sensor, lat, lon, data)
 
 #NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS *********
