@@ -379,6 +379,7 @@ def updateGraph(n, button, sensor):
         fileName = str(sensor + ".csv")
 
     if clicked == "t" and os.path.exists(fileName):
+        print("here")
         fileName = sensor + ".csv"
         with open(fileName, "r") as csvFile:
             dataFile = csv.reader(csvFile)
