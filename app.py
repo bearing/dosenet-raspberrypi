@@ -387,7 +387,7 @@ def updateGraph(n, button, sensor):
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
 
-            data = dataFile['dataSet']
+            datas = dataFile['dataSet']
             if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"): #separate the data to look at the correct one out of PTH
                 if sensor == "pressure":
                     data = dataFile['dataSet'][0]
@@ -400,9 +400,9 @@ def updateGraph(n, button, sensor):
                 dataFile,
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
-                hover_name = dataFile['dataSet'],
+                hover_name = datas,
                 hover_data = {'dataSet': False},
-                color = dataFile['dataSet'],
+                color = datas,
                 color_continuous_scale = scl,
                 zoom = 19,
                 height = 1000,
