@@ -147,7 +147,7 @@ def deleteFile():
     if os.path.exists("P/T/H.csv"):
         os.remove("P/T/H.csv")
     if os.path.exists("Radiation.csv"):
-      os.remove("Raditation.csv")
+      os.remove("Radiation.csv")
     else:
       print("The file does not exist")
 #
