@@ -350,7 +350,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         for sensor in sensorList:
             messages = receive_queue_data()
             #print("message: ", messages)
-            if messages['data'] is not None:
+            if messages is not None:
                 data = sum(messages['data'])
                 print("sum: " , data)
                 print("data: " , data)
