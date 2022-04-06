@@ -370,28 +370,21 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
-    print("clicked" , clicked)
-
-    print("updateGraph")
-    print("sensor: ", sensor)
     if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
         fileName = str(PTH + ".csv")
     else:
         fileName = str(sensor + ".csv")
-
     if clicked == "T" and os.path.exists(fileName):
         fileName = sensor + ".csv"
         colNames = ['lat', 'lon', 'dataSet']
         dataFile = pd.read_csv(fileName, usecols = colNames)
-        print(dataFile['lat'])
-
         if len(dataFile['lat']) != 0:
             # print ("in update graph creating trace")
-            print(dataFile['lat'])
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
 
+            data = dataFile['dataSet']
             if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"): #separate the data to look at the correct one out of PTH
                 if sensor == "pressure":
                     data = dataFile['dataSet'][0]
@@ -399,16 +392,14 @@ def updateGraph(n, button, sensor):
                     data = dataFile['dataSet'][1]
                 if sensor == "humidity":
                     data = dataFile['dataSet'][2]
-            else:
-                data = dataFile['dataSet']
 
             fig = px.scatter_mapbox(
                 dataFile,
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
-                hover_name = data,
+                hover_name = dataFile['dataSet'],
                 hover_data = {'dataSet': False},
-                color = data,
+                color = dataFile['dataSet'],
                 color_continuous_scale = scl,
                 zoom = 19,
                 height = 1000,
