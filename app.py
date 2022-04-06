@@ -349,7 +349,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
         lon = str(randolon())
         for sensor in sensorList:
             messages = receive_queue_data()
-            #print("message: ", messages)
+            print("message: ", messages)
             data = sum(messages['data'])
             print("data: " , data)
             appendFile(sensor, lat, lon, data)
@@ -370,10 +370,11 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
+
+    fileName = str(sensor + ".csv")
     if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
         fileName = str(PTH + ".csv")
-    else:
-        fileName = str(sensor + ".csv")
+
     if clicked == "T" and os.path.exists(fileName):
         fileName = sensor + ".csv"
         colNames = ['lat', 'lon', 'dataSet']
