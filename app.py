@@ -65,7 +65,7 @@ def createSaveFile():
     timeStamp = str(datetime.now())
     fileName = timeStamp + ".csv"
     print('fileName' + fileName)
-    headerList = [['dateTime','latitude', 'longitude', 'airQuality', 'co2', 'humidity', 'pressure', 'radiation', 'temperature']]
+    headerList = [['dateTime','lat', 'lon', AIR, CO2, RAD, PTH]]
     if os.path.exists(fileName) == False:
         with open(fileName, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -73,12 +73,12 @@ def createSaveFile():
             csvFile.close()
     return fileName
 
-def appendSaveFile(sensors, lat, lon, saveName):
+def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
     now = datetime.now()
     dateTime = now.strftime("%d/%m/%Y %H:%M:%S")
     for x in range(len(sensors)):
         if x == 0:
-            if AIR in sensors:
+            if AIR in sensorList:
                 with open("Air Quality.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("AirQuality.csv")
@@ -87,7 +87,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
             else:
                 air = " "
         elif x == 1:
-            if CO2 in sensors:
+            if CO2 in sensorList:
                 with open("CO2.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("CO2.csv")
@@ -96,7 +96,7 @@ def appendSaveFile(sensors, lat, lon, saveName):
             else:
                 co2 = " "
         elif x == 2:
-            if 'RAD' in sensors:
+            if RAD in sensorList:
                 with open("Radiation.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("Radiation.csv")
@@ -105,32 +105,59 @@ def appendSaveFile(sensors, lat, lon, saveName):
             else:
                 RAD = " "
         elif x == 3:
-            if 'H'in sensors:
-                with open("Humidity.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Humidity.csv")
-                    col = f1['dataSet'].tolist()
-                    hum = col[-1]
-            else:
-                hum = " "
-        elif x == 4:
-            if 'P' in sensors:
-                with open("Pressure.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Pressure.csv")
-                    col = f1['dataSet'].tolist()
-                    pres = col[-1]
-            else:
-                pres = " "
-        elif x == 5:
-            if 'T' in sensors:
-                with open("Temperature.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Temperature.csv")
-                    col = f1['dataSet'].tolist()
-                    temp = col[-1]
-            else:
-                temp = " "
+            if PTH in sensorList:
+                if 'pres' in PTHSensor: #pressure
+                    with open("P/T/H.csv", "r") as csvFile:
+                        f1 = csv.reader(csvFile)
+                        #f1 = pd.read_csv("Humidity.csv")
+                        col = f1['dataSet'][0].tolist()
+                        pres = col[-1]
+                else:
+                    pres = " "
+                if 'hum' in PTHSensor: #pressure
+                    with open("P/T/H.csv", "r") as csvFile:
+                        f1 = csv.reader(csvFile)
+                        #f1 = pd.read_csv("Humidity.csv")
+                        col = f1['dataSet'][1].tolist()
+                        hum = col[-1]
+                else:
+                    hum = " "
+                if 'temp' in PTHSensor:
+                    with open("P/T/H.csv", "r") as csvFile:
+                        f1 = csv.reader(csvFile)
+                        #f1 = pd.read_csv("Temperature.csv")
+                        col = f1['dataSet'][2].tolist()
+                        temp = col[-1]
+                else:
+                    temp = " "
+
+        # elif x == 3:
+        #     if 'H'in sensors:
+        #         with open("Humidity.csv", "r") as csvFile:
+        #             f1 = csv.reader(csvFile)
+        #             #f1 = pd.read_csv("Humidity.csv")
+        #             col = f1['dataSet'].tolist()
+        #             hum = col[-1]
+        #     else:
+        #         hum = " "
+        # elif x == 4:
+        #     if 'P' in sensors:
+        #         with open("Pressure.csv", "r") as csvFile:
+        #             f1 = csv.reader(csvFile)
+        #             #f1 = pd.read_csv("Pressure.csv")
+        #             col = f1['dataSet'].tolist()
+        #             pres = col[-1]
+        #     else:
+        #         pres = " "
+        # elif x == 5:
+        #     if 'T' in sensors:
+        #         with open("Temperature.csv", "r") as csvFile:
+        #             f1 = csv.reader(csvFile)
+        #             #f1 = pd.read_csv("Temperature.csv")
+        #             col = f1['dataSet'].tolist()
+        #             temp = col[-1]
+        #     else:
+        #         temp = " "
 
     newRow = [dateTime, lat, lon, air, co2, hum, pres, RAD, temp]
     with open(saveName,'a') as csvFile:
@@ -221,6 +248,7 @@ app.layout = html.Div([
     html.Div(id='collectingData', children='', style={'display': 'none'}),
     html.Div(id='savingData', children='', style={'display': 'none'}),
     html.Div(id='stopSensors', children='', style={'display': 'none'}),
+    html.Div(id='PTHSensors', children='', style={'display': 'none'}),
 
     html.Div(id='buttons', children = [
     html.Button(children = 'Start', id='start-button', n_clicks = 0, style={'width': "15%", 'height': "40px",'display': 'inline-block','margin-left': "10px",'margin-right': "30px", 'font_size': '40px'}),
@@ -229,7 +257,6 @@ app.layout = html.Div([
     style= {'margin-left': '20%','display': 'flex'}),
 
     html.Br(),
-
 
     dcc.Graph(id='map'),
     dcc.Interval(
@@ -284,13 +311,13 @@ def stopSensor(stop, sensorList):
     send_queue_cmd('STOP',sensorList)
     send_queue_cmd('EXIT',sensorList)
     time.sleep(2)
-
     return("exit")
-
 
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
     dash.dependencies.Output('checked-sensor', 'children'),
+    dash.dependencies.Output('PTHSensors', 'children'), ###MAKE SURE THIS WORKS AND DONT FORGET####
+
     dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.State('airQuality','value'),
     dash.dependencies.State('co2','value'),
@@ -301,6 +328,7 @@ def stopSensor(stop, sensorList):
 
 def temp_sensor(start, air, co, hum, pres, rad, temp):
     sensorList = []
+    PTHSens = []
     if air != []:
         print ("air")
         createFile(Air)
@@ -317,6 +345,12 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         print ("PTH")
         createFile(PTH)
         sensorList.append(PTH)
+        if pres != []:
+            PTHSens.append("pre")
+        if hum != []:
+            PTHSens.append("hum")
+        if temp != []:
+            PTHSens.append("temp")
 
 
     print("sens list: " , sensorList)
@@ -324,7 +358,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     time.sleep(2) #time for sensors to start up: 5 seconds
 
     send_queue_cmd("START", sensorList) #start the q
-    return sensorList
+    return sensorList, PTHSens
 
 #creates file to save the data onto
 @app.callback(
@@ -341,13 +375,15 @@ def saveFile(save):
     dash.dependencies.State('clicked-button', 'children'),
     dash.dependencies.State('save-button', 'n_clicks'),
     dash.dependencies.State('checked-sensor', 'children'),
-    dash.dependencies.State('savingFileName', 'children'))
-def collectDataInFile(n, clicked, save, sensorList, fileName):
+    dash.dependencies.State('savingFileName', 'children'),
+    dash.dependencies.State('PTHSensors', 'children'))
+def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
     last_clicked = clicked[-5:]
     if last_clicked == 'START':
         lat = str(randolat())
         lon = str(randolon())
         for sensor in sensorList:
+            time.sleep(2) #pause before calling recieve data again to give map time to load
             messages = receive_queue_data()
             #print("message: ", messages)
             if messages is not None:
@@ -358,7 +394,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName):
 
 #NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS *********
         if (save != 0):
-            appendSaveFile(sensor, lat, lon, fileName)
+            appendSaveFile(sensorList, lat, lon, fileName, PTHSensor)
 
         #clear_queue() ONLY CLEAR Q AFTER IT WAS PUT ONTO THE FILES
     return "data"
