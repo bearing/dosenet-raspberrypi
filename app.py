@@ -65,7 +65,7 @@ def createSaveFile():
     timeStamp = str(datetime.now())
     fileName = timeStamp + ".csv"
     print('fileName' + fileName)
-    headerList = [['dateTime','lat', 'lon', AIR, CO2, RAD, PTH]]
+    headerList = [['dateTime','lat', 'lon', AIR, CO2, RAD, "Pressure", "Temperature", "Humidity"]]
     if os.path.exists(fileName) == False:
         with open(fileName, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -101,7 +101,7 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("Radiation.csv")
                     col = f1['dataSet'].tolist()
-                    RAD = col[-1]
+                    rad = col[-1]
             else:
                 RAD = " "
         elif x == 3:
@@ -114,22 +114,22 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
                         pres = col[-1]
                 else:
                     pres = " "
-                if 'hum' in PTHSensor: #pressure
-                    with open("P/T/H.csv", "r") as csvFile:
-                        f1 = csv.reader(csvFile)
-                        #f1 = pd.read_csv("Humidity.csv")
-                        col = f1['dataSet'][1].tolist()
-                        hum = col[-1]
-                else:
-                    hum = " "
                 if 'temp' in PTHSensor:
                     with open("P/T/H.csv", "r") as csvFile:
                         f1 = csv.reader(csvFile)
                         #f1 = pd.read_csv("Temperature.csv")
-                        col = f1['dataSet'][2].tolist()
+                        col = f1['dataSet'][1].tolist()
                         temp = col[-1]
                 else:
                     temp = " "
+                if 'hum' in PTHSensor: #pressure
+                    with open("P/T/H.csv", "r") as csvFile:
+                        f1 = csv.reader(csvFile)
+                        #f1 = pd.read_csv("Humidity.csv")
+                        col = f1['dataSet'][0].tolist()
+                        hum = col[-1]
+                else:
+                    hum = " "
 
         # elif x == 3:
         #     if 'H'in sensors:
@@ -159,7 +159,7 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
         #     else:
         #         temp = " "
 
-    newRow = [dateTime, lat, lon, air, co2, hum, pres, RAD, temp]
+    newRow = [dateTime, lat, lon, air, co2, rad, pres, temp, hum]
     with open(saveName,'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(newRow)
@@ -346,11 +346,11 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         createFile(PTH)
         sensorList.append(PTH)
         if pres != []:
-            PTHSens.append("pre")
-        if hum != []:
-            PTHSens.append("hum")
+            PTHSens.append("pres")
         if temp != []:
             PTHSens.append("temp")
+        if hum != []:
+            PTHSens.append("hum")
 
 
     print("sens list: " , sensorList)
@@ -392,9 +392,8 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
                 print("data: " , data)
                 appendFile(sensor, lat, lon, data)
 
-#NEED TO FIX THE FILENAME THINGY!!!!! DONT FORGET THIS *********
         if (save != 0):
-            appendSaveFile(sensorList, lat, lon, fileName, PTHSensor)
+            appendSaveFile(sensorList, lat, lon, fileName, PTHSensor) ##MAKE SURE THIS WORKS PLZ###
 
         #clear_queue() ONLY CLEAR Q AFTER IT WAS PUT ONTO THE FILES
     return "data"
