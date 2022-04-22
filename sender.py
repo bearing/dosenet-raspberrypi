@@ -215,7 +215,7 @@ class ServerSender(object):
             self.vprint(3, 'Constructed packet')
             return raw_packet
 
-    def construct_packet_new_Env(self, timestamp, average_data, error_code=0):
+    def construct_packet_new_Env(self, sensor_type, timestamp, average_data, error_code=0):
         """
         Constructing of packet to send data for the AQ, CO2, Weather sensors
         Content of avgdata_str varies based on the type of sensor
@@ -375,13 +375,13 @@ class ServerSender(object):
         encrypted = self.encrypt_packet_aes(packet)
         self.send_data(encrypted)
 
-    def send_data_new_Env(self, timestamp, average_data, error_code=0):
+    def send_data_new_Env(self, sensor_type, timestamp, average_data, error_code=0):
         """
-        Protocol for sending data for the 
+        Protocol for sending data for the
         Air Quality Sensor, CO2 Sensor and Weather Sensor
         """
         packet = self.construct_packet_new_Env(
-            timestamp, average_data, error_code=error_code)
+            sensor_type, timestamp, average_data, error_code=error_code)
         encrypted = self.encrypt_packet(packet)
         self.send_data(encrypted)
 
