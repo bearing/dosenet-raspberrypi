@@ -160,13 +160,13 @@ class Data_Handler(object):
 
         if self.manager.sensor_type in [3,4,5]:
             average_data = kwargs.get('average_data')
-            self.manager.sender.send_data_new_Env(this_end, average_data)
+            self.manager.sender.send_data_new_Env(self.stype, this_end, average_data)
             if self.queue:
                 self.vprint(1, "Flushing memory queue to server")
                 while self.queue:
                     trash = self.queue.popleft()
                     self.manager.sender.send_data_new_Env(
-                        trash[0], trash[1])
+                        trash[0], trash[1], trash[2])
 
     def send_all_to_backlog(self, path=None):
         if path == None and self.stype == 1:
