@@ -383,7 +383,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
         lat = str(randolat())
         lon = str(randolon())
         for sensor in sensorList:
-            time.sleep(2) #pause before calling recieve data again to give map time to load
+            time.sleep(1) #pause before calling recieve data again to give map time to load
             messages = receive_queue_data()
             #print("message: ", messages)
             if messages is not None:
