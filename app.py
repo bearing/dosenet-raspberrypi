@@ -433,20 +433,20 @@ def updateGraph(n, button, sensor):
 
             fig = px.scatter_mapbox(
                 dataFile,
-                lat = dataFile['lat'],
-                lon = dataFile['lon'],
-                hover_name = datas,
-                hover_data = {'dataSet': False},
-                color = datas,
-                color_continuous_scale = scl,
-                zoom = 19,
-                height = 1000,
-                mapbox_style = "open-street-map"
+                lat=dataFile['lat'],
+                lon=dataFile['lon'],
+                hover_name= dataFile['dataSet'],
+                hover_data= {'dataSet':False},
+                color=dataFile['dataSet'],
+                color_continuous_scale=scl,
+                zoom=19,
+                height=1000,
+                mapbox_style="open-street-map"
                 )
 
-            print("lat: ", dataFile['lat'])
-            print("lon: ", dataFile['lon'])
-            print("data: ", dataFile['dataSet'])
+            # print("lat: ", dataFile['lat'])
+            # print("lon: ", dataFile['lon'])
+            # print("data: ", dataFile['dataSet'])
             fig.update_geos(fitbounds = "locations")
             fig.update_traces(marker = {'size': 10})
             return fig
