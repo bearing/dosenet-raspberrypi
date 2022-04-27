@@ -343,8 +343,8 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
         sensorList.append(RAD)
     if pres != [] or hum != [] or temp != []:
         print ("PTH")
-        createFile(PTH)
-        sensorList.append(PTH)
+        createFile("P/T/H")
+        sensorList.append("P/T/H")
         if pres != []:
             PTHSens.append("pres")
         if temp != []:
@@ -410,13 +410,13 @@ def updateGraph(n, button, sensor):
 
     fileName = str(sensor + ".csv")
     if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
-        fileName = str(PTH + ".csv")
+        fileName = str("P/T/H.csv")
 
     if clicked == "T" and os.path.exists(fileName):
         fileName = sensor + ".csv"
         colNames = ['lat', 'lon', 'dataSet']
         dataFile = pd.read_csv(fileName, usecols = colNames)
-        if len(dataFile['lat']) != 0:
+        if len(dataFile['lat']) != 0: #check to make sure the files ae not empty
             # print ("in update graph creating trace")
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
@@ -433,8 +433,8 @@ def updateGraph(n, button, sensor):
 
             fig = px.scatter_mapbox(
                 dataFile,
-                lat=dataFile['lat'],
-                lon=dataFile['lon'],
+                lat = dataFile['lat'],
+                lon = dataFile['lon'],
                 hover_name = datas,
                 hover_data = {'dataSet': False},
                 color = datas,
