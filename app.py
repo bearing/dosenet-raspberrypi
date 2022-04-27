@@ -444,9 +444,9 @@ def updateGraph(n, button, sensor):
                 mapbox_style = "open-street-map"
                 )
 
-            print("lat: ", lat)
-            print("lon: ", lon)
-            print("data: ", color)
+            print("lat: ", dataFile['lat'])
+            print("lon: ", dataFile['lon'])
+            print("data: ", dataFile['dataSet'])
             fig.update_geos(fitbounds = "locations")
             fig.update_traces(marker = {'size': 10})
             return fig
