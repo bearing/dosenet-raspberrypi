@@ -261,7 +261,7 @@ app.layout = html.Div([
     dcc.Graph(id='map'),
     dcc.Interval(
             id = 'intervalLoop',
-            interval = 1 * 5000,
+            interval = 1 * 10000,
             n_intervals = 0
         ),
     dcc.Interval(
@@ -388,8 +388,8 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
             #print("message: ", messages)
             if messages is not None:
                 data = sum(messages['data'])
-                print("sum: " , data)
-                print("data: " , data)
+                # print("sum: " , data)
+                # print("data: " , data)
                 appendFile(sensor, lat, lon, data)
 
         if (save != 0):
@@ -417,7 +417,7 @@ def updateGraph(n, button, sensor):
         colNames = ['lat', 'lon', 'dataSet']
         dataFile = pd.read_csv(fileName, usecols = colNames)
         if len(dataFile['lat']) != 0: #check to make sure the files ae not empty
-            # print ("in update graph creating trace")
+            print ("in update graph creating trace")
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
@@ -444,6 +444,9 @@ def updateGraph(n, button, sensor):
                 mapbox_style = "open-street-map"
                 )
 
+            print("lat: ", lat)
+            print("lon: ", lon)
+            print("data: ", color)
             fig.update_geos(fitbounds = "locations")
             fig.update_traces(marker = {'size': 10})
             return fig
