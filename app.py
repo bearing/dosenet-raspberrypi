@@ -266,12 +266,12 @@ app.layout = html.Div([
         ),
     dcc.Interval(
             id = 'dataLoop',
-            interval = 1 * 5000,
+            interval = 1 * 10000,
             n_intervals = 0
         ),
     dcc.Interval(
             id = 'saveLoop',
-            interval = 1 * 5000,
+            interval = 1 * 10000,
             n_intervals = 0
         )
 ])
@@ -383,7 +383,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
         lat = str(randolat())
         lon = str(randolon())
         for sensor in sensorList:
-            time.sleep(1) #pause before calling recieve data again to give map time to load
+            #time.sleep(1) #pause before calling recieve data again to give map time to load
             messages = receive_queue_data()
             #print("message: ", messages)
             if messages is not None:
