@@ -46,7 +46,6 @@ def appendFile(sensorName, lat, lon, data):
         writer.writerow(newRow)
         csvFile.close()
 
-
 def createFile(sensorName):
     print("created file with name: " + sensorName)
     fileName = str(sensorName + ".csv")
@@ -59,7 +58,7 @@ def createFile(sensorName):
 
 def createSaveFile():
     timeStamp = str(datetime.now())
-    fileName = timeStamp + ".csv"
+    fileName = str(timeStamp + ".csv")
     print('fileName' + fileName)
     headerList = [['dateTime','lat', 'lon', 'AirQuality', 'CO2', "Radiation", "Pressure", "Temperature", "Humidity"]]
     if os.path.exists(fileName) == False:
@@ -222,17 +221,17 @@ app.layout = html.Div([
     html.Div(id='checklist', children = [
         html.Div(id='checklistText', children='What sensors do you want to be collecting data?', style= {'margin-left': '5%', 'margin-right': '5%'}),
         html.Div(id='checkboxes', children = [
-            dcc.Checklist( id="airQuality",
+            dcc.Checklist( id="AirQuality",
                 options=[{'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'AirQuality'}], value=[]),
-            dcc.Checklist( id="co2",
+            dcc.Checklist( id="CO2",
                 options=[{'label': 'CO2', 'value': 'CO2'}], value=[]),
-            dcc.Checklist( id="humidity",
+            dcc.Checklist( id="Humidity",
                 options=[{'label': 'Humidity', 'value': 'Humidity'}], value=[]),
-            dcc.Checklist( id="pressure",
+            dcc.Checklist( id="Pressure",
                 options=[{'label': 'Pressure (Pa)', 'value': 'Pressure'}], value=[]),
-            dcc.Checklist( id="RAD",
+            dcc.Checklist( id="Radiation",
                 options=[{'label': 'Radiation (cps)', 'value': 'Radiation'}], value=[]),
-            dcc.Checklist( id="temperature",
+            dcc.Checklist( id="Temperature",
                 options=[{'label': 'Temperature (C)', 'value': 'Temperature'}], value=[])])
         ], style= {'display': 'flex'}),
 
@@ -278,9 +277,10 @@ app.layout = html.Div([
     [dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.Input('stop-button', 'n_clicks')],
     [dash.dependencies.State('clicked-button', 'children'),
-    dash.dependencies.State('intervalLoop', 'n_intervals')]
+    dash.dependencies.State('intervalLoop', 'n_intervals'),
+    dash.dependencies.State('checked-sensor', 'children')]
 )
-def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
+def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
     if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
@@ -393,30 +393,18 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
-
-    fileName = str(sensor + '.csv')
-    if (sensor == 'Pressure' or sensor == 'Temperature' or sensor == 'Humidity'):  #look at different file name
-        fileName = str('P/T/H.csv')
-
+    fileName = str(sensor + ".csv")
+    print("started it")
     if clicked == "T" and os.path.exists(fileName):
-        fileName = sensor + '.csv'
-        colNames = ['lat', 'lon', 'dataSet']
-        dataFile = pd.read_csv(fileName, usecols = colNames)
-        if len(dataFile['lat']) != 0: #check to make sure the files ae not empty
-            print ("in update graph creating trace")
+        print("past here")
+        fileName = sensor + ".csv"
+        dataFile = pd.read_csv(fileName)
+        if len(dataFile["lat"]) != 0:
+            print("in update graph creating trace")
+            # print(dataFile['lat'])
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
-
-            datas = dataFile['dataSet']
-            if (sensor == 'Pressure' or sensor == "Temperature" or sensor == "Humidity"): #separate the data to look at the correct one out of PTH
-                if sensor == "Pressure":
-                    data = dataFile['dataSet'][0]
-                if sensor == "Temperature":
-                    data = dataFile['dataSet'][1]
-                if sensor == "Humidity":
-                    data = dataFile['dataSet'][2]
-
             fig = px.scatter_mapbox(
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
@@ -428,13 +416,8 @@ def updateGraph(n, button, sensor):
                 height=1000,
                 mapbox_style="open-street-map"
                 )
-
-            print("hitting here")
-            # print("lat: ", dataFile['lat'])
-            # print("lon: ", dataFile['lon'])
-            # print("data: ", dataFile['dataSet'])
-            fig.update_geos(fitbounds = "locations")
-            fig.update_traces(marker = {'size': 10})
+            fig.update_geos(fitbounds="locations")
+            fig.update_traces(marker={'size': 10})
             return fig
         return dash.no_update
     return dash.no_update
