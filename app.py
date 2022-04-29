@@ -9,22 +9,14 @@ import random
 import csv
 from os import path
 from datetime import datetime
-import datetime as dt
-import pika
+
 import argparse
-import time
 
 import dash
-from dash import dcc
-from dash import html
+import dash_core_components as dcc
+import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
-import json
-import sys
-import traceback
-
 
 app = dash.Dash(__name__, prevent_initial_callbacks=True)
 # ________________________________________________________
@@ -47,7 +39,6 @@ def appendFile(sensorName, lat, lon, data):
         csvFile.close()
 
 def createFile(sensorName):
-    print("created file with name: " + sensorName)
     fileName = str(sensorName + ".csv")
     headerList = [['lat', 'lon', 'dataSet']]
     if os.path.exists(fileName) == False:
@@ -58,9 +49,9 @@ def createFile(sensorName):
 
 def createSaveFile():
     timeStamp = str(datetime.now())
-    fileName = str(timeStamp + ".csv")
+    fileName = timeStamp + ".csv"
     print('fileName' + fileName)
-    headerList = [['dateTime','lat', 'lon', 'AirQuality', 'CO2', "Radiation", "Pressure", "Temperature", "Humidity"]]
+    headerList = [['dateTime','latitude', 'longitude', 'airQuality', 'co2', 'humidity', 'pressure', 'radiation', 'temperature']]
     if os.path.exists(fileName) == False:
         with open(fileName, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -68,93 +59,54 @@ def createSaveFile():
             csvFile.close()
     return fileName
 
-def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
+def appendSaveFile(sensors, lat, lon, saveName):
     now = datetime.now()
     dateTime = now.strftime("%d/%m/%Y %H:%M:%S")
     for x in range(len(sensors)):
         if x == 0:
-            if AIR in sensorList:
-                with open("AirQuality.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("AirQuality.csv")
-                    col = f1['dataSet'].tolist()
-                    air = col[-1]
+            if 'Air Quality' in sensors:
+                f1 = pd.read_csv("AirQuality.csv")
+                col = f1['dataSet'].tolist()
+                air = col[-1]
             else:
                 air = " "
         elif x == 1:
-            if CO2 in sensorList:
-                with open("CO2.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("CO2.csv")
-                    col = f1['dataSet'].tolist()
-                    co2 = col[-1]
+            if 'CO2' in sensors:
+                f1 = pd.read_csv("CO2.csv")
+                col = f1['dataSet'].tolist()
+                co2 = col[-1]
             else:
                 co2 = " "
         elif x == 2:
-            if RAD in sensorList:
-                with open("Radiation.csv", "r") as csvFile:
-                    f1 = csv.reader(csvFile)
-                    #f1 = pd.read_csv("Radiation.csv")
-                    col = f1['dataSet'].tolist()
-                    rad = col[-1]
+            if 'H'in sensors:
+                f1 = pd.read_csv("Humidity.csv")
+                col = f1['dataSet'].tolist()
+                hum = col[-1]
             else:
-                RAD = " "
+                hum = " "
         elif x == 3:
-            if PTH in sensorList:
-                if 'pres' in PTHSensor: #pressure
-                    with open("P/T/H.csv", "r") as csvFile:
-                        f1 = csv.reader(csvFile)
-                        #f1 = pd.read_csv("Humidity.csv")
-                        col = f1['dataSet'][0].tolist()
-                        pres = col[-1]
-                else:
-                    pres = " "
-                if 'temp' in PTHSensor:
-                    with open("P/T/H.csv", "r") as csvFile:
-                        f1 = csv.reader(csvFile)
-                        #f1 = pd.read_csv("Temperature.csv")
-                        col = f1['dataSet'][1].tolist()
-                        temp = col[-1]
-                else:
-                    temp = " "
-                if 'hum' in PTHSensor: #pressure
-                    with open("P/T/H.csv", "r") as csvFile:
-                        f1 = csv.reader(csvFile)
-                        #f1 = pd.read_csv("Humidity.csv")
-                        col = f1['dataSet'][0].tolist()
-                        hum = col[-1]
-                else:
-                    hum = " "
+            if 'P' in sensors:
+                f1 = pd.read_csv("Pressure.csv")
+                col = f1['dataSet'].tolist()
+                pres = col[-1]
+            else:
+                pres = " "
+        elif x == 4:
+            if 'Radiation' in sensors:
+                f1 = pd.read_csv("Radiation.csv")
+                col = f1['dataSet'].tolist()
+                rad = col[-1]
+            else:
+                rad = " "
+        elif x == 5:
+            if 'T' in sensors:
+                f1 = pd.read_csv("Temperature.csv")
+                col = f1['dataSet'].tolist()
+                temp = col[-1]
+            else:
+                temp = " "
 
-        # elif x == 3:
-        #     if 'H'in sensors:
-        #         with open("Humidity.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Humidity.csv")
-        #             col = f1['dataSet'].tolist()
-        #             hum = col[-1]
-        #     else:
-        #         hum = " "
-        # elif x == 4:
-        #     if 'P' in sensors:
-        #         with open("Pressure.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Pressure.csv")
-        #             col = f1['dataSet'].tolist()
-        #             pres = col[-1]
-        #     else:
-        #         pres = " "
-        # elif x == 5:
-        #     if 'T' in sensors:
-        #         with open("Temperature.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Temperature.csv")
-        #             col = f1['dataSet'].tolist()
-        #             temp = col[-1]
-        #     else:
-        #         temp = " "
-
-    newRow = [dateTime, lat, lon, air, co2, rad, pres, temp, hum]
+    newRow = [dateTime, lat, lon, air, co2, hum, pres, rad, temp]
     with open(saveName,'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(newRow)
@@ -166,10 +118,14 @@ def deleteFile():
       os.remove("AirQuality.csv")
     if os.path.exists("CO2.csv"):
       os.remove("CO2.csv")
-    if os.path.exists("P/T/H.csv"):
-        os.remove("P/T/H.csv")
+    if os.path.exists("Humidity.csv"):
+      os.remove("Humidity.csv")
+    if os.path.exists("Pressure.csv"):
+      os.remove("Pressure.csv")
     if os.path.exists("Radiation.csv"):
       os.remove("Radiation.csv")
+    if os.path.exists("Temperature.csv"):
+      os.remove("Temperature.csv")
     else:
       print("The file does not exist")
 #
@@ -204,8 +160,8 @@ app.layout = html.Div([
             html.Div(id='sensorText', children='What sensor data do you want to display on the map?', style= {'margin-right': '2%'}),
             dcc.Dropdown(id="displayOption",
                 options=[
-                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': "AirQuality"},
-                    {'label': 'CO2', 'value': 'CO2'},
+                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'AirQuality'},
+                    {'label': 'CO2', 'value': 'Co2'},
                     {'label': 'Humidity', 'value': 'Humidity'},
                     {'label': 'Pressure (Pa)', 'value': 'Pressure'},
                     {'label': 'Radiation (cps)', 'value': 'Radiation'},
@@ -221,18 +177,18 @@ app.layout = html.Div([
     html.Div(id='checklist', children = [
         html.Div(id='checklistText', children='What sensors do you want to be collecting data?', style= {'margin-left': '5%', 'margin-right': '5%'}),
         html.Div(id='checkboxes', children = [
-            dcc.Checklist( id="AirQuality",
-                options=[{'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'AirQuality'}], value=[]),
-            dcc.Checklist( id="CO2",
-                options=[{'label': 'CO2', 'value': 'CO2'}], value=[]),
-            dcc.Checklist( id="Humidity",
-                options=[{'label': 'Humidity', 'value': 'Humidity'}], value=[]),
-            dcc.Checklist( id="Pressure",
-                options=[{'label': 'Pressure (Pa)', 'value': 'Pressure'}], value=[]),
-            dcc.Checklist( id="Radiation",
-                options=[{'label': 'Radiation (cps)', 'value': 'Radiation'}], value=[]),
-            dcc.Checklist( id="Temperature",
-                options=[{'label': 'Temperature (C)', 'value': 'Temperature'}], value=[])])
+            dcc.Checklist( id="airQuality",
+                options=[{'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'airQuality'}], value=[]),
+            dcc.Checklist( id="co2",
+                options=[{'label': 'CO2', 'value': 'co2'}], value=[]),
+            dcc.Checklist( id="humidity",
+                options=[{'label': 'Humidity', 'value': 'humidity'}], value=[]),
+            dcc.Checklist( id="pressure",
+                options=[{'label': 'Pressure (Pa)', 'value': 'pressure'}], value=[]),
+            dcc.Checklist( id="radiation",
+                options=[{'label': 'Radiation (cps)', 'value': 'radiation'}], value=[]),
+            dcc.Checklist( id="temperature",
+                options=[{'label': 'Temperature (C)', 'value': 'temperature'}], value=[])])
         ], style= {'display': 'flex'}),
 
     html.Br(),
@@ -242,7 +198,6 @@ app.layout = html.Div([
     html.Div(id='savingFileName', children='', style={'display': 'none'}),
     html.Div(id='collectingData', children='', style={'display': 'none'}),
     html.Div(id='savingData', children='', style={'display': 'none'}),
-    html.Div(id='PTHSensors', children='', style={'display': 'none'}),
 
     html.Div(id='buttons', children = [
     html.Button(children = 'Start', id='start-button', n_clicks = 0, style={'width': "15%", 'height': "40px",'display': 'inline-block','margin-left': "10px",'margin-right': "30px", 'font_size': '40px'}),
@@ -255,17 +210,17 @@ app.layout = html.Div([
     dcc.Graph(id='map'),
     dcc.Interval(
             id = 'intervalLoop',
-            interval = 1 * 10000,
+            interval = 1 * 5000,
             n_intervals = 0
         ),
     dcc.Interval(
             id = 'dataLoop',
-            interval = 1 * 10000,
+            interval = 1 * 5000,
             n_intervals = 0
         ),
     dcc.Interval(
             id = 'saveLoop',
-            interval = 1 * 10000,
+            interval = 1 * 5000,
             n_intervals = 0
         )
 ])
@@ -277,74 +232,61 @@ app.layout = html.Div([
     [dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.Input('stop-button', 'n_clicks')],
     [dash.dependencies.State('clicked-button', 'children'),
-    dash.dependencies.State('intervalLoop', 'n_intervals'),
-    dash.dependencies.State('checked-sensor', 'children')]
+    dash.dependencies.State('intervalLoop', 'n_intervals')]
 )
-def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList):
+def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
     if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
-        if start_clicks == 1:
-            clear_queue() #clear the queue when start is first pushed
     elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
+        deleteFile()
         interval = 0
-        deleteFile() #delete the temp files
-        print("Sending EXIT command to all active sensors")
-        send_queue_cmd('STOP',sensorList)
-        send_queue_cmd('EXIT',sensorList)
-        time.sleep(2)
-        return("exit")
     else:
         last_clicked = "none"
     cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
+
     return cur_clicks, interval
 
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
     dash.dependencies.Output('checked-sensor', 'children'),
-    dash.dependencies.Output('PTHSensors', 'children'), ###MAKE SURE THIS WORKS AND DONT FORGET####
     dash.dependencies.Input('start-button', 'n_clicks'),
-    dash.dependencies.State('AirQuality','value'),
-    dash.dependencies.State('CO2','value'),
-    dash.dependencies.State('Humidity','value'),
-    dash.dependencies.State('Pressure','value'),
-    dash.dependencies.State('Radiation','value'),
-    dash.dependencies.State('Temperature','value'))
+    dash.dependencies.State('airQuality','value'),
+    dash.dependencies.State('co2','value'),
+    dash.dependencies.State('humidity','value'),
+    dash.dependencies.State('pressure','value'),
+    dash.dependencies.State('radiation','value'),
+    dash.dependencies.State('temperature','value'))
 
 def temp_sensor(start, air, co, hum, pres, rad, temp):
     sensorList = []
-    PTHSens = []
     if air != []:
         print ("air")
-        createFile('AirQuality')
-        sensorList.append('AirQuality')
+        createFile("AirQuality")
+        sensorList.append("AirQuality")
     if co != []:
         print ("co2")
-        createFile('CO2')
-        sensorList.append('CO2')
+        createFile("CO2")
+        sensorList.append("CO2")
+    if hum != []:
+        print ("hum")
+        createFile("Humidity")
+        sensorList.append("Humidity")
+    if pres != []:
+        print ("pres")
+        createFile("Pressure")
+        sensorList.append("Pressure")
     if rad != []:
         print ("rad")
-        createFile('Radiation')
-        sensorList.append('Radiation')
-    if pres != [] or hum != [] or temp != []:
-        print ("PTH")
-        createFile("P/T/H")
-        sensorList.append('P/T/H')
-        if pres != []:
-            PTHSens.append("pres")
-        if temp != []:
-            PTHSens.append("temp")
-        if hum != []:
-            PTHSens.append("hum")
+        createFile("Radiation")
+        sensorList.append("Radiation")
+    if temp != []:
+        print ("temp")
+        createFile("Temperature")
+        sensorList.append("Temperature")
 
-
-    print("sens list: " , sensorList)
-    startSensor(sensorList) #start up the sensors
-    time.sleep(2) #time for sensors to start up: 5 seconds
-
-    send_queue_cmd("START", sensorList) #start the q
-    return sensorList, PTHSens
+    return sensorList
 
 #creates file to save the data onto
 @app.callback(
@@ -361,26 +303,19 @@ def saveFile(save):
     dash.dependencies.State('clicked-button', 'children'),
     dash.dependencies.State('save-button', 'n_clicks'),
     dash.dependencies.State('checked-sensor', 'children'),
-    dash.dependencies.State('savingFileName', 'children'),
-    dash.dependencies.State('PTHSensors', 'children'))
-def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
+    dash.dependencies.State('savingFileName', 'children'))
+def collectDataInFile(n, clicked, save, sensors, fileName):
     last_clicked = clicked[-5:]
     if last_clicked == 'START':
         lat = str(randolat())
         lon = str(randolon())
-        for sensor in sensorList:
-            #time.sleep(5) #pause before calling recieve data again to give map time to load
-            messages = receive_queue_data()
-            #print("message: ", messages)
-            if messages is not None:
-                data = sum(messages['data'])
-                print("sum: " , data)
-                appendFile(sensor, lat, lon, data)
-
+        for x in sensors:
+            # print("appending to file")
+         #send message to start collecting
+            data = str(randoNum())
+            appendFile(x, lat, lon, data)
         if (save != 0):
-            appendSaveFile(sensorList, lat, lon, fileName, PTHSensor) ##MAKE SURE THIS WORKS PLZ###
-
-        #clear_queue() ONLY CLEAR Q AFTER IT WAS PUT ONTO THE FILES
+            appendSaveFile(sensors, lat, lon, fileName)
     return "data"
 
 
@@ -398,12 +333,13 @@ def updateGraph(n, button, sensor):
         print("past here")
         fileName = sensor + ".csv"
         dataFile = pd.read_csv(fileName)
-        if len(dataFile['lat']) != 0:
+        if len(dataFile["lat"]) != 0:
             print("in update graph creating trace")
             # print(dataFile['lat'])
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
             [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
+
             fig = px.scatter_mapbox(
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
@@ -415,145 +351,12 @@ def updateGraph(n, button, sensor):
                 height=1000,
                 mapbox_style="open-street-map"
                 )
+
             fig.update_geos(fitbounds="locations")
             fig.update_traces(marker={'size': 10})
             return fig
         return dash.no_update
     return dash.no_update
 # ------------------------------------------------------------------------------
-# if __name__ == '__main__':
-     #app.run_server(debug=True)
-#________________________________________________________________________________
-def startSensor(sensorList):
-    file_prefix = '{}_p{}_g{}'.format("Inside", "1", "1")
-    fname = "/home/pi/data/" + file_prefix + '_' + \
-    str(dt.datetime.today()).split()[0]
-
-    print("in start sens")
-    py = 'sudo python'
-    for sensor in sensorList:
-        if sensor == 'P/T/H':
-            py = 'python3'
-            script = 'weather_DAQ_rabbitmq.py'
-            log = 'weather_gui.log'
-
-        if sensor == 'AirQuality':
-            py = 'python'
-            script = 'air_quality_DAQ.py'
-            log = 'AQ_gui.log'
-
-        if sensor == 'Radiation':
-            print("here: RAD")
-            py = 'sudo python'
-            script = 'D3S_rabbitmq_DAQ.py'
-            log = 'rad_gui.log'
-
-        if sensor == 'CO2':
-            py = 'python'
-            script = 'adc_DAQ.py'
-            log = 'CO2_gui.log'
-
-        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
-        cmd_options = ' -i {}'.format("2")
-        cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
-        cmd = cmd_head + cmd_options + cmd_log
-        print(cmd)
-        os.system(cmd)
-
-#-------------------------------------------------------------------------------
-# Methods for communication with the shared queue
-#   - allows commmunication between GUI and sensor DAQs
-#   - send commands and receive sensor data
-#-------------------------------------------------------------------------------
-def send_queue_cmd(cmd, daq_list):
-    '''
-    Send commands for sensor DAQs
-        - valid commands: START, STOP, EXIT
-    '''
-    print("in send q")
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='fromGUI')
-    for sensor in daq_list:
-        print("Sending cmd: {} for {}".format(cmd,sensor))
-        message = {'id': sensor, 'cmd': cmd}
-        channel.basic_publish(exchange='',
-                              routing_key='fromGUI',
-                              body=json.dumps(message))
-    connection.close()
-
-def receive_queue_data():
-    '''
-    Receive data from sensor DAQs
-    '''
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='toGUI')
-    method_frame, header_frame, body = channel.basic_get(queue='toGUI')
-    if body is not None:
-        # message from d3s is coming back as bytes
-        if type(body) is bytes:
-            body = body.decode("utf-8")
-        message = json.loads(body)
-        channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-        connection.close()
-        return message
-    else:
-        connection.close()
-        return None
-
-def clear_queue():
-    print("Initializing queues... clearing out old data")
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='toGUI')
-    channel.queue_delete(queue='toGUI')
-    connection.close()
-
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='fromGUI')
-    channel.queue_delete(queue='fromGUI')
-    connection.close()
-
-
 if __name__ == '__main__':
     app.run_server(debug=True)
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--test", "-t",
-        action='store_true',
-        default=False,
-    )
-    parser.add_argument(
-        "--windows", "-w",
-        action = 'store_true',
-        default = False,
-    )
-
-    args = parser.parse_args()
-    arg_dict = vars(args)
-
-    # global ex
-    # #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    # try:
-    #     if not arg_dict['test']:
-    #         clear_queue()
-    #     app = QApplication(sys.argv)
-    #     QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    #     nbins = 1024
-    #     # ex = App(nbins=nbins, **arg_dict)
-    #     # ex.show()
-    #
-    #     #atexit.register(ex.exit)
-    # except:
-    #     if not arg_dict['test']:
-    #         send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
-    #     # Still want to see traceback for debugging
-    #     print('ERROR: GUI quit unexpectedly!')
-    #     traceback.print_exc()
-    #     pass
-
-    # ret = app.exec_()
-    # print(ret)
-    # sys.exit(ret)
