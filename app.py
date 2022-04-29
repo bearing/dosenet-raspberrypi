@@ -305,12 +305,12 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList
     dash.dependencies.Output('checked-sensor', 'children'),
     dash.dependencies.Output('PTHSensors', 'children'), ###MAKE SURE THIS WORKS AND DONT FORGET####
     dash.dependencies.Input('start-button', 'n_clicks'),
-    dash.dependencies.State('airQuality','value'),
-    dash.dependencies.State('co2','value'),
-    dash.dependencies.State('humidity','value'),
-    dash.dependencies.State('pressure','value'),
-    dash.dependencies.State('RAD','value'),
-    dash.dependencies.State('temperature','value'))
+    dash.dependencies.State('AirQuality','value'),
+    dash.dependencies.State('CO2','value'),
+    dash.dependencies.State('Humidity','value'),
+    dash.dependencies.State('Pressure','value'),
+    dash.dependencies.State('Radiation','value'),
+    dash.dependencies.State('Temperature','value'))
 
 def temp_sensor(start, air, co, hum, pres, rad, temp):
     sensorList = []
