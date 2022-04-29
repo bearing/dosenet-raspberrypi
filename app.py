@@ -399,7 +399,7 @@ def updateGraph(n, button, sensor):
         print("past here")
         fileName = sensor + ".csv"
         dataFile = pd.read_csv(fileName)
-        if len(dataFile["lat"]) != 0:
+        if len(dataFile['lat']) != 0:
             print("in update graph creating trace")
             # print(dataFile['lat'])
             scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
