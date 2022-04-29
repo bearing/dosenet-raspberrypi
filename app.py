@@ -374,8 +374,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
             #print("message: ", messages)
             if messages is not None:
                 data = sum(messages['data'])
-                # print("sum: " , data)
-                # print("data: " , data)
+                print("sum: " , data)
                 appendFile(sensor, lat, lon, data)
 
         if (save != 0):
