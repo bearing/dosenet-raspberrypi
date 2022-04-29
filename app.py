@@ -243,7 +243,6 @@ app.layout = html.Div([
     html.Div(id='savingFileName', children='', style={'display': 'none'}),
     html.Div(id='collectingData', children='', style={'display': 'none'}),
     html.Div(id='savingData', children='', style={'display': 'none'}),
-    html.Div(id='stopSensors', children='', style={'display': 'none'}),
     html.Div(id='PTHSensors', children='', style={'display': 'none'}),
 
     html.Div(id='buttons', children = [
@@ -283,30 +282,23 @@ app.layout = html.Div([
 )
 def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
-    if start_clicks > int(prev_clicks['START']):
+    if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
         if start_clicks == 1:
             clear_queue() #clear the queue when start is first pushed
-    elif stop_clicks > int(prev_clicks['STOP']):
+    elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
         interval = 0
+        deleteFile() #delete the temp files
+        print("Sending EXIT command to all active sensors")
+        send_queue_cmd('STOP',sensorList)
+        send_queue_cmd('EXIT',sensorList)
+        time.sleep(2)
+        return("exit")
     else:
         last_clicked = "none"
-    cur_clicks = 'START:{} STOP:{} LAST:{}'.format(start_clicks, stop_clicks,last_clicked)
+    cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
     return cur_clicks, interval
-
-@app.callback(
-    dash.dependencies.Output('stopSensors', 'children'),
-    dash.dependencies.Input('stop-button', 'n_clicks'),
-    dash.dependencies.State('checked-sensor', 'children'))
-def stopSensor(stop, sensorList):
-    deleteFile() #delete the temp files
-
-    print("Sending EXIT command to all active sensors")
-    send_queue_cmd('STOP',sensorList)
-    send_queue_cmd('EXIT',sensorList)
-    time.sleep(2)
-    return("exit")
 
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
@@ -352,7 +344,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     time.sleep(2) #time for sensors to start up: 5 seconds
 
     send_queue_cmd("START", sensorList) #start the q
-    return sensorList
+    return sensorList, PTHSens
 
 #creates file to save the data onto
 @app.callback(
