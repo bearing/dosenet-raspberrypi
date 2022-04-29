@@ -27,10 +27,6 @@ import traceback
 
 
 app = dash.Dash(__name__, prevent_initial_callbacks=True)
-RAD = "Radiation"
-AIR = "Air Quality"
-CO2 = "CO2"
-PTH = "P/T/H"
 # ________________________________________________________
 # method that creates rando numbers
 def randoNum():
@@ -65,7 +61,7 @@ def createSaveFile():
     timeStamp = str(datetime.now())
     fileName = timeStamp + ".csv"
     print('fileName' + fileName)
-    headerList = [['dateTime','lat', 'lon', AIR, CO2, RAD, "Pressure", "Temperature", "Humidity"]]
+    headerList = [['dateTime','lat', 'lon', 'AirQuality', 'CO2', "Radiation", "Pressure", "Temperature", "Humidity"]]
     if os.path.exists(fileName) == False:
         with open(fileName, 'w') as csvFile:
             writer = csv.writer(csvFile)
@@ -79,7 +75,7 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
     for x in range(len(sensors)):
         if x == 0:
             if AIR in sensorList:
-                with open("Air Quality.csv", "r") as csvFile:
+                with open("AirQuality.csv", "r") as csvFile:
                     f1 = csv.reader(csvFile)
                     #f1 = pd.read_csv("AirQuality.csv")
                     col = f1['dataSet'].tolist()
@@ -167,8 +163,8 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
 
 
 def deleteFile():
-    if os.path.exists("Air Quality.csv"):
-      os.remove("Air Quality.csv")
+    if os.path.exists("AirQuality.csv"):
+      os.remove("AirQuality.csv")
     if os.path.exists("CO2.csv"):
       os.remove("CO2.csv")
     if os.path.exists("P/T/H.csv"):
@@ -209,12 +205,12 @@ app.layout = html.Div([
             html.Div(id='sensorText', children='What sensor data do you want to display on the map?', style= {'margin-right': '2%'}),
             dcc.Dropdown(id="displayOption",
                 options=[
-                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': AIR},
-                    {'label': 'CO2', 'value': CO2},
-                    {'label': 'Humidity', 'value': 'humidity'},
-                    {'label': 'Pressure (Pa)', 'value': 'pressure'},
-                    {'label': 'Radiation (cps)', 'value': RAD},
-                    {'label': 'Temperature (C)', 'value': 'temperature'}
+                    {'label': 'Air Quality PM 2.5 (ug/m3)', 'value': "AirQuality"},
+                    {'label': 'CO2', 'value': 'CO2'},
+                    {'label': 'Humidity', 'value': 'Humidity'},
+                    {'label': 'Pressure (Pa)', 'value': 'Pressure'},
+                    {'label': 'Radiation (cps)', 'value': 'Radiation'},
+                    {'label': 'Temperature (C)', 'value': 'Temperature'}
                 ],
                 placeholder="Select a sensor",
                 multi=False,
@@ -227,17 +223,17 @@ app.layout = html.Div([
         html.Div(id='checklistText', children='What sensors do you want to be collecting data?', style= {'margin-left': '5%', 'margin-right': '5%'}),
         html.Div(id='checkboxes', children = [
             dcc.Checklist( id="airQuality",
-                options=[{'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'airQuality'}], value=[]),
+                options=[{'label': 'Air Quality PM 2.5 (ug/m3)', 'value': 'AirQuality'}], value=[]),
             dcc.Checklist( id="co2",
-                options=[{'label': 'CO2', 'value': 'co2'}], value=[]),
+                options=[{'label': 'CO2', 'value': 'CO2'}], value=[]),
             dcc.Checklist( id="humidity",
-                options=[{'label': 'Humidity', 'value': 'humidity'}], value=[]),
+                options=[{'label': 'Humidity', 'value': 'Humidity'}], value=[]),
             dcc.Checklist( id="pressure",
-                options=[{'label': 'Pressure (Pa)', 'value': 'pressure'}], value=[]),
+                options=[{'label': 'Pressure (Pa)', 'value': 'Pressure'}], value=[]),
             dcc.Checklist( id="RAD",
-                options=[{'label': 'Radiation (cps)', 'value': 'RAD'}], value=[]),
+                options=[{'label': 'Radiation (cps)', 'value': 'Radiation'}], value=[]),
             dcc.Checklist( id="temperature",
-                options=[{'label': 'Temperature (C)', 'value': 'temperature'}], value=[])])
+                options=[{'label': 'Temperature (C)', 'value': 'Temperature'}], value=[])])
         ], style= {'display': 'flex'}),
 
     html.Br(),
@@ -287,17 +283,16 @@ app.layout = html.Div([
 )
 def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
-    if start_clicks > int(prev_clicks['start']):
+    if start_clicks > int(prev_clicks['START']):
         last_clicked = 'START'
         if start_clicks == 1:
             clear_queue() #clear the queue when start is first pushed
-    elif stop_clicks > int(prev_clicks['stop']):
+    elif stop_clicks > int(prev_clicks['STOP']):
         last_clicked = 'STOP'
         interval = 0
     else:
         last_clicked = "none"
-    cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
-
+    cur_clicks = 'START:{} STOP:{} LAST:{}'.format(start_clicks, stop_clicks,last_clicked)
     return cur_clicks, interval
 
 @app.callback(
@@ -317,7 +312,6 @@ def stopSensor(stop, sensorList):
 @app.callback(
     dash.dependencies.Output('checked-sensor', 'children'),
     dash.dependencies.Output('PTHSensors', 'children'), ###MAKE SURE THIS WORKS AND DONT FORGET####
-
     dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.State('airQuality','value'),
     dash.dependencies.State('co2','value'),
@@ -331,16 +325,16 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     PTHSens = []
     if air != []:
         print ("air")
-        createFile(Air)
-        sensorList.append(Air)
+        createFile('AirQuality')
+        sensorList.append('AirQuality')
     if co != []:
         print ("co2")
-        createFile(CO2)
-        sensorList.append(CO2)
+        createFile('CO2')
+        sensorList.append('CO2')
     if rad != []:
         print ("rad")
-        createFile(RAD)
-        sensorList.append(RAD)
+        createFile('Radiation')
+        sensorList.append('Radiation')
     if pres != [] or hum != [] or temp != []:
         print ("PTH")
         createFile("P/T/H")
@@ -358,7 +352,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     time.sleep(2) #time for sensors to start up: 5 seconds
 
     send_queue_cmd("START", sensorList) #start the q
-    return sensorList, PTHSens
+    return sensorList
 
 #creates file to save the data onto
 @app.callback(
@@ -408,12 +402,12 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
 
-    fileName = str(sensor + ".csv")
-    if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"):  #look at different file name
-        fileName = str("P/T/H.csv")
+    fileName = str(sensor + '.csv')
+    if (sensor == 'Pressure' or sensor == 'Temperature' or sensor == 'Humidity'):  #look at different file name
+        fileName = str('P/T/H.csv')
 
     if clicked == "T" and os.path.exists(fileName):
-        fileName = sensor + ".csv"
+        fileName = sensor + '.csv'
         colNames = ['lat', 'lon', 'dataSet']
         dataFile = pd.read_csv(fileName, usecols = colNames)
         if len(dataFile['lat']) != 0: #check to make sure the files ae not empty
@@ -423,12 +417,12 @@ def updateGraph(n, button, sensor):
             [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
 
             datas = dataFile['dataSet']
-            if (sensor == 'pressure' or sensor == "temperature" or sensor == "humidity"): #separate the data to look at the correct one out of PTH
-                if sensor == "pressure":
+            if (sensor == 'Pressure' or sensor == "Temperature" or sensor == "Humidity"): #separate the data to look at the correct one out of PTH
+                if sensor == "Pressure":
                     data = dataFile['dataSet'][0]
-                if sensor == "temperature":
+                if sensor == "Temperature":
                     data = dataFile['dataSet'][1]
-                if sensor == "humidity":
+                if sensor == "Humidity":
                     data = dataFile['dataSet'][2]
 
             fig = px.scatter_mapbox(
@@ -436,7 +430,7 @@ def updateGraph(n, button, sensor):
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
                 hover_name= dataFile['dataSet'],
-                hover_data= {'dataSet':False},
+                #hover_data= {'dataSet':False},
                 color=dataFile['dataSet'],
                 color_continuous_scale=scl,
                 zoom=19,
