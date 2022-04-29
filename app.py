@@ -330,7 +330,7 @@ def temp_sensor(start, air, co, hum, pres, rad, temp):
     if pres != [] or hum != [] or temp != []:
         print ("PTH")
         createFile("P/T/H")
-        sensorList.append("P/T/H")
+        sensorList.append('P/T/H')
         if pres != []:
             PTHSens.append("pres")
         if temp != []:
@@ -450,23 +450,23 @@ def startSensor(sensorList):
     print("in start sens")
     py = 'sudo python'
     for sensor in sensorList:
-        if sensor == PTH:
+        if sensor == 'P/T/H':
             py = 'python3'
             script = 'weather_DAQ_rabbitmq.py'
             log = 'weather_gui.log'
 
-        if sensor == AIR:
+        if sensor == 'AirQuality':
             py = 'python'
             script = 'air_quality_DAQ.py'
             log = 'AQ_gui.log'
 
-        if sensor == RAD:
+        if sensor == 'Radiation':
             print("here: RAD")
             py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
-        if sensor == CO2:
+        if sensor == 'CO2':
             py = 'python'
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
