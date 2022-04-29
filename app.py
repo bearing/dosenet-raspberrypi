@@ -426,11 +426,10 @@ def updateGraph(n, button, sensor):
                     data = dataFile['dataSet'][2]
 
             fig = px.scatter_mapbox(
-                dataFile,
                 lat=dataFile['lat'],
                 lon=dataFile['lon'],
                 hover_name= dataFile['dataSet'],
-                #hover_data= {'dataSet':False},
+                #hover_data= {dataFile['dataSet']:False},
                 color=dataFile['dataSet'],
                 color_continuous_scale=scl,
                 zoom=19,
@@ -438,6 +437,7 @@ def updateGraph(n, button, sensor):
                 mapbox_style="open-street-map"
                 )
 
+            print("hitting here")
             # print("lat: ", dataFile['lat'])
             # print("lon: ", dataFile['lon'])
             # print("data: ", dataFile['dataSet'])
