@@ -364,8 +364,8 @@ def saveFile(save):
     dash.dependencies.State('savingFileName', 'children'),
     dash.dependencies.State('PTHSensors', 'children'))
 def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
-    last_clicked = clicked[-5:]
-    if last_clicked == 'START':
+    last_clicked = clicked[-1:]
+    if last_clicked == 'T':
         lat = str(randolat())
         lon = str(randolon())
         for sensor in sensorList:
