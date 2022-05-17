@@ -277,19 +277,18 @@ app.layout = html.Div([
     dash.dependencies.Input('stop-button', 'n_clicks')],
     [dash.dependencies.State('clicked-button', 'children'),
     dash.dependencies.State('intervalLoop', 'n_intervals'),
-    dash.dependencies.State('checked-sensor', 'children')]
-)
+    dash.dependencies.State('checked-sensor', 'children')])
 def updatedClicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList):
     prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
     if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
         if start_clicks == 1:
             print("updatedClicked: start button pushed")
-            clear_queue() #clear the queue when start is first pushed
+            clear_queue()
     elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
         interval = 0
-        deleteFile() #delete the temp files
+        deleteFile()
         print("Sending EXIT command to all active sensors")
         send_queue_cmd('STOP',sensorList)
         send_queue_cmd('EXIT',sensorList)
@@ -298,6 +297,7 @@ def updatedClicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList)
     else:
         last_clicked = "none"
     cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
+    print('updatedClicked: ', last_clicked )
     return last_clicked, interval
 
 #return which sensors are clicked in array and makes files when start is clicked
@@ -311,7 +311,6 @@ def updatedClicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList)
     dash.dependencies.State('Pressure','value'),
     dash.dependencies.State('Radiation','value'),
     dash.dependencies.State('Temperature','value'))
-
 def startProcess(start, air, co, hum, pres, rad, temp):
     sensorList = []
     PTHSens = []
@@ -337,12 +336,11 @@ def startProcess(start, air, co, hum, pres, rad, temp):
             PTHSens.append("temp")
         if hum != []:
             PTHSens.append("hum")
-
     print("startProcess: sensorList: " , sensorList)
-    startSensor(sensorList) #start up the sensors
+    startSensor(sensorList)
     print("startProcess: startSensors called")
-    time.sleep(2) #time for sensors to start up: 5 seconds
-    send_queue_cmd("START", sensorList) #start the q
+    time.sleep(2)
+    send_queue_cmd("START", sensorList)
     print("startProcess: send_queue_cmd called")
     return sensorList, PTHSens
 
@@ -352,7 +350,6 @@ def startProcess(start, air, co, hum, pres, rad, temp):
     dash.dependencies.Input('save-button', 'n_clicks'))
 def saveFile(save):
     return createSaveFile()
-
 
 #collect data and append to files continuously for time interval after start pushed. saves the data onto the file if the save button has been pushed
 @app.callback(
@@ -369,7 +366,6 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
         lat = str(randolat())
         lon = str(randolon())
         for sensor in sensorList:
-            #time.sleep(5) #pause before calling recieve data again to give map time to load
             messages = receive_queue_data()
             if messages is not None:
                 data = sum(messages['data'])
@@ -377,8 +373,8 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
                 appendFile(sensor, lat, lon, data)
         if (save != 0):
             appendSaveFile(sensorList, lat, lon, fileName, PTHSensor)
-    return "data"
-
+            print("collectDataInFile: appendSaveFile")
+        return "data"
 
 # #read the file of correct sensor and display on map
 @app.callback(
