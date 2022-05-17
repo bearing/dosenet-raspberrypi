@@ -298,7 +298,7 @@ def updatedClicked(start_clicks, stop_clicks, prev_clicks, interval, sensorList)
     else:
         last_clicked = "none"
     cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
-    return cur_clicks, interval
+    return last_clicked, interval
 
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
