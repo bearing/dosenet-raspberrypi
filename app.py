@@ -389,7 +389,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
 def updateGraph(n, button, sensor):
     clicked = button[-1:]
     fileName = str(sensor + ".csv")
-    if clicked == "T" and os.path.exists(fileName):
+    if clicked == 'T' and os.path.exists(fileName):
         print("updateGraph: filename exists")
         fileName = sensor + ".csv"
         dataFile = pd.read_csv(fileName)
