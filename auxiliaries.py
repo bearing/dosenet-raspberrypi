@@ -188,7 +188,7 @@ class Config(object):
 
     def __init__(self, filename, verbosity=1, logfile=None):
         set_verbosity(self, verbosity=verbosity, logfile=logfile)
-        with open(filename, 'rb') as config_file:
+        with open(filename, 'r') as config_file:
             config_reader = csv.DictReader(config_file)
             #content = config_reader.next()
             #Python 3 edit
