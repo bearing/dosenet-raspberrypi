@@ -190,7 +190,11 @@ class Config(object):
         set_verbosity(self, verbosity=verbosity, logfile=logfile)
         with open(filename, 'rb') as config_file:
             config_reader = csv.DictReader(config_file)
-            content = config_reader.next()
+            #content = config_reader.next()
+            #Python 3 edit
+            for row in config_reader:
+                print(row)
+                content = row
 
         self.ID = content['stationID']
         self.hash = content['message_hash']
