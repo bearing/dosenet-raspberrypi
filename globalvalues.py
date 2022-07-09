@@ -24,6 +24,15 @@ except ImportError:
     print('Not on a Raspberry Pi, proceeding anyway')
     RPI = False
 
+'''
+Python 3 imports
+'''
+
+try:
+    import adafruit_mcp3xxx.mcp3008
+except:
+    pass
+
 # Hardware pin numbers
 # (using Broadcom numbering)
 # (Broadcom numbers are labeled on the pi hat)
@@ -113,8 +122,9 @@ DEFAULT_INTERVAL_NORMAL_CO2 = 300
 DEFAULT_INTERVAL_TEST_CO2 = 30
 CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
+#t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8
 try:
-    DEFAULT_WEATHER_PORT = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
+    DEFAULT_WEATHER_PORT = BME280()
 except:
     print("No Weather Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
