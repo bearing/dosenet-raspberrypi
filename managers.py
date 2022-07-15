@@ -24,7 +24,7 @@ except:
     print("Not set up to run a CO2 sensor, continuing anyway")
 try:
     import adafruit_bme280
-    from adafruit_bme280 import basic as ada
+    from adafruit_bme280 import advanced as ada
 except:
     print("Not set up to run a weather sensor, continuing anyway")
 '''
