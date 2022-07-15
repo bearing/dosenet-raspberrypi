@@ -622,9 +622,9 @@ class Base_Manager(object):
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
-                temp = self.Weather_Port.temperature()
-                press = self.Weather_Port.pressure() / 100
-                humid = self.Weather_Port.humidity()
+                temp = self.Weather_Port.read_temperature()
+                press = self.Weather_Port.read_pressure() / 100
+                humid = self.Weather_Port.read_humidity()
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
@@ -1089,6 +1089,7 @@ if __name__ == '__main__':
     valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
     for i, val in enumerate(valid_sensors):
         if not isinstance(sensor, int):
+            print(sensor)
             if sensor.upper() in val:
                 sensor = i+1
     if isinstance(sensor, str):
