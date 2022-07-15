@@ -16,6 +16,7 @@ except:
     pass
     
 import os
+import board
 
 try:
     import RPi.GPIO as GPIO
@@ -27,7 +28,6 @@ except ImportError:
 '''
 Python 3 imports
 '''
-
 try:
     import adafruit_mcp3xxx.mcp3008
 except:
@@ -124,7 +124,8 @@ CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
 #t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8
 try:
-    DEFAULT_WEATHER_PORT = BME280()
+    i2c = board.I2C()
+    DEFAULT_WEATHER_PORT = Adafruit_BME280_I2C(i2c)
 except:
     print("No Weather Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
