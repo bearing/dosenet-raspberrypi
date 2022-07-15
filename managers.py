@@ -651,6 +651,7 @@ class Base_Manager(object):
                 temp = self.Weather_Port.temperature
                 press = self.Weather_Port.pressure
                 humid = self.Weather_Port.relative_humidity
+                print(temp + ", " + press + ", " + humid)
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
