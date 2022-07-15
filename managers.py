@@ -63,6 +63,7 @@ from globalvalues import WEATHER_VARIABLES, WEATHER_VARIABLES_UNITS
 try:
     from globalvalues import DEFAULT_WEATHER_PORT
 except ImportError:
+    print("DEFAULT_WEATHER_PORT not imported")
     pass
 try:
     from globalvalues import DEFAULT_AQ_PORT
@@ -1089,7 +1090,6 @@ if __name__ == '__main__':
     valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
     for i, val in enumerate(valid_sensors):
         if not isinstance(sensor, int):
-            print(sensor)
             if sensor.upper() in val:
                 sensor = i+1
     if isinstance(sensor, str):
