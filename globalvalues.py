@@ -12,8 +12,7 @@ except:
     pass
 try:
     from adafruit_bme280 import basic as ada
-except Exception as ex:
-    print(ex)
+except:
     pass
     
 import os
@@ -125,8 +124,9 @@ CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
 #t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8
 try:
-    DEFAULT_WEATHER_PORT = ada.Adafruit_BME280()
-except:
+    DEFAULT_WEATHER_PORT = ada.Adafruit_BME280_I2C(board.I2C())
+except Exception as ex:
+    print(ex)
     print("No Weather Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
 DEFAULT_INTERVAL_TEST_WEATHER = 30
