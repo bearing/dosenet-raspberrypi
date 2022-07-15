@@ -1084,11 +1084,12 @@ if __name__ == '__main__':
     parser.add_argument(
         '--sensor', '-s', type=str, help='Enter a number corresponding ' +
         'to the sensor type where: \n1 = The Pocket Geiger \n2 = The D3S' +
-        '\n3 = The Air Quality Sensor \n4 = The C02 Sensor')
+        '\n3 = The Air Quality Sensor \n4 = The C02 Sensor \n5 = The Weather Sensor')
     sensor = parser.parse_known_args()[0].sensor
     valid_sensors = [['POCKET_GEIGER', 'PG', '1'], ['D3S', '2'], ['AIR_QUALITY', 'AQ', '3'], ['CO2', '4'], ['WEATHER_SENSOR', 'WEATHER', '5']]
     for i, val in enumerate(valid_sensors):
         if not isinstance(sensor, int):
+            print(sensor)
             if sensor.upper() in val:
                 sensor = i+1
     if isinstance(sensor, str):
