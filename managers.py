@@ -25,6 +25,7 @@ except:
 try:
     import adafruit_bme280
     from adafruit_bme280 import advanced as ada
+    from adafruit_bme280 import basic as adab
 except:
     print("Not set up to run a weather sensor, continuing anyway")
 '''
@@ -647,9 +648,9 @@ class Base_Manager(object):
                 self.Weather_Port.overscan_temperature = ada.OVERSCAN_X2
                 # give sensor time to gather initial readings
                 time.sleep(1)
-                temp = ada.temperature
-                press = ada.pressure
-                humid = ada.relative_humidity
+                temp = adab.temperature
+                press = adab.pressure
+                humid = adab.relative_humidity
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
