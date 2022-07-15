@@ -24,6 +24,7 @@ except:
     print("Not set up to run a CO2 sensor, continuing anyway")
 try:
     import adafruit_bme280
+    from adafruit_bme280 import basic as ada
 except:
     print("Not set up to run a weather sensor, continuing anyway")
 '''
@@ -638,12 +639,12 @@ class Base_Manager(object):
                 #press = self.Weather_Port.read_pressure() / 100
                 #humid = self.Weather_Port.read_humidity()
                 self.Weather_Port.sea_level_pressure = 1013.25
-                self.Weather_Port.mode = MODE_NORMAL
-                self.Weather_Port.standby_period = STANDBY_TC_500
-                self.Weather_Port.iir_filter = IIR_FILTER_X16
-                self.Weather_Port.overscan_pressure = OVERSCAN_X16
-                self.Weather_Port.overscan_humidity = OVERSCAN_X1
-                self.Weather_Port.overscan_temperature = OVERSCAN_X2
+                self.Weather_Port.mode = ada.MODE_NORMAL
+                self.Weather_Port.standby_period = ada.STANDBY_TC_500
+                self.Weather_Port.iir_filter = ada.IIR_FILTER_X16
+                self.Weather_Port.overscan_pressure = ada.OVERSCAN_X16
+                self.Weather_Port.overscan_humidity = ada.OVERSCAN_X1
+                self.Weather_Port.overscan_temperature = ada.OVERSCAN_X2
                 # give sensor time to gather initial readings
                 time.sleep(1)
                 temp = temperature
