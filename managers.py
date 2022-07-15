@@ -623,8 +623,7 @@ class Base_Manager(object):
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
-                self.Weather_Port.get_status()
-                temp = self.Weather_Port.read_temperature()
+                temp = self.read_temperature()
                 press = self.Weather_Port.read_pressure() / 100
                 humid = self.Weather_Port.read_humidity()
                 this_instant_data.append(date_time)
