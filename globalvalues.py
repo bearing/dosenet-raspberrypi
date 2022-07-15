@@ -125,7 +125,7 @@ CO2_VARIABLES = ['CO2 Concentration in ppm', 'UV index']
 
 #t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8
 try:
-    DEFAULT_WEATHER_PORT = ada.Adafruit_BME280(board.I2C())
+    DEFAULT_WEATHER_PORT = ada.Adafruit_BME280()
 except:
     print("No Weather Sensor setup, proceeding without initializing Weather Port.")
 DEFAULT_INTERVAL_NORMAL_WEATHER = 300
