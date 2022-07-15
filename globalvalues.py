@@ -11,8 +11,9 @@ try:
 except:
     pass
 try:
-    from Adafruit_BME280 import basic as ada
-except:
+    from adafruit_bme280 import basic as ada
+except Exception as ex:
+    print(ex)
     pass
     
 import os
