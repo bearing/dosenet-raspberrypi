@@ -647,9 +647,9 @@ class Base_Manager(object):
                 self.Weather_Port.overscan_temperature = ada.OVERSCAN_X2
                 # give sensor time to gather initial readings
                 time.sleep(1)
-                temp = temperature
-                press = pressure
-                humid = relative_humidity
+                temp = ada.temperature
+                press = ada.pressure
+                humid = ada.relative_humidity
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
