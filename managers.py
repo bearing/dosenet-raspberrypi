@@ -22,6 +22,17 @@ try:
     import Adafruit_MCP3008
 except:
     print("Not set up to run a CO2 sensor, continuing anyway")
+try:
+    from adafruit_bme280 import basic as ada
+except:
+    print("Not set up to run a weather sensor, continuing anyway")
+'''
+Python 3 imports
+'''
+try:
+    import adafruit_mcp3xxx.mcp3008
+except:
+    print("Not set up to run a CO2 sensor in Python 3, continuing anyway")
 
 import numpy as np
 import datetime
@@ -623,9 +634,21 @@ class Base_Manager(object):
             while time.time() < this_end:
                 date_time = datetime.datetime.now()
                 this_instant_data = []
-                temp = self.Weather_Port.read_temperature()
-                press = self.Weather_Port.read_pressure() / 100
-                humid = self.Weather_Port.read_humidity()
+                #temp = self.Weather_Port.read_temperature()
+                #press = self.Weather_Port.read_pressure() / 100
+                #humid = self.Weather_Port.read_humidity()
+                self.Weather_Port.sea_level_pressure = 1013.25
+                self.Weather_Port.mode = ada.MODE_NORMAL
+                self.Weather_Port.standby_period = ada.STANDBY_TC_500
+                self.Weather_Port.iir_filter = ada.IIR_FILTER_X16
+                self.Weather_Port.overscan_pressure = ada.OVERSCAN_X16
+                self.Weather_Port.overscan_humidity = ada.OVERSCAN_X1
+                self.Weather_Port.overscan_temperature = ada.OVERSCAN_X2
+                # give sensor time to gather initial readings
+                time.sleep(1)
+                temp = ada.temperature
+                press = ada.pressure
+                humid = ada.relative_humidity
                 this_instant_data.append(date_time)
                 this_instant_data.append(float('%.2f'%temp))
                 this_instant_data.append(float('%.2f'%press))
