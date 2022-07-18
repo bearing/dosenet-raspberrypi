@@ -21,13 +21,11 @@ except:
 try:
     import Adafruit_MCP3008
 except:
-    print("Not set up to run a CO2 sensor, continuing anyway")
+    print("Not set up to run a CO2 sensor in Python 2, continuing anyway")
 try:
-    import adafruit_bme280
-    from adafruit_bme280 import advanced as ada
-    from adafruit_bme280 import basic as adab
+    from Adafruit_BME280 import *
 except:
-    print("Not set up to run a weather sensor, continuing anyway")
+    print("Not set up to run a weather sensor in Python 2, continuing anyway")
 '''
 Python 3 imports
 '''
@@ -35,6 +33,11 @@ try:
     import adafruit_mcp3xxx.mcp3008
 except:
     print("Not set up to run a CO2 sensor in Python 3, continuing anyway")
+try:
+    from adafruit_bme280 import advanced as ada
+    from adafruit_bme280 import basic as adab
+except:
+    print("Not set up to run a weather sensor in Python 3, continuing anyway")
 
 import numpy as np
 import datetime
