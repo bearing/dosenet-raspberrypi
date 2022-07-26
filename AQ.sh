@@ -9,12 +9,12 @@ case "$1" in
   start)
     echo "Starting Air Quality Sensor script" > $LOG
     sleep 30
-    sudo -E python $DOSENET/managers.py --sensor 3 --log --logfile $LOG >>$LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 3 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished Air Quality Sensor script" >> $LOG
     ;;
   test)
     echo "Starting Air Quality Sensor script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 3 --test --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 3 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping Air Quality Sensor script" >> $LOG
