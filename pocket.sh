@@ -8,13 +8,13 @@ LOG=/tmp/pocket_manager.log
 case "$1" in
   start)
     echo "Starting pocket Geiger script" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 1 --log --logfile $LOG >>$LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 1 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished pocket Geiger script" >> $LOG
     exit 0
     ;;
   test)
     echo "Starting pocket Geiger script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 1 --test --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 1 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping pocket Geiger script" >> $LOG
