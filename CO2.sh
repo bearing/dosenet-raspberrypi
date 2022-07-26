@@ -8,12 +8,12 @@ LOG=/tmp/CO2_manager.log
 case "$1" in
   start)
     echo "Starting CO2 sensor script" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 4 --log --logfile $LOG >>$LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 4 --log --logfile $LOG >>$LOG 2>&1
     echo "Finished CO2 sensor script" >> $LOG
     ;;
   test)
     echo "Starting CO2 sensor script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 4 --test --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 4 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping CO2 sensor script" >> $LOG
