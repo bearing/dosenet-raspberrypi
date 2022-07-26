@@ -8,12 +8,12 @@ LOG=/tmp/d3s_manager.log
 case "$1" in
   start)
     echo "Starting D3S script" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 2 --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 2 --log --logfile $LOG >> $LOG 2>&1
     echo "Finished D3S script" >> $LOG
     ;;
   test)
     echo "Starting D3S script in test mode" > $LOG
-    sudo -E python $DOSENET/managers.py --sensor 2 --test --log --logfile $LOG >> $LOG 2>&1
+    sudo -E python2 $DOSENET/managers.py --sensor 2 --test --log --logfile $LOG >> $LOG 2>&1
     ;;
   stop)
     echo "Stopping D3S script" >> $LOG
