@@ -15,6 +15,6 @@ do
 done
 
 echo "Starting OLED Display"
-    sudo python $DOSENET/OLED_Display.py $@
+    sudo python2 $DOSENET/OLED_Display.py $@
 
 exit 0
