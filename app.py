@@ -235,9 +235,9 @@ app.layout = html.Div([
         ], style= {'display': 'flex'}),
 
     html.Br(),
-    html.Div(id='clicked-button', children='', style={'display': 'none'}),
-    html.Div(id='prevStart', children='0', style={'display': 'none'}),
-    html.Div(id='prevStop', children='0', style={'display': 'none'}),
+    html.Div(id='clicked-button', children = '', style={'display': 'none'}),
+    html.Div(id='prevStart', children = 0, style={'display': 'none'}),
+    html.Div(id='prevStop', children = 0, style={'display': 'none'}),
     html.Div(id='display-clicked', children='', style={'display': 'none'}),
     html.Div(id='checked-sensor', children='', style={'display': 'none'}),
     html.Div(id='savingFileName', children='', style={'display': 'none'}),
@@ -300,7 +300,6 @@ def updatedClicked(start_clicks, stop_clicks, prevStart, prevStop, interval, sen
         send_queue_cmd('EXIT',sensorList)
         time.sleep(2)
         prevStop = stop_clicks
-        return("exit")
     else:
         last_clicked = 'none'
     print('updatedClicked: ', last_clicked )
