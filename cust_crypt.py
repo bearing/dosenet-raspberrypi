@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from Crypto.PublicKey import RSA as rsa
+try:
+    from Crypto.PublicKey import RSA as rsa
+except:
+    print("PublicKey not imported")
 
 
 class PublicDEncrypt:
@@ -23,7 +26,7 @@ class PublicDEncrypt:
         if self.public_key is None:
             return None
         else:
-            return self.public_key.encrypt(message, "32")
+            return self.public_key.encrypt(message, 32)
 
     def read_key_file(self, key_file):
         with open(key_file, 'r') as f:
