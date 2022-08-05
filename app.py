@@ -246,10 +246,11 @@ app.layout = html.Div([
     html.Div(id='PTHSensors', children='', style={'display': 'none'}),
 
     html.Div(id='buttons', children = [
-    html.Button(children = 'Start', id='start-button', n_clicks = 0, style={'width': "15%", 'height': "40px",'display': 'inline-block','margin-left': "10px",'margin-right': "30px", 'font_size': '40px'}),
-    html.Button(children = 'Stop', id='stop-button', n_clicks = 0, style={'width': "15%", 'height': "40px", 'display': 'inline-block', 'margin-right': "30px", 'font_size': '40px'}),
-    html.Button(children = 'Save', id='save-button', n_clicks = 0, style={'width': "15%", 'height': "40px", 'display': 'inline-block', 'font_size': '40px'})],
-    style= {'margin-left': '20%','display': 'flex'}),
+    html.Button(children = 'Start', id='start-button', n_clicks = 0, style={'width': "15%", 'height': "40px",'display': 'inline-block','margin-right': "10%", 'font_size': '40px'}),
+    html.Button(children = 'Stop', id='stop-button', n_clicks = 0, style={'width': "15%", 'height': "40px", 'display': 'inline-block', 'margin-right': "10%", 'font_size': '40px'}),
+    html.Button(children = 'Save Data', id='save-button', n_clicks = 0, style={'width': "15%", 'height': "40px", 'display': 'inline-block', 'font_size': '40px', 'margin-right': "10%"}),
+    html.Button('Download as HTML', id = 'download',  n_clicks = 0, style={'width': "15%", 'height': "40px", 'display': 'inline-block', 'font_size': '40px'})],
+    style= {'text-align': 'center','margin-left': "8%",'margin-top': '5%', 'display': 'flex'}),
 
     html.Br(),
 
@@ -384,36 +385,45 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
 # #read the file of correct sensor and display on map
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
+    dash.dependencies.Input('dataLoop', 'n_intervals'),
     dash.dependencies.Input('intervalLoop', 'n_intervals'),
     dash.dependencies.State('clicked-button', 'children'),
     dash.dependencies.State('displayOption', 'value'))
 def updateGraph(n, button, sensor):
-    clicked = button[-1:]
-    fileName = str(sensor + ".csv")
-    if clicked == 'T' and os.path.exists(fileName):
-        print("updateGraph: filename exists")
-        fileName = sensor + ".csv"
-        dataFile = pd.read_csv(fileName)
-        if len(dataFile['lat']) != 0:
-            print("updateGraph: data on the file exists")
-            scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
-            [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
-            [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
-            fig = px.scatter_mapbox(
-                lat=dataFile['lat'],
-                lon=dataFile['lon'],
-                hover_name= dataFile['dataSet'],
-                #hover_data= {dataFile['dataSet']:False},
-                color=dataFile['dataSet'],
-                color_continuous_scale=scl,
-                zoom = 19,
-                height=1000,
-                mapbox_style="open-street-map"
-                )
-            fig.update_geos(fitbounds="locations")
-            fig.update_traces(marker={'size': 10})
-            return fig
-        return dash.no_update
+    print("started it")
+    href = None
+    if clicked == "T":
+        fileName = str(sensor + ".csv")
+        if os.path.exists(fileName):
+            print("past here")
+            fileName = sensor + ".csv"
+            dataFile = pd.read_csv(fileName)
+            if len(dataFile["lat"]) != 0:
+                print("in update graph creating trace")
+                scl = [0,"rgb(150,0,90)"],[0.125,"rgb(0, 0, 200)"],[0.25,"rgb(0, 25, 255)"],\
+                [0.375,"rgb(0, 152, 255)"],[0.5,"rgb(44, 255, 150)"],[0.625,"rgb(151, 255, 0)"],\
+                [0.75,"rgb(255, 234, 0)"],[0.875,"rgb(255, 111, 0)"],[1,"rgb(255, 0, 0)"]
+                fig = px.scatter_mapbox(
+                    lat=dataFile['lat'],
+                    lon=dataFile['lon'],
+                    hover_name= dataFile['dataSet'],
+                    #hover_data= {dataFile['dataSet']:False},
+                    color=dataFile['dataSet'],
+                    color_continuous_scale=scl,
+                    zoom=19,
+                    height=1000,
+                    mapbox_style="open-street-map"
+                    )
+                fig.update_geos(fitbounds="locations")
+                fig.update_traces(marker={'size': 10})
+                if save != 0:
+                    print("in the save part")
+                    timeStamp = datetime.now()
+                    title = timeStamp.strftime("%Y-%m-%d %H:%M:%S")
+                    fig.write_html(str(title) + ".html")
+                    save = 0
+                return fig, save
+            return dash.no_update
     return dash.no_update
 # ------------------------------------------------------------------------------
 # if __name__ == '__main__':
