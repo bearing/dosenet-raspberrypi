@@ -389,7 +389,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
     dash.dependencies.Input('intervalLoop', 'n_intervals'),
     dash.dependencies.State('clicked-button', 'children'),
     dash.dependencies.State('displayOption', 'value'))
-def updateGraph(n, button, sensor):
+def updateGraph(n, button, sensor, save):
     print("started it")
     href = None
     if clicked == "T":
