@@ -41,6 +41,7 @@ except:
 
 import numpy as np
 import datetime
+import struct
 from Crypto.Cipher import AES
 from collections import deque
 
