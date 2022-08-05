@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-try:
-    from Crypto.PublicKey import RSA as rsa
-except:
-    print("PublicKey not imported")
+from Crypto.PublicKey import RSA as rsa
 
 
 class PublicDEncrypt:
