@@ -449,7 +449,7 @@ def startSensor(sensorList):
 
         if sensor == 'Radiation':
             print("here: RAD")
-            py = 'sudo python3'
+            py = 'sudo python'
             script = 'D3S_rabbitmq_DAQ.py'
             log = 'rad_gui.log'
 
