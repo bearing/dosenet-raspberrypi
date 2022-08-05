@@ -460,7 +460,7 @@ def startSensor(sensorList):
             script = 'adc_DAQ.py'
             log = 'CO2_gui.log'
 
-        cmd_head = '{} /home/pi/pyqt-gui/dosenet-raspberrypi/{}'.format(py, script)
+        cmd_head = '{} /home/pi/dosenet-raspberrypi/{}'.format(py, script)
         cmd_options = ' -i {}'.format("2")
         cmd_log = ' > /tmp/{} 2>&1 &'.format(log)
         cmd = cmd_head + cmd_options + cmd_log
