@@ -288,6 +288,12 @@ def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
     elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
         deleteFile()
+        print("Sending EXIT command to all active sensors")
+        send_queue_cmd('STOP',sensorList)
+        send_queue_cmd('EXIT',sensorList)
+        time.sleep(2)
+        prevStop = stop_clicks
+        return("exit")
         interval = 0
     else:
         last_clicked = "none"
