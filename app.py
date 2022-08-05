@@ -386,10 +386,10 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
     dash.dependencies.Output('download', 'n_clicks'),
-    dash.dependencies.Input('dataLoop', 'n_intervals'),
     dash.dependencies.Input('intervalLoop', 'n_intervals'),
     dash.dependencies.State('clicked-button', 'children'),
-    dash.dependencies.State('displayOption', 'value'))
+    dash.dependencies.State('displayOption', 'value'),
+    dash.dependencies.State('download', 'n_clicks'))
 def updateGraph(n, button, sensor, save):
     clicked = button[-1:]
     print("started it")
