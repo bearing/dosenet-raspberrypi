@@ -346,7 +346,7 @@ def startProcess(start, air, co, hum, pres, rad, temp):
     startSensor(sensorList)
     print("startProcess: startSensors called")
     time.sleep(2)
-    send_queue_cmd("START", sensorList)
+    send_queue_cmd('START', sensorList)
     print("startProcess: send_queue_cmd called")
     return sensorList, PTHSens
 
@@ -397,7 +397,7 @@ def updateGraph(n, button, sensor, save):
     if clicked == "T":
         fileName = str(sensor + ".csv")
         if os.path.exists(fileName):
-            print("past here")
+            print("file name exists")
             fileName = sensor + ".csv"
             dataFile = pd.read_csv(fileName)
             if len(dataFile["lat"]) != 0:
@@ -418,6 +418,7 @@ def updateGraph(n, button, sensor, save):
                     )
                 fig.update_geos(fitbounds="locations")
                 fig.update_traces(marker={'size': 10})
+
                 if save != 0:
                     print("in the save part")
                     timeStamp = datetime.now()
