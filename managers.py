@@ -250,7 +250,7 @@ class Base_Manager(object):
 
         self.interval = interval
 
-        if config:
+        if config and not self.test and not self.cirtest:
             try:
                 self.config = Config(config,
                                      verbosity=self.v, logfile=self.logfile)
@@ -307,7 +307,7 @@ class Base_Manager(object):
             self.vprint(
                     1, OLED_CONNECTED_TEXT)
             self.vprint(1, SINGLE_BREAK_LINE)
-            
+
         if self.new_setup:
             self.vprint(
                     1, NEW_SENSOR_DISPLAY_TEXT.format(sensor_name=self.sensor_names[self.sensor_type-1]))
