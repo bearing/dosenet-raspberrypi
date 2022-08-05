@@ -276,36 +276,24 @@ app.layout = html.Div([
 @app.callback(
     dash.dependencies.Output('clicked-button', 'children'),
     dash.dependencies.Output('intervalLoop', 'n_intervals'),
-    dash.dependencies.Output('prevStart', 'children'),
-    dash.dependencies.Output('prevStop', 'children'),
     [dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.Input('stop-button', 'n_clicks')],
-    [dash.dependencies.State('prevStart', 'children'),
-    dash.dependencies.State('prevStop', 'children'),
-    dash.dependencies.State('intervalLoop', 'n_intervals'),
-    dash.dependencies.State('checked-sensor', 'children')])
-def updatedClicked(start_clicks, stop_clicks, prevStart, prevStop, interval, sensorList):
-    if start_clicks > int(prevStart):
+    [dash.dependencies.State('clicked-button', 'children'),
+    dash.dependencies.State('intervalLoop', 'n_intervals')]
+)
+def updated_clicked(start_clicks, stop_clicks, prev_clicks, interval):
+    prev_clicks = dict([i.split(':') for i in prev_clicks.split(' ')])
+    if start_clicks > int(prev_clicks['start']):
         last_clicked = 'START'
-        if start_clicks == 1:
-            print("updatedClicked: start button pushed")
-            clear_queue()
-        prevStart = start_clicks
-    elif stop_clicks > int(prevStop):
+    elif stop_clicks > int(prev_clicks['stop']):
         last_clicked = 'STOP'
-        interval = 0
         deleteFile()
-        print("Sending EXIT command to all active sensors")
-        send_queue_cmd('STOP',sensorList)
-        send_queue_cmd('EXIT',sensorList)
-        time.sleep(2)
-        prevStop = stop_clicks
-        return("exit")
+        interval = 0
     else:
-        last_clicked = 'none'
-    print('updatedClicked: ', last_clicked )
-    return last_clicked, interval, prevStart, prevStop
+        last_clicked = "none"
+    cur_clicks = 'start:{} stop:{} last:{}'.format(start_clicks, stop_clicks,last_clicked)
 
+    return cur_clicks, interval
 #return which sensors are clicked in array and makes files when start is clicked
 @app.callback(
     dash.dependencies.Output('checked-sensor', 'children'),
