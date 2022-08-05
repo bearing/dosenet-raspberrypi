@@ -385,6 +385,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
 # #read the file of correct sensor and display on map
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
+    dash.dependencies.Output('download', 'n_clicks'),
     dash.dependencies.Input('dataLoop', 'n_intervals'),
     dash.dependencies.Input('intervalLoop', 'n_intervals'),
     dash.dependencies.State('clicked-button', 'children'),
