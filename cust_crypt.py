@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Crypto.PublicKey import RSA as rsa
+from Crypto.Cipher import PKCS1_OAEP
 
 
 class PublicDEncrypt:
