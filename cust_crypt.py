@@ -24,7 +24,7 @@ class PublicDEncrypt:
         if self.public_key is None:
             return None
         else:
-            cipher = PKCS1_OAEP.new(self.public_key)
+            cipher = PKCS1_OAEP.new(key=self.public_key, hashAlgo=self.SHA256.new()) #, hashAlgo=hash_algo)
             return cipher.encrypt(message)
 
     def read_key_file(self, key_file):
