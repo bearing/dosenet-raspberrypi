@@ -25,7 +25,7 @@ class PublicDEncrypt:
             return None
         else:
             cipher = PKCS1_OAEP.new(self.public_key)
-            return cipher.encrypt(message, 32)
+            return cipher.encrypt(message)
 
     def read_key_file(self, key_file):
         with open(key_file, 'r') as f:
