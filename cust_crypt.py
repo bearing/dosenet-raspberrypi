@@ -2,6 +2,7 @@
 
 from Crypto.PublicKey import RSA as rsa
 from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Hash import SHA1, SHA256
 
 
 class PublicDEncrypt:
