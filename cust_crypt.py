@@ -12,11 +12,6 @@ class PublicDEncrypt:
         self.private_key = None
         self.public_key = None
 
-        try:
-            self.public_key = self.read_key_file(rsa_key.pub)
-        except:
-            print("rsa_key does not exist")
-
         for key_file in key_file_lst:
             key = self.read_key_file(key_file)
             if not key:
@@ -30,7 +25,7 @@ class PublicDEncrypt:
         if self.public_key is None:
             return None
         else:
-            cipher = PKCS1_OAEP.new(key=self.public_key, hashAlgo=self.SHA256.new()) #, hashAlgo=hash_algo)
+            cipher = PKCS1_OAEP.new(key=self.public_key, hashAlgo=SHA256.new()) #, hashAlgo=hash_algo)
             return cipher.encrypt(message)
 
     def read_key_file(self, key_file):
