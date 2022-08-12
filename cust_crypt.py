@@ -29,7 +29,7 @@ class PublicDEncrypt:
             return cipher.encrypt(message)
 
     def read_key_file(self, key_file):
-        with open(key_file, 'r') as f:
+        with open(key_file, 'rb') as f:
             return rsa.importKey(f.read())
 
     def decrypt_message(self, message):
