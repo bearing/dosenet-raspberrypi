@@ -12,6 +12,11 @@ class PublicDEncrypt:
         self.private_key = None
         self.public_key = None
 
+        try:
+            self.public_key = self.read_key_file(rsa_key.pub)
+        except:
+            print("rsa_key does not exist")
+
         for key_file in key_file_lst:
             key = self.read_key_file(key_file)
             if not key:
