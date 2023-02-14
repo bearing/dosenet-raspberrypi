@@ -46,25 +46,25 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 	arg_dict = vars(args)
-	
+
 	session = gps.gps("localhost","2947")
 	session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
-	
+
 	recorded_time = time.time()
-	
+
 	while True: # Starts collecting and plotting data
 		#lat, lon = uniform(37.875830,37.878), uniform(-122.268459,-122.278)
-		
+
 		# Uncomment the following block and delete the preceeding when it is time to incorporate actual gps data
-		
+
 		lat, lon = 0, 0
-		
+
 		command = receive('GPS', 'fromGUI')
 
 		if command == 'EXIT':
 			print("GPS daq has received command to exit")
 			break
-		
+
 		try:
 			report = session.next()
 			#print report
@@ -79,13 +79,13 @@ if __name__ == '__main__':
 		except StopIteration:
 			session = None
 			print("Gpsd has terminated")
-		
+
 		# print(str(lat) + ' | ' + str(lon))
-		
+
 		if time.time()-recorded_time >= arg_dict['interval']:
 			recorded_time = recorded_time + arg_dict['interval']
 			send_data([lat, lon])
-					
+
 		sys.stdout.flush()
 
 # This was made by Big Al and Edward Lee

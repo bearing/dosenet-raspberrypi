@@ -26,9 +26,10 @@ import sys
 import traceback
 
 app = dash.Dash(__name__, prevent_initial_callbacks=True)
-# ________________________________________________________
-# method that creates rando numbers
-def randoNum():
+
+
+# ____________________________ fake GPS data points near berkeley campus
+def randoNum(): #
     return randint(0, 46) * 8 + 13
 def randolat():
     lat = 37.871591 + random.uniform(-0.0005, 0.0005)
@@ -37,6 +38,7 @@ def randolon():
     lon = -122.261996 + random.uniform(-0.0005, 0.0005)
     return lon
 
+# ____________________________ Create files and store data
 def appendFile(sensorName, lat, lon, data):
     fileName = str(sensorName + ".csv")
     newRow = [lat, lon, data]
@@ -55,6 +57,7 @@ def createFile(sensorName):
             writer.writerows(headerList)
             csvFile.close()
 
+# ____________________________ Creates a save file with all the data
 def createSaveFile():
     timeStamp = str(datetime.now())
     fileName = str(timeStamp + ".csv")
@@ -67,6 +70,7 @@ def createSaveFile():
             csvFile.close()
     return fileName
 
+# ____________________________ Appends data to a save file
 def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
     now = datetime.now()
     dateTime = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -125,41 +129,13 @@ def appendSaveFile(sensorList, lat, lon, saveName, PTHSensor):
                 else:
                     hum = " "
 
-        # elif x == 3:
-        #     if 'H'in sensors:
-        #         with open("Humidity.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Humidity.csv")
-        #             col = f1['dataSet'].tolist()
-        #             hum = col[-1]
-        #     else:
-        #         hum = " "
-        # elif x == 4:
-        #     if 'P' in sensors:
-        #         with open("Pressure.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Pressure.csv")
-        #             col = f1['dataSet'].tolist()
-        #             pres = col[-1]
-        #     else:
-        #         pres = " "
-        # elif x == 5:
-        #     if 'T' in sensors:
-        #         with open("Temperature.csv", "r") as csvFile:
-        #             f1 = csv.reader(csvFile)
-        #             #f1 = pd.read_csv("Temperature.csv")
-        #             col = f1['dataSet'].tolist()
-        #             temp = col[-1]
-        #     else:
-        #         temp = " "
-
     newRow = [dateTime, lat, lon, air, co2, rad, pres, temp, hum]
     with open(saveName,'a') as csvFile:
         writer = csv.writer(csvFile)
         writer.writerow(newRow)
         csvFile.close()
 
-
+# ____________________________ Deletes files
 def deleteFile():
     if os.path.exists("AirQuality.csv"):
       os.remove("AirQuality.csv")
@@ -171,14 +147,8 @@ def deleteFile():
       os.remove("Radiation.csv")
     else:
       print("The file does not exist")
-#
-# fig = go.Figure(go.Scattermapbox(mode = "markers", marker = {'size': 10}))
-# fig.update_geos(fitbounds="locations")
-# fig.update_layout(
-#     mapbox = {
-#         'style': "open-street-map"})
-# ------------------------------------------------------------------------------
-# App layout
+
+#________________________HTML for interface 
 app.layout = html.Div([
 
     html.H1("DoseNet Mapping Radiation", style={'text-align': 'center'}),
@@ -271,8 +241,9 @@ app.layout = html.Div([
             n_intervals = 0
         )
 ])
-# ------------------------------------------------------------------------------
-#tells us what button was the last one clicked
+#______________________Callbacks for collecting data in real time
+
+#________________________Button was the last one clicked
 @app.callback(
     dash.dependencies.Output('clicked-button', 'children'),
     dash.dependencies.Output('intervalLoop', 'n_intervals'),
@@ -290,6 +261,7 @@ def updatedClicked(start_clicks, stop_clicks, prevStart, prevStop, interval, sen
         if start_clicks == 1:
             print("updatedClicked: start button pushed")
             clear_queue()
+
         prevStart = start_clicks
     elif stop_clicks > int(prevStop):
         last_clicked = 'STOP'
@@ -305,10 +277,10 @@ def updatedClicked(start_clicks, stop_clicks, prevStart, prevStop, interval, sen
     print('updatedClicked: ', last_clicked )
     return last_clicked, interval, prevStart, prevStop
 
-#return which sensors are clicked in array and makes files when start is clicked
+#________________________Makes files of and starts the selected sensors when start button is clicked
 @app.callback(
     dash.dependencies.Output('checked-sensor', 'children'),
-    dash.dependencies.Output('PTHSensors', 'children'), ###MAKE SURE THIS WORKS AND DONT FORGET####
+    dash.dependencies.Output('PTHSensors', 'children'),
     dash.dependencies.Input('start-button', 'n_clicks'),
     dash.dependencies.State('AirQuality','value'),
     dash.dependencies.State('CO2','value'),
@@ -341,22 +313,25 @@ def startProcess(start, air, co, hum, pres, rad, temp):
             PTHSens.append("temp")
         if hum != []:
             PTHSens.append("hum")
+
     print("startProcess: sensorList: " , sensorList)
     startSensor(sensorList)
     print("startProcess: startSensors called")
     time.sleep(2)
     send_queue_cmd('START', sensorList)
     print("startProcess: send_queue_cmd called")
+    send_data(sensorList)
+    print("startGPS: send_data called")
     return sensorList, PTHSens
 
-#creates file to save the data onto
+#________________________Creates file to save the data onto
 @app.callback(
     dash.dependencies.Output('savingFileName', 'children'),
     dash.dependencies.Input('save-button', 'n_clicks'))
 def saveFile(save):
     return createSaveFile()
 
-#collect data and append to files continuously for time interval after start pushed. saves the data onto the file if the save button has been pushed
+#________________________Collects data and appends to files continuously every time interval after start button is pushed. Saves the data onto the file if the save button has been pushed
 @app.callback(
     dash.dependencies.Output('collectingData', 'children'),
     dash.dependencies.Input('dataLoop', 'n_intervals'),
@@ -383,7 +358,7 @@ def collectDataInFile(n, clicked, save, sensorList, fileName, PTHSensor):
             print("collectDataInFile: appendSaveFile")
         return "data"
 
-# #read the file of correct sensor and display on map
+#________________________Reads the file of selected display sensor and displays it on map
 @app.callback(
     dash.dependencies.Output('map', 'figure'),
     dash.dependencies.Output('download', 'n_clicks'),
@@ -429,10 +404,14 @@ def updateGraph(n, button, sensor, save):
                 return fig, save
             return dash.no_update
     return dash.no_update
-# ------------------------------------------------------------------------------
-# if __name__ == '__main__':
-     #app.run_server(debug=True)
-#________________________________________________________________________________
+
+
+#___________________________________________________
+# Methods for communication with the shared queue
+#   - allows commmunication between GUI and sensor DAQs
+#   - send commands and receive sensor data
+#______________________________________________
+
 def startSensor(sensorList):
     file_prefix = '{}_p{}_g{}'.format("Inside", "1", "1")
     fname = "/home/pi/data/" + file_prefix + '_' + \
@@ -467,11 +446,7 @@ def startSensor(sensorList):
         print("startSensor: completed")
         os.system(cmd)
 
-#-------------------------------------------------------------------------------
-# Methods for communication with the shared queue
-#   - allows commmunication between GUI and sensor DAQs
-#   - send commands and receive sensor data
-#-------------------------------------------------------------------------------
+
 def send_queue_cmd(cmd, daq_list):
     '''
     Send commands for sensor DAQs
@@ -524,6 +499,42 @@ def clear_queue():
     connection.close()
 
 
+#________________________ For GPS
+def send_data(data):
+	connection = pika.BlockingConnection(
+					  pika.ConnectionParameters('localhost'))
+	channel = connection.channel()
+	channel.queue_declare(queue='toGUI')
+	message = {'id': 'GPS', 'data': data}
+
+	channel.basic_publish(exchange='',
+						  routing_key='toGUI',
+						  body=json.dumps(message))
+	connection.close()
+
+def receive(ID, queue):
+	'''
+	Returns command from queue with given ID
+	'''
+	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+	channel = connection.channel()
+	channel.queue_declare(queue=queue)
+	method_frame, header_frame, body = channel.basic_get(queue=queue)
+	if body is not None:
+		message = json.loads(body)
+		if message['id']==ID:
+			channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+			connection.close()
+			return message['cmd']
+		else:
+			connection.close()
+			return None
+	else:
+		connection.close()
+		return None
+
+#_________________________________________
+
 if __name__ == '__main__':
     app.run_server(debug=True)
     parser = argparse.ArgumentParser()
@@ -540,27 +551,3 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     arg_dict = vars(args)
-
-    # global ex
-    # #Wrap everything in try/except so that sensor DAQs can be shutdown cleanly
-    # try:
-    #     if not arg_dict['test']:
-    #         clear_queue()
-    #     app = QApplication(sys.argv)
-    #     QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    #     nbins = 1024
-    #     # ex = App(nbins=nbins, **arg_dict)
-    #     # ex.show()
-    #
-    #     #atexit.register(ex.exit)
-    # except:
-    #     if not arg_dict['test']:
-    #         send_queue_cmd('EXIT',[RAD,AIR,CO2,PTH])
-    #     # Still want to see traceback for debugging
-    #     print('ERROR: GUI quit unexpectedly!')
-    #     traceback.print_exc()
-    #     pass
-
-    # ret = app.exec_()
-    # print(ret)
-    # sys.exit(ret)
