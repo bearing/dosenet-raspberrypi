@@ -1,0 +1,8 @@
+name: kromek_d3s_driver
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - libusb1
+  - pyserial
